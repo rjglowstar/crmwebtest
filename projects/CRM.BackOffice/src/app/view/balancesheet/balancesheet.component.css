@@ -1,0 +1,137 @@
+.balancesheet-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr !important;
+    position: relative;
+    border: 1px solid #e3e3e3;
+}
+
+.balancesheet-grid .grid-1:first-child {
+    border-right: 1px solid #e3e3e3;
+}
+
+.heading-sheet {
+    display: grid;
+    grid-template-columns: 1fr 101px;
+    border: 1px solid #00000030;
+    border-left: 0;
+    border-right: 0;
+}
+
+.heading-sheet.head {
+    background: #efefef;
+    border-top: none;
+    border-color: #e3e3e3;
+}
+
+.heading-sheet.foot {
+    border-bottom: none;
+    border-color: #e3e3e3;
+}
+
+.heading-sheet h5 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #212529;
+    margin: 0;
+    padding: 6px 7px;
+}
+
+.heading-sheet.head h5 {
+    font-size: 14px;
+}
+
+.sheet-scroll {
+    height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
+.balancesheet-grid .balsheet .balTitle {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    padding: 5px 12px;
+    line-height: 1;
+    color: #212529;
+}
+
+.balancesheet-grid .balsheet :is(ul, .heading-sheet) {
+    grid-template-columns: 1fr 1fr !important;
+}
+
+
+.balancesheet-grid .balsheet ul:nth-child(even) {
+    background-color: initial;
+}
+
+.balancesheet-grid .balsheet .listGroup ul:nth-child(even) {
+    background-color: #f2f4f5;
+}
+
+.balancesheet-grid .balsheet .listGroup ul:nth-child(odd)+.heading-sheet.total_view {
+    background-color: #f2f4f5;
+}
+
+.balancesheet-grid .balsheet .heading-sheet.total_view {
+    background: #e3e3e385 !important;
+}
+
+.balancesheet-grid .balsheet .listGroup:not(:first-child) {
+    margin-top: -1px;
+}
+
+.balancesheet-grid .balsheet .listGroup:not(:first-child) .balTitle {
+    margin-top: 8px;
+}
+
+.balancesheet-grid .balsheet .listGroup {
+    border: 1px solid transparent;
+}
+
+.balancesheet-grid .balsheet .listGroup:hover {
+    border: 1px solid #7A7A7A;
+}
+
+.balancesheet-grid .balsheet .heading-sheet h5:last-child,
+.balancesheet-grid .balsheet .listGroup ul li:last-child {
+    text-align: right;
+}
+
+.balancesheet-grid .balsheet .heading-sheet.total_view h5 {
+    padding: 5px 12px;
+}
+
+.balancesheet-grid .balsheet .group_block p {
+    font-size: 13px;
+    line-height: 1.2;
+    margin-bottom: 10px;
+}
+
+.balancesheet-grid .balsheet .group_block p span {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.balancesheet-grid .balsheet .group_block p:last-child {
+    margin-bottom: 0;
+}
+
+.balancesheet-grid ul {
+    display: grid;
+    padding: 0;
+    list-style: none;
+    grid-template-columns: 1fr 100px;
+    margin-bottom: 0;
+}
+
+.balancesheet-grid ul:nth-child(even) {
+    background: #f2f4f5;
+}
+
+.balancesheet-grid ul li {
+    padding: 5px 12px;
+    font-size: 13px;
+}
+
+.heading-sheet:last-child {
+    grid-template-columns: 1fr minmax(55px, auto) minmax(101px, auto);
+}

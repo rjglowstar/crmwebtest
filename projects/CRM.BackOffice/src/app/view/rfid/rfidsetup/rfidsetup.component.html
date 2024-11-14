@@ -1,0 +1,377 @@
+<title>RFID setup</title>
+<section class="updateinventory-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">RFID Setup</li>
+            </ul>
+          </div>
+        </div>
+        <!-- #region Top buttons-->
+        <div class="summarybar bg">
+          <div class="summary-left machine-status">
+            <span class="label_sp text-light" [ngClass]="statusTextBgClass">{{statusText}}</span>
+            <button class="btn btn-primary icon-clear" (click)="refreshDevice()" title="Refresh Device"></button>
+          </div>
+          <div class="summary-right pe-0">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isCanAccessAllButtons">
+              <button kendoButton (click)="filterSidebar()"><i class="icon-search" title="Search Stone"></i></button>
+              <button title="Fetch RFID" [disabled]="mySelection.length == 0" (click)="openRFIDInfoModal()" kendoButton>
+                <i class="icon-rfid"></i>
+              </button>
+              <button title="Update RFID" [disabled]="mySelection.length != 1" (click)="openRFIDModal()" kendoButton>
+                <i class="icon-edit"></i>
+              </button>
+              <input #file type="file"
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                (click)="file.value=''" (change)="onSelectExcelFile($event)" hidden />
+              <button kendoButton title="Import Inventory" (click)="file.click()">
+                <i class="icon-excelnew p-0"></i>
+              </button>
+              <button kendoButton title="Export No RFID Stones" (click)="exportToExcel()"><i
+                  class="icon-doc_download"></i></button>
+              <button title="Delete RFID" [disabled]="mySelection.length ==0" (click)="deleteRFIDModal()" kendoButton>
+                <i class="icon-trash"></i>
+              </button>
+              <button kendoButton title="Grid Configuration" (click)="openGridConfigDialog()">
+                <i class="icon-gridconfig"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <!-- #endregion Top buttons-->
+        <!-- #region RFID Grid-->
+        <div class="content_box">
+          <div class="grid-wrap grid-summury">
+            <kendo-grid #invGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+              (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+              [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)"
+              [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+
+                      <ng-template *ngIf="isShowCheckBoxAll && field.title == 'Checkbox'" kendoGridHeaderTemplate>
+                        <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox"
+                          (selectAllChange)="selectAllInventories($event)" />
+                        <label class="k-checkbox-label" for="headerCheckbox"></label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.title == 'Checkbox'">
+                        <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                          id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+
+
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+        <!-- #endregion RFID Grid-->
+      </div>
+      <!-- #region Filter -->
+      <div class="sr-wrap rfidsearch-panel" [ngClass]="{'active': filterFlag}">
+        <div class="sr">
+          <h6>Search By Filter <i class="icon-delete float-end mt-1 me-1" (click)="filterSidebar()"></i>
+          </h6>
+          <form name="form" #RfidSearchForm="ngForm" novalidate>
+            <div class="i-form">
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Stone Id</label>
+                  <input type="text" name="filterStoneId" [(ngModel)]="stoneId" #filterStoneId="ngModel"
+                    id="filterStoneId">
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Certificate No</label>
+                  <input type="text" name="filterCertificateNo" [(ngModel)]="certificateNo"
+                    #filterCertificateNo="ngModel" id="filterCertificateNo">
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">RFID</label>
+                  <input type="text" name="filterRIFID" [(ngModel)]="rfid" #filterStoneId="ngModel" id="filterRIFID">
+                </div>
+
+                <div class="form-data">
+                  <label>Status</label>
+                </div>
+                <div class="form-data mul-select">
+                  <kendo-multiselect name="status" class="customselect" [data]="listStatus"
+                    [(ngModel)]="inventorySearchCriteriaObj.status" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                    (valueChange)="utilityService.onMultiSelectChange(listStatus, inventorySearchCriteriaObj.status)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="dropdown-header single k-widget k-header">
+                        <span class="temp-single">Select Status</span>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(inventorySearchCriteriaObj.status, true)">
+                        {{utilityService.getCommaSapratedString(inventorySearchCriteriaObj.status)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box mt-2">
+                  <ng2-tri-state-checkbox name="filterIsRfid" id="allocated-rfid"
+                    [(ngModel)]="inventorySearchCriteriaObj.isRfid" #filterIsRfid="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label for="allocated-rfid">Allocated RFID</label>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                  <button class="btn btn-action" (click)="RfidSearchForm.form.valid && onFilterSubmit(RfidSearchForm)">
+                    <i class="icon-search"></i>Search</button>
+                  <button (click)="clearFilter(RfidSearchForm)" class="btn btn-action"><i
+                      class="icon-clear"></i>Clear</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- #endregion -->
+    </div>
+  </div>
+</section>
+
+
+<!-- #region RFID Manual Edit -->
+<div class="modal c-modal addemp dialog-xs rorgan" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isAddRFID">
+  <form name="form" #RFIDForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-edit"></i>
+            RFID</h5>
+          <button type="button" class="close" (click)="closeAddRFIDDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-rfid">
+                <div class="rfid-grid">
+                  <div class="form-data">
+                    <label for="">StoneId :</label>
+                  </div>
+                  <div class="form-data">
+                    <label for="">{{inventoryObj.stoneId}}</label>
+                  </div>
+                  <div class="form-data">
+                    <label for="">RFID No<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': RFID.invalid && (RFID.dirty || RFID.touched)}">
+                    <input type="text" name="RFID" [(ngModel)]="inventoryObj.rfid" #RFID="ngModel" id="" required
+                      autocomplete="off">
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="RFIDForm.form.valid && onRFIDSubmit(RFIDForm)" [disabled]="RFIDForm.form.invalid"
+            class="btn btn-primary"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeAddRFIDDialog()"></div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<!-- #region RFID machine popup -->
+<div class="modal c-modal addemp dialog-sm" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isAddRFIDInfo">
+  <form name="form" #RFIDScanForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">
+            <i class="icon-rfid"></i>
+            RFID Info
+          </h5>
+          <button type="button" class="close" (click)="closeAddRFIDInfoDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="d-flex justify-content-between rfid-main">
+                <!-- <div class="form-data">
+                  <label for="">StoneId</label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': stoneid.invalid && (stoneid.dirty || stoneid.touched)}">
+                  <kendo-dropdownlist [data]="listNotFoundTags" [kendoDropDownFilter]="filterSettings"
+                    [textField]="'stoneId'" [valueField]="'stoneId'" name="stoneid" #stoneid="ngModel"
+                    [valuePrimitive]="true" (valueChange)="onNotAllocatedStoneChange($event)"
+                    [(ngModel)]="selectedScanStone.stoneId" required [disabled]="listNotFoundTags.length == 0">
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data">
+                  <label for="">RFID</label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': rfid.invalid && (rfid.dirty || rfid.touched)}">
+                  <kendo-dropdownlist [data]="notAllocatedTags" [kendoDropDownFilter]="filterSettings"
+                    [textField]="'rfid'" [valueField]="'rfid'" name="rfid" #rfid="ngModel" [valuePrimitive]="true"
+                    [(ngModel)]="selectedScanStone.rfid" [disabled]="notAllocatedTags.length == 0" required>
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data"></div> -->
+                <div class="rfid-status">
+                  <div class="form-data">
+                    <span class="text-light" [ngClass]="statusTextBgClass">{{statusText}}</span>
+                  </div>
+                  <div class="form-data">
+                    <button class="btn btn-primary icon-clear" kendoTooltip position="bottom" (click)="refreshDevice()"
+                      title="Refresh Device"></button>
+                  </div>
+                </div>
+
+                <div class="rfid-right">
+                  <div class="form-data">
+                    <button class="btn btn-primary" *ngIf="statusText == 'LIGHTING'" kendoTooltip position="bottom"
+                      (click)="stopLighting()" title="StopLighting">StopLighting</button>
+                  </div>
+                  <div class="form-data">
+                    <button class="btn btn-primary" kendoTooltip position="bottom" title="StartScan"
+                      (click)="startScan()">StartScan</button>
+                  </div>
+                  <!-- <div class="form-data">
+                  <button class="btn btn-primary" (click)="stopScan()" title="StopScan">StopScan</button>
+                </div> -->
+                  <div class="form-data">
+                    <button class="btn btn-primary icon-doc_download" kendoTooltip position="bottom"
+                      (click)="exportScannedGrid()" title="Export To Excel"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-xl-6 col-lg-6 col-xs-6 col-sm-6 rfid-tbl rfid-info grid-wrap mb-3">
+                  <h6 class="d-flex justify-content-between">Found Stones
+                    <button *ngIf="foundTags.length>0" class="btn btn-primary float-end icon-light"
+                      [ngClass]="{'icon-light-active':isAllFoundLighting}" (click)="startAllLighting('found')"></button>
+                  </h6>
+                  <div class="clearfix"></div>
+                  <kendo-grid [data]="filterFoundTags" [pageSize]="rfIdGridPageSize" [skip]="foundSkip"
+                    [pageable]="true"
+                    (pageChange)="filterFoundTags = rfIdGridPageChange($event, foundTags);foundSkip = $event.skip;">
+                    <kendo-grid-column [width]=" 80" field="stoneId" title="Stone ID">
+                    </kendo-grid-column>
+                    <kendo-grid-column [width]="65" field="rfid" title="RFID">
+                      <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                        {{dataItem.rfid}}
+                        <button class="btn btn-primary float-end icon-light"
+                          [ngClass]="{'icon-light-active':dataItem.isLighting}"
+                          (click)="startLighting(dataItem,rowIndex,'found')"></button>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </kendo-grid>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-xs-6 col-sm-6 rfid-tbl rfid-info grid-wrap mb-3">
+                  <h6 class="d-flex justify-content-between">Not Found Stones</h6>
+                  <!-- (selectionChange)="selectedScanRowChange($event)" -->
+                  <kendo-grid [data]="filterNotFoundTags" [selectable]="selectableModalSettings"
+                    [(selectedKeys)]="myScanSelection" [kendoGridSelectBy]="'stoneId'" [pageSize]="rfIdGridPageSize"
+                    [pageable]="true" [skip]="notFoundSkip"
+                    (pageChange)="filterNotFoundTags = rfIdGridPageChange($event, notFoundTags);notFoundSkip = $event.skip;">
+                    <kendo-grid-column [width]="60" field="stoneId" title="Stone ID"></kendo-grid-column>
+                    <kendo-grid-column [width]="70" field="rfid" title="RFID">
+                    </kendo-grid-column>
+                  </kendo-grid>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-xs-6 col-sm-6 rfid-tbl rfid-info grid-wrap">
+                  <h6 class="d-flex justify-content-between">Allocated RFID
+                    <button *ngIf="allocatedTags.length>0" class="btn btn-primary float-end icon-light"
+                      [ngClass]="{'icon-light-active':isAllAllocatedLighting}"
+                      (click)="startAllLighting('allocated')"></button>
+                  </h6>
+                  <div class="clearfix"></div>
+                  <kendo-grid [data]="filterAllocatedTags" [pageSize]="rfIdGridPageSize" [pageable]="true"
+                    [skip]="allocatedSkip"
+                    (pageChange)="filterAllocatedTags = rfIdGridPageChange($event, allocatedTags);allocatedSkip = $event.skip;">
+                    <kendo-grid-column [width]="80" field="stoneId" title="StoneId">
+                    </kendo-grid-column>
+                    <kendo-grid-column [width]="80" field="rfid" title="RFID">
+                      <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                        {{dataItem.rfid}}
+                        <button class="btn btn-primary float-end icon-light me-1"
+                          [ngClass]="{'icon-light-active':dataItem.isLighting}"
+                          (click)="startLighting(dataItem,rowIndex,'allocated')"></button>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </kendo-grid>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-xs-6 col-sm-6 rfid-tbl rfid-info grid-wrap">
+                  <h6 class="d-flex justify-content-between">Not Allocated RFID
+                    <button *ngIf="notAllocatedTags.length>0" class="btn btn-primary float-end icon-light"
+                      [ngClass]="{'icon-light-active':isAllNotAllocatedLighting}"
+                      (click)="startAllLighting('notallocated')"></button>
+                  </h6>
+                  <div class="clearfix"></div>
+                  <kendo-grid [data]="filterNotAllocatedTags" [pageSize]="rfIdGridPageSize" [pageable]="true"
+                    [skip]="notAllocatedSkip"
+                    (pageChange)="filterNotAllocatedTags = rfIdGridPageChange($event, notAllocatedTags);notAllocatedSkip = $event.skip;">
+                    <kendo-grid-column [width]="80" field="rfid" title="RFID">
+                      <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                        {{dataItem.rfid}}
+                        <button class="btn btn-primary float-end icon-light"
+                          [ngClass]="{'icon-light-active':dataItem.isLighting}"
+                          (click)="startLighting(dataItem,rowIndex,'notallocated')"></button>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </kendo-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- <button class="btn btn-primary" (click)="onRFIDSubmit(RFIDScanForm)" [disabled]="!RFIDScanForm.valid"><i
+              class="icon-save"></i>Save</button> -->
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeAddRFIDInfoDialog()"></div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<!-- #region Grid Config-->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'RFID'" [gridName]="'RFIDGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion Grid Config-->
+
+<div kendoDialogContainer></div>

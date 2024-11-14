@@ -1,0 +1,302 @@
+<title>Suppliers</title>
+<section class="omaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Suppliers</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton (click)="openAddOrgDialog()" title="Add Organization"><i
+                  class="icon-add"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openUpdateOrgDialog()" title="Edit Organization">
+                <i class="icon-edit"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openOrgRedirect('details')" title="View Details"><i
+                  class="icon-viewdetilas"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openDeleteDialog()" title="Delete"><i
+                  class="icon-trash"></i></button>
+              <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                  class="icon-gridconfig"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid #orgGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+              (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+              [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)"
+              [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #orgSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Name</label>
+                    <input type="text" id="" name="filtername" [(ngModel)]="supplierCriteria.name"
+                      #filtername="ngModel">
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Email</label>
+                    <input type="mail" id="" name="filterEmail" [(ngModel)]="supplierCriteria.email"
+                      #filterEmail="ngModel">
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" (click)="orgSearchForm.form.valid && onFilterSubmit(orgSearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button (click)="clearFilter(orgSearchForm)" class="btn btn-action">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="orgSearchForm.form.valid && onFilterSubmit(orgSearchForm)"><i
+              class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(orgSearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Register Modal Start -->
+  <div class="modal c-modal addemp rorgan" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+    *ngIf="isRegOrganization">
+    <form name="form" #supplierForm="ngForm">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-supplier"></i>Supplier</h5>
+            <button type="button" class="close" (click)="closeRegOrganDialog(supplierForm)">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+                <div class="i-form ro-grid">
+                  <h6 class="title"><i class="icon-supplier"></i>Supplier Information</h6>
+                  <div class="grid">
+                    <div class="form-data">
+                      <label for="">Name<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                      <input type="text" name="name" [(ngModel)]="supplierObj.name" #name="ngModel" id="" required>
+                    </div>
+                    <div class="form-data">
+                      <label for="">Regi. No</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" id="" name="registrationNo" #registrationNo="ngModel"
+                        [(ngModel)]="supplierObj.registrationNo">
+                    </div>
+                    <div class="form-data">
+                      <label for="">Inc. Tax No</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" id="" name="incomeTaxNo" #incomeTaxNo="ngModel"
+                        [(ngModel)]="supplierObj.incomeTaxNo">
+                    </div>
+                    <div class="form-data">
+                      <label>Membership</label>
+                    </div>
+                    <div class="form-data">
+                      <kendo-combobox [data]="listMembershipItems" name="membership" #membership="ngModel"
+                        [valuePrimitive]="true" [(ngModel)]="supplierObj.membership"
+                        [kendoDropDownFilter]="filterSettings">
+                      </kendo-combobox>
+                    </div>
+                    <div class="form-data">
+                      <label for="">Website</label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': website.invalid && ((website.touched && website.hasError('pattern')) || (website.errors?.required && website.touched))}">
+                      <input type="text" id="" name="website" #website="ngModel" [(ngModel)]="supplierObj.website"
+                        [pattern]="websitePattern">
+                    </div>
+                    <div class="form-data">
+                      <label>TaxNo</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" id="" name="taxNo" #taxNo="ngModel" [(ngModel)]="supplierObj.taxNo">
+                    </div>
+                    <div class="form-data">
+                      <label for="">Person Name<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" [ngClass]="{ 'error': person.invalid  && (person.dirty || person.touched)}">
+                      <input type="text" name="person" [(ngModel)]="supplierObj.person" #person="ngModel" id=""
+                        required>
+                    </div>
+                    <div class="form-data">
+                      <label for="">Email<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('email')) || (email.errors?.required && email.touched))}">
+                      <input type="email" name="email" [(ngModel)]="supplierObj.email" #email="ngModel" id="" required
+                        email>
+                    </div>
+
+                    <div class="form-data">
+                      <label for="">Mobile No<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data country-code"
+                      [ngClass]="{ 'error':primaryMobile.invalid && (primaryMobile.dirty || primaryMobile.touched)}">
+                      <ngx-intl-tel-input [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                        [enablePlaceholder]="false" [searchCountryFlag]="true"
+                        [searchCountryField]="[SearchCountryField.All]" [selectFirstCountry]="false"
+                        [selectedCountryISO]="CountryISO.India" [maxLength]="15" [phoneValidation]="true"
+                        [separateDialCode]="separateDialCode" [numberFormat]="PhoneNumberFormat.National"
+                        name="primaryMobile" #primaryMobile="ngModel" [(ngModel)]="primaryMobileNo"
+                        (ngModelChange)="checkIntPhoneValidation($event, IntlTelType.PrimaryMobile, supplierForm)"
+                        [enablePlaceholder]="true">
+                      </ngx-intl-tel-input>
+                    </div>
+
+                    <div class="form-data">
+                      <label for="">Phone No</label>
+                    </div>
+                    <div class="form-data">
+                      <kendo-maskedtextbox name="phoneNo" #phoneNo="ngModel" [(ngModel)]="supplierObj.phoneNo" id="">
+                      </kendo-maskedtextbox>
+                    </div>
+                    <div class="form-data">
+                      <label for="">Fax No</label>
+                    </div>
+                    <div class="form-data">
+                      <kendo-maskedtextbox name="faxNo" #faxNo="ngModel" [(ngModel)]="supplierObj.faxNo" id="">
+                      </kendo-maskedtextbox>
+                    </div>
+                    <div class="form-data">
+                      <label for="">Code<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" name="code" [(ngModel)]="supplierObj.code" #codeData="ngModel" id="" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="i-form rs-add">
+                  <h6 class="title"><i class="icon-mapmarker"></i>Address</h6>
+                  <div class="grid">
+                    <div class="form-data">
+                      <label>Line1</label>
+                    </div>
+                    <div class="form-data">
+                      <textarea cols="4" type="text" id="" name="line1" #line1="ngModel"
+                        [(ngModel)]="supplierObj.address.line1">
+                                            </textarea>
+                    </div>
+                    <div class="form-data">
+                      <label>Line2</label>
+                    </div>
+                    <div class="form-data">
+                      <textarea cols="4" type="text" id="" name="line2" #line2="ngModel"
+                        [(ngModel)]="supplierObj.address.line2">
+                                            </textarea>
+                    </div>
+                    <!-- <div class="form-data">
+                    <label>Type</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listAddressTypeItems" [valuePrimitive]="true" name="addressType"
+                      #addressType="ngModel" [(ngModel)]="supplierObj.address.type">
+                    </kendo-combobox>
+                  </div> -->
+                    <div class="form-data">
+                      <label>Country</label>
+                    </div>
+                    <div class="form-data">
+                      <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                        [valueField]="'name'" name="country" #country="ngModel" (valueChange)="onCountryChange($event)"
+                        [valuePrimitive]="true" [(ngModel)]="supplierObj.address.country">
+                      </kendo-combobox>
+                    </div>
+                    <div class="form-data">
+                      <label>State</label>
+                    </div>
+                    <div class="form-data">
+                      <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                        [valueField]="'name'" (valueChange)="onStateChange($event)" [valuePrimitive]="true" name="state"
+                        #state="ngModel" [(ngModel)]="supplierObj.address.state">
+                      </kendo-combobox>
+                    </div>
+                    <div class="form-data">
+                      <label>City</label>
+                    </div>
+                    <div class="form-data">
+                      <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                        [valueField]="'name'" (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city"
+                        #city="ngModel" [(ngModel)]="supplierObj.address.city">
+                      </kendo-combobox>
+                    </div>
+                    <div class="form-data">
+                      <label>ZipCode</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" id="" name="zipcode" #zipcode="ngModel"
+                        [(ngModel)]="supplierObj.address.zipCode">
+                    </div>
+                  </div>
+                </div>
+
+                <h6 class="title"><i class="icon-api"></i>API Path</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label>API Path</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="apiPath" [(ngModel)]="supplierObj.apiPath" #apiPath="ngModel" id="">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button (click)="onOrgSubmit(supplierForm,false)" [disabled]="!supplierForm.valid"
+              class="btn btn-primary"><i class="icon-add"></i>New</button>
+            <button (click)="onOrgSubmit(supplierForm,true)" [disabled]="!supplierForm.valid" class="btn btn-primary"><i
+                class="icon-save"></i>Save</button>
+          </div>
+        </div>
+      </div>
+      <div (document:keydown.esc)="closeRegOrganDialog(supplierForm)"></div>
+    </form>
+  </div>
+  <!-- Register Modal End -->
+
+  <ng-container *ngIf="isGridConfig">
+    <app-gridconfiguration [fields]="fields" [pageName]="'Supplier'" [gridName]="'SupplierGrid'"
+      [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+      (ChildEvent)="setNewGridConfig($event)">
+    </app-gridconfiguration>
+  </ng-container>
+
+  <div kendoDialogContainer></div>
+</section>

@@ -1,0 +1,403 @@
+<title>Lab Result Upload</title>
+<section class="lab-rec-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <!-- #region Header -->
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Lab Result Upload</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right pe-0">
+            <div class="inputWrap">
+              <div>
+                <span class="input_label">Upload result for :</span>
+                <kendo-dropdownlist [data]="listLabItems" textField="text" valueField="value" name="Lab"
+                  [kendoDropDownFilter]="filterSettings" [(ngModel)]="selectedLabItems" #Lab="ngModel"
+                  (valueChange)="LabChange()" *ngIf="isViewButtons" style="width:173px;">
+                </kendo-dropdownlist>
+              </div>
+              <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+                <input #file type="file"
+                  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                  (click)="file.value=''" (change)="onSelectExcelFile($event)" hidden />
+                <button kendoButton (click)="file.click()" title="Lab Result Upload" [disabled]="!(selectedLabItems)">
+                  <i class="icon-excelnew p-0"></i>
+                </button>
+                <button kendoButton title="Save Lab Result"
+                  [disabled]="!(selectedLabResultExcelItems && selectedLabResultExcelItems.length > 0)"
+                  (click)="SaveLabResultFile()" title="Save Lab Result"><i class="icon-save"></i></button>
+                <button kendoButton (click)="openDialog()"><i class="icon-lab" title="Lab Action"></i></button>
+                <button kendoButton (click)="UpdateControllerNo()"><i class="icon-Manual_Issue_Packet"
+                    title="Save RFID"></i></button>
+                <button kendoButton title="Filter" class="nf-click" (click)="openFilterDialog()"><i
+                    class="icon-filter"></i></button>
+                <button kendoButton> <i class="icon-gridconfig" (click)="openGridConfigDialog()"
+                    title="Grid Configuration"></i></button>
+              </kendo-buttongroup>
+            </div>
+          </div>
+        </div>
+        <!-- #endregion -->
+        <div class="n-fil user-filter" *ngIf="isFilter"
+          style="position: absolute;right: 15px;box-shadow: 0px 8px 5px 0px rgb(0 0 0 / 75%);">
+          <div class="n-fil-left">
+            <ul class="f-group">
+              <div class="upl-grid">
+                <label for="">Weight</label>
+                <input type="text" [(ngModel)]="selectedFromWeight" (keypress)="utilityService.floatOnly($event)"
+                  type="text" name="fromweight" autocomplete="off" maxlength="10" #fromweight="ngModel" id="fromweight">
+                <label for="">To</label>
+                <input type="text" [(ngModel)]="selectedToWeight" (keypress)="utilityService.floatOnly($event)"
+                  type="text" name="toweight" autocomplete="off" maxlength="10" #toweight="ngModel" id="toweight">
+                <button kendoButton kendoTooltip position="bottom" title="Search" (click)="SearchFilter()">
+                  <i class="icon-search p-0"></i></button>
+                <button kendoButton kendoTooltip position="bottom" title="Clear" (click)="ClearFilter()">
+                  <i class="icon-clear p-0"></i></button>
+              </div>
+            </ul>
+          </div>
+          <div class="n-fil-right">
+            <li class="n-close" (click)="closeFilterDailog()"><i class="icon-delete" title="Close Filter"></i></li>
+          </div>
+        </div>
+        <!-- #region Grid -->
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid [data]="gridView" class="grid-ui upload-grid" [sortable]="true"
+              (sortChange)="sortChange($event)" [sort]="sort" [groupable]="true" [group]="groups"
+              (groupChange)="groupChange($event)" (selectionChange)="onSelect($event)" [selectable]="selectableSettings"
+              [resizable]="true" [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'stoneId'" [pageSize]="pageSize"
+              [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <kendo-grid-column [width]="25"  title="">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    <div class="i-hov" *ngIf="dataItem.isResultAvailable">
+                      <i class="icon-info"></i>
+                      <div class="em-box" *ngIf="fetchError(dataItem?.stoneId)">
+                        <h6 class="title">Stone Id: {{fetchError(dataItem?.stoneId)?.stoneId}}
+                        </h6>
+                        <span>Reasons :
+                          <div class="e-msg" *ngFor="let message of fetchError(dataItem?.stoneId)?.messageList">
+                            <span>{{message}}</span>
+                          </div>
+                        </span>
+                      </div>
+                    </div>
+                  </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-checkbox-column [width]="40">
+                  <ng-template kendoGridHeaderTemplate>
+                    <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox"
+                      (selectAllChange)="selectAllStocks($event)" />
+                    <label class="k-checkbox-label" for="headerCheckbox"></label>
+                  </ng-template>
+                  <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                    <div class="i-hov" *ngIf="dataItem.isDisabled">
+                      <i class="icon-info"></i>
+                      <div class="em-box" *ngIf="fetchError(dataItem?.stoneId)">
+                        <h6 class="title">Stone Id: {{fetchError(dataItem?.stoneId)?.stoneId}}
+                        </h6>
+                        <span>Reasons :
+                          <div class="e-msg" *ngFor="let message of fetchError(dataItem?.stoneId)?.messageList">
+                            <span>{{message}}</span>
+                          </div>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="i-hov" *ngIf="dataItem.isDisabled == false">
+                      <input type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                        [kendoGridSelectionCheckbox]="rowIndex" />
+                      <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                      </label>
+                    </div>
+                  </ng-template>
+                </kendo-grid-checkbox-column>
+
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title"
+                      class="{{field.title=='Weight' || field.title=='Color' || field.title=='Clarity' || field.title=='Cut' || field.title=='Polish' || field.title=='Symmetry' || field.title=='Fluorescence' ? 'of-initial' : ''}}">
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Shape'">
+                        <span class="whole-cell">
+                          {{dataItem.shape}}
+                          <i [ngClass]="getCompareLabResultWithGrading(dataItem.stoneId, 'SHAPE','Class')"></i>
+                          <div class="arrow-tooltip">
+                            {{getCompareLabResultWithGrading(dataItem.stoneId, 'SHAPE','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Weight'">
+                        <span class="whole-cell">
+                          {{dataItem.weight}}
+                          <i [ngClass]="getCompareLabResultWithGrading(dataItem.stoneId, 'WEIGHT','Class')"></i>
+                          <div class="arrow-tooltip">
+                            {{getCompareLabResultWithGrading(dataItem.stoneId, 'WEIGHT','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Color'">
+                        <span class="whole-cell">
+                          {{dataItem.color}}
+                          <i [ngClass]="getCompareLabResultWithGrading(dataItem.stoneId, 'COLOR','Class')"></i>
+                          <div class="arrow-tooltip">
+                            {{getCompareLabResultWithGrading(dataItem.stoneId, 'COLOR','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Clarity'">
+                        <span class="whole-cell">
+                          {{dataItem.clarity}}
+                          <i [ngClass]="getCompareLabResultWithGrading(dataItem.stoneId, 'CLARITY','Class')"></i>
+                          <div class="arrow-tooltip">
+                            {{getCompareLabResultWithGrading(dataItem.stoneId, 'CLARITY','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Cut'">
+                        <span class="whole-cell">
+                          {{dataItem.cut}}
+                          <i [ngClass]="getCompareLabResultWithGrading(dataItem.stoneId, 'CUT','Class')"></i>
+                          <div class="arrow-tooltip">
+                            {{getCompareLabResultWithGrading(dataItem.stoneId, 'CUT','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Polish'">
+                        <span class="whole-cell">
+                          {{dataItem.polish}}
+                          <i [ngClass]="getCompareLabResultWithGrading(dataItem.stoneId, 'POLISH','Class')"></i>
+                          <div class="arrow-tooltip">
+                            {{getCompareLabResultWithGrading(dataItem.stoneId, 'POLISH','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Symmetry'">
+                        <span class="whole-cell">
+                          {{dataItem.symmetry}}
+                          <i [ngClass]="getCompareLabResultWithGrading(dataItem.stoneId, 'SYMMETRY','Class')"></i>
+                          <div class="arrow-tooltip">
+                            {{getCompareLabResultWithGrading(dataItem.stoneId, 'SYMMETRY','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Fluorescence'">
+                        <span class="whole-cell">
+                          {{dataItem.fluorescence}}
+                          <i [ngClass]="getCompareLabResultWithGrading(dataItem.stoneId, 'FLUORESCENCE','Class')"></i>
+                          <div class="arrow-tooltip">
+                            {{getCompareLabResultWithGrading(dataItem.stoneId, 'FLUORESCENCE','ToolTip')}}
+                          </div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Media'">
+                        <span
+                          *ngIf="(dataItem.media.isCertificate) || (dataItem.media.isPrimaryImage) || (dataItem.media.isHtmlVideo)">
+                          <span class="gr-icon" *ngIf="dataItem.media.isHtmlVideo"
+                            (click)="openMediaDialog('360 Vision View','iframe', dataItem)">
+                            <i class="icon-diamond"></i>
+                          </span>
+                          <span class="gr-icon" *ngIf="dataItem.media.isPrimaryImage"
+                            (click)="openMediaDialog('Image View','img', dataItem)">
+                            <i class="icon-camera"></i>
+                          </span>
+                          <span class="gr-icon" *ngIf="dataItem.media.isCertificate"
+                            (click)="openMediaDialog('Certificate View','cert', dataItem)">
+                            <i class="icon-cerificate"></i>
+                          </span>
+                        </span>
+                      </ng-template>
+
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+
+              <ng-template kendoGridDetailTemplate let-dataItem>
+                <div class="lir-grid">
+                  <kendo-grid [data]="getDetailData(dataItem.stoneId)" class="grid-ui upload-grid" [resizable]="true">
+                    <ng-container *ngIf="fields && fields.length > 0">
+                      <ng-container *ngFor="let field of fields">
+                        <ng-container *ngIf="field.isSelected">
+                          <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                            <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Media'">
+                              <span
+                                *ngIf="(dataItem.media.isCertificate) || (dataItem.media.isPrimaryImage) || (dataItem.media.isHtmlVideo)">
+                                <span class="gr-icon" *ngIf="dataItem.media.isHtmlVideo"
+                                  (click)="openMediaDialog('360 Vision View','iframe', dataItem)">
+                                  <i class="icon-diamond"></i>
+                                </span>
+                                <span class="gr-icon" *ngIf="dataItem.media.isPrimaryImage"
+                                  (click)="openMediaDialog('Image View','img', dataItem)">
+                                  <i class="icon-camera"></i>
+                                </span>
+                                <span class="gr-icon" *ngIf="dataItem.media.isCertificate"
+                                  (click)="openMediaDialog('Certificate View','cert', dataItem)">
+                                  <i class="icon-cerificate"></i>
+                                </span>
+                              </span>
+                            </ng-template>
+                          </kendo-grid-column>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </kendo-grid>
+                </div>
+              </ng-template>
+            </kendo-grid>
+          </div>
+        </div>
+        <!-- #endregion -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- #region Model -->
+<div class="modal c-modal addemp rorgan dialog-sm" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isRecheckIssue">
+  <form name="form" #RecheckIssue="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-Manual_Issue_Packet"></i>Recheck Packets</h5>
+          <button type="button" class="close" (click)="closeDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ma-issue-top">
+                <div class="i-form c-con mt-2">
+                  <h6 class="title"><i class="icon-setting"></i>Recheck Reason </h6>
+                  <div class="grid top">
+                    <div class="form-data t-ap recheck-grid">
+                      <div class="grid-1">
+                        <label>Action<span class="require">*</span></label>
+                        <kendo-combobox [data]="listActionType" [valuePrimitive]="true" textField="text"
+                          valueField="value" name="action" [(ngModel)]="actionType" (valueChange)="actionTypeChange()"
+                          #action="ngModel" required [kendoDropDownFilter]="filterSettings">
+                        </kendo-combobox>
+                      </div>
+                      <div class="grid-1">
+                        <label>Reason</label>
+                        <kendo-multiselect name="status" class="customselect" [data]="listReason"
+                          [(ngModel)]="labReCheckRequestObj.recheckReason" [textField]="'name'" [valueField]="'name'"
+                          [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                          [tagMapper]="tagMapper"
+                          (valueChange)="onReasonMultiSelectChange(listReason, labReCheckRequestObj.recheckReason)">
+                          <ng-template kendoComboBoxHeaderTemplate>
+                            <div class="dropdown-header single k-widget k-header">
+                              <span class="temp-single">Select Reason</span>
+                            </div>
+                          </ng-template>
+                          <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                            <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                            <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                          </ng-template>
+                        </kendo-multiselect>
+                      </div>
+                      <button type="button" class="btn btn-primary mt-4" (click)="GetRecheckCharge()">
+                        <i class="icon-clear"></i>Fetch
+                      </button>
+                      <span class="bg-text mt-4"><b>Charge: </b><span>{{recheckCharge}}</span></span>
+
+                      <span class="text-start" [hidden]="!isRepairVisible">Repairing Stones <span class="ms-1">
+                          <kendo-switch class="k-widget k-switch-off me-1" #isRepairing="ngModel" name="isRepairing"
+                            id="m-chk" [(ngModel)]="isRepairingStones"></kendo-switch>
+                        </span>
+                      </span>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mod-wrap">
+                <div class="grid-wrap">
+                  <ng-container *ngIf="!gridViewIssue">
+                    <div class="k-grouping-header k-grouping-header-flex">
+                      <div class="k-indicator-container">
+                        <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                        </kendo-skeleton>
+                      </div>
+                    </div>
+                    <table *ngIf="fields && fields.length > 0" class="w-100">
+                      <th *ngFor="let field of fields">{{field.propertyName}}</th>
+                      <tr *ngFor="let field of skeletonArray">
+                        <td *ngFor="let field of fields">
+                          <kendo-skeleton shape="text" animation="wave" [width]="75" [height]="40">
+                          </kendo-skeleton>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-container>
+                  <kendo-grid [data]="gridViewIssue" class="grid-ui upload-grid" [sortable]="true" [resizable]="true">
+                    <ng-container *ngIf="fields && fields.length > 0">
+                      <ng-container *ngFor="let field of fields">
+                        <ng-container *ngIf="field.isSelected">
+                          <kendo-grid-column [width]="100" [field]="field.propertyName" [title]="field.title">
+                            <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Media'">
+                              <span
+                                *ngIf="(dataItem.media.isCertificate) || (dataItem.media.isPrimaryImage) || (dataItem.media.isHtmlVideo)">
+                                <span class="gr-icon" *ngIf="dataItem.media.isHtmlVideo"
+                                  (click)="openMediaDialog('360 Vision View','iframe', dataItem)">
+                                  <i class="icon-diamond"></i>
+                                </span>
+                                <span class="gr-icon" *ngIf="dataItem.media.isPrimaryImage"
+                                  (click)="openMediaDialog('Image View','img', dataItem)">
+                                  <i class="icon-camera"></i>
+                                </span>
+                                <span class="gr-icon" *ngIf="dataItem.media.isCertificate"
+                                  (click)="openMediaDialog('Certificate View','cert', dataItem)">
+                                  <i class="icon-cerificate"></i>
+                                </span>
+                              </span>
+                            </ng-template>
+                          </kendo-grid-column>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </kendo-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="saveActionOnPacket(RecheckIssue)"
+            [disabled]="!RecheckIssue.valid">
+            <i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div (document:keydown.esc)="closeDialog()"></div>
+</div>
+<!-- #endregion -->
+
+<!-- #region Grid Config -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'LabReconsiliation'" [gridName]="'LabReconsiliationGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Media Modal -->
+<ng-container *ngIf="isShowMedia">
+  <app-media [mediaTitle]="mediaTitle" [mediaSrc]="mediaSrc" [mediaType]="mediaType"
+    (closeDialog)="closeMediaDialog($event)"></app-media>
+</ng-container>
+<!-- #endregion-->
+
+<div kendoDialogContainer></div>

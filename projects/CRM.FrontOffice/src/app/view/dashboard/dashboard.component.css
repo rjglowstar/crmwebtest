@@ -1,0 +1,335 @@
+/* Praposal-sent-successfully modal - start */
+.praposal-sucModal .modal-dialog {
+    max-width: 500px;
+}
+
+@media(max-width:515px) {
+    .praposal-sucModal .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.praposal-sucModal a.btn.btn-primary {
+    font-size: 14px;
+    color: #000;
+    background: #ffffff;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    padding: 4px 8px;
+    height: 30px;
+}
+
+.praposal-sucModal a.btn.btn-primary:hover {
+    background-color: rgba(77, 77, 77, 0.7) !important;
+    color: #fff;
+    border-color: #3d3d3d;
+}
+
+/* Praposal-sent-successfully modal - end */
+
+.dash_infoBox {
+    display: grid;
+    grid-template-columns: minmax(415px, 33%) 41% 1fr;
+    grid-gap: 10px;
+}
+
+.orderdash-gridbox {
+    width: 100%;
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.orderdash-gridbox .dash_highBox {
+    overflow: hidden;
+    border-radius: 3px;
+    background: #FFF;
+    padding: 8px 15px;
+}
+
+.d_wrap .flexbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.orderdash-gridbox .dash_highBox.lg {
+    padding: 20px 15px;
+}
+
+.dash_highBox h5 {
+    color: #89899B;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.orderdash-gridbox .dash_highBox h5 {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 14px;
+    white-space: nowrap;
+}
+
+.orderdash-gridbox .dash_highBox h5 span {
+    color: #F58A4E;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.dash-subgrid span.total_sp {
+    display: block;
+    color: #4D4D4D;
+    font-weight: 600;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+.d_wrap .dash-subgrid a {
+    display: inline-block;
+    color: #89899B;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 14px;
+    text-decoration: underline;
+}
+
+.dash_highBox .icon_box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 3px;
+    background: rgba(244, 244, 244, 0.65);
+    padding: 10px;
+}
+
+.dash_highBox .icon_box i {
+    font-size: 30px;
+    color: rgba(77, 77, 77, 0.20);
+    cursor: initial;
+}
+
+.d_wrap .block_bg {
+    overflow: hidden;
+    border-radius: 5px;
+    background: #FFF;
+    padding: 10px;
+}
+
+.grid_wrapper .block_bg {
+    padding: 6px 10px 10px 10px;
+}
+
+.d_wrap .block_title {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #4D4D4D;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.d_wrap .block_title .k-button,
+.d_wrap .block_title .k-button:hover {
+    background-color: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+.d_wrap .block_bg .switch-lable {
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.d_wrap .chart_wrapper {
+    height: 259px;
+}
+
+.d_wrap .chart_wrapper .k-chart {
+    height: 100%;
+}
+
+.d_wrap .grid_wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    margin-top: 10px;
+}
+
+.fscreen_btn {
+    opacity: 0.3;
+    transition: 0.3s all ease-in-out;
+    -webkit-transition: 0.3s all ease-in-out;
+}
+
+.fscreen_btn:hover {
+    opacity: 1;
+}
+
+.aiSub_grid {
+    display: grid;
+    grid-template-columns: 1fr max-content max-content;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Sec Fullscreen START */
+.fS_toggle {
+    position: fixed;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    z-index: 999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.fS_toggle .chart_wrapper {
+    height: calc(100vh - 10vh);
+}
+
+.fS_toggle .grid-wrap .dash-grid {
+    height: calc((100vh - 70px) - 10px) !important;
+}
+
+.fS_toggle .fscreen_btn {
+    opacity: 1;
+}
+
+/* Sec Fullscreen END */
+
+@media(max-width:1800px) {
+    .dash_infoBox {
+        grid-template-columns: minmax(440px, 33%) 1fr 1fr;
+    }
+}
+
+@media(max-width:1680px) {
+    .dash-subgrid span.total_sp {
+        font-size: 22px;
+    }
+
+    .dash_highBox .icon_box {
+        width: 40px;
+        height: 40px;
+    }
+
+    .dash_highBox .icon_box i {
+        font-size: 26px !important;
+    }
+}
+
+@media(max-width:1199px) {
+    .d_wrap .grid_wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .d_wrap .grid_wrapper .dash-grid {
+        min-height: 125px;
+        height: auto;
+    }
+
+    .dash_infoBox {
+        grid-template-columns: minmax(440px, 1fr) 1fr;
+    }
+
+    .d_wrap .block_bg.sales_chart {
+        grid-column: 1 / 3;
+    }
+
+    .d_wrap .block_bg.party_chart {
+        grid-column: 2;
+        grid-row: 1;
+    }
+}
+
+@media (min-width:768px) and (max-width:990px) {
+    .dash_highBox h5 {
+        font-size: 13px;
+    }
+
+    .d_wrap .dash-subgrid a {
+        font-size: 12px;
+    }
+}
+
+@media(max-width:767px) {
+    .dash_infoBox {
+        grid-template-columns: 1fr;
+    }
+
+    .d_wrap .block_bg.sales_chart {
+        grid-column: initial;
+    }
+
+    .d_wrap .block_bg.party_chart {
+        grid-column: inherit;
+        grid-row: 2;
+    }
+}
+
+@media(max-width:520px) {
+    .orderdash-gridbox .dash_highBox {
+        padding: 10px;
+    }
+
+    .dash_highBox h5 {
+        font-size: 13px;
+    }
+
+    .dash-subgrid span.total_sp {
+        font-size: 125%;
+    }
+
+    .d_wrap .dash-subgrid a {
+        font-size: 12px;
+    }
+
+    .dash_highBox .icon_box i {
+        font-size: 22px !important;
+    }
+}
+
+@media(max-width:450px) {
+
+    .orderdash-gridbox .dash_highBox:nth-last-child(1),
+    .orderdash-gridbox .dash_highBox:nth-last-child(2) {
+        grid-column: 1 / 3;
+    }
+
+    .orderdash-gridbox .dash_highBox.lg h5 {
+        margin-bottom: 10px;
+    }
+
+    .d_wrap .dash-subgrid a {
+        margin-top: 10px;
+    }
+}
+
+@media(min-width:381px) and (max-width:420px) {
+    .orderdash-gridbox .dash_highBox.lenCheck .icon_box {
+        display: none;
+    }
+}
+
+@media(max-width:380px) {
+    .orderdash-gridbox {
+        grid-template-columns: 1fr;
+    }
+
+    .orderdash-gridbox .dash_highBox:nth-last-child(1),
+    .orderdash-gridbox .dash_highBox:nth-last-child(2) {
+        grid-column: initial;
+    }
+}

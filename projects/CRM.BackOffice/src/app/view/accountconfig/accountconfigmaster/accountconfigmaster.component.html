@@ -1,0 +1,936 @@
+<title>Account config</title>
+<section class="acConfig_sec">
+  <div class="content_wrap">
+    <div class="breadcrumb">
+      <div class="breadcrumb-left">
+        <ul>
+          <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+          <li class="breadcrumb-item active" aria-current="page">Account Config</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="acConfi_wrap content_scroll">
+      <!-- LAst INVOICE NUMBER -->
+      <div class="pro_block lastInv_num">
+        <div class="p_info bg_box lastInvoice">
+          <h6 class="p_title pb_5">
+            <span>Last Invoice Numbers</span>
+            <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap">
+              <button kendoButton title="Update" (click)="updatePrefixAndNumber()"><i class="icon-save"></i></button>
+            </kendo-buttongroup>
+          </h6>
+          <ul class="aconfig_data">
+            <li>
+              <div class="lInv_num">
+                Transaction Number :
+                <div *ngIf="!addlastInvoiceNumFlag">
+                  <span class="ms-1 me-2">{{accountingConfigData.lastInvoiceNum}}</span>
+                  <div class="btnGroup_gap">
+                    <button kendoButton title="change" (click)="changelastInvoiceNumFlag()">
+                      <i class=" icon-edit"></i>
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="addlastInvoiceNumFlag" class="form-data">
+                  <input type="text" name="lastInvoiceNum" [(ngModel)]="accountingConfigData.lastInvoiceNum"
+                    #lastInvoiceNum="ngModel" id="lastInvoiceNum" class="me-2"
+                    (keypress)="utilityService.numberOnly($event)">
+                  <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+                    <button kendoButton title="Update" (click)="updatePrefixAndNumber()"><i
+                        class="icon-save"></i></button>
+                    <button kendoButton title="Edit" (click)="closelastInvoiceNumFlag()">
+                      <i class=" icon-delete"></i></button>
+                  </kendo-buttongroup>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="lInv_num">
+                Local Invoice :
+                <div *ngIf="!changeLocalInvoiceNumflag">
+                  <span
+                    class="ms-1 me-2">{{accountingConfigData.localInvoicePrefix}}-{{accountingConfigData.lastLocalInvoiceNum}}
+                  </span>
+                  <div class="btnGroup_gap">
+                    <button kendoButton title="change" (click)="changeLocalInvoiceNum()">
+                      <i class=" icon-edit"></i></button>
+                  </div>
+                </div>
+                <div *ngIf="changeLocalInvoiceNumflag" class="form-data">
+                  <input type="text" name="localInvoicePrefix" [(ngModel)]="accountingConfigData.localInvoicePrefix"
+                    #localInvoicePrefix="ngModel" id="localInvoicePrefix" class="me-2">
+                  <input type="text" name="lastLocalInvoiceNum" [(ngModel)]="accountingConfigData.lastLocalInvoiceNum"
+                    #lastLocalInvoiceNum="ngModel" id="lastLocalInvoiceNum" class="me-2"
+                    (keypress)="utilityService.numberOnly($event)">
+                  <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+                    <button kendoButton title="Update" (click)="updatePrefixAndNumber()"><i
+                        class="icon-save"></i></button>
+                    <button kendoButton title="Edit" (click)="closeLocalInvoiceNum()">
+                      <i class=" icon-delete"></i></button>
+                  </kendo-buttongroup>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="lInv_num">
+                Overseas Invoice :
+                <div *ngIf="!changeOverSeaInvoiceNumflag">
+                  <span
+                    class="ms-1 me-2">{{accountingConfigData.overseaInvoicePrefix}}-{{accountingConfigData.lastOverSeaInvoiceNum}}</span>
+                  <div class="btnGroup_gap">
+                    <button kendoButton title="change" (click)="changeOverSeaInvoiceNum()"><i
+                        class=" icon-edit"></i></button>
+                  </div>
+                </div>
+                <div *ngIf="changeOverSeaInvoiceNumflag" class="form-data">
+                  <input type="text" name="overseaInvoicePrefix" [(ngModel)]="accountingConfigData.overseaInvoicePrefix"
+                    #overseaInvoicePrefix="ngModel" id="overseaInvoicePrefix" class="me-2">
+                  <input type="text" name="lastOverSeaInvoiceNum"
+                    [(ngModel)]="accountingConfigData.lastOverSeaInvoiceNum" #lastOverSeaInvoiceNum="ngModel"
+                    id="lastOverSeaInvoiceNum" class="me-2" (keypress)="utilityService.numberOnly($event)">
+                  <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+                    <button kendoButton title="Update" (click)="updatePrefixAndNumber()"><i
+                        class="icon-save"></i></button>
+                    <button kendoButton title="Edit" (click)="closeOverSeaInvoiceNum()">
+                      <i class=" icon-delete"></i></button>
+                  </kendo-buttongroup>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="lInv_num">
+                Local Memo :
+                <div *ngIf="!changeLocalMemoNumflag">
+                  <span
+                    class="ms-1 me-2">{{accountingConfigData.localMemoPrefix}}-{{accountingConfigData.lastLocalMemoNum}}</span>
+                  <div class="btnGroup_gap">
+                    <button kendoButton title="change" (click)="changeLocalMemoNum()"><i
+                        class=" icon-edit"></i></button>
+                  </div>
+                </div>
+                <div *ngIf="changeLocalMemoNumflag" class="form-data">
+                  <input type="text" name="localMemoPrefix" [(ngModel)]="accountingConfigData.localMemoPrefix"
+                    #localMemoPrefix="ngModel" id="localMemoPrefix" class="me-2">
+                  <input type="text" name="lastLocalMemoNum" [(ngModel)]="accountingConfigData.lastLocalMemoNum"
+                    #lastLocalMemoNum="ngModel" id="lastLocalMemoNum" class="me-2"
+                    (keypress)="utilityService.numberOnly($event)">
+                  <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+                    <button kendoButton title="Update" (click)="updatePrefixAndNumber()"><i
+                        class="icon-save"></i></button>
+                    <button kendoButton title="Edit" (click)="closeLocalMemoNum()">
+                      <i class=" icon-delete"></i></button>
+                  </kendo-buttongroup>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="lInv_num">
+                Export Memo :
+                <div *ngIf="!changeExportMemoNumflag">
+                  <span
+                    class="ms-1 me-2">{{accountingConfigData.exportMemoPrefix}}-{{accountingConfigData.lastExportMemoNum}}</span>
+                  <div class="btnGroup_gap">
+                    <button kendoButton title="change" (click)="changeExportMemoNum()"><i
+                        class=" icon-edit"></i></button>
+                  </div>
+                </div>
+                <div *ngIf="changeExportMemoNumflag" class="form-data">
+                  <input type="text" name="exportMemoPrefix" [(ngModel)]="accountingConfigData.exportMemoPrefix"
+                    #exportMemoPrefix="ngModel" id="exportMemoPrefix" class="me-2">
+                  <input type="text" name="lastExportMemoNum" [(ngModel)]="accountingConfigData.lastExportMemoNum"
+                    #lastExportMemoNum="ngModel" id="lastExportMemoNum" class="me-2"
+                    (keypress)="utilityService.numberOnly($event)">
+                  <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+                    <button kendoButton title="Update" (click)="updatePrefixAndNumber()"><i
+                        class="icon-save"></i></button>
+                    <button kendoButton title="Edit" (click)="closeExportMemoNum()">
+                      <i class=" icon-delete"></i></button>
+                  </kendo-buttongroup>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="lInv_num">
+                Proforma Invoice :
+                <div *ngIf="!changeProformaInvoiceNumflag">
+                  <span
+                    class="ms-1 me-2">{{accountingConfigData.proformaInvoicePrefix}}-{{accountingConfigData.lastProformaInvoiceNum}}</span>
+                  <div class="btnGroup_gap">
+                    <button kendoButton title="change" (click)="changeProformaInvoiceNum()"><i
+                        class=" icon-edit"></i></button>
+                  </div>
+                </div>
+                <div *ngIf="changeProformaInvoiceNumflag" class="form-data">
+                  <input type="text" name="proformaInvoicePrefix"
+                    [(ngModel)]="accountingConfigData.proformaInvoicePrefix" #proformaInvoicePrefix="ngModel"
+                    id="proformaInvoicePrefix" class="me-2">
+                  <input type="text" name="lastProformaInvoiceNum"
+                    [(ngModel)]="accountingConfigData.lastProformaInvoiceNum" #lastProformaInvoiceNum="ngModel"
+                    id="lastProformaInvoiceNum" class="me-2" (keypress)="utilityService.numberOnly($event)">
+                  <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+                    <button kendoButton title="Update" (click)="updatePrefixAndNumber()"><i
+                        class="icon-save"></i></button>
+                    <button kendoButton title="Edit" (click)="closeProformaInvoiceNum()">
+                      <i class=" icon-delete"></i></button>
+                  </kendo-buttongroup>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="lInv_num">
+                Certificate Memo :
+                <div *ngIf="!changeCertificateNumflag">
+                  <span
+                    class="ms-1 me-2">{{accountingConfigData.certificatePrefix}}-{{accountingConfigData.lastCertificateNum}}</span>
+                  <div class="btnGroup_gap">
+                    <button kendoButton title="change" (click)="changeCertificateFlag()"><i
+                        class=" icon-edit"></i></button>
+                  </div>
+                </div>
+                <div *ngIf="changeCertificateNumflag" class="form-data">
+                  <input type="text" name="certificatePrefix" [(ngModel)]="accountingConfigData.certificatePrefix"
+                    #certificatePrefix="ngModel" id="certificatePrefix" class="me-2">
+                  <input type="text" name="lastCertificateNum" [(ngModel)]="accountingConfigData.lastCertificateNum"
+                    #lastCertificateNum="ngModel" id="lastCertificateNum" class="me-2"
+                    (keypress)="utilityService.numberOnly($event)">
+                  <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+                    <button kendoButton title="Update" (click)="updatePrefixAndNumber()"><i
+                        class="icon-save"></i></button>
+                    <button kendoButton title="Edit" (click)="closeCertificateFlag()">
+                      <i class=" icon-delete"></i></button>
+                  </kendo-buttongroup>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="lInv_num">
+                Add Amount Limit :
+                <div *ngIf="!addAmountLimitFlag">
+                  <span class="ms-1 me-2">{{accountingConfigData.addAmountLimit}}</span>
+                  <div class="btnGroup_gap">
+                    <button kendoButton title="change" (click)="changeAddAmountLimitFlag()"><i
+                        class=" icon-edit"></i></button>
+                  </div>
+                </div>
+                <div *ngIf="addAmountLimitFlag" class="form-data">
+                  <input type="text" name="addAmountLimit" [(ngModel)]="accountingConfigData.addAmountLimit"
+                    #addAmountLimit="ngModel" id="addAmountLimit" class="me-2"
+                    (keypress)="utilityService.floatOnly($event)">
+                  <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+                    <button kendoButton title="Update" (click)="updatePrefixAndNumber()"><i
+                        class="icon-save"></i></button>
+                    <button kendoButton title="Edit" (click)="closeAddAmountLimitFlag()">
+                      <i class=" icon-delete"></i></button>
+                  </kendo-buttongroup>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="lInv_num">
+                Export Memo Return :
+                <div *ngIf="!changeExportMemoReturnNumflag">
+                  <span
+                    class="ms-1 me-2">{{accountingConfigData.exportMemoReturnPrefix}}-{{accountingConfigData.lastExportMemoReturnNum}}</span>
+                  <div class="btnGroup_gap">
+                    <button kendoButton title="change" (click)="changeExportMemoReturnNum()"><i
+                        class=" icon-edit"></i></button>
+                  </div>
+                </div>
+                <div *ngIf="changeExportMemoReturnNumflag" class="form-data">
+                  <input type="text" name="exportMemoReturnPrefix"
+                    [(ngModel)]="accountingConfigData.exportMemoReturnPrefix" #exportMemoReturnPrefix="ngModel"
+                    id="exportMemoReturnPrefix" class="me-2">
+                  <input type="text" name="lastExportMemoReturnNum"
+                    [(ngModel)]="accountingConfigData.lastExportMemoReturnNum" #lastExportMemoReturnNum="ngModel"
+                    id="lastExportMemoReturnNum" class="me-2" (keypress)="utilityService.numberOnly($event)">
+                  <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+                    <button kendoButton title="Update" (click)="updatePrefixAndNumber()"><i
+                        class="icon-save"></i></button>
+                    <button kendoButton title="Edit" (click)="closeExportMemoReturnNum()">
+                      <i class=" icon-delete"></i></button>
+                  </kendo-buttongroup>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="lInv_num">
+                Local & Overseas Same Number
+                <kendo-switch class="k-widget k-switch-off" #isSameNumber="ngModel" name="isSameNumber"
+                  id="m-isSameNumber" [(ngModel)]="accountingConfigData.isSameNumber">
+                </kendo-switch>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- DEFAULT LEDGER SECTION -->
+      <div class="pro_block">
+        <div class="p_info bg_box">
+          <h6 class="p_title ">
+            <span>Default Ledger</span>
+          </h6>
+          <ul class="defaultLeader">
+            <li class="p-0">
+              <h6 class="p_title sm m-0">{{groupTitle[3]}}</h6>
+            </li>
+            <li>
+              <!-- SALES LEDGER -->
+              <span>Set Default Ledger :</span>
+              <div class="form-data">
+                <kendo-combobox [data]="listLedgerItems" [textField]="'text'" [valueField]="'value'"
+                  [valuePrimitive]="true" [(ngModel)]="selectedSalesLedger" [kendoDropDownFilter]="filterSettings"
+                  [popupSettings]="{width: 'auto'}" (valueChange)="onLedgerChanges($event, transactionType.Sales)"
+                  name="defaultledger" style="width:200px !important;">
+                </kendo-combobox>
+              </div>
+            </li>
+            <li class="p-0">
+              <h6 class="p_title sm m-0">{{groupTitle[4]}}</h6>
+            </li>
+            <li>
+              <!-- PURCHASE LEDGER -->
+              <span>Set Default Ledger :</span>
+              <div class="form-data">
+                <kendo-combobox [data]="listLedgerItems" [textField]="'text'" [valueField]="'value'"
+                  [valuePrimitive]="true" [kendoDropDownFilter]="filterSettings" [(ngModel)]="selectedPurcahseLedger"
+                  [popupSettings]="{width: 'auto'}" (valueChange)="onLedgerChanges($event, transactionType.Purchase)"
+                  name="defaultledger" style="width:200px !important;">
+                </kendo-combobox>
+              </div>
+            </li>
+            <li class="p-0">
+              <h6 class="p_title sm m-0">{{groupTitle[7]}}</h6>
+            </li>
+            <li>
+              <!-- CASH HANDLING LEDGER -->
+              <span>Set Default Ledger :</span>
+              <div class="form-data">
+                <kendo-combobox [data]="listLedgerItems" [textField]="'text'" [valueField]="'value'"
+                  [valuePrimitive]="true" [(ngModel)]="selectedCashHandlingLedger" [kendoDropDownFilter]="filterSettings"
+                  [popupSettings]="{width: 'auto'}" (valueChange)="onLedgerChanges($event, ledgerType.CashHandling)"
+                  name="defaultledger" style="width:200px !important;">
+                </kendo-combobox>
+              </div>
+            </li>
+            <li class="p-0">
+              <h6 class="p_title sm m-0">{{groupTitle[8]}}</h6>
+            </li>
+            <li>
+              <!-- INTEREST LEDGER -->
+              <span>Set Default Ledger :</span>
+              <div class="form-data">
+                <kendo-combobox [data]="listLedgerItems" [textField]="'text'" [valueField]="'value'"
+                  [valuePrimitive]="true" [(ngModel)]="selectedInterestLedger" [kendoDropDownFilter]="filterSettings"
+                  [popupSettings]="{width: 'auto'}" (valueChange)="onLedgerChanges($event, ledgerType.Interest)"
+                  name="defaultledger" style="width:200px !important;">
+                </kendo-combobox>
+              </div>
+            </li>
+            <li class="p-0">
+              <h6 class="p_title sm m-0">{{groupTitle[9]}}</h6>
+            </li>
+            <li>
+              <!-- EXPENSE LEDGER -->
+              <span>Set Default Ledger :</span>
+              <div class="form-data">
+                <kendo-combobox [data]="listLedgerItems" [textField]="'text'" [valueField]="'value'"
+                  [valuePrimitive]="true" [(ngModel)]="selectedExpenceLedger" [kendoDropDownFilter]="filterSettings"
+                  [popupSettings]="{width: 'auto'}" (valueChange)="onLedgerChanges($event, ledgerType.Expense)"
+                  name="defaultledger" style="width:200px !important;">
+                </kendo-combobox>
+              </div>
+            </li>
+            <li class="p-0">
+              <h6 class="p_title sm m-0">{{groupTitle[10]}}</h6>
+            </li>
+            <li>
+              <!-- LOGISTIC CHARGE LEDGER -->
+              <span>Set Default Ledger :</span>
+              <div class="form-data">
+                <kendo-combobox [data]="listLedgerItems" [textField]="'text'" [valueField]="'value'"
+                  [valuePrimitive]="true" [(ngModel)]="selectedLogisticChargeLedger" [kendoDropDownFilter]="filterSettings"
+                  [popupSettings]="{width: 'auto'}" (valueChange)="onLedgerChanges($event, ledgerType.LogisticCharge)"
+                  name="defaultledger" style="width:200px !important;">
+                </kendo-combobox>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pro_block">
+        <div class="p_info">
+          <h6 class="p_title border_none">
+            <span>{{groupTitle[0]}}</span>
+            <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+              <button kendoButton title="Add {{groupTitle[0]}}" (click)="openAddPopup(accConfigEnum.LedgerGroup)"><i
+                  class="icon-add"></i></button>
+            </kendo-buttongroup>
+          </h6>
+          <div class="config_box">
+            <div class="c_height">
+              <ul class="config_ul">
+                <li *ngFor="let ledgerGroup of accountingConfigData?.ledgerGroups">
+                  <div class="c_label">
+                    <b>Name&nbsp;:&nbsp;</b>{{ledgerGroup.name}}
+                    <b>Nature&nbsp;:&nbsp;</b>{{ledgerGroup.nature}}
+                    <b>Parent&nbsp;:&nbsp;</b>{{ledgerGroup.parent == null ? ' - ' : ledgerGroup.parent}}
+                    <!-- <span class="me-2 title"><b>Bank Ledger :</b>
+                      {{ledgerGroup.isBankLedger}}</span> -->
+                  </div>
+                  <div class="btnGroup ms-auto" *ngIf="ledgerGroup.parent != null">
+                    <button class="btn"><i title="Edit" class="icon-edit"
+                        (click)="editExisting(accConfigEnum.LedgerGroup, ledgerGroup);"></i></button>
+                    <button class="btn"><i title="Delete" class="icon-trash"
+                        (click)="deleteExisting(accConfigEnum.LedgerGroup, ledgerGroup);"></i></button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pro_block">
+        <div class="p_info">
+          <h6 class="p_title border_none">
+            <span>{{groupTitle[1]}}</span>
+            <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+              <button kendoButton title="Add {{groupTitle[1]}}" (click)="openAddPopup(accConfigEnum.TaxType)"><i
+                  class="icon-add"></i></button>
+            </kendo-buttongroup>
+          </h6>
+          <div class="config_box">
+            <div class="c_height">
+              <ul class="config_ul">
+                <li *ngFor="let taxType of accountingConfigData?.taxTypes">
+                  <div class="c_label">
+                    <b>Name&nbsp;:&nbsp;</b>{{taxType.name}}
+                    <b>Rate&nbsp;:&nbsp;</b>{{taxType.rate}}
+                    <b>Type&nbsp;:&nbsp;</b>{{taxType?.type}}
+                    <b>Rouding&nbsp;:&nbsp;</b>{{taxType.isRounding}}
+                  </div>
+                  <div class="btnGroup ms-auto">
+                    <button class="btn"><i title="Edit" class="icon-edit"
+                        (click)="editExisting(accConfigEnum.TaxType, taxType);"></i></button>
+                    <button class="btn"><i title="Delete" class="icon-trash"
+                        (click)="deleteExisting(accConfigEnum.TaxType, taxType);"></i></button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pro_block">
+        <div class="p_info">
+          <h6 class="p_title border_none">
+            <span>{{groupTitle[2]}}</span>
+            <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+              <button kendoButton title="Add {{groupTitle[2]}}" (click)="openAddPopup(accConfigEnum.TransactGroup)"><i
+                  class="icon-add"></i></button>
+            </kendo-buttongroup>
+          </h6>
+          <div class="config_box">
+            <div class="c_height">
+              <ul class="config_ul">
+                <li *ngFor="let transactItemGroup of accountingConfigData?.transactItemGroups">
+                  <div class="c_label">
+                    <b>Name&nbsp;:&nbsp;</b>{{transactItemGroup.name}}
+                    <b>Parent&nbsp;:&nbsp;</b>{{transactItemGroup.parent}}
+                    <b>Description&nbsp;:&nbsp;</b>{{transactItemGroup.description}}
+                  </div>
+                  <div class="btnGroup ms-auto">
+                    <button class="btn"><i title="Edit" class="icon-edit"
+                        (click)="editExisting(accConfigEnum.TransactGroup, transactItemGroup);"></i></button>
+                    <button class="btn"><i title="Delete" class="icon-trash"
+                        (click)="deleteExisting(accConfigEnum.TransactGroup, transactItemGroup);"></i></button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pro_block">
+        <div class="p_info">
+          <h6 class="p_title border_none">
+            <span>{{groupTitle[5]}}</span>
+            <!-- <div class="btnGroup ms-auto">
+            <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+              <button kendoButton title="Add {{groupTitle[5]}}" (click)="openAddPopup(accConfigEnum.CurrencyType)"><i
+                  class="icon-add"></i></button>
+            </kendo-buttongroup>
+          </div> -->
+          </h6>
+          <div class="config_box">
+            <div class="c_height">
+              <ul class="config_ul">
+                <li *ngFor="let currencyConfig of accountingConfigData?.currencyConfigs">
+                  <div class="c_label">
+                    <b>
+                      <!-- <b>From :</b> -->
+                      {{currencyConfig.fromCurrency}}</b>
+                    <!-- <span class="me-2 title"><b>Rate :</b>
+                          {{currencyConfig.fromRate}}</span> -->
+                    <b>To&nbsp;:&nbsp;</b>{{currencyConfig.toCurrency}}
+                    <b>Rate&nbsp;:&nbsp;</b>{{currencyConfig.toRate}}
+                  </div>
+                  <div class="btnGroup ms-auto">
+                    <button class="btn"><i title="Edit" class="icon-edit"
+                        (click)="editExisting(accConfigEnum.CurrencyType, currencyConfig);"></i></button>
+                    <!-- <button class="btn"><i title="Delete" class="icon-trash"
+                            (click)="deleteExisting(accConfigEnum.CurrencyType, currencyConfig);"></i></button> -->
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pro_block">
+        <div class="pro_info">
+          <h6 class="p_title border_none">
+            <span>{{groupTitle[6]}}</span>
+            <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+              <button kendoButton title="Add {{groupTitle[6]}}" (click)="openAddPopup(accConfigEnum.MemoProcess)"><i
+                  class="icon-add"></i></button>
+            </kendo-buttongroup>
+          </h6>
+          <div class="config_box">
+            <div class="c_height">
+              <ul class="config_ul">
+                <li *ngFor="let memoProcess of accountingConfigData?.memoProcess">
+                  <div class="c_label">{{memoProcess}}</div>
+                  <div class="btnGroup ms-auto">
+                    <button class="btn"><i title="Delete" class="icon-trash"
+                        (click)="deleteExisting(accConfigEnum.MemoProcess, memoProcess);"></i>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pro_block">
+        <div class="p_info">
+          <h6 class="p_title border_none">
+            <span>Operational Managers to Notify</span>
+            <div class="d-flex ms-auto">
+              <form name="form" #opmangerForm="ngForm" novalidate>
+                <div class="form-data mul-select" style="max-width:200px;">
+                  <kendo-multiselect name="status" class="customselect" [data]="listOPManagers"
+                    [(ngModel)]="filterOpManager" [textField]="'name'" [valueField]="'value'" [valuePrimitive]="true"
+                    [popupSettings]="{width: 'auto'}" [autoClose]="false" [kendoMultiSelectSummaryTag]="0"
+                    [kendoDropDownFilter]="filterSettings"
+                    (open)="filterOpManagerChk = onOpenDropdown(listOPManagers,filterOpManagerChk, filterOpManager)"
+                    (valueChange)="onMultiSelectChange(listOPManagers, filterOpManager)" [disabled]="!isViewButtons">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="dropdown-header single k-widget k-header">
+                        <span class="temp-single">Select Op Manager</span>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.text}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(selectedOpManagerNames, true)">
+                        {{utilityService.getCommaSapratedString(selectedOpManagerNames)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+              </form>
+              <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons" class="ms-2">
+                <button kendoButton title="Add Or Update Operational Manager"
+                  (click)="addOrUpdateOpManagerNotifyList()"><i class="icon-add"></i></button>
+              </kendo-buttongroup>
+            </div>
+          </h6>
+          <div class="config_box">
+            <div class="c_height">
+              <ul class="config_ul">
+                <li *ngFor="let opManager of accountingConfigData?.opManagerList">
+                  <div class="c_label">{{opManager.name}}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pro_block">
+        <div class="p_info bg_box ">
+          <h6 class="p_title pb_5">
+            <span>Email Config</span>
+            <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap" *ngIf="isViewButtons">
+              <button type="button" kendoButton title="Edit Configuration" [disabled]="isMarketingEditable"
+                (click)="enableMarketingSaveChanges()"><i class="icon-edit"></i></button>
+              <button type="button" kendoButton title="Save Configuration"
+                [disabled]="!isMarketingEditable || !emailConfigForm.valid" (click)="updateMarketingEmail()"><i
+                  class="icon-save"></i></button>
+              <button type="button" kendoButton title="Disabled Configuration" [disabled]="!isMarketingEditable"
+                (click)="disabledMarketingConfiguration()"><i class="icon-delete"></i></button>
+            </kendo-buttongroup>
+          </h6>
+          <form name="emailConfigForm" #emailConfigForm="ngForm" novalidate>
+            <ul class="pro_data ch_pass column2">
+              <li>
+                <div class="form-data mb-0">
+                  <label>Email</label>
+                  <input type="email" name="Email" [(ngModel)]="accountingConfigData.marketingEmail.emailId"
+                    #email="ngModel" id="email" required placeholder="Enter Email" [disabled]="!isMarketingEditable"
+                    [ngClass]="{'active':isMarketingEditable}">
+                </div>
+              </li>
+              <li>
+                <div class="form-data mb-0">
+                  <label>Password</label>
+                  <div class="position-relative">
+                    <input type="password" name="password" [(ngModel)]="accountingConfigData.marketingEmail.password"
+                      #password id="password" required placeholder="Enter Password" [disabled]="!isMarketingEditable"
+                      [ngClass]="{'active':isMarketingEditable}">
+                    <span (click)="password.type=password.type=='password' ? 'text' : 'password'">
+                      <i class="icon-view"></i>
+                    </span>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="form-data mb-0">
+                  <label>Host</label>
+                  <input type="text" name="host" [(ngModel)]="accountingConfigData.marketingEmail.host" #host="ngModel"
+                    id="host" required placeholder="Enter Host" [disabled]="!isMarketingEditable"
+                    [ngClass]="{'active':isMarketingEditable}">
+                </div>
+              </li>
+              <li>
+                <div class="form-data mb-0">
+                  <label>Port</label>
+                  <input type="text" name="port" [(ngModel)]="accountingConfigData.marketingEmail.port" #port="ngModel"
+                    id="port" required placeholder="Enter Port" [disabled]="!isMarketingEditable"
+                    (keypress)="utilityService.numberOnly($event)" [ngClass]="{'active':isMarketingEditable}">
+                </div>
+              </li>
+            </ul>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add  Modal Start -->
+<div class="modal c-modal addemp msconfig rorgan" tabindex="-1" role="dialog" *ngIf="showPopup">
+  <form name="form" #labDNormForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <!-- Ledger Group -->
+      <div class="modal-content" *ngIf="isAddLedgerGroup">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <span *ngIf="!editMode">Add</span>
+            <span *ngIf="editMode">Edit</span>
+            &nbsp;
+            {{groupTitle[0]}}
+          </h5>
+          <button type="button" class="close" (click)="closePopup(accConfigEnum.LedgerGroup)" data-dismiss="modal"
+            aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form add-ledger">
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">Name <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" autocomplete="off" name="name" [(ngModel)]="ledgerGroupObj.name" #name="ngModel"
+                      id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Nature <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listLedgerGroupNatureItems" [valuePrimitive]="true" name="nature"
+                      [(ngModel)]="ledgerGroupObj.nature" #nature="ngModel" required
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Parent <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listParentLedgerGroupItems" [valuePrimitive]="true" name="parent"
+                      [kendoDropDownFilter]="filterSettings" [(ngModel)]="ledgerGroupObj.parent" #parent="ngModel"
+                      required (valueChange)="checkISBank()">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data"></div>
+                  <div class="permission_body--item">
+                    <input type="checkbox" name="isActive" [(ngModel)]="ledgerGroupObj.isBankLedger" class="k-checkbox"
+                      [disabled]="IsBankParent">
+                    <label class="k-checkbox-label" for="">Is Bank Ledger</label>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class=" modal-footer ">
+          <button class="btn btn-primary" *ngIf="!editMode" [disabled]="!labDNormForm.valid"
+            (click)="addNew(accConfigEnum.LedgerGroup, true, labDNormForm)"><i class="icon-add"></i>New</button>
+          <button class="btn btn-primary" *ngIf="!editMode" [disabled]="!labDNormForm.valid"
+            (click)="addNew(accConfigEnum.LedgerGroup, false, labDNormForm)"><i class="icon-save"></i>Save</button>
+          <button class="btn btn-primary" *ngIf="editMode" [disabled]="!labDNormForm.valid"
+            (click)="updateSelected(accConfigEnum.LedgerGroup, ledgerGroupObj, labDNormForm)"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+
+      <!-- Text Type -->
+      <div class="modal-content" *ngIf="isAddTaxType">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <span *ngIf="!editMode">Add</span>
+            <span *ngIf="editMode">Edit</span>
+            &nbsp;
+            {{groupTitle[1]}}
+          </h5>
+          <button type="button" class="close" (click)="closePopup(accConfigEnum.TaxType)" data-dismiss="modal"
+            aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form add-ledger">
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">Name <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="name" [(ngModel)]="taxTypeObj.name" #name="ngModel" id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Rate <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="number" name="rate" [(ngModel)]="taxTypeObj.rate" #rate="ngModel" id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Type <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="type" [(ngModel)]="taxTypeObj.type" #type="ngModel" id="" required>
+                  </div>
+                  <div class="form-data"></div>
+                  <div class="permission_body--item">
+                    <input type="checkbox" name="isActive" [(ngModel)]="taxTypeObj.isRounding" class="k-checkbox">
+                    <label class="k-checkbox-label" for="">Is Rouding</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class=" modal-footer ">
+          <button class="btn btn-primary" *ngIf="!editMode" [disabled]="!labDNormForm.valid"
+            (click)="addNew(accConfigEnum.TaxType, true, labDNormForm)"><i class="icon-add"></i>New</button>
+          <button class="btn btn-primary" *ngIf="!editMode" [disabled]="!labDNormForm.valid"
+            (click)="addNew(accConfigEnum.TaxType, false, labDNormForm)"><i class="icon-save"></i>Save</button>
+          <button class="btn btn-primary" *ngIf="editMode" [disabled]="!labDNormForm.valid"
+            (click)="updateSelected(accConfigEnum.TaxType, taxTypeObj, labDNormForm)"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+
+      <!-- Transact Item Groups -->
+      <div class="modal-content" *ngIf="isAddTransactionItemGroup">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <span *ngIf="!editMode">Add</span>
+            <span *ngIf="editMode">Edit</span>
+            &nbsp;
+            {{groupTitle[2]}}
+          </h5>
+          <button type="button" class="close" (click)="closePopup(accConfigEnum.TransactGroup)" data-dismiss="modal"
+            aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-shape">
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">Name <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="name" [(ngModel)]="transactItemGroupObj.name" #name="ngModel" id=""
+                      required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Parent <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="Parent" [(ngModel)]="transactItemGroupObj.parent" #displayName="ngModel"
+                      id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Description <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="Description" [(ngModel)]="transactItemGroupObj.description"
+                      #displayName="ngModel" id="" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class=" modal-footer ">
+          <button class="btn btn-primary" *ngIf="!editMode" [disabled]="!labDNormForm.valid"
+            (click)="addNew(accConfigEnum.TransactGroup, true, labDNormForm)"><i class="icon-add"></i>New</button>
+          <button class="btn btn-primary" *ngIf="!editMode" [disabled]="!labDNormForm.valid"
+            (click)="addNew(accConfigEnum.TransactGroup, false, labDNormForm);"><i class="icon-save"></i>Save</button>
+          <button class="btn btn-primary" *ngIf="editMode" [disabled]="!labDNormForm.valid"
+            (click)="updateSelected(accConfigEnum.TransactGroup, transactItemGroupObj, labDNormForm)"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+
+      <!-- Currency Item Groups -->
+      <div class="modal-content" *ngIf="isAddCurrencyConfig">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <span *ngIf="!editMode">Add</span>
+            <span *ngIf="editMode">Edit</span>
+            &nbsp;
+            {{groupTitle[5]}}
+          </h5>
+          <button type="button" class="close" (click)="closePopup(accConfigEnum.CurrencyType)" data-dismiss="modal"
+            aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-shape">
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">From Currency <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': from.invalid && (from.dirty || from.touched)}">
+                    <kendo-combobox class="w-auto" [data]="listCurrencyConfig" [valuePrimitive]="true" textField="text"
+                      valueField="value" name="from" [(ngModel)]="currencyConfigObj.fromCurrency" #from="ngModel"
+                      required [disabled]="editMode" [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Rate <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="number" name="fromRate" [(ngModel)]="currencyConfigObj.fromRate" #fromRate="ngModel"
+                      id="" required disabled="true">
+                  </div>
+                  <div class="form-data">
+                    <label for="">To Currency <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': to.invalid && (to.dirty || to.touched)}">
+                    <kendo-combobox class="w-auto" [data]="listCurrencyConfig" [valuePrimitive]="true" textField="text"
+                      valueField="value" name="to" [(ngModel)]="currencyConfigObj.toCurrency" #to="ngModel" required
+                      [disabled]="editMode" [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Rate <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="number" name="toRate" [(ngModel)]="currencyConfigObj.toRate" #toRate="ngModel" id=""
+                      required>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class=" modal-footer ">
+          <button class="btn btn-primary" *ngIf="!editMode" [disabled]="!labDNormForm.valid"
+            (click)="addNew(accConfigEnum.CurrencyType, true, labDNormForm)"><i class="icon-add"></i>New</button>
+          <button class="btn btn-primary" *ngIf="!editMode" [disabled]="!labDNormForm.valid"
+            (click)="addNew(accConfigEnum.CurrencyType, false, labDNormForm)"><i class="icon-save"></i>Save</button>
+          <button class="btn btn-primary" *ngIf="editMode" [disabled]="!labDNormForm.valid"
+            (click)="updateSelected(accConfigEnum.CurrencyType, currencyConfigObj, labDNormForm)"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+
+      <!-- Memo Process -->
+      <div class="modal-content" *ngIf="isAddMemoProcess">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <span>Add</span>
+            &nbsp;
+            {{groupTitle[6]}}
+          </h5>
+          <button type="button" class="close" (click)="closePopup(accConfigEnum.MemoProcess)" data-dismiss="modal"
+            aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-shape">
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">Process Name <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="mPName" [(ngModel)]="memoProcessName" #mPName="ngModel" id="" required />
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class=" modal-footer ">
+          <button class="btn btn-primary" [disabled]="!labDNormForm.valid"
+            (click)="addNew(accConfigEnum.MemoProcess, true, labDNormForm)"><i class="icon-add"></i>New</button>
+          <button class="btn btn-primary" [disabled]="!labDNormForm.valid"
+            (click)="addNew(accConfigEnum.MemoProcess, false, labDNormForm)"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+
+    </div>
+    <div (document:keydown.esc)="closePopupOnEsc()"></div>
+  </form>
+</div>
+
+<div kendoDialogContainer></div>
+
+<!-- Add Modal End -->

@@ -1,0 +1,13 @@
+.grid-summury .k-grid .grid-summary-dtl {
+    margin: 6px 0 6px 0;
+}
+
+.grid-summury .k-grid .grid-summary-dtl span {
+    font-weight: normal;
+    font-style: italic;
+}
+
+.grid-summury .k-grid .grid-summary-dtl label {
+    font-weight: 600;
+    padding: 0px 5px;
+}

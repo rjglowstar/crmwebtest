@@ -1,0 +1,976 @@
+<title>Grading</title>
+<section class="grade-wrap">
+  <div class="content_wrap">
+    <div class="breadcrumb">
+      <div class="breadcrumb-left">
+        <ul>
+          <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+          <li class="breadcrumb-item active" aria-current="page">Grading</li>
+        </ul>
+      </div>
+    </div>
+    <div class="e-left w-100">
+      <div class="">
+        <div class="gradWrap">
+          <div class="company content_box">
+            <div class="searchcomp">
+              <div>
+                <input type="text" name="searchPacket" #searchStoneId [(ngModel)]="searchPacket"
+                  placeholder="Search Stone" class="form-control m-0" autocomplete="off">
+              </div>
+              <div class="search-stone">
+                <div *ngFor="let pct of navGradingMasterItem; let i=index" (click)="navChange(i)" id="{{pct.name}}"
+                  class="{{pct.name}} element" [ngClass]="{ 'active': pct.isChecked}">
+                  <span>{{pct.name}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="company-info content_box" style="overflow: hidden;">
+            <div class="grade-info h-100">
+              <kendo-splitter orientation="vertical" style="border: 0;height:100%;">
+                <kendo-splitter-pane [collapsible]="true" style="flex-basis: 252px;">
+                  <div class="grade-chart">
+                    <div class="chart-height">
+                      <!-- #region Chart -->
+                      <kendo-chart>
+                        <kendo-chart-title></kendo-chart-title>
+                        <kendo-chart-area background="#fff"></kendo-chart-area>
+                        <kendo-chart-category-axis>
+                          <kendo-chart-category-axis-item [categories]="netAmountsRapVer">
+                          </kendo-chart-category-axis-item>
+                        </kendo-chart-category-axis>
+                        <kendo-chart-axis-defaults [majorGridLines]="{ visible: false }"></kendo-chart-axis-defaults>
+                        <kendo-chart-tooltip format="n2"></kendo-chart-tooltip>
+                        <kendo-chart-value-axis>
+                          <kendo-chart-value-axis-item [title]="{ text: 'Net Amount' }">
+                          </kendo-chart-value-axis-item>
+                        </kendo-chart-value-axis>
+                        <kendo-chart-series>
+                          <kendo-chart-series-item type="column" [color]="chartColor" [data]="netAmounts">
+                            <kendo-chart-series-item-labels [format]="'n2'">
+                            </kendo-chart-series-item-labels>
+                          </kendo-chart-series-item>
+                        </kendo-chart-series>
+                      </kendo-chart>
+                      <!-- #endregion -->
+                    </div>
+                  </div>
+                </kendo-splitter-pane>
+                <kendo-splitter-pane class="grade-grid">
+                  <div class="summarybar mt-1">
+                    <div class="summary-left">
+                      <ul>
+                        <li><span>Packets:</span>0</li>
+                      </ul>
+                    </div>
+                    <div class="summary-right pe-0">
+                      <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons" class="btnGroup_gap">
+                        <button kendoButton title="Plan Maker" (click)="openPlanmakerDialog()"><i
+                            class="icon-Calculater"></i></button>
+                        <button [disabled]="this.mySelection.length != 1" kendoButton
+                          (click)="openEditInventoryDialog()">
+                          <i class="icon-edit"></i>
+                        </button>
+                        <button kendoButton title="Grid Configuration" (click)="openGridConfigDialog()">
+                          <i class="icon-gridconfig"></i>
+                        </button>
+                      </kendo-buttongroup>
+                    </div>
+                  </div>
+                  <!-- #region Grid -->
+                  <div class="grid-wrap">
+                    <ng-container *ngIf="!gridView">
+                      <div class="k-grouping-header k-grouping-header-flex">
+                        <div class="k-indicator-container">
+                          <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                          </kendo-skeleton>
+                        </div>
+                      </div>
+                      <table *ngIf="fields && fields.length > 0" class="w-100">
+                        <th *ngFor="let field of fields">{{field.propertyName}}</th>
+                        <tr *ngFor="let field of skeletonArray">
+                          <td *ngFor="let field of fields">
+                            <kendo-skeleton shape="text" animation="wave" [width]="75" [height]="40">
+                            </kendo-skeleton>
+                          </td>
+                        </tr>
+                      </table>
+                    </ng-container>
+                    <kendo-grid #invGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+                      [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+                      (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+                      [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)"
+                      [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+                      <ng-container *ngIf="fields && fields.length > 0">
+                        <ng-container *ngIf="fields && fields.length > 0">
+                          <ng-container *ngFor="let field of fields">
+                            <ng-container *ngIf="field.isSelected">
+                              <kendo-grid-column [width]="field.width" [field]="field.propertyName"
+                                [title]="field.title">
+                                <ng-template *ngIf="isShowCheckBoxAll && field.title == 'Checkbox'"
+                                  kendoGridHeaderTemplate>
+                                  <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox"
+                                    id="headerCheckbox" />
+                                  <label class="k-checkbox-label" for="headerCheckbox"></label>
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                  *ngIf="field.title == 'Checkbox'">
+                                  <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                                    id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                                  <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                  </label>
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem
+                                  *ngIf="field.propertyName=='createdDate'">
+                                  {{dataItem.createdDate | date:"dd/MM/yyyy hh:mm"}}
+                                </ng-template>
+                              </kendo-grid-column>
+                            </ng-container>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </kendo-grid>
+                  </div>
+                  <!-- #endregion -->
+                </kendo-splitter-pane>
+              </kendo-splitter>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-container *ngIf="isplanmaker">
+  <app-planmaker (toggle)="isplanmaker=$event"></app-planmaker>
+</ng-container>
+
+<!-- #region Edit Inventory Modal -->
+<div class="modal c-modal addemp edinv rorgan" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isEditInventory">
+  <form name="inventoryForm" #inventoryForm="ngForm" novalidate>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="icon-edit"></i>Edit Grading</h5>
+          <button type="button" class="close" (click)="closeEditInventoryDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <kendo-tabstrip>
+            <kendo-tabstrip-tab title="Basic Details" [selected]="true">
+              <ng-template kendoTabContent>
+                <div class="i-form ed-basic-01">
+                  <div class="flex">
+                    <div class="i-title">
+                      <h6 class="title"><i class="icon-info"></i> Stone Info</h6>
+                    </div>
+                  </div>
+                  <div class="grid">
+                    <div class="form-data" *ngIf="inclusionConfig.ktoS">
+                      <label for="">Stone Id<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" *ngIf="inclusionConfig.ktoS"
+                      [ngClass]="{ 'error': stoneId.invalid && (stoneId.dirty || stoneId.touched) }">
+                      <input type="text" name="stoneId" disabled [(ngModel)]="gradingMasterObj.stoneId"
+                        #stoneId="ngModel" id="stoneId" required autocomplete="off">
+                    </div>
+                    <div class="form-data" *ngIf="inclusionConfig.ktoS">
+                      <label>Kapan<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" *ngIf="inclusionConfig.ktoS"
+                      [ngClass]="{ 'error': kapan.invalid && (kapan.dirty || kapan.touched) }">
+                      <input type="text" name="kapan" disabled [(ngModel)]="gradingMasterObj.kapan" #kapan="ngModel"
+                        id="kapan" required autocomplete="off">
+                    </div>
+                    <div class="form-data" *ngIf="inclusionConfig.ktoS">
+                      <label>Article<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" *ngIf="inclusionConfig.ktoS"
+                      [ngClass]="{ 'error': article.invalid && (article.dirty || article.touched) }">
+                      <input type="text" name="article" [(ngModel)]="gradingMasterObj.article" #article="ngModel"
+                        id="article" required (keyup)="checkRequiredFields()" autocomplete="off">
+                    </div>
+                    <div class="form-data">
+                      <label>Grade</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" name="grade" disabled [(ngModel)]="gradingMasterObj.grade" #grade="ngModel"
+                        id="grade" autocomplete="off">
+                    </div>
+                    <div class="form-data">
+                      <label>Shape<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" [ngClass]="{ 'error': shape.invalid && (shape.dirty || shape.touched) }">
+                      <kendo-dropdownlist [data]="allTheShapes" [valuePrimitive]="true" textField="name"
+                        valueField="name" name="shape" [(ngModel)]="gradingMasterObj.shape" #shape="ngModel" id="shape"
+                        required (keyup)="checkRequiredFields();" (valueChange)="GetPricing()">
+                      </kendo-dropdownlist>
+                    </div>
+                    <div class="form-data">
+                      <label>Weight<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" [ngClass]="{ 'error': weight.invalid && (weight.dirty || weight.touched) }">
+                      <input type="text" name="weight" autocomplete="off" maxlength="10"
+                        (keypress)="utilityService.floatOnly($event)" [(ngModel)]="gradingMasterObj.weight"
+                        #weight="ngModel" id="weight" required (keyup)="checkRequiredFields();GetPricing()"
+                        (valueChange)="GetPricing()">
+                    </div>
+                    <div class="form-data">
+                      <label>Color<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" [ngClass]="{ 'error': color.invalid && (color.dirty || color.touched) }">
+                      <kendo-dropdownlist [data]="allColors" [valuePrimitive]="true" textField="name" valueField="name"
+                        name="color" [(ngModel)]="gradingMasterObj.color" #color="ngModel" id="color" required
+                        (keyup)="checkRequiredFields()" (valueChange)="GetPricing()">
+                      </kendo-dropdownlist>
+                    </div>
+                    <div class="form-data">
+                      <label>Clarity<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': clarity.invalid && (clarity.dirty || clarity.touched) }">
+                      <kendo-dropdownlist [data]="allClarities" [valuePrimitive]="true" textField="name"
+                        valueField="name" name="clarity" [(ngModel)]="gradingMasterObj.clarity" #clarity="ngModel"
+                        id="clarity" required (keyup)="checkRequiredFields()" (valueChange)="GetPricing()">
+                      </kendo-dropdownlist>
+                    </div>
+                    <div class="form-data">
+                      <label>Cut<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" [ngClass]="{ 'error': cut.invalid && (cut.dirty || cut.touched) }">
+                      <kendo-dropdownlist [data]="allTheCPS" [valuePrimitive]="true" textField="name" valueField="name"
+                        name="cut" [(ngModel)]="gradingMasterObj.cut" #cut="ngModel" id="cut" required
+                        (keyup)="checkRequiredFields()" (valueChange)="GetPricing()">
+                      </kendo-dropdownlist>
+                    </div>
+                    <div class="form-data">
+                      <label>Polish<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" [ngClass]="{ 'error': polish.invalid && (polish.dirty || polish.touched) }">
+                      <kendo-dropdownlist [data]="allTheCPS" [valuePrimitive]="true" textField="name" valueField="name"
+                        name="polish" [(ngModel)]="gradingMasterObj.polish" #polish="ngModel" id="polish" required
+                        (keyup)="checkRequiredFields();" (valueChange)="GetPricing()">
+                      </kendo-dropdownlist>
+                    </div>
+                    <div class="form-data">
+                      <label>Symmentry<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': symmetry.invalid && (symmetry.dirty || symmetry.touched) }">
+                      <kendo-dropdownlist [data]="allTheCPS" [valuePrimitive]="true" textField="name" valueField="name"
+                        name="symmetry" [(ngModel)]="gradingMasterObj.symmetry" #symmetry="ngModel" id="symmetry"
+                        required (keyup)="checkRequiredFields();" (valueChange)="GetPricing()">
+                      </kendo-dropdownlist>
+                    </div>
+                    <div class="form-data">
+                      <label>Fluorescence<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': fluorescence.invalid && (fluorescence.dirty || fluorescence.touched) }">
+                      <kendo-dropdownlist [data]="allTheFluorescences" [valuePrimitive]="true" textField="name"
+                        valueField="name" name="fluorescence" [(ngModel)]="gradingMasterObj.fluorescence"
+                        #fluorescence="ngModel" id="fluorescence" required (keyup)="checkRequiredFields()"
+                        (valueChange)="GetPricing()">
+                      </kendo-dropdownlist>
+                    </div>
+                    <div class="form-data">
+                      <label>Lab</label>
+                    </div>
+                    <div class="form-data">
+                      <kendo-dropdownlist [data]="allTheLab" [valuePrimitive]="true" textField="name" valueField="name"
+                        name="lab" [(ngModel)]="gradingMasterObj.lab" #lab="ngModel" id="lab">
+                      </kendo-dropdownlist>
+                    </div>
+                  </div>
+                </div>
+                <div class="i-form ed-basic-02">
+                  <div class="flex">
+                    <div class="i-title">
+                      <h6 class="title"><i class="icon-pricing"></i> Pricing</h6>
+                    </div>
+                  </div>
+                  <div class="grid">
+
+                    <div class="form-data">
+                      <label>Rap<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" [ngClass]="{ 'error': rap.invalid && (rap.dirty || rap.touched) }">
+                      <input type="text" name="rap" [(ngModel)]="gradingMasterObj.basePrice.rap" #rap="ngModel" id="rap"
+                        autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event);" required
+                        (keyup)="checkRequiredFields()" (keyup)="calculateRapPricing();">
+                    </div>
+
+                    <div class="form-data">
+                      <label>Discount<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': discount.invalid && (discount.dirty || discount.touched) }">
+                      <input type="text" name="discount" [(ngModel)]="gradingMasterObj.basePrice.discount"
+                        #discount="ngModel" id="discount" autocomplete="off" maxlength="10"
+                        (keypress)="utilityService.discountfloat($event);" required (keyup)="checkRequiredFields()"
+                        (keyup)="calculateRapPricing();">
+                    </div>
+
+                    <div class="form-data">
+                      <label>Per Carat<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': perCarat.invalid && (perCarat.dirty || perCarat.touched) }">
+                      <input type="text" name="perCarat" [(ngModel)]="gradingMasterObj.basePrice.perCarat"
+                        #perCarat="ngModel" disabled="true" id="perCarat" autocomplete="off" maxlength="10"
+                        (keypress)="utilityService.floatOnly($event)" required (keyup)="checkRequiredFields()">
+                    </div>
+
+                    <div class="form-data">
+                      <label>Net Amount<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': netAmount.invalid && (netAmount.dirty || netAmount.touched) }">
+                      <input type="text" name="netAmount" [(ngModel)]="gradingMasterObj.basePrice.netAmount"
+                        #netAmount="ngModel" disabled="true" id="netAmount" autocomplete="off" maxlength="10"
+                        (keypress)="utilityService.floatOnly($event)" required (keyup)="checkRequiredFields()">
+                    </div>
+
+                  </div>
+                </div>
+                <div class="i-form ed-basic-04">
+                  <div class="flex">
+                    <div class="i-title">
+                      <h6 class="title"><i class="icon-other"></i> Others</h6>
+                    </div>
+                  </div>
+                  <div class="grid">
+                    <div class="form-data">
+                      <label>Comments</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" name="comments" [(ngModel)]="gradingMasterObj.comments" #comments="ngModel"
+                        id="comments">
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-tabstrip-tab>
+
+
+            <kendo-tabstrip-tab title="Inclusion">
+              <ng-template kendoTabContent>
+                <div class="i-form ed-inclusion-01">
+                  <div class="flex">
+                    <div class="i-title">
+                      <h6 class="title"><i class="icon-bgm"></i> BGM</h6>
+                    </div>
+                  </div>
+
+                  <div class="grid">
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.shade && (inclusionData  | typefilter:'Shade').length > 0">
+                      <label>Shade<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.shade && (inclusionData  | typefilter:'Shade').length > 0"
+                      [ngClass]="{ 'error': shade.invalid && (shade.dirty || shade.touched) }">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'Shade'" [valuePrimitive]="true"
+                        textField="name" valueField="name" name="shade" [(ngModel)]="gradingMasterObj.inclusion.shade"
+                        #shade="ngModel" id="shade" required (valueChange)="checkRequiredFields()">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.brown && (inclusionData  | typefilter:'Brown').length > 0">
+                      <label for="">Brown<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.brown && (inclusionData  | typefilter:'Brown').length > 0"
+                      [ngClass]="{ 'error': brown.invalid && (brown.dirty || brown.touched) }">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'Brown'" [valuePrimitive]="true"
+                        textField="name" valueField="name" name="brown" [(ngModel)]="gradingMasterObj.inclusion.brown"
+                        #brown="ngModel" id="brown" required (valueChange)="checkRequiredFields()">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.green && (inclusionData  | typefilter:'Green').length > 0">
+                      <label>Green<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.green && (inclusionData  | typefilter:'Green').length > 0"
+                      [ngClass]="{ 'error': green.invalid && (green.dirty || green.touched) }">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'Green'" [valuePrimitive]="true"
+                        textField="name" valueField="name" name="green" [(ngModel)]="gradingMasterObj.inclusion.green"
+                        #green="ngModel" id="green" required (valueChange)="checkRequiredFields()">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.milky && (inclusionData  | typefilter:'Milky').length > 0">
+                      <label>Milky<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.milky && (inclusionData  | typefilter:'Milky').length > 0"
+                      [ngClass]="{ 'error': milky.invalid && (milky.dirty || milky.touched) }">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'Milky'" [valuePrimitive]="true"
+                        textField="name" valueField="name" name="milky" [(ngModel)]="gradingMasterObj.inclusion.milky"
+                        #milky="ngModel" id="milky" required (valueChange)="checkRequiredFields()">
+                      </kendo-dropdownlist>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="i-form ed-inclusion-02">
+                  <div class="flex">
+                    <div class="i-title">
+                      <h6 class="title"><i class="icon-blackwhite"></i> Black & White</h6>
+                    </div>
+                  </div>
+                  <div class="grid">
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.sideBlack && (inclusionData  | typefilter:'SideBlack').length > 0">
+                      <label>Side Black</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.sideBlack && (inclusionData  | typefilter:'SideBlack').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'SideBlack'" [valuePrimitive]="true"
+                        textField="name" valueField="name" name="sideBlack"
+                        [(ngModel)]="gradingMasterObj.inclusion.sideBlack" #sideBlack="ngModel" id="sideBlack">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.centerSideBlack && (inclusionData  | typefilter:'centerSideBlack').length > 0">
+                      <label>Center SideBlack</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.centerSideBlack && (inclusionData  | typefilter:'centerSideBlack').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'centerSideBlack'" [valuePrimitive]="true"
+                        textField="name" valueField="name" name="centerSideBlack"
+                        [(ngModel)]="gradingMasterObj.inclusion.centerSideBlack" #centerSideBlack="ngModel"
+                        id="centerSideBlack">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.centerBlack && (inclusionData  | typefilter:'centerBlack').length > 0">
+                      <label>Center Black</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.centerBlack && (inclusionData  | typefilter:'centerBlack').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'centerBlack'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="centerBlack"
+                        [(ngModel)]="gradingMasterObj.inclusion.centerBlack" #centerBlack="ngModel" id="centerBlack">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.sideWhite && (inclusionData  | typefilter:'sideWhite').length > 0">
+                      <label>Side White</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.sideWhite && (inclusionData  | typefilter:'sideWhite').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'sideWhite'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="sideWhite"
+                        [(ngModel)]="gradingMasterObj.inclusion.sideWhite" #sideWhite="ngModel" id="sideWhite">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.centerSideWhite && (inclusionData  | typefilter:'centerSideWhite').length > 0">
+                      <label>Center SideWhite</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.centerSideWhite && (inclusionData  | typefilter:'centerSideWhite').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'centerSideWhite'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="centerSideWhite"
+                        [(ngModel)]="gradingMasterObj.inclusion.centerSideWhite" #centerSideWhite="ngModel"
+                        id="centerSideWhite">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.centerWhite && (inclusionData  | typefilter:'centerWhite').length > 0">
+                      <label>Center White</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.centerWhite && (inclusionData  | typefilter:'centerWhite').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'centerWhite'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="centerWhite"
+                        [(ngModel)]="gradingMasterObj.inclusion.centerWhite" #centerWhite="ngModel" id="centerWhite">
+                      </kendo-dropdownlist>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="i-form ed-inclusion-03">
+                  <div class="flex">
+                    <div class="i-title">
+                      <h6 class="title"><i class="icon-openinclusion"></i> Open Inclusion</h6>
+                    </div>
+                  </div>
+                  <div class="grid">
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.openCrown && (inclusionData  | typefilter:'openCrown').length > 0">
+                      <label>Open Crown</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.openCrown && (inclusionData  | typefilter:'openCrown').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'openCrown'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="openCrown"
+                        [(ngModel)]="gradingMasterObj.inclusion.openCrown" #openCrown="ngModel" id="openCrown">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.openTable && (inclusionData  | typefilter:'openTable').length > 0">
+                      <label>Open Table</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.openTable && (inclusionData  | typefilter:'openTable').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'openTable'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="openTable"
+                        [(ngModel)]="gradingMasterObj.inclusion.openTable" #openTable="ngModel" id="openTable">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.openPavilion && (inclusionData  | typefilter:'openPavilion').length > 0">
+                      <label>Open Pavilion</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.openPavilion && (inclusionData  | typefilter:'openPavilion').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'openPavilion'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="openPavilion"
+                        [(ngModel)]="gradingMasterObj.inclusion.openPavilion" #openPavilion="ngModel" id="openPavilion">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.openGirdle && (inclusionData  | typefilter:'openGirdle').length > 0">
+                      <label>Open Girdle</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.openGirdle && (inclusionData  | typefilter:'openGirdle').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'openGirdle'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="openGirdle"
+                        [(ngModel)]="gradingMasterObj.inclusion.openGirdle" #openGirdle="ngModel" id="openGirdle">
+                      </kendo-dropdownlist>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="i-form ed-inclusion-04">
+                  <div class="flex">
+                    <div class="i-title">
+                      <h6 class="title"><i class="icon-extrafacet"></i> Extra Facet</h6>
+                    </div>
+                  </div>
+                  <div class="grid">
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.efoc && (inclusionData  | typefilter:'efoc').length > 0">
+                      <label>EFOC</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.efoc && (inclusionData  | typefilter:'efoc').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'efoc'" textField="name" valueField="name"
+                        [valuePrimitive]="true" name="efoc" [(ngModel)]="gradingMasterObj.inclusion.efoc"
+                        #efoc="ngModel" id="efoc">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.efot && (inclusionData  | typefilter:'efot').length > 0">
+                      <label>EFOT</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.efot && (inclusionData  | typefilter:'efot').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'efot'" textField="name" valueField="name"
+                        [valuePrimitive]="true" name="efot" [(ngModel)]="gradingMasterObj.inclusion.efot"
+                        #efot="ngModel" id="efot">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.efog && (inclusionData  | typefilter:'efog').length > 0">
+                      <label>EFOG</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.efog && (inclusionData  | typefilter:'efog').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'efog'" textField="name" valueField="name"
+                        [valuePrimitive]="true" name="efog" [(ngModel)]="gradingMasterObj.inclusion.efog"
+                        #efog="ngModel" id="efog">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.efop && (inclusionData  | typefilter:'efop').length > 0">
+                      <label>EFOP</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.efop && (inclusionData  | typefilter:'efop').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'efop'" textField="name" valueField="name"
+                        [valuePrimitive]="true" name="efop" [(ngModel)]="gradingMasterObj.inclusion.efop"
+                        #efop="ngModel" id="efop">
+                      </kendo-dropdownlist>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="i-form ed-inclusion-05">
+                  <div class="flex">
+                    <div class="i-title">
+                      <h6 class="title"><i class="icon-natural"></i> Natural</h6>
+                    </div>
+                  </div>
+                  <div class="grid">
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.naturalOnTable && (inclusionData  | typefilter:'naturalOnTable').length > 0">
+                      <label>Natural On Table</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.naturalOnTable && (inclusionData  | typefilter:'naturalOnTable').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalOnTable'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="naturalOnTable"
+                        [(ngModel)]="gradingMasterObj.inclusion.naturalOnTable" #naturalOnTable="ngModel"
+                        id="naturalOnTable">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.naturalOnGirdle && (inclusionData  | typefilter:'naturalOnGirdle').length > 0">
+                      <label>Natural On Girdle</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.naturalOnGirdle && (inclusionData  | typefilter:'naturalOnGirdle').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalOnGirdle'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="naturalOnGirdle"
+                        [(ngModel)]="gradingMasterObj.inclusion.naturalOnGirdle" #naturalOnGirdle="ngModel"
+                        id="naturalOnGirdle">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.naturalOnCrown && (inclusionData  | typefilter:'naturalOnCrown').length > 0">
+                      <label>Natural On Crown</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.naturalOnCrown && (inclusionData  | typefilter:'naturalOnCrown').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalOnCrown'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="naturalOnCrown"
+                        [(ngModel)]="gradingMasterObj.inclusion.naturalOnCrown" #naturalOnCrown="ngModel"
+                        id="naturalOnCrown">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.naturalOnPavilion && (inclusionData  | typefilter:'naturalOnPavilion').length > 0">
+                      <label>Natural On Pavillion</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.naturalOnPavilion && (inclusionData  | typefilter:'naturalOnPavilion').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalonpavilion'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="naturalOnPavillion"
+                        [(ngModel)]="gradingMasterObj.inclusion.naturalOnPavillion" #naturalOnPavillion="ngModel"
+                        id="naturalOnPavillion">
+                      </kendo-dropdownlist>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="i-form ed-inclusion-06">
+                  <div class="flex">
+                    <div class="i-title">
+                      <h6 class="title"><i class="icon-other"></i> Other</h6>
+                    </div>
+                  </div>
+                  <div class="grid">
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.girdleCondition && (inclusionData  | typefilter:'girdleCondition').length > 0">
+                      <label>Girdle Condition</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.girdleCondition && (inclusionData  | typefilter:'girdleCondition').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'GirdleCondition'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="girdleCondition"
+                        [(ngModel)]="gradingMasterObj.inclusion.girdleCondition" #girdleCondition="ngModel"
+                        id="girdleCondition">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.culet && (inclusionData  | typefilter:'culet').length > 0">
+                      <label>Culet</label>
+                    </div>
+                    <div class="form-data" *ngIf="inclusionConfig.culet">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'culet'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="culet"
+                        [(ngModel)]="gradingMasterObj.inclusion.culet" #culet="ngModel" id="culet">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.hna && (inclusionData  | typefilter:'hna').length > 0">
+                      <label>HNA<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" *ngIf="inclusionConfig.hna && (inclusionData  | typefilter:'hna').length > 0"
+                      [ngClass]="{ 'error': hna.invalid && (hna.dirty || hna.touched) }">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'hna'" textField="name" valueField="name"
+                        [valuePrimitive]="true" name="hna" [(ngModel)]="gradingMasterObj.inclusion.hna" #hna="ngModel"
+                        id="hna" required (valueChange)="checkRequiredFields()">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.eyeClean && (inclusionData  | typefilter:'eyeClean').length > 0">
+                      <label>Eye Clean<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.eyeClean && (inclusionData  | typefilter:'eyeClean').length > 0"
+                      [ngClass]="{ 'error': eyeClean.invalid && (eyeClean.dirty || eyeClean.touched) }">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'eyeClean'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="eyeClean" required
+                        (valueChange)="checkRequiredFields()" [(ngModel)]="gradingMasterObj.inclusion.eyeClean"
+                        #eyeClean="ngModel" id="eyeClean">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.ktoS && (inclusionData  | typefilter:'ktoS').length > 0">
+                      <label>KToS</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.ktoS && (inclusionData  | typefilter:'ktoS').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'ktos'" textField="name" valueField="name"
+                        [valuePrimitive]="true" name="ktos" [(ngModel)]="gradingMasterObj.inclusion.ktoS"
+                        #ktos="ngModel" id="ktos">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.flColor && (inclusionData  | typefilter:'flColor').length > 0">
+                      <label>FLColor</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.flColor && (inclusionData  | typefilter:'flColor').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'FLColor'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="fLColor"
+                        [(ngModel)]="gradingMasterObj.inclusion.flColor" #fLColor="ngModel" id="fLColor">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data">
+                      <label>Graining</label>
+                    </div>
+                    <div class="form-data">
+                      <kendo-dropdownlist [data]="listGrainingItems" [valuePrimitive]="true" name="graining"
+                        [(ngModel)]="gradingMasterObj.inclusion.graining" #graining="ngModel" id="graining">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.redSpot && (inclusionData  | typefilter:'redSpot').length > 0">
+                      <label>RedSpot</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.redSpot && (inclusionData  | typefilter:'redSpot').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'redSpot'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="redSpot"
+                        [(ngModel)]="gradingMasterObj.inclusion.redSpot" #redSpot="ngModel" id="redSpot">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.luster && (inclusionData  | typefilter:'luster').length > 0">
+                      <label>Luster</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.luster && (inclusionData  | typefilter:'luster').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'luster'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="luster"
+                        [(ngModel)]="gradingMasterObj.inclusion.luster" #luster="ngModel" id="luster">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data">
+                      <label>Certi Comment</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" name="certiComment" [(ngModel)]="gradingMasterObj.inclusion.certiComment"
+                        #certiComment="ngModel" id="certiComment">
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.bowtie && (inclusionData  | typefilter:'bowtie').length > 0">
+                      <label>Bowtie</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="inclusionConfig.bowtie && (inclusionData  | typefilter:'bowtie').length > 0">
+                      <kendo-dropdownlist [data]="inclusionData  | typefilter:'bowtie'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="bowtie"
+                        [(ngModel)]="gradingMasterObj.inclusion.bowtie" #bowtie="ngModel" id="bowtie">
+                      </kendo-dropdownlist>
+                    </div>
+
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-tabstrip-tab>
+
+            <kendo-tabstrip-tab title="Measurement">
+              <ng-template kendoTabContent>
+                <div class="i-form ed-measurement">
+                  <div class="grid">
+
+                    <div class="form-data" *ngIf="measurementConfig.depth">
+                      <label for="">Depth<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" *ngIf="measurementConfig.depth"
+                      [ngClass]="{ 'error': depth.invalid && (depth.dirty || depth.touched) }">
+                      <input type="text" name="depth" [(ngModel)]="gradingMasterObj.measurement.depth" #depth="ngModel"
+                        id="depth" autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)"
+                        required (keyup)="checkRequiredFields()">
+                    </div>
+
+                    <div class="form-data" *ngIf="measurementConfig.table">
+                      <label>Table<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" *ngIf="measurementConfig.table"
+                      [ngClass]="{ 'error': table.invalid && (table.dirty || table.touched) }">
+                      <input type="text" name="table" [(ngModel)]="gradingMasterObj.measurement.table" #table="ngModel"
+                        autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="table"
+                        required (keyup)="checkRequiredFields()">
+                    </div>
+
+                    <div class="form-data" *ngIf="measurementConfig.length">
+                      <label>Length<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" *ngIf="measurementConfig.length"
+                      [ngClass]="{ 'error': length.invalid && (length.dirty || length.touched) }">
+                      <input type="text" name="length" [(ngModel)]="gradingMasterObj.measurement.length"
+                        #length="ngModel" autocomplete="off" maxlength="10"
+                        (keypress)="utilityService.floatOnly($event)" id="length" required
+                        (keyup)="checkRequiredFields()">
+                    </div>
+
+                    <div class="form-data" *ngIf="measurementConfig.height">
+                      <label>Height<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" *ngIf="measurementConfig.height"
+                      [ngClass]="{ 'error': height.invalid && (height.dirty || height.touched) }">
+                      <input type="text" name="height" [(ngModel)]="gradingMasterObj.measurement.height"
+                        #height="ngModel" autocomplete="off" maxlength="10"
+                        (keypress)="utilityService.floatOnly($event)" id="width" required
+                        (keyup)="checkRequiredFields()">
+                    </div>
+
+                    <div class="form-data" *ngIf="measurementConfig.crownHeight">
+                      <label>CrHeight</label>
+                    </div>
+                    <div class="form-data" *ngIf="measurementConfig.crownHeight">
+                      <input type="text" name="crownHeight" [(ngModel)]="gradingMasterObj.measurement.crownHeight"
+                        #crownHeight="ngModel" autocomplete="off" maxlength="10"
+                        (keypress)="utilityService.floatOnly($event)" id="crownHeight">
+                    </div>
+
+                    <div class="form-data" *ngIf="measurementConfig.crownAngle">
+                      <label>CrAngle</label>
+                    </div>
+                    <div class="form-data" *ngIf="measurementConfig.crownAngle">
+                      <input type="text" name="crownAngle" [(ngModel)]="gradingMasterObj.measurement.crownAngle"
+                        #crownAngle="ngModel" autocomplete="off" maxlength="10"
+                        (keypress)="utilityService.floatOnly($event)" id="crownAngle">
+                    </div>
+
+                    <div class="form-data" *ngIf="measurementConfig.pavillionDepth">
+                      <label>PvlDepth</label>
+                    </div>
+                    <div class="form-data" *ngIf="measurementConfig.pavillionDepth">
+                      <input type="text" name="pavilionDepth" [(ngModel)]="gradingMasterObj.measurement.pavilionDepth"
+                        #pavilionDepth="ngModel" autocomplete="off" maxlength="10"
+                        (keypress)="utilityService.floatOnly($event)" id="pavilionDepth">
+                    </div>
+
+                    <div class="form-data" *ngIf="measurementConfig.pavillionAngle">
+                      <label>PvlAngle</label>
+                    </div>
+                    <div class="form-data" *ngIf="measurementConfig.pavillionAngle">
+                      <input type="text" name="pavilionAngle" [(ngModel)]="gradingMasterObj.measurement.pavilionAngle"
+                        #pavilionAngle="ngModel" autocomplete="off" maxlength="10"
+                        (keypress)="utilityService.floatOnly($event)" id="pavilionAngle">
+                    </div>
+
+                    <div class="form-data" *ngIf="measurementConfig.girdlePer">
+                      <label>GirdlePer</label>
+                    </div>
+                    <div class="form-data" *ngIf="measurementConfig.girdlePer">
+                      <input type="text" name="girdlePer" [(ngModel)]="gradingMasterObj.measurement.girdlePer"
+                        #girdlePer="ngModel" autocomplete="off" maxlength="10"
+                        (keypress)="utilityService.floatOnly($event)" id="girdlePer">
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                      <label>Min Girdle</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                      <kendo-dropdownlist [data]="measurementData  | typefilter:'girdle'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="mingirdle"
+                        [(ngModel)]="gradingMasterObj.measurement.minGirdle" #mingirdle="ngModel" id="mingirdle">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data"
+                      *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                      <label>Max Girdle</label>
+                    </div>
+                    <div class="form-data"
+                      *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                      <kendo-dropdownlist [data]="measurementData  | typefilter:'girdle'" textField="name"
+                        valueField="name" [valuePrimitive]="true" name="maxgirdle"
+                        [(ngModel)]="gradingMasterObj.measurement.maxGirdle" #maxgirdle="ngModel" id="maxgirdle">
+                      </kendo-dropdownlist>
+                    </div>
+
+                    <div class="form-data" *ngIf="measurementConfig.ratio">
+                      <label>Ratio<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" *ngIf="measurementConfig.ratio">
+                      <input type="text" name="ratio" [(ngModel)]="gradingMasterObj.measurement.ratio" #ratio="ngModel"
+                        autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="ratio"
+                        required (keyup)="checkRequiredFields()">
+                    </div>
+
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-tabstrip-tab>
+
+          </kendo-tabstrip>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="onInvSubmit(inventoryForm)" [disabled]="!isFormValid"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'Grading'" [gridName]="'GradingGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+
+<div (document:keydown.esc)="closeEditInventoryDialog()"></div>
+<div kendoDialogContainer></div>

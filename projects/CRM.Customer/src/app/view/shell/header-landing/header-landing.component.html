@@ -1,0 +1,257 @@
+<!-- Header Start -->
+<header>
+    <div #nav>
+        <nav class="header_wrap navbar navbar-expand-lg navbar-light">
+            <div class="headFlex_wrap">
+                <div class="d-none d-lg-block"></div>
+                <div class="c_logo text-center">
+                    <a class="navbar_brand d-inline-block" routerLink="/dashboard" href="javascript:void(0);">
+                        <img [src]="logoPath" class="img-fluid d-block mx-lg-auto" alt="brand-logo">
+                    </a>
+                </div>
+                <div class="nav_links ms-auto">
+                    <div class="nav_links res_topbar">
+                        <div class="lanSelect_box nav-link" (clickOutside)="onClickedOutside($event)">
+                            <span [ngClass]="{'active': language === 'en'}"
+                                (click)="changeLanguage(languageList[0])">Eng</span>
+                            <span class="d-block px-2">|</span>
+                            <span [ngClass]="{'active': language === 'ch'}"
+                                (click)="changeLanguage(languageList[1])">中国人</span>
+                        </div>
+                        <a class="nav-link btn_wrap" routerLinkActive="link-active" routerLink="/login">
+                            <i class="icon-login_new1"></i>{{'BasicText.Login'| translate}}</a>
+                    </div>
+
+                    <div class="siBar_togmenu d-block d-lg-none" [ngClass]="{'active': navMenuBar}"
+                        (click)="navpanelBar(true);">
+                        <div class="toggle_btn"></div>
+                        <!-- <i class="icon-menu_new" [ngClass]="{'close_menu': navMenuBar}" (click)="navpanelBar()"></i> -->
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Header End -->
+
+        <!-- Menubar start -->
+        <div class="navMenu_bar" [ngClass]="{'active': navMenuBar}">
+            <div class="close_menu" (click)="navpanelBar();">
+                <div class="toggle_btn"></div>
+            </div>
+            <ul class="nav_menu">
+                <li>
+                    <a class="nav-link" (click)="navpanelBar()" routerLinkActive="link-active"
+                        routerLink="/home">{{'HeaderLanding.Home'|translate}}</a>
+                </li>
+                <li>
+                    <a class="nav-link dropdown" (click)="navpanelBar()" routerLinkActive="link-active"
+                        routerLink="/aboutus">{{'HeaderLanding.Know Glowstar'|translate}} <i class="icon-right_new"></i>
+                    </a>
+                    <div class="nav_submenu">
+                        <ul>
+                            <li>
+                                <a routerLink="/aboutus" fragment="shineWith_Sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Shine Brighter with us'|translate}}</span>
+                                    <p>{{'HeaderLanding.Crafting Brilliance Illuminating Stories'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/aboutus" fragment="legCont_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Legacy Continues'|translate}}</span>
+                                    <p>{{'HeaderLanding.Shaping Tomorrow Brilliance Today'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/aboutus" fragment="missVision_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Mission-Vision'|translate}}</span>
+                                    <p>{{'HeaderLanding.Guided by Brilliance Driven by Purpose'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/aboutus" fragment="whyUs_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Why Us'|translate}}</span>
+                                    <p>{{'HeaderLanding.Unwavering Quality Unmatched Service'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/aboutus" fragment="certifi_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Certifications'|translate}}</span>
+                                    <p>{{'HeaderLanding.Where Quality is Certified'|translate}}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+                    <a class="nav-link dropdown" (click)="navpanelBar()" routerLinkActive="link-active"
+                        routerLink="/products">{{'HeaderLanding.Products'|translate}} <i class="icon-right_new"></i></a>
+                    <div class="nav_submenu">
+                        <ul>
+                            <li>
+                                <a routerLink="/products" fragment="certiDiam_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Certified Diamonds'|translate}}</span>
+                                    <p>{{'HeaderLanding.Authenticity You Can Trust'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/products" fragment="looseDiam_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Loose Diamonds'|translate}}</span>
+                                    <p>{{'HeaderLanding.Endless Possibilities Unmatched Quality'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/products" fragment="fancyDiam_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Fancy Shapes'|translate}}</span>
+                                    <p>{{'HeaderLanding.Crafting Uniqueness with Every Cut'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/products" fragment="fancyColor_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Fancy Colors'|translate}}</span>
+                                    <p>{{'HeaderLanding.A Spectrum of Elegance'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/products" fragment="matchPair_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Match pairs'|translate}}</span>
+                                    <p>{{'HeaderLanding.Perfect Harmony in Every Pair'|translate}}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+                    <a class="nav-link dropdown" (click)="navpanelBar()" routerLinkActive="link-active"
+                        routerLink="/sustainability">{{'HeaderLanding.Sustainability'|translate}} <i
+                            class="icon-right_new"></i></a>
+                    <div class="nav_submenu">
+                        <ul>
+                            <li>
+                                <a routerLink="/sustainability" fragment="journyDia_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Journey of Our Diamonds'|translate}}</span>
+                                    <p>{{'HeaderLanding.Traceability'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/sustainability" fragment="sourceInte_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Sourced with Integrity'|translate}}</span>
+                                    <p>{{'HeaderLanding.Traceability'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/sustainability" fragment="poliPerfe_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Polished to Perfection'|translate}}</span>
+                                    <p>{{'HeaderLanding.Traceability'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/sustainability" fragment="ethicalBusi_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Ethical Business Practices'|translate}}</span>
+                                    <p>{{'HeaderLanding.Upholding Ethical Standards in Every Facet'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/sustainability" fragment="certiEnsur_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Certifications'|translate}}</span>
+                                    <p>{{'HeaderLanding.Ensuring Quality and Authenticity'|translate}}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="nav-link dropdown" (click)="navpanelBar()" routerLinkActive="link-active"
+                        routerLink="/craftsmanship">{{'HeaderLanding.Craftmanship'|translate}} <i
+                            class="icon-right_new"></i></a>
+                    <div class="nav_submenu">
+                        <ul>
+                            <li>
+                                <a routerLink="/craftsmanship" fragment="ourManufac_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Our Manufacturing Facility'|translate}}</span>
+                                    <p>{{'HeaderLanding.Precision and Innovation in Every Cut'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/craftsmanship" fragment="expertSkill_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Expertise and Skilled Artisans'|translate}}</span>
+                                    <p>{{'HeaderLanding.Mastering the Art of Diamond Crafting'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/craftsmanship" fragment="manufacProce_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Manufacturing Process'|translate}}</span>
+                                    <p>{{'HeaderLanding.From Raw Stone to Radiant Gem'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/craftsmanship" fragment="theCarat_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.The Carat'|translate}}</span>
+                                    <p>{{'HeaderLanding.Defining Weight and Magnitude'|translate}}</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/craftsmanship" fragment="capabi_sec" class="nav_sublink">
+                                    <span>{{'HeaderLanding.Capabilities'|translate}}</span>
+                                    <p>{{'HeaderLanding.Elevating the Diamond Experience'|translate}}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <ng-container *ngIf="companyName == 'Glowstar'">
+                    <li>
+                        <a class="nav-link dropdown" (click)="navpanelBar()" routerLinkActive="link-active"
+                            routerLink="/csr">{{'HeaderLanding.CSR'|translate}} <i class="icon-right_new"></i></a>
+                        <div class="nav_submenu">
+                            <ul>
+                                <li>
+                                    <a routerLink="/csr" fragment="identify_sec" class="nav_sublink">
+                                        <span>{{'HeaderLanding.Identify'|translate}}</span>
+                                        <p>{{'HeaderLanding.Recognizing the gaps, Responding to the needs'|translate}}
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a routerLink="/csr" fragment="assess_sec" class="nav_sublink">
+                                        <span>{{'HeaderLanding.Assess'|translate}}</span>
+                                        <p>{{'HeaderLanding.Evaluating to plan precisely'|translate}}</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a routerLink="/csr" fragment="construct_sec" class="nav_sublink">
+                                        <span>{{'HeaderLanding.Construct'|translate}}</span>
+                                        <p>{{'HeaderLanding.Building foundations for brighter futures'|translate}}</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a routerLink="/csr" fragment="elevate_sec" class="nav_sublink">
+                                        <span>{{'HeaderLanding.Elevate'|translate}}</span>
+                                        <p>{{'HeaderLanding.Uplifting lives through education'|translate}}</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a routerLink="/csr" fragment="enrich_sec" class="nav_sublink">
+                                        <span>{{'HeaderLanding.Enrich'|translate}}</span>
+                                        <p>{{'HeaderLanding.Uplifting lives through education'|translate}}</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ng-container>
+                <li><a class="nav-link" (click)="navpanelBar()" routerLinkActive="link-active"
+                        routerLink="/eventnew">{{'HeaderLanding.Events'|translate}}</a>
+                </li>
+
+                <li><a class="nav-link" (click)="navpanelBar()" routerLinkActive="link-active"
+                        routerLink="/contactus">{{'HeaderLanding.Contact'|translate}}</a></li>
+
+                <li class="d-lg-none"><a class="nav-link" (click)="navpanelBar()" routerLinkActive="link-active"
+                        routerLink="/login">{{'HeaderLanding.Login'|translate}}</a></li>
+            </ul>
+        </div>
+        <!-- Menubar end -->
+    </div>
+</header>

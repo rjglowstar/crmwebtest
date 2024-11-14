@@ -1,0 +1,84 @@
+<!-- #region Repairing Modal -->
+<div class="modal c-modal addemp dialog-sm rorgan" tabindex="-1" role="dialog" data-keyboard="false"
+    data-backdrop="static">
+    <form name="repairingMultiForm" #repairingMultiForm="ngForm" novalidate>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="icon-add"></i>Repairing</h5>
+                    <button type="button" class="close" (click)="closeRepairingDialog()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="grid d-flex justify-content-between mb-2">
+                        <div class="form-data ps-ico">
+                            <input type="text" name="stoneIdSearch" [(ngModel)]="searchStoneId" #stoneIdSearch="ngModel"
+                                id="stoneIdSearch" autocomplete="off" placeholder="Search Stone Id">
+                            <span class="formicon">
+                                <button class="spanbutton"
+                                    [disabled]="((searchStoneId != null) ? (searchStoneId.length == 0) : true)"
+                                    (click)="getInventoryMeasurementData(true)"><i class="icon-search"></i></button>
+                            </span>
+                        </div>
+                        <div class="form-data">
+                            <button kendoButton title="Delete" kendoTooltip position="bottom"
+                                [disabled]="mySelection.length==0" (click)="deleteInvFromGrid()">
+                                <i class="icon-trash p-0"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="panelbar-wrapper ms-config">
+                        <div class="grid-wrap mt-2 grid-repairing">
+                            <kendo-grid [resizable]="true" [data]="gridViewInvList" [sortable]="true"
+                                [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)"
+                                (cellClick)="cellClickHandler($event)" (cellClose)="cellCloseHandler($event)"
+                                [sortable]="true" style="height:calc(100vh - 490px);" [selectable]="selectableSettings" class="mb-grid">
+                                <kendo-grid-checkbox-column [showSelectAll]="isShowCheckBoxAll" [width]="40">
+                                    <ng-template *ngIf="isShowCheckBoxAll" kendoGridHeaderTemplate>
+                                        <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox"
+                                            id="headerCheckbox" (selectAllChange)="selectAllInvList($event)" />
+                                        <label class="k-checkbox-label" for="headerCheckbox"></label>
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                        <input type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                                            [kendoGridSelectionCheckbox]="rowIndex"
+                                            (change)="selectData(dataItem, $event)" />
+                                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                        </label>
+                                    </ng-template>
+                                </kendo-grid-checkbox-column>
+                                <kendo-grid-column field="defectedStone.stoneId" title="Stone Id" [width]="100">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="defectedStone.shape" title="Shape" [width]="100">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="defectedStone.weight" title="Ct" [width]="70">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="defectedStone.cut" title="Cut" [width]="70">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="defectedStone.color" title="Color" [width]="50">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="defectedStone.clarity" title="Clarity" [width]="100">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="defectedStone.polish" title="Polish" [width]="60">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="defectedStone.symmetry" title="Symm" [width]="100">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="description" title="Description" [width]="100">
+                                </kendo-grid-column>
+                            </kendo-grid>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" (click)="onSubmit(repairingMultiForm)"
+                        [disabled]="!repairingMultiForm.valid"><i class="icon-save"></i>Save</button>
+                </div>
+            </div>
+        </div>
+
+        <div (document:keydown.esc)="closeRepairingDialog()"></div>
+    </form>
+</div>
+<!-- #endregion -->

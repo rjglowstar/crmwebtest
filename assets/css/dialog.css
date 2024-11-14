@@ -1,0 +1,292 @@
+.lg-dailog .modal-dialog {
+    max-width: 1050px !important;
+}
+
+@media(max-width:1065px) {
+    .lg-dailog .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.c-modal .modal-dialog {
+    max-width: 600px;
+    animation: 0.25s bdialog-flyin;
+}
+
+.c-modal .modal-dialog.mediaView {
+    max-width: 600px !important;
+}
+
+@media(max-width:615px) {
+    .c-modal .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.addemp .modal-dialog {
+    max-width: 650px;
+}
+
+@media(max-width:665px) {
+    .addemp .modal-dialog {
+        max-width: 95%;
+        margin: 0 auto;
+    }
+}
+
+.addemp.systemUser-modal .modal-dialog {
+    width: 100%;
+    max-width: 1024px;
+}
+
+@media(max-width:1039px) {
+    .addemp.systemUser-modal .modal-dialog {
+        max-width: 95%;
+        margin: 0 auto;
+    }
+}
+
+.addemp.ledgSumModal .modal-dialog {
+    width: 100%;
+    max-width: 1024px;
+}
+
+@media(max-width:1039px) {
+    .addemp.ledgSumModal .modal-dialog {
+        max-width: 95%;
+        margin: 0 auto;
+    }
+}
+
+.addemp.add-special-ml .modal-dialog {
+    max-width: 970px;
+}
+
+@media screen and (max-width:985px) {
+    .addemp.add-special-ml .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.employee-modal.rorgan .modal-dialog {
+    max-width: 1050px;
+}
+
+@media(max-width:1065px) {
+    .employee-modal.rorgan .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.editcell .modal-dialog {
+    max-width: 1050px;
+}
+
+@media(max-width:1065px) {
+    .editcell .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.edittable .modal-dialog {
+    max-width: 370px;
+    margin: auto;
+}
+
+@media(max-width:385px) {
+    .edittable .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.edinv .modal-dialog {
+    max-width: 950px;
+}
+
+@media(max-width:965px) {
+    .edinv .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.msconfig .modal-dialog {
+    max-width: 350px;
+}
+
+@media(max-width:365px) {
+    .msconfig .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.msconfig.cut .modal-dialog {
+    max-width: 600px;
+}
+
+@media(max-width:615px) {
+    .msconfig.cut .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.la-mas .modal-dialog {
+    max-width: 850px;
+}
+
+@media(max-width:865px) {
+    .la-mas .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.cut-modal.c-modal .modal-dialog {
+    max-width: 650px;
+}
+
+@media(max-width:615px) {
+    .cut-modal.c-modal .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.criteria .modal-dialog {
+    max-width: 1000px;
+}
+
+@media(max-width:1015px) {
+    .criteria .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.temp-show .modal-dialog {
+    max-width: 950px;
+}
+
+@media (max-width:965px) {
+    .temp-show .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.modal-dialog-centered {
+    height: calc(100vh - 1rem);
+}
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        margin: 1.75rem auto;
+    }
+
+    .modal-dialog-centered {
+        height: calc(100vh - 3.5rem);
+    }
+}
+
+.k-dialog-titlebar {
+    background-color: #303030;
+}
+
+.dialog-lg .modal-dialog {
+    max-width: 1350px;
+}
+
+@media (max-width:1365px) {
+    .dialog-lg .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.dialog-lg-l .modal-dialog {
+    max-width: 1250px;
+}
+
+@media (max-width:1265px) {
+    .dialog-lg-l .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.dialog-xs-l .modal-dialog {
+    max-width: 1000px;
+}
+
+@media (max-width:1015px) {
+    .dialog-xs-l .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.dialog-xsx-l .modal-dialog {
+    max-width: 1150px;
+}
+
+@media (max-width:1165px) {
+    .dialog-xsx-l .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.dialog-xsx-lg .modal-dialog {
+    max-width: 1550px;
+}
+
+@media (max-width:1565px) {
+    .dialog-xsx-lg .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.dialog-xs .modal-dialog {
+    max-width: 350px;
+}
+
+@media (max-width:365px) {
+    .dialog-xs .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.dialog-sm .modal-dialog {
+    max-width: 900px;
+}
+
+@media (max-width:915px) {
+    .dialog-sm .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.dialog-sm-ex .modal-dialog {
+    max-width: 900px;
+}
+
+@media (max-width:915px) {
+    .dialog-sm-ex .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.dialog-ex-xs .modal-dialog {
+    max-width: 500px;
+}
+
+@media (max-width:515px) {
+    .dialog-ex-xs .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.dialog-sm-l .modal-dialog {
+    max-width: 850px;
+}
+
+@media (max-width:865px) {
+    .dialog-sm-l .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.k-dialog-wrapper .k-dialog {
+    max-width: 95%;
+}

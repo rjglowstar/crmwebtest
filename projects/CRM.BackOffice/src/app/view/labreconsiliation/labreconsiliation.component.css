@@ -1,0 +1,236 @@
+.lab-rec-wrap .k-touch-action-auto {
+    position: relative;
+}
+
+.lab-rec-wrap .k-touch-action-auto:nth-child(2),
+.lab-rec-wrap .k-touch-action-auto:nth-child(3) {
+    overflow: initial;
+}
+
+.em-box {
+    position: absolute;
+    left: 30px;
+    background-color: #4d4d4d;
+    color: #fff;
+    padding: 5px;
+    z-index: 9999;
+    border: 1px solid #4d4d4d;
+    display: none;
+    margin-top: -22px;
+}
+
+.em-box::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: -8px;
+    border-top: 10px solid transparent;
+    border-right: 10px solid #4d4d4d;
+    border-bottom: 10px solid transparent;
+}
+
+.i-hov {
+    text-align: center;
+}
+
+.i-hov:hover .em-box {
+    display: block;
+}
+
+.i-hov span {
+    display: block;
+    padding: 2px 0;
+}
+
+.i-hov h6.title {
+    color: #fff;
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
+.upl-grid {
+    display: grid;
+    grid-template-columns: 52px 60px 18px 60px 28px auto;
+    grid-column-gap: 10px;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.whole-cell {
+    display: block;
+    margin: -30px;
+    margin-top: -26px;
+    padding: 20px 30px;
+    width: auto;
+}
+
+.whole-cell i {
+    position: relative;
+    z-index: 10;
+}
+
+.whole-cell i:hover~.arrow-tooltip {
+    display: block;
+}
+
+.c-con .grid {
+    grid-template-columns: 100% !important;
+}
+
+.lir-grid .k-grid {
+    max-height: 180px !important;
+    overflow: hidden;
+    overflow-y: auto;
+    height: auto;
+}
+
+.lrm-grid .k-grid {
+    max-height: calc(100vh - 568px) !important;
+    overflow: hidden;
+    overflow-y: auto;
+    height: auto;
+}
+
+.bg-text {
+    background: #efefef;
+    font-size: 13px;
+    padding: 5px;
+    text-align: center;
+    border: 1px dashed #000;
+}
+
+.recheck-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto auto;
+    justify-content: normal !important;
+    gap: 10px;
+}
+
+.grid-wrap td.of-initial {
+    overflow: initial !important;
+}
+
+.n-fil {
+    background: #f9f9f9;
+    background: #fff;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    transition: all 0.5s ease;
+    animation: slideTopDown 0.2s both linear;
+    position: relative;
+    z-index: 1;
+}
+
+.n-fil.resUser_fil {
+    position: absolute;
+    width: calc(100% - 20px);
+    box-shadow: 0px 20px 10px rgba(255, 255, 255, 20%);
+    padding: 4px 10px;
+    left: 10px;
+}
+
+.n-fil .k-multiselect .k-input-values {
+    padding: initial;
+}
+
+.n-fil .f-group {
+    display: flex;
+}
+
+.n-fil.active {
+    display: flex;
+}
+
+.n-fil-left {
+    flex: 0 0 60%;
+    max-width: 60%;
+}
+
+.n-fil-right {
+    flex: 0 0 40%;
+    max-width: 40%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.n-fil-right .f-group {
+    padding-right: 15px;
+}
+
+.n-fil .f-group {
+    margin: initial;
+}
+
+.n-fil li {
+    display: flex;
+    align-items: center;
+    padding-right: 15px;
+}
+
+.n-fil-right li {
+    padding: 5px 8px;
+    border-radius: 3px;
+}
+
+.n-fil-right li:hover {
+    background-color: #ececec;
+}
+
+.n-fil-left .f-group label {
+    width: initial;
+    padding-right: 10px;
+}
+
+.n-fil-left .f-group label.c-wid {
+    width: 190px;
+}
+
+.n-fil select {
+    border: 0;
+    background-color: transparent;
+    font-weight: 500;
+    font-size: 14px;
+    color: #000;
+}
+
+.n-fil-right li:active {
+    background-color: #4d4d4d;
+    color: #fff;
+}
+
+.n-fil-right li:active select {
+    color: #fff;
+}
+
+.n-fil-right li:active option {
+    color: #000;
+}
+
+.n-fil .f-group input {
+    background: #ffffff8c;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    height: 30px;
+}
+
+@media(max-width:400px) {
+    .upl-grid {
+        grid-template-columns: 50px minmax(70px, auto) 20px minmax(70px, auto);
+        grid-gap: 5px;
+    }
+
+    .upl-grid *:nth-child(5) {
+        text-align: right;
+        grid-column-end: 5;
+    }
+
+    .upl-grid *:nth-child(6) {
+        grid-row-start: 2;
+        grid-column-end: 3;
+    }
+}

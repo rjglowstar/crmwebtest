@@ -1,0 +1,47 @@
+.em-box {
+    position: absolute;
+    left: 30px;
+    background-color: #4d4d4d;
+    color: #fff;
+    padding: 5px;
+    z-index: 9999;
+    border: 1px solid #4d4d4d;
+    display: none;
+    margin-top: -22px;
+}
+
+.em-box::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: -8px;
+    border-top: 10px solid transparent;
+    border-right: 10px solid #4d4d4d;
+    border-bottom: 10px solid transparent;
+}
+
+.i-hov {
+    text-align: center;
+}
+
+.i-hov:hover .em-box {
+    display: block;
+}
+
+.i-hov span {
+    display: block;
+    padding: 2px 0;
+}
+
+.i-hov h6.title {
+    color: #fff;
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
+.inward-grid {
+    display: grid;
+    grid-template-columns: 66px 1fr 76px 1fr 82px 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+}

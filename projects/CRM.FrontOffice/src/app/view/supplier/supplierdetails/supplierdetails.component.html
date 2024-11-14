@@ -1,0 +1,55 @@
+<title>Supplier Details</title>
+<section class="edetails-wrap">
+  <div class="content_wrap">
+    <div class="e-left w-100">
+      <div class="breadcrumb bg">
+        <div class="breadcrumb-left">
+          <ul>
+            <li class="breadcrumb-item"><a routerLink="/"><i class="icon-home"></i>Home</a></li>
+            <li class="breadcrumb-item"><a routerLink="/supplier">Suppliers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Supplier Details</li>
+          </ul>
+        </div>
+        <div class="breadcrumb-right pe-0">
+          <kendo-buttongroup kendoTooltip position="bottom">
+            <button kendoButton routerLink="/supplier"><i class="icon-back"></i></button>
+          </kendo-buttongroup>
+        </div>
+      </div>
+      <div class="profile_wrap supDetails content_scroll">
+        <div class="pro_block">
+          <div class="p_info">
+            <h6 class="p_title">Supplier Information</h6>
+            <ul class="pro_data lft" *ngIf="supplierData">
+              <li>Name : <span>{{supplierData.name}}</span></li>
+              <li>Registration No : <span>{{supplierData.registrationNo}}</span></li>
+              <li>IncomeTax No : <span>{{supplierData.incomeTaxNo}}</span></li>
+              <li>Membership : <span>{{supplierData.membership}}</span></li>
+              <li>Website : <span>{{supplierData.website}}</span></li>
+              <li>Person : <span>{{supplierData.person}}</span></li>
+              <li>Country : <span>{{supplierData.address.country}}</span></li>
+              <li>Email : <span>{{supplierData.email}}</span></li>
+              <li>Mobile No : <span>{{supplierData.mobileNo | numberfilter:'mobile'}} </span></li>
+              <li>Phone : <span>{{supplierData.phoneNo |numberfilter:'phone'}}</span></li>
+              <li>Fax No: <span>{{supplierData.faxNo | numberfilter:'fax'}}</span></li>
+              <li>API Path : <span>{{supplierData.apiPath}}</span></li>
+              <li class="w_100">Address Note : <span>{{supplierData.address.line1}}</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="pro_block">
+          <div class="p_info tax_info">
+            <h6 class="p_title">Tax Information</h6>
+            <ul class="pro_data">
+              <li class="w_100">
+                Tax No : <span>{{supplierData.taxNo}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div kendoDialogContainer></div>

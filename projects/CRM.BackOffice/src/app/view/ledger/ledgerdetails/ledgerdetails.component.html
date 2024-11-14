@@ -1,0 +1,275 @@
+<title>Ledger Details</title>
+<div class="pdetails-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <div class="company-info">
+          <div class="breadcrumb bg">
+            <div class="breadcrumb-left">
+              <ul>
+                <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                <li class="breadcrumb-item" routerLink="/ledger">Ledger</li>
+                <li class="breadcrumb-item active" aria-current="page">Ledger Details</li>
+              </ul>
+            </div>
+            <div class="breadcrumb-right pe-0">
+              <kendo-buttongroup kendoTooltip position="bottom">
+                <button kendoButton routerLink="/ledger"><i class="icon-back"></i></button>
+              </kendo-buttongroup>
+            </div>
+          </div>
+          <div class="profile_wrap content_scroll leader_detail">
+            <div class="pro_block">
+              <div class="p_info">
+                <h6 class="p_title">Personal Information</h6>
+                <ul class="pro_data">
+                  <li class="w_100">Name : <span>{{ledgerData.name}}</span></li>
+                  <li>Code : <span>{{ledgerData.code}}</span></li>
+                  <li>Email : <span>{{ledgerData.email}}</span></li>
+                  <li>Mobile No. : <span>{{ledgerData.mobileNo}}</span></li>
+                  <li>Phone : <span>{{ledgerData.phoneNo}}</span></li>
+                  <li>Fax No : <span>{{ledgerData.faxNo}}</span></li>
+                </ul>
+              </div>
+              <div class="p_info">
+                <h6 class="p_title">Primary Address</h6>
+                <ul class="pro_data">
+                  <li class="w_100">Address line 1 : <span>{{ledgerData.address.line1}}</span></li>
+                  <li class="w_100">Address line 2 : <span>{{ledgerData.address.line2}}</span></li>
+                  <li>Email : <span>{{ledgerData.email}}</span></li>
+                  <li>Mobile No : <span>{{ledgerData.mobileNo}}</span></li>
+                  <li>City : <span>{{ledgerData.address.city}}</span></li>
+                  <li>State : <span>{{ledgerData.address.state}}</span></li>
+                  <li>Country : <span>{{ledgerData.address.country}}</span></li>
+                  <li>Zipcode : <span>{{ledgerData.address.zipCode}}</span></li>
+                </ul>
+              </div>
+              <div class="p_info" *ngIf="isBrokerDtl">
+                <h6 class="p_title">Broker Information</h6>
+                <ul class="pro_data">
+                  <li>Brokrage % : <span>{{ledgerData.broker.brokrage}}</span></li>
+                  <li>Ref. Address : <span>{{ledgerData.broker.refAddress}}</span></li>
+                  <li>Ref. Company Name : <span>{{ledgerData.broker.refCompanyName}}</span></li>
+                  <li>Ref. Person Name : <span>{{ledgerData.broker.refPersonName}}</span></li>
+                  <li>Ref. Email : <span>{{ledgerData.broker.refemail}}</span></li>
+                  <li>Ref. Mobile No : <span>{{ledgerData.broker.refmobileNo}}</span></li>
+                </ul>
+              </div>
+            </div>
+            <div class="pro_block">
+              <div class="p_info">
+                <h6 class="p_title">Business Information</h6>
+                <ul class="pro_data">
+                  <li class="w_100">Contact Person : <span>{{ledgerData.contactPerson}}</span></li>
+                  <li>Line Of Business.: <span>{{ledgerData.lineOfBusiness}}</span></li>
+                  <li>IncomeTax No. : <span>{{ledgerData.incomeTaxNo}}</span></li>
+                  <li>Tax No. : <span>{{ledgerData.taxNo}}</span></li>
+                  <li>Status : <span>{{ledgerData.isActive}}</span></li>
+                </ul>
+              </div>
+              <div class="p_info">
+                <h6 class="p_title">Bank Information</h6>
+                <ul class="pro_data">
+                  <li>Bank Name : <span>{{ledgerData.bank.bankName}}</span></li>
+                  <li>Branch : <span>{{ledgerData.bank.branch}}</span></li>
+                  <li>Account No : <span>{{ledgerData.bank.accountNo}}</span></li>
+                  <li>Account Name : <span>{{ledgerData.bank.accountName}}</span></li>
+                  <li>IFSC Code : <span>{{ledgerData.bank.ifsc}}</span></li>
+                  <li>Swift : <span>{{ledgerData.bank.swift}}</span></li>
+                </ul>
+              </div>
+            </div>
+            <div class="pro_block column2">
+              <h6 class="p_title pb_5">
+                <span>Other Address</span>
+                <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap">
+                  <button kendoButton (click)="openAddressModal()" title="Add Address"><i class="icon-add"></i></button>
+                </kendo-buttongroup>
+              </h6>
+              <div class="config_Wrapper mt-0 mx-1">
+                <ng-container *ngIf="ledgerData.otherAddress.length > 0">
+                  <div class="config_box" [ngClass]="{ 'pe-0': !lastDivNumber.includes(i)}"
+                    *ngFor="let item of ledgerData.otherAddress;let i = index">
+                    <div class="config_head btns">
+                      <div class="config_title">{{item.type}}</div>
+                      <kendo-buttongroup kendoTooltip position="bottom">
+                        <button kendoButton title="Copy Address" (click)="editAddress(item, i, true)"><i
+                            class="icon-copy"></i></button>
+                        <button kendoButton title="Edit Address" (click)="editAddress(item, i);"><i
+                            class="icon-edit"></i></button>
+                        <button kendoButton title="Delete Address" (click)="deleteAddress(item.id, i)"><i
+                            class="icon-trash"></i></button>
+                      </kendo-buttongroup>
+                    </div>
+                    <ul class="config_ul border-none">
+                      <li>Line1 : {{item.line1}}</li>
+                      <li>Line2 : {{item.line2}}</li>
+                      <li>Country : {{item.country}}</li>
+                      <li>State : {{item.state}}</li>
+                      <li>City : {{item.city}}</li>
+                      <li>ZipCode : {{item.zipCode}}</li>
+                    </ul>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="not_found m-0" *ngIf="ledgerData.otherAddress.length == 0">No Address Found</div>
+            </div>
+            <div class="pro_block column2">
+              <h6 class="p_title">
+                <span>Summary</span>
+                <span class="cBal_sp"><span>Current Balance :</span> {{ledgerSummaryData.total}}</span>
+              </h6>
+              <div class="balancesheet-grid mx-1">
+                <!-- Credit -->
+                <div class="grid-1">
+                  <div class="heading-sheet head">
+                    <h5>Credit</h5>
+                    <h5>Net Amount</h5>
+                  </div>
+                  <div class="ledger-sheet-scroll" [ngClass]="{'fullHeight' : ledgerData.otherAddress.length == 0}">
+                    <ul *ngFor="let item of ledgerSummaryData.creditData">
+                      <li>{{item.transactionNo}} | {{item.transactionType}} ({{item.createdDate | date:
+                        'dd/MM/yyyy'}})
+                        {{item.items.length > 0 ? (' - ' + item.items) : ''}}</li>
+                      <li>{{item.amount}}</li>
+                    </ul>
+                  </div>
+                  <div class="heading-sheet foot">
+                    <h5></h5>
+                    <h5>Total :</h5>
+                    <h5>{{ledgerSummaryData.creditTotal}}</h5>
+                  </div>
+                </div>
+                <!-- Debit -->
+                <div class="grid-1">
+                  <div class="heading-sheet head">
+                    <h5>Debit</h5>
+                    <h5>Net Amount</h5>
+                  </div>
+                  <div class="ledger-sheet-scroll" [ngClass]="{'fullHeight' : ledgerData.otherAddress.length == 0}">
+                    <ul *ngFor="let item of ledgerSummaryData.debitData">
+                      <li>{{item.transactionNo}} | {{item.transactionType}} ({{item.createdDate | date:
+                        'dd/MM/yyyy'}})
+                        {{item.items.length > 0 ? (' - ' + item.items) : ''}}</li>
+                      <li>{{item.amount}}</li>
+                    </ul>
+                  </div>
+                  <div class="heading-sheet foot">
+                    <h5></h5>
+                    <h5>Total :</h5>
+                    <h5>{{ledgerSummaryData.debitTotal}}</h5>
+                  </div>
+                </div>
+              </div>
+              <div class="pagination cus_pag justify-content-between align-items-center w-100 p-2">
+                <div class="pagesize d-flex align-items-center">
+                  <p class="cursor" (click)="onClickPage(activePage - 1)"><i class="k-icon k-i-arrow-w"></i>
+                  </p>
+                  <p class="cursor" *ngFor="let i of pageCount" [ngClass]="{'active' : i == activePage}"
+                    (click)="onClickPage(i)">{{i}}</p>
+                  <p class="cursor" (click)="onClickPage(activePage + 1)"><i class="k-icon k-i-arrow-e"></i>
+                  </p>
+                </div>
+                <div class="count-page">{{pageCountString}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Address Modal Start -->
+<div class="modal addemp c-modal rorgan" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isAddress">
+  <form name="addressForm" #addressForm="ngForm" novalidate>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-mapmarker"></i>{{insertFlag ? 'Add'
+            : 'Edit'}} Address
+          </h5>
+          <button type="button" class="close" (click)="closeAddressModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body pb-3">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="mul-address-grid">
+                <div class="form-data">
+                  <label>Line1<span class="require">*</span></label>
+                </div>
+                <div class="form-data">
+                  <textarea cols="4" type="text" id="" name="line1" #line1="ngModel" [(ngModel)]="addressObj.line1"
+                    required></textarea>
+                </div>
+                <div class="form-data">
+                  <label>Line2</label>
+                </div>
+                <div class="form-data">
+                  <textarea cols="4" type="text" id="" name="line2" #line2="ngModel"
+                    [(ngModel)]="addressObj.line2"></textarea>
+                </div>
+                <div class="form-data">
+                  <label>Type<span class="require">*</span></label>
+                </div>
+                <div class="form-data">
+                  <kendo-combobox [data]="listAddressTypeItems" [valuePrimitive]="true" name="addressType"
+                    #addressType="ngModel" [(ngModel)]="addressObj.type" required
+                    [kendoDropDownFilter]="filterSettings">
+                  </kendo-combobox>
+                </div>
+                <div class="form-data">
+                  <label>Country<span class="require">*</span></label>
+                </div>
+                <div class="form-data">
+                  <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                    [valueField]="'name'" name="country" #country="ngModel" (valueChange)="onCountryChange($event)"
+                    [valuePrimitive]="true" [(ngModel)]="addressObj.country" required
+                    [kendoDropDownFilter]="filterSettings">
+                  </kendo-combobox>
+                </div>
+                <div class="form-data">
+                  <label>State<span class="require">*</span></label>
+                </div>
+                <div class="form-data">
+                  <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                    [valueField]="'name'" (valueChange)="onStateChange($event)" [valuePrimitive]="true" name="state"
+                    #state="ngModel" [(ngModel)]="addressObj.state" required [kendoDropDownFilter]="filterSettings">
+                  </kendo-combobox>
+                </div>
+                <div class="form-data">
+                  <label>City<span class="require">*</span></label>
+                </div>
+                <div class="form-data">
+                  <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                    [valueField]="'name'" (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city"
+                    #city="ngModel" [(ngModel)]="addressObj.city" required [kendoDropDownFilter]="filterSettings">
+                  </kendo-combobox>
+                </div>
+                <div class="form-data">
+                  <label>ZipCode<span class="require">*</span></label>
+                </div>
+                <div class="form-data">
+                  <input type="text" autocomplete="off" id="" name="zipcode" #zipcode="ngModel"
+                    [(ngModel)]="addressObj.zipCode" required>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="onAddressSubmit(addressForm, false)" [disabled]="!addressForm.valid"
+            class="btn btn-primary"><i class="icon-add"></i>New</button>
+          <button class="btn btn-primary" (click)="onAddressSubmit(addressForm, true)" [disabled]="!addressForm.valid">
+            <i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- Address Modal End -->
+<div (document:keydown.esc)="closeAddressModal()"></div>
+<div kendoDialogContainer></div>

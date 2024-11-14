@@ -1,0 +1,322 @@
+button.adm-btn {
+    font-weight: 500;
+    font-size: 16px;
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 6px;
+    max-width: 50%;
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+button.adm-btn:hover {
+    color: #2e2e2e;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.admin-login {
+    background-image: url("../../../../assets/images/admin_back.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    margin: -10px;
+}
+
+.a-logwrap input:-webkit-autofill,
+.a-logwrap input:-webkit-autofill:hover,
+.a-logwrap input:-webkit-autofill:focus,
+.a-logwrap input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #2e2e2e inset;
+    -webkit-text-fill-color: #fff !important;
+}
+
+.a-logwrap {
+    max-width: 440px;
+    width: 100%;
+    margin-left: 170px;
+}
+
+.a-logwrap .sus-alert span {
+    color: red;
+    text-align: left;
+    padding-left: 8px;
+    transform: scale(1);
+}
+
+.a-logwrap input {
+    font-size: 13px;
+}
+
+h6.a-title {
+    font-weight: 600;
+    font-size: 22px;
+    color: #fff;
+    text-transform: uppercase;
+    background-color: #201f1a;
+    padding: 10px;
+    margin: initial;
+}
+
+.a-f-wrap {
+    background-color: #2e2e2e;
+    color: #fff;
+    padding: 50px;
+}
+
+.a-f-wrap label {
+    font-weight: 500;
+    font-size: 16px;
+    display: block;
+    margin-bottom: 3px;
+    width: 100%;
+}
+
+.a-logwrap input {
+    background-color: transparent;
+    border: 1px solid #7d7d7d;
+    padding: 6px 10px 6px 30px !important;
+    max-width: 370px;
+    width: 100%;
+    color: #fff;
+    border-radius: 3px;
+}
+
+.a-logwrap input:focus {
+    border-color: #fff !important;
+}
+
+.a-f-group {
+    position: relative;
+    margin-bottom: 17px;
+}
+
+.a-f-group i {
+    position: absolute;
+    top: 71%;
+    transform: translateY(-50%);
+    left: 10px;
+}
+
+.a-f-group .adm-btn {
+    margin-top: 24px;
+}
+
+.adm-logo .logo {
+    position: absolute;
+    top: 50%;
+    right: 56%;
+    transform: translateY(-50%);
+}
+
+.adm-logo .logo img {
+    max-width: 300px;
+    filter: invert(1);
+}
+
+.dia-icon img {
+    max-width: 10%;
+}
+
+li.asscher-Diamond img {
+    position: absolute;
+    top: 0;
+    right: 50%;
+}
+
+li.Emerald img {
+    position: absolute;
+    top: 14%;
+    left: 7%;
+    transform: rotate(-47deg);
+}
+
+li.round img {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -45px;
+}
+
+li.marquise img {
+    position: absolute;
+    bottom: 14%;
+    left: 8%;
+    transform: rotate(47deg);
+}
+
+li.princess img {
+    position: absolute;
+    bottom: 0;
+    right: 50%;
+}
+
+.login-shape {
+    position: relative;
+    top: 50%;
+    right: -25%;
+    transform: translateY(-50%);
+    height: 100%;
+    width: 50%;
+    border-radius: 50%;
+    background-color: #2e2e2e;
+}
+
+/* ================= Responsive =================== */
+
+@media (max-width: 1550px) {
+    .adm-logo .logo img {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .a-logwrap {
+        margin-left: 100px;
+    }
+
+    .adm-logo .logo img {
+        max-width: 165px;
+    }
+
+    li.round img {
+        left: -25px;
+    }
+}
+
+@media (max-width: 991px) {
+    .admin-login {
+        display: block;
+        overflow-y: auto;
+        margin: -10px;
+        margin-right: -15px;
+    }
+
+    .login-shape {
+        position: relative;
+        top: initial;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        border-radius: initial;
+        background-color: transparent;
+        height: 288px;
+        overflow: hidden;
+        padding-top: 102px;
+    }
+
+    .a-logwrap {
+        margin: 100px auto;
+    }
+
+    .adm-logo {
+        position: relative;
+        bottom: 0;
+        right: 0;
+        height: 716px;
+        width: 100%;
+        transform: translateY(-10%);
+        background: #2d2d2d;
+        border-radius: 50%;
+    }
+
+    .adm-logo .logo {
+        position: absolute;
+        top: 18%;
+        left: 50%;
+        right: initial;
+        transform: translateX(-50%);
+    }
+
+    li.asscher-Diamond img {
+        position: absolute;
+        top: 30%;
+        right: -3%;
+        transform: rotate(90deg);
+    }
+
+    li.Emerald img {
+        position: absolute;
+        top: 6%;
+        right: 17%;
+        left: initial;
+        transform: rotate(47deg);
+    }
+
+    li.round img {
+        position: absolute;
+        top: -4%;
+        transform: translateY(-50%);
+        left: 50% !important;
+        transform: translateX(-50%);
+    }
+
+    li.marquise img {
+        position: absolute;
+        top: 10%;
+        left: 13%;
+        transform: rotate(-46deg);
+    }
+
+    li.princess img {
+        position: absolute;
+        top: 30%;
+        left: -3%;
+        transform: rotate(-90deg);
+    }
+
+    .adm-logo .logo img {
+        max-width: 210px;
+    }
+}
+
+@media (max-width: 990px) {
+    .admin-login {
+        margin: -5px;
+        margin-right: -10px;
+    }
+}
+
+@media (max-width: 425px) {
+    .a-f-wrap {
+        padding: 20px;
+    }
+
+    .a-logwrap {
+        max-width: 320px;
+        margin: 20px auto 78px;
+    }
+
+    .a-logwrap input {
+        font-size: 12px;
+    }
+
+    .a-f-wrap label {
+        font-size: 14px;
+    }
+
+    .adm-logo {
+        transform: translateY(-8%);
+    }
+
+    .a-f-group .adm-btn {
+        margin-top: 31px;
+    }
+
+    .login-shape {
+        height: 285px;
+    }
+}
+
+@media (max-width: 320px) {
+    .a-logwrap {
+        max-width: 275px;
+    }
+}

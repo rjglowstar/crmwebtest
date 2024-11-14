@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW X8 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="130mm" height="108.416mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 13000 10842"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil3 {fill:#13D0AB}
+    .fil2 {fill:#46CAEF}
+    .fil1 {fill:#499DF3}
+    .fil0 {fill:#663333}
+    .fil4 {fill:#FFC43E}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g id="_2062231458480">
+   <path class="fil0" d="M0 0l13000 0 0 10842 -13000 0 0 -10842zm301 337l2772 0 0 -40 587 0 0 40 2485 0 0 -40 587 0 0 40 2515 0 0 -40 587 0 0 40 2864 0 0 10212 -2864 0 0 65 -587 0 0 -65 -2515 0 0 65 -587 0 0 -65 -2485 0 0 65 -587 0 0 -65 -2772 0 0 -10212z"/>
+   <path class="fil1" d="M1318 4941c0,49 15,63 64,63l2096 0c49,0 64,-14 64,-63l0 -1377 -2224 0 0 1377z"/>
+   <path class="fil2" d="M5405 4941c0,49 15,63 63,63l2097 0c48,0 63,-14 63,-63l0 -1377 -2223 0 0 1377z"/>
+   <path class="fil1" d="M9491 4941c0,49 15,63 64,63l2096 0c49,0 64,-14 64,-63l0 -1377 -2224 0 0 1377z"/>
+   <path class="fil1" d="M1318 7079c0,49 15,64 64,64l2096 0c49,0 64,-15 64,-64l0 -1376 -2224 0 0 1376z"/>
+   <path class="fil3" d="M5405 7079c0,49 15,64 63,64l2097 0c48,0 63,-15 63,-64l0 -1376 -2223 0 0 1376z"/>
+   <path class="fil2" d="M1318 2802c0,49 15,64 64,64l2096 0c49,0 64,-15 64,-64l0 -1376 -2224 0 0 1376z"/>
+   <path class="fil3" d="M5405 2802c0,49 15,64 63,64l2097 0c48,0 63,-15 63,-64l0 -1376 -2223 0 0 1376z"/>
+   <path class="fil4" d="M9491 2802c0,49 15,64 64,64l2096 0c49,0 64,-15 64,-64l0 -1376 -2224 0 0 1376z"/>
+   <rect class="fil0" x="4084" width="781" height="10842"/>
+   <rect class="fil0" x="8166" y="287" width="781" height="10555"/>
+  </g>
+ </g>
+</svg>

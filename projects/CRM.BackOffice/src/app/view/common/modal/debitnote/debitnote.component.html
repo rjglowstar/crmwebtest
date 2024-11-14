@@ -1,0 +1,249 @@
+<!-- #region  Sales Modal -->
+<div class="modal c-modal addemp dialog-sm rs-payment" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form class="modal-content" name="debitNoteForm" #debitNoteForm="ngForm">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="icon-debitnote"></i>Debit Note</h5>
+        <button type="button" class="close" (click)="closeDialog(false)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="title k-justify-content-between"><span><i class="icon-info"></i>Debit Note Details</span>
+          {{debitNoteTransactionObj.packingList.length > 0 ? 'Package(s) : ' + debitNoteTransactionObj.packingList.length
+          : ''}}
+        </h6>
+        <div class="content">
+          <div class="debitnote-grid">
+            <div class="form-data">
+              <label [hidden]="isEdit">Purchase Tran. No</label>
+            </div>
+            <div class="form-data">
+              <input type="text" id="barcode" [(ngModel)]="searchInvoice" #BarcodeInput autocomplete="off"
+                name="barcode" class="c-wi" (keypress)="utilityService.numberOnly($event)" [hidden]="isEdit">
+            </div>
+            <div class="form-data"></div>
+            <div class="form-data">
+              <label>Transactions No</label>
+            </div>
+            <div class="form-data">
+              <span><i class="icon-transactitem"></i>{{debitNoteTransactionObj.number}}</span>
+            </div>
+          </div>
+          <div class="e-details-n mt-2"
+            *ngIf="debitNoteTransactionObj.fromLedger && debitNoteTransactionObj.fromLedger.id && debitNoteTransactionObj.fromLedger.id.length > 0">
+            <div class="info-block we-3">
+              <li>
+                <h6 class="c-name"><span>Party:</span>{{this.debitNoteTransactionObj.fromLedger.name}}</h6>
+              </li>
+              <li>
+                <h6 class="c-name"><span>Contact
+                    Person:</span>{{this.debitNoteTransactionObj.fromLedger.contactPerson}}</h6>
+              </li>
+              <li>
+                <h6 class="c-name"><span>Email:</span>{{this.debitNoteTransactionObj.fromLedger.email}}</h6>
+              </li>
+              <li>
+                <h6 class="c-name"><span>MobileNo:</span>{{this.debitNoteTransactionObj.fromLedger.mobileNo}}</h6>
+              </li>
+              <li>
+                <h6 class="c-name"><span>PhoneNo:</span>{{this.debitNoteTransactionObj.fromLedger.phoneNo}}</h6>
+              </li>
+            </div>
+          </div>
+          <div class="form-data text-end"
+            *ngIf="debitNoteTransactionObj.packingList && debitNoteTransactionObj.packingList.length > 0">
+            <button kendoTooltip position="bottom" kendoButton title="Packing List"
+              (click)="togglePackinglistDialog()"><i class="icon-packinglist pe-0"></i></button>
+          </div>
+          <div class="grid-wrap border-top mt-2 pt-2">
+            <kendo-grid [resizable]="true" [data]="debitNoteTransactionObj.items" [selectable]="selectableSettings"
+              [(selectedKeys)]="mySelectionTrans" [kendoGridSelectBy]="'index'" style="height:calc(100vh - 512px)" class="mb-grid">
+              <kendo-grid-column field="item.name" title="Name" [width]="120">
+              </kendo-grid-column>
+              <kendo-grid-column field="quantity" title="Qty" [width]="30"></kendo-grid-column>
+              <kendo-grid-column field="rate" title="Rate" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="amount" title="Amount" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="discPerc" title="Dis(%)" [width]="50"></kendo-grid-column>
+              <kendo-grid-column field="discount" title="Dis" [width]="50"></kendo-grid-column>
+              <kendo-grid-column field="taxAmount" title="Tax" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="total" title="Total" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="remove" title="Remove" [width]="32" *ngIf="!isEdit">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                  <button kendoTooltip position="bottom" kendoButton title="Remove Item"
+                    (click)="deleteItem(rowIndex)"><i class="icon-trash pe-0"></i></button>
+                </ng-template>
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+          <div class="grid-total d-flex p-2 border">
+            <div class="grid-left-total">
+              <div class="form-data">
+                <label>Amount</label>
+              </div>
+              <div class="form-data">
+                <input type="text" readonly disabled [value]="debitNoteTransactionObj.amount">
+              </div>
+              <div class="form-data">
+                <label>Discount</label>
+              </div>
+              <div class="form-data">
+                <input type="text" readonly disabled [value]="debitNoteTransactionObj.discount">
+              </div>
+              <div class="form-data">
+                <label>Tax</label>
+              </div>
+              <div class="form-data">
+                <input type="text" readonly disabled [value]="debitNoteTransactionObj.taxAmount">
+              </div>
+              <div class="form-data">
+                <label>Remark</label>
+                <textarea cols="4" type="text" name="remark" #remark="ngModel"
+                  [(ngModel)]="debitNoteTransactionObj.note" placeholder="Remark">
+                </textarea>
+              </div>
+            </div>
+            <div class="grid-right-total">
+              <div class="form-data">
+                <label>Total Amt</label>
+              </div>
+              <div class="form-data">
+                <input type="text" name="tamt" readonly disabled [value]="transactionTotalAmount">
+              </div>
+              <div class="form-data">
+                <label>Add Amt</label>
+              </div>
+              <div class="form-data" [ngClass]="{ 'error': !validAddAmtLimit }">
+                <input type="text" name="addamt" #addamt="ngModel" [(ngModel)]="debitNoteTransactionObj.addAmount"
+                  (keypress)="utilityService.discountfloat($event);"
+                  (keyup)="calculateTransactionItems(true);validAddAmtLimit = utilityService.validateAddAmountLimit(debitNoteTransactionObj.addAmount, accountConfig.addAmountLimit);">
+                <span class="font-smaller s-error" *ngIf="!validAddAmtLimit">Amount exceed limit</span>
+              </div>
+              <div class=" form-data">
+                <label>Net Amt</label>
+              </div>
+              <div class="form-data">
+                <input type="text" readonly disabled [value]="debitNoteTransactionObj.netTotal">
+              </div>
+              <div class="form-data">
+                <label>Paid Amt</label>
+              </div>
+              <div class="form-data">
+                <input type="text" name="paidAmt" #paidAmt="ngModel" [(ngModel)]="debitNoteTransactionObj.paidAmount"
+                  (keypress)="utilityService.discountfloat($event);" (keyup)="calculateTransactionItems(true)">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" *ngIf="!isEdit">
+        <button type="button" class="btn btn-primary"
+          [disabled]="!(debitNoteForm.valid && validAddAmtLimit) || debitNoteTransactionObj.netTotal == 0"
+          (click)="saveTransaction(true)">
+          <i class="icon-add"></i>New</button>
+        <button type="button" class="btn btn-primary"
+          [disabled]="!(debitNoteForm.valid && validAddAmtLimit) || debitNoteTransactionObj.netTotal == 0"
+          (click)="saveTransaction()">
+          <i class="icon-save"></i>Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- #endregion -->
+
+<!-- #region Packing List Dialog -->
+<div class="modal c-modal addemp dialog-sm-l" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  [hidden]="!isPackinglistDialog">
+  <form name="form">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="icon-addpacket"></i>Packing List</h5>
+          <button type="button" class="close" (click)="togglePackinglistDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="en-form f-12 mt-1">
+                <div class="ma-issue-top">
+                  <div class="packing-grid  d-flex justify-content-between">
+                    <div class="tag ci-top-left border-0 p-0">
+                      <ul>
+                        <li><span class="t-title">Total Psc :</span> {{debitNoteTransactionObj.packingList.length}}
+                        </li>
+                        <li><span class="t-title">Total Amount :</span> {{totalPacketAmount}}</li>
+                        <li><span class="t-title">Avg Dis(%):</span> {{avgDiscPer}}</li>
+                        <li><span class="t-title">Selected Stone(s):</span> {{mySelectionPackage.length}}</li>
+                      </ul>
+                    </div>
+                    <kendo-buttongroup kendoTooltip position="bottom" *ngIf="!isEdit">
+                      <button kendoButton title="Delete" kendoTooltip position="bottom"
+                        [disabled]="mySelectionPackage.length == 0" (click)="openDeleteDialog()">
+                        <i class="icon-trash p-0"></i>
+                      </button>
+                    </kendo-buttongroup>
+                  </div>
+                  <div class="grid-wrap mt-2">
+                    <kendo-grid [resizable]="true" [data]="gridViewPackageList" [sortable]="true" [pageSize]="pageSize"
+                      [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)" [sortable]="true"
+                      [selectable]="selectableSettings" [(selectedKeys)]="mySelectionPackage"
+                      [kendoGridSelectBy]="'stoneId'" style="height:calc(100vh - 490px);">
+                      <kendo-grid-checkbox-column [showSelectAll]="isShowCheckBoxAll" [width]="40" *ngIf="!isEdit">
+                        <ng-template *ngIf="isShowCheckBoxAll" kendoGridHeaderTemplate>
+                          <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox"
+                            (selectAllChange)="selectAllPackingList($event)" />
+                          <label class="k-checkbox-label" for="headerCheckbox"></label>
+                        </ng-template>
+                        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                          <div class="i-hov" *ngIf="dataItem.isDisabled">
+                            <i class="icon-info"></i>
+                            <div class="em-box" *ngIf="fetchError(dataItem?.stoneId)">
+                              <h6 class="title">stoneId:
+                                {{fetchError(dataItem?.stoneId)?.stoneId}}
+                              </h6>
+                              <span>Reasons:
+                                <div class="e-msg" *ngFor="let message of fetchError(dataItem?.stoneId)?.messageList">
+                                  <span>{{message}}</span>
+                                </div>
+                              </span>
+                            </div>
+                          </div>
+                          <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                            id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                          <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                          </label>
+                        </ng-template>
+                      </kendo-grid-checkbox-column>
+                      <kendo-grid-column field="stoneId" title="Stone Id" [width]="100"></kendo-grid-column>
+                      <kendo-grid-column field="certificateNo" title="Certicate No" [width]="100"></kendo-grid-column>
+                      <kendo-grid-column field="shape" title="Shape" [width]="100"></kendo-grid-column>
+                      <kendo-grid-column field="weight" title="Ct" [width]="100"></kendo-grid-column>
+                      <kendo-grid-column field="lab" title="Lab" [width]="100"></kendo-grid-column>
+                      <kendo-grid-column field="origin" title="Origin" [width]="100"></kendo-grid-column>
+                      <kendo-grid-column field="color" title="Color" [width]="100"></kendo-grid-column>
+                      <kendo-grid-column field="clarity" title="Clarity" [width]="100"></kendo-grid-column>
+                      <kendo-grid-column field="price.discount" title="Discount" [width]="100"></kendo-grid-column>
+                      <kendo-grid-column field="price.perCarat" title="$/Ct" [width]="100"></kendo-grid-column>
+                      <kendo-grid-column field="price.netAmount" title="Net Amount" [width]="100"></kendo-grid-column>
+                      <kendo-grid-column field="dollarRate" title="Dollar Rate(₹)" [width]="100"></kendo-grid-column>
+                    </kendo-grid>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" *ngIf="!isEdit">
+          <button type="button" class="btn btn-primary" (click)="AddItemByPackageList()">
+            <i class="icon-save"></i>Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->

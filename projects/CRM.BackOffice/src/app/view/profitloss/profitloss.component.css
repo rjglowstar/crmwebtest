@@ -1,0 +1,66 @@
+.sr-wrap.inclusion-panel {
+    position: absolute;
+    background: #fff;
+    box-shadow: -10px 10px 15px rgba(0, 0, 0, 10%);
+    border-radius: 5px;
+    top: 0;
+    right: 0;
+    height: 100%;
+    animation: slideRight 0.5s;
+    width: 250px;
+    z-index: 10;
+    overflow-y: auto;
+    transform: translateX(300px);
+}
+
+.sr-wrap.inclusion-panel.active {
+    transform: translateX(0);
+}
+
+.pf-design {
+    border: 1px solid #d3d3d3;
+    position: relative;
+    overflow: auto;
+}
+
+.pf-design .td-title {
+    user-select: auto;
+    position: sticky;
+    top: -1px;
+}
+
+.pf-design .td-title td {
+    background-color: #4d4d4d;
+    font-weight: 700;
+    color: #fff;
+}
+
+.pf-design table td {
+    font-size: 14px;
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+.td-total td {
+    background: #eeeeee;
+    font-weight: 600;
+}
+
+.td-total:last-child {
+    position: sticky;
+    bottom: -1px;
+}
+
+.td-total:last-child td {
+    background: #d6d6d6;
+}
+
+.profitLoss_sec .pf-design table td {
+    font-size: 13px;
+}
+
+.profitLoss_sec .pf-design .td-total:last-child td,
+.profitLoss_sec .pf-design .td-title td {
+    font-size: 14px;
+    font-weight: 600;
+}

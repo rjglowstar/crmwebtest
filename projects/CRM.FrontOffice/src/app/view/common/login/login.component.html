@@ -1,0 +1,57 @@
+<title>Admin Login</title>
+<div class="form-wrap admin-login">
+  <form #LoginForm="ngForm">
+    <div class="a-logwrap">
+      <h6 class="a-title">Login</h6>
+      <div class="a-f-wrap" [ngClass]="{ 'error': loginError}">
+        <div class="a-f-group">
+          <label>Username</label>
+          <i class="icon-userlogin"></i>
+          <input autocomplete="off" id="firstFocus" class="form-control" placeholder="User Name" name="username"
+            [(ngModel)]="loginModelObj.user_id" #username required>
+        </div>
+
+        <div class="a-f-group">
+          <label>Password</label>
+          <i class="icon-key"></i>
+          <input class="form-control" placeholder="Password" type="password" name="pwd"
+            [(ngModel)]="loginModelObj.password" #Pass required>
+          <span class="pass-view" (click)="Pass.type = Pass.type == 'password' ? 'text' : 'password'"
+            style="right: 26px;margin-top: -17px;">
+            <i class="icon-view"></i>
+          </span>
+        </div>
+
+        <span class="s-error" *ngIf="loginError">{{errorMsg}}</span>
+        <div class="a-f-group mb-0">
+          <button (click)="login(LoginForm)" [disabled]="!LoginForm.valid || loginLoading" class="adm-btn">
+            Login
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="login-shape">
+    <div class="adm-logo">
+      <div class="logo">
+        <a href="javascript:void(0)"><img src="commonAssets/images/Diamanto.png" alt="logo"></a>
+      </div>
+      <div class="dia-icon">
+        <ul>
+          <li class="asscher-Diamond"><img src="assets/images/asscher-Diamond.png" alt="logo"></li>
+          <li class="Emerald"><img src="assets/images/emerald-Diamond.png" alt="logo"></li>
+          <li class="round"><img src="assets/images/round-diamond.png" alt="logo"></li>
+          <li class="marquise"><img src="assets/images/marquise-diamond.png" alt="logo"></li>
+          <li class="princess"><img src="assets/images/princess-diamond.png" alt="logo"></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff"
+  template="<img src='commonAssets/images/gl.gif' style='width:80px;' />" [fullScreen]="true">
+  <!-- <p style="color: white"> Loading... </p> -->
+</ngx-spinner>
+
+<div kendoDialogContainer></div>

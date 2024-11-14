@@ -1,0 +1,143 @@
+<title>FTP Add.Disc</title>
+<section class="updateinventory-wrap">
+    <div class="content_wrap">
+        <div class="d-flex">
+            <div class="e-left">
+                <!-- #region Header -->
+                <div class="breadcrumb">
+                    <div class="breadcrumb-left">
+                        <ul>
+                            <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                            <li class="breadcrumb-item active" aria-current="page">FTP Additional Discount</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="summarybar bg">
+                    <div class="summary-left">
+                        <kendo-buttongroup kendoTooltip position="bottom"
+                            *ngIf="isAllSelected || mySelection.length > 0">
+                            <button kendoButton title="Select All Stone(s)" class="me-1 pt-0 pb-0"
+                                style="line-height: 1.8;" *ngIf="isAllSelected"
+                                (click)="selectAllCustAddDisc('checked', true)">
+                                Select All
+                            </button>
+                            <button kendoButton title="DeSelect Stone(s)" class="me-1 pt-0 pb-0"
+                                style="line-height: 1.8;" *ngIf="mySelection.length > 0"
+                                (click)="selectAllCustAddDisc('uncheckedAll', true)">
+                                DeSelect All
+                            </button>
+                        </kendo-buttongroup>
+                        <ul>
+                            <li>Total Stone(s) : <span>{{ summaryTotalCount }}</span></li>
+                            <li>Selected Stone(s) : <span>{{ mySelection.length }}</span></li>
+                        </ul>
+                    </div>
+                    <div class="summary-right">
+                        <kendo-buttongroup kendoTooltip position="bottom">
+                            <button kendoButton title="Delete" [disabled]="mySelection.length == 0"
+                                (click)="openDeleteDialog()">
+                                <i class="icon-trash"></i>
+                            </button>
+                        </kendo-buttongroup>
+                    </div>
+                </div>
+                <!-- #region Grid -->
+                <div class="content_box">
+                    <div class="grid-wrap">
+                        <kendo-grid #orgGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true" [sort]="sort"
+                            [groupable]="true" [sortable]="true" [selectable]="selectableSettings" (sortChange)="sortChange($event)"
+                            (selectionChange)="selectedRowChange($event)" [group]="groups"
+                            (cellClick)="cellClickHandler($event)" (cellClose)="cellCloseHandler($event)"
+                            (groupChange)="groupChange($event)" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+                            (pageChange)="pageChange($event)" [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+                            <ng-container *ngIf="custAddDiscFields && custAddDiscFields.length > 0">
+                                <ng-container *ngFor="let field of custAddDiscFields">
+                                    <ng-container *ngIf="field.isSelected">
+                                        <kendo-grid-column [width]="field.width" [field]="field.propertyName"
+                                            [title]="field.title">
+
+                                            <ng-template *ngIf="isShowCheckBoxAll && field.title == 'Checkbox'"
+                                                kendoGridHeaderTemplate>
+                                                <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox"
+                                                    id="headerCheckbox"
+                                                    (selectAllChange)="selectAllCustAddDisc($event, false)" />
+                                                <label class="k-checkbox-label" for="headerCheckbox"></label>
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                                *ngIf="field.title == 'Checkbox'">
+                                                <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                                                    id="checkbox-{{rowIndex}}"
+                                                    [kendoGridSelectionCheckbox]="rowIndex" />
+                                                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                                </label>
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.title == 'Created Date'">
+                                                {{dataItem.createdDate | date: 'dd/MM/yyyy HH:mm:ss'}}
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.title == 'M. Disc'">
+                                                {{dataItem.price.discount}}
+                                            </ng-template>
+                                        </kendo-grid-column>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </kendo-grid>
+                    </div>
+                </div>
+                <!-- #endregion -->
+            </div>
+            <!-- #region Filter Section -->
+            <div class="e-right">
+                <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+                    <div class="sr">
+                        <h6>Search By Filter</h6>
+                        <form name="form" #custAddDiscSearchForm="ngForm" novalidate>
+                            <div class="i-form">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label class="lbl">StoneId</label>
+                                        <input type="text" id="" name="filterstoneId"
+                                            [(ngModel)]="stoneId" #filterstoneId="ngModel"
+                                            autocomplete="off" />
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label class="lbl">CompanyName</label>
+                                        <input type="text" id="" name="filterCName"
+                                            [(ngModel)]="custAddDiscCriteria.companyName" #filterCName="ngModel"
+                                            autocomplete="off" />
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                                        <button class="btn btn-action"
+                                            (click)="custAddDiscSearchForm.form.valid && onFilterSubmit(custAddDiscSearchForm)">
+                                            <i class="icon-search"></i>Search
+                                        </button>
+                                        <button (click)="clearFilter(custAddDiscSearchForm)" class="btn btn-action">
+                                            <i class="icon-clear"></i>Clear
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- #endregion -->
+            <!-- #region Mobile filter section -->
+            <div class="f-btn" [ngClass]="{'active': filterFlag}">
+                <ul>
+                    <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button>
+                    </li>
+                    <li><button (click)="onFilterSubmit(custAddDiscSearchForm)"><i class="icon-search"></i></button>
+                    </li>
+                    <li><button (click)="clearFilter(custAddDiscSearchForm)"><i class="icon-clear"></i></button></li>
+                </ul>
+            </div>
+            <!-- #endregion -->
+        </div>
+    </div>
+</section>
+
+
+<div kendoDialogContainer></div>

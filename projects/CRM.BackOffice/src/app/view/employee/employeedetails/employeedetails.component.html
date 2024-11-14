@@ -1,0 +1,85 @@
+<title>Employee Details</title>
+<section class="edetails-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item" routerLink="/employee">Employee</li>
+              <li class="breadcrumb-item active" aria-current="page">Employee Details</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right pe-0">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton routerLink="/employee/search"><i class="icon-back"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="profile_wrap emp_details content_scroll">
+          <div class="pro_block">
+            <div class="p_info">
+              <h6 class="p_title">Personal Information</h6>
+              <ul class="pro_data">
+                <li>Full Name : <span>{{employeeObj.fullName}}</span></li>
+                <li>Department : <span>{{employeeObj.department}}</span></li>
+                <li>Origin : <span>{{employeeObj.origin}}</span></li>
+                <li>Organization : <span>{{employeeObj.organization.name}}</span></li>
+                <li>Branch : <span>{{employeeObj.branch.name}}</span></li>
+              </ul>
+            </div>
+            <div class="p_info">
+              <h6 class="p_title">Address</h6>
+              <ul class="pro_data">
+                <li class="w_100">Address : <span>{{employeeObj.address.line1}},
+                    {{employeeObj.address.line2}}, {{employeeObj.address.city}}-
+                    {{employeeObj.address.zipCode}},
+                    {{employeeObj.address.state}}, {{employeeObj.address.country}} </span>
+                </li>
+                <li>Email : <span>{{employeeObj.email}}</span></li>
+                <li>Mobile No : <span>{{employeeObj.mobile | numberfilter:'mobile'}}</span></li>
+                <li>Type : <span>{{employeeObj.address.type}}</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="pro_block">
+            <div class="p_info">
+              <h6 class="p_title">Others</h6>
+              <ul class="pro_data">
+                <li class="w_100">Native Address : <span>{{employeeObj.nativeAddress}}</span></li>
+                <li>Enrollment No. : <span>{{employeeObj.enrollmentNumber}}</span></li>
+                <li>Joining Date : <span>{{employeeObj.joiningDate | date: 'dd/MM/yyyy'}}</span></li>
+                <li>Manager : <span><input type="checkbox" class="k-checkbox" disabled
+                      [checked]="employeeObj.isManager" /></span></li>
+                <li>Active : <span><input type="checkbox" class="k-checkbox" disabled
+                      [checked]="employeeObj.isActive" /></span></li>
+                <li>Available : <span><input type="checkbox" class="k-checkbox" disabled
+                      [checked]="employeeObj.isAvailable" /></span></li>
+              </ul>
+            </div>
+            <div class="p_info socMed">
+              <h6 class="p_title">Social Media</h6>
+              <div class="socBox_wrap">
+                <kendo-card class="w-100" *ngFor="let field of employeeObj.socialMedias">
+                  <kendo-card-body>
+                    <div kendoCardSubtitle>
+                      <div class="d-flex align-items-center">
+                        <i class="k-icon k-i-star"></i>
+                        <span>{{field.provider.providerName}}</span>
+                      </div>
+                      <span class="s-title">{{(field.provider.mediaType
+                        == '3' || field.provider.mediaType
+                        == 'Messaging') ? (field.mobileNumber) :
+                        field.profileName}}</span>
+                    </div>
+                  </kendo-card-body>
+                </kendo-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

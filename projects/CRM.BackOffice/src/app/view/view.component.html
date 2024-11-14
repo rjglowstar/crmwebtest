@@ -1,0 +1,38 @@
+<!-- Top Bar Start -->
+<app-header (toggleNotification)="toggleNotification($event)"></app-header>
+<!-- Top Bar End -->
+
+<!-- Sidebar Start -->
+<app-side-menu></app-side-menu>
+<!-- Sidebar End -->
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff"
+  template="<img src='commonAssets/images/gl.gif' style='width:80px;' />" [fullScreen]="true">
+  <!-- <p style="color: white"> Loading... </p> -->
+</ngx-spinner>
+
+
+<!-- #region Memo Model-->
+<ng-container *ngIf="notificationMemoActionFlag">
+  <app-memo (toggle)="closeMemoDialog($event)" [memoRequest]="fetchMemoRequest"> </app-memo>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Ledger Dialog -->
+<ng-container *ngIf="isLedgerFlag">
+  <app-ledger-modal [showSearch]="true" [ledgerIdent]="ledgerIdent" [ledgerType]="ledgerType"
+    (successEvent)="updateLedgers($event)" (toggle)="isLedgerFlag=$event"></app-ledger-modal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Qc Request Model-->
+<ng-container *ngIf="qcRequestDialog">
+  <app-qcrequest-modal (toggle)="closeQcRequestDialog()" [qcRequestBOId]="qcRequestBoId">
+  </app-qcrequest-modal>
+</ng-container>
+<!-- #endregion -->
+
+
+<!-- Page main content -->
+<router-outlet></router-outlet>
+<!-- Page main content -->

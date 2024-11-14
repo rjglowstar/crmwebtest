@@ -1,0 +1,404 @@
+<title>Pricing Configuration</title>
+<section class="or-config-wrap price_config">
+  <div class="content_wrap">
+    <div class="breadcrumb">
+      <div class="breadcrumb-left">
+        <ul>
+          <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+          <li class="breadcrumb-item active" aria-current="page">Pricing Configurations</li>
+        </ul>
+      </div>
+    </div>
+    <!-- This same configbar as it's bottom for mobile view "priceMob_Config" -->
+    <div class="summarybar bg priceDesk_config">
+      <div class="summary-left">
+        <ul>
+          <li>Configuration</li>
+        </ul>
+      </div>
+      <div class="summary-right b_config pe-0">
+        <div class="inputWrap">
+          <div>
+            <span class="input_label">Expiration Day</span>
+            <span class="d-inline-block"
+              [ngClass]="{ 'error': expirationDay.invalid && (expirationDay.hasError('pattern') || expirationDay.dirty || expirationDay.touched)}">
+              <input type="text" name="expirationDay" [(ngModel)]="pricingConfig.expirationDay" #expirationDay="ngModel"
+                id="expirationDay" required placeholder="Enter Expiration Day" [disabled]="!isEditable"
+                [ngClass]="{'active':isEditable}" (keypress)="utilityService.numberOnly($event);">
+            </span>
+          </div>
+          <div>
+            <span class="input_label">Base Discount Difference</span>
+            <span class="d-inline-block"
+              [ngClass]="{ 'error': baseDiscountDifference.invalid && (baseDiscountDifference.hasError('pattern') || baseDiscountDifference.dirty || baseDiscountDifference.touched)}">
+              <input type="text" name="baseDiscountDifference" [(ngModel)]="pricingConfig.baseDiscountDifference"
+                #baseDiscountDifference="ngModel" id="baseDiscountDifference" required
+                placeholder="Enter Base Discount Difference" [disabled]="!isEditable" [ngClass]="{'active':isEditable}"
+                (keypress)="utilityService.discountfloat($event);">
+            </span>
+          </div>
+        </div>
+        <kendo-buttongroup kendoTooltip position="bottom">
+          <button type="button" kendoButton title="Edit Configuration" [disabled]="isEditable"
+            (click)="enableSaveChanges()"><i class="icon-edit"></i></button>
+          <button type="button" kendoButton title="Save Configuration"
+            [disabled]="!isEditable || !pricingConfigForm.valid" (click)="submit(pricingConfigForm, 1)"><i
+              class="icon-save"></i></button>
+          <button type="button" kendoButton title="Disabled Configuration" [disabled]="!isEditable"
+            (click)="disabledConfiguration()"><i class="icon-delete"></i></button>
+        </kendo-buttongroup>
+      </div>
+    </div>
+    <div class="content_box sec_title">
+
+      <div class="summary-left b_config pe-0 d-none priceMob_Config">
+        <div class="config_box mb-3 no_hover">
+          <h6 class="config_head btns">
+            <span class="config_title">Configuration</span>
+            <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap">
+              <button type="button" kendoButton title="Edit Configuration" [disabled]="isEditable"
+                (click)="enableSaveChanges()"><i class="icon-edit"></i></button>
+              <button type="button" kendoButton title="Save Configuration"
+                [disabled]="!isEditable || !pricingConfigForm.valid" (click)="submit(pricingConfigForm, 1)"><i
+                  class="icon-save"></i></button>
+              <button type="button" kendoButton title="Disabled Configuration" [disabled]="!isEditable"
+                (click)="disabledConfiguration()"><i class="icon-delete"></i></button>
+            </kendo-buttongroup>
+          </h6>
+          <ul class="config_ul border-none column2">
+            <li class="align-items-center">
+              <span class="input_label">Expiration Day</span>
+              <span class="d-inline-block w-100"
+                [ngClass]="{ 'error': expirationDay.invalid && (expirationDay.hasError('pattern') || expirationDay.dirty || expirationDay.touched)}">
+                <input type="text" name="expirationDay" [(ngModel)]="pricingConfig.expirationDay"
+                  #expirationDay="ngModel" id="expirationDay" required placeholder="Enter Expiration Day"
+                  [disabled]="!isEditable" [ngClass]="{'active':isEditable}"
+                  (keypress)="utilityService.numberOnly($event);">
+              </span>
+            </li>
+            <li class="align-items-center">
+              <span class="input_label">Base Discount Difference</span>
+              <span class="d-inline-block w-100"
+                [ngClass]="{ 'error': baseDiscountDifference.invalid && (baseDiscountDifference.hasError('pattern') || baseDiscountDifference.dirty || baseDiscountDifference.touched)}">
+                <input type="text" name="baseDiscountDifference" [(ngModel)]="pricingConfig.baseDiscountDifference"
+                  #baseDiscountDifference="ngModel" id="baseDiscountDifference" required
+                  placeholder="Enter Base Discount Difference" [disabled]="!isEditable"
+                  [ngClass]="{'active':isEditable}" (keypress)="utilityService.discountfloat($event);">
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="secTitle">
+        <div class="secTitle-left">Expiry Criteria</div>
+        <div class="secTitle-right">
+          <kendo-buttongroup kendoTooltip position="bottom">
+            <button kendoButton (click)="openAddExpiryCriteria()" title="Add Expiry Criteria"><i
+                class="icon-add"></i></button>
+          </kendo-buttongroup>
+        </div>
+      </div>
+      <form name="pricingConfigForm" #pricingConfigForm="ngForm" novalidate>
+        <div class="config_bg">
+          <div class="config_Wrapper" *ngIf="expiryCriteriaData.length > 0">
+            <div *ngFor="let criteria of expiryCriteriaData;let i = index">
+              <div class="config_box">
+                <div class="config_head">
+                  <div class="config_title">
+                    {{criteria.minWeight}} - {{criteria.maxWeight}}
+                    {{criteria.name ? ('(' + criteria.name + ')') : ''}}
+                  </div>
+                  <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                    <button kendoButton title="Copy Criteria" (click)="editExpiryCriteria(criteria, true)">
+                      <i class="icon-copy"></i>
+                    </button>
+                    <button kendoButton title="Edit Criteria" (click)="editExpiryCriteria(criteria);">
+                      <i class="icon-edit"></i>
+                    </button>
+                    <button kendoButton title="Delete Criteria" (click)="openDeleteDialog(criteria.id)">
+                      <i class="icon-trash"></i>
+                    </button>
+                  </kendo-buttongroup>
+                </div>
+                <ul class="config_ul">
+                  <li>
+                    <div>Shape <span>:</span></div>
+                    <div>
+                      <i *ngFor="let item of criteria.shape; let isLast=last">
+                        {{item}}{{isLast ? '' : ','}}
+                      </i>
+                    </div>
+                  </li>
+                  <li>
+                    <div>Color <span>:</span></div>
+                    <div>
+                      <i *ngFor="let item of criteria.color; let isLast=last">
+                        {{item}}{{isLast ? '' : ','}}
+                      </i>
+                    </div>
+                  </li>
+                  <li>
+                    <div>Clarity <span>:</span></div>
+                    <div>
+                      <i *ngFor="let item of criteria.clarity; let isLast=last">
+                        {{item}}{{isLast ? '' : ','}}
+                      </i>
+                    </div>
+                  </li>
+                  <li>
+                    <div>CPS <span>:</span></div>
+                    <div>
+                      <i *ngFor="let item of criteria.cps; let isLast=last">
+                        {{item}}{{isLast ? '' : ','}}
+                      </i>
+                    </div>
+                  </li>
+                  <li>
+                    <div>BGM <span>:</span></div>
+                    <div>
+                      <i>
+                        {{criteria.isBgm ? 'Yes' : 'No'}}
+                      </i>
+                    </div>
+                  </li>
+                  <li>
+                    <div>Day <span>:</span></div>
+                    <div>
+                      <i>
+                        {{criteria.days}}
+                      </i>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing Criteria Modal Start -->
+<div class="modal addemp c-modal rorgan" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isAddExpiryCriteria">
+  <form name="criteriaForm" #criteriaForm="ngForm" novalidate>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-pricingcriteria"></i>{{insertFlag ? 'Add'
+            : 'Edit'}} Special Stone Criteria
+          </h5>
+          <button type="button" class="close" (click)="closeAddExpiryCriteria()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body pb-3">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="pricing-special-grid">
+                <div class="form-data">
+                  <label>Name</label>
+                </div>
+                <div class="form-data">
+                  <input type="text" name="name" [(ngModel)]="expiryCriteriaObj.name" #name="ngModel" id="name">
+                </div>
+                <div class="form-data">
+                  <label for="">Shape<span class="require">*</span></label>
+                </div>
+                <div class="form-data mul-select"
+                  [ngClass]="{ 'error': shape.invalid && (shape.dirty || shape.touched)}">
+                  <kendo-multiselect name="shape" class="customselect" [data]="allTheShapes"
+                    [(ngModel)]="expiryCriteriaObj.shape" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false" required
+                    [kendoMultiSelectSummaryTag]="0" #shape="ngModel" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allTheShapes, expiryCriteriaObj.shape);"
+                    (open)="filterShapeChk = utilityService.onOpenDropdown(allTheShapes,filterShapeChk, expiryCriteriaObj.shape)"
+                    (filterChange)="filterShape = utilityService.handleFilter($event);allTheShapes = utilityService.filterDropdownSearch(ShapesList, $event, expiryCriteriaObj.shape)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header form-data mb-0 p-2 position-relative c-fil">
+                        <input type="text" name="filterShape" id="filterShape" [(ngModel)]="filterShape"
+                          placeholder="Search Shape">
+                        <span class="k-icon k-i-search"></span>
+                      </div>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterShapeChk" id="filterShapeChk"
+                          title="Select all" [(ngModel)]="filterShapeChk"
+                          (change)="expiryCriteriaObj.shape = utilityService.checkAllListItems(allTheShapes, filterShapeChk, expiryCriteriaObj.shape);">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(expiryCriteriaObj.shape, true)">
+                        {{utilityService.getCommaSapratedString(expiryCriteriaObj.shape)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="form-data">
+                  <label for="">Weight<span class="require">*</span></label>
+                </div>
+                <div class="form-data" [ngClass]="{'error': (errWeight.length > 0 || minWeight.invalid || maxWeight.invalid) && 
+                  (minWeight.touched && maxWeight.touched) }">
+                  <div class="d-flex">
+                    <input type="text" class="me-2" name="minWeight" placeholder="Min" required #minWeight="ngModel"
+                      id="minWeight"
+                      (blur)="errWeight = utilityService.checkMinMaxValidation(expiryCriteriaObj.minWeight, expiryCriteriaObj.maxWeight)"
+                      [(ngModel)]="expiryCriteriaObj.minWeight" (keypress)="utilityService.floatOnly($event);" />
+                    <input type="text" placeholder="Max" required name="maxWeight" #maxWeight="ngModel" id="maxWeight"
+                      [(ngModel)]="expiryCriteriaObj.maxWeight" (keypress)="utilityService.floatOnly($event);"
+                      (blur)="errWeight = utilityService.checkMinMaxValidation(expiryCriteriaObj.minWeight, expiryCriteriaObj.maxWeight)" />
+                  </div>
+                  <span class="font-smaller s-error">{{errWeight.length > 0 ? '(' + errWeight + ')' : ''}}</span>
+                </div>
+                <div class="form-data">
+                  <label for="">Color<span class="require">*</span></label>
+                </div>
+                <div class="form-data mul-select"
+                  [ngClass]="{ 'error': color.invalid && (color.dirty || color.touched) }">
+                  <kendo-multiselect name="color" class="customselect" [data]="allColors" required #color="ngModel"
+                    [(ngModel)]="expiryCriteriaObj.color" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allColors, expiryCriteriaObj.color)"
+                    (open)="filterColorChk = utilityService.onOpenDropdown(allColors,filterColorChk, expiryCriteriaObj.color)"
+                    (filterChange)="filterColor = utilityService.handleFilter($event);allColors = utilityService.filterDropdownSearch(ColorList, $event, expiryCriteriaObj.color)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header form-data mb-0 p-2 position-relative c-fil">
+                        <input type="text" name="filterColor" id="filterColor" [(ngModel)]="filterColor"
+                          placeholder="Search Color">
+                        <span class="k-icon k-i-search"></span>
+                      </div>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterColorChk" id="filterColorChk"
+                          title="Select all" [(ngModel)]="filterColorChk"
+                          (change)="expiryCriteriaObj.color = utilityService.checkAllListItems(allColors,filterColorChk, expiryCriteriaObj.color)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(expiryCriteriaObj.color, true)">
+                        {{utilityService.getCommaSapratedString(expiryCriteriaObj.color)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="form-data">
+                  <label for="">Clarity<span class="require">*</span></label>
+                </div>
+                <div class="form-data mul-select"
+                  [ngClass]="{ 'error': clarity.invalid && (clarity.dirty || clarity.touched) }">
+                  <kendo-multiselect name="clarity" class="customselect" [data]="allClarities" required
+                    [(ngModel)]="expiryCriteriaObj.clarity" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" #clarity="ngModel" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allClarities, expiryCriteriaObj.clarity)"
+                    (open)="filterClarityChk = utilityService.onOpenDropdown(allClarities,filterClarityChk, expiryCriteriaObj.clarity)"
+                    (filterChange)="filterClarity = utilityService.handleFilter($event);allClarities = utilityService.filterDropdownSearch(ClarityList, $event, expiryCriteriaObj.clarity)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header form-data mb-0 p-2 position-relative c-fil">
+                        <input type="text" name="filterClarity" id="filterClarity" [(ngModel)]="filterClarity"
+                          placeholder="Search Clarity">
+                        <span class="k-icon k-i-search"></span>
+                      </div>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterClarityChk" id="filterClarityChk"
+                          title="Select all" [(ngModel)]="filterClarityChk"
+                          (change)="expiryCriteriaObj.clarity = utilityService.checkAllListItems(allClarities,filterClarityChk, expiryCriteriaObj.clarity)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(expiryCriteriaObj.clarity, true)">
+                        {{utilityService.getCommaSapratedString(expiryCriteriaObj.clarity)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="form-data">
+                  <label for="">Cps<span class="require">*</span></label>
+                </div>
+                <div class="form-data mul-select" [ngClass]="{ 'error': cps.invalid && (cps.dirty || cps.touched) }">
+                  <kendo-multiselect name="cps" class="customselect" [data]="allTheCps" required #cps="ngModel"
+                    [(ngModel)]="expiryCriteriaObj.cps" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allTheCps, expiryCriteriaObj.cps)"
+                    (open)="filterCpsChk = utilityService.onOpenDropdown(allTheCps,filterCpsChk, expiryCriteriaObj.cps)"
+                    (filterChange)="filterCps = utilityService.handleFilter($event);allTheCps = utilityService.filterDropdownSearch(CPSList, $event, expiryCriteriaObj.cps)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header form-data mb-0 p-2 position-relative c-fil">
+                        <input type="text" name="filterCps" id="filterCps" [(ngModel)]="filterCps"
+                          placeholder="Search Cps">
+                        <span class="k-icon k-i-search"></span>
+                      </div>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterCpsChk" id="filterCpsChk"
+                          title="Select all" [(ngModel)]="filterCpsChk"
+                          (change)="expiryCriteriaObj.cps = utilityService.checkAllListItems(allTheCps,filterCpsChk, expiryCriteriaObj.cps)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(expiryCriteriaObj.cps, true)">
+                        {{utilityService.getCommaSapratedString(expiryCriteriaObj.cps)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="form-data">
+                  <label>Exp. Day<span class="require">*</span></label>
+                </div>
+                <div class="form-data">
+                  <input type="text" name="days" required [(ngModel)]="expiryCriteriaObj.days" #days="ngModel" id="days"
+                    (keypress)="utilityService.numberOnly($event);">
+                </div>
+                <div class="form-data">
+                  <label for="">BGM</label>
+                </div>
+                <div class="form-data">
+                  <div class="d-flex">
+                    <kendo-switch class="k-widget k-switch-off me-1 mt-1" #isBgm="ngModel" name="isBgm" id="m-chk"
+                      [(ngModel)]="expiryCriteriaObj.isBgm"></kendo-switch>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="onCriteriaSubmit(criteriaForm, false)" [disabled]="!criteriaForm.valid"
+            class="btn btn-primary"><i class="icon-add"></i>New</button>
+          <button class="btn btn-primary" (click)="onCriteriaSubmit(criteriaForm, true)"
+            [disabled]="!criteriaForm.valid">
+            <i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- Pricing Criteria Modal End -->
+<div (document:keydown.esc)="closeAddExpiryCriteria()"></div>
+
+<div kendoDialogContainer></div>

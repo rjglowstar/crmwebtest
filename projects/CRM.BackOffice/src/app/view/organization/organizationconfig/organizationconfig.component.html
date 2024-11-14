@@ -1,0 +1,53 @@
+<title>Organization Configuration</title>
+<section class="or-config-wrap">
+  <div class="content_wrap">
+    <div class="e-left w-100">
+      <div class="breadcrumb bg">
+        <div class="breadcrumb-left">
+          <ul>
+            <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+            <li class="breadcrumb-item"><a routerLink="/organization">Organizations</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {{orgConfig.organizationDNorm.name}}'s Configurations</li>
+          </ul>
+        </div>
+        <div class="breadcrumb-right">
+          <kendo-buttongroup kendoTooltip position="bottom">
+            <button type="button" kendoButton title="Edit Configuration" [disabled]="isEditable"
+              (click)="enableSaveChanges()"><i class="icon-edit"></i></button>
+            <button type="button" kendoButton title="Save Configuration"
+              [disabled]="!isEditable || !orgConfigForm.valid" (click)="submitForPath(orgConfigForm)"><i
+                class="icon-save"></i></button>
+            <button type="button" kendoButton title="Disabled Configuration" [disabled]="!isEditable"
+              (click)="disabledConfiguration()"><i class="icon-delete"></i></button>
+          </kendo-buttongroup>
+        </div>
+      </div>
+      <div class="content_box">
+        <form name="orgConfigForm" #orgConfigForm="ngForm" novalidate>
+          <div class="or-config ms-config">
+            <div class="d-prop-wrap">
+              <div class="flex in-block">
+                <div class="o-title">
+                  <h6 class="title">API-Path Configuration</h6>
+                </div>
+                <div class="o-edit"></div>
+              </div>
+              <div class="wrd grid">
+                <div class="form-data"
+                  [ngClass]="{ 'error': apiPath.invalid && (apiPath.hasError('pattern') || apiPath.dirty || apiPath.touched)}">
+                  <input type="text" name="apiPath" [(ngModel)]="orgConfig.apiPath" #apiPath="ngModel" id="apiPath"
+                    required placeholder="Enter URL" [disabled]="!isEditable" [pattern]="websitePattern"
+                    [ngClass]="{'active':isEditable}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div kendoDialogContainer></div>

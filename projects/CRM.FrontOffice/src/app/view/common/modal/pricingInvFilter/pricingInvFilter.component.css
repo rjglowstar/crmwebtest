@@ -1,0 +1,72 @@
+.stock-search-grid .form-data:nth-child(4) {
+    flex: 0 0 15%;
+}
+
+.slot-wrap {
+    background-color: #d3d3d3;
+    padding: 5px;
+    border-bottom: initial;
+}
+
+.slot-wrap h5 {
+    margin-bottom: initial;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.slot-wrap .o-edit i {
+    font-size: 14px;
+    padding-right: initial;
+}
+
+.i-form.slot-list.info-block {
+    position: relative;
+}
+
+.info-block.slot-list {
+    margin: initial;
+}
+
+.i-form.slot-filter .grid {
+    grid-template-columns: 35px 150px 1fr;
+}
+
+.s-details {
+    position: static;
+    top: 100%;
+    left: 0;
+    background-color: #f4f4f4;
+    padding: 5px;
+    width: 100%;
+    display: block;
+    z-index: 5;
+    height: 48px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.s-details:hover {
+    position: absolute;
+    height: initial;
+    border-left: 1px solid #d3d3d3;
+    border-right: 1px solid #d3d3d3;
+    border-bottom: 1px solid #d3d3d3;
+}
+
+.s-details h6.c-name {
+    width: 279px;
+    overflow: hidden;
+    word-break: break-all;
+}
+
+.slot-modal .modal-body .s-block {
+    min-height: 100px;
+    max-height: 180px;
+    overflow: hidden;
+    overflow-y: scroll;
+    padding-right: 5px;
+}
+
+.s-details .info-block li {
+    color: #fff;
+}

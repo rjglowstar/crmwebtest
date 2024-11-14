@@ -1,0 +1,118 @@
+<title>Biding History</title>
+<section id="wrapper">
+  <div class="content_wrap bidHis">
+    <!-- #region Header -->
+    <div class="breadcrumb">
+      <div class="breadcrumb-left">
+        <ul>
+          <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+          <li class="breadcrumb-item active" aria-current="page">Biding History</li>
+        </ul>
+      </div>
+    </div>
+    <div class="summarybar bg">
+      <div class="summary-left">
+        <ul>
+          <li>Total Stones: <span>{{totalStones}}</span></li>
+          <li>Total Weight : <span>{{totalStonesWeight}}</span></li>
+          <li>Total $/CT : <span>{{totalStonesPerCarat}}</span></li>
+          <li>Total Amount : <span>{{totalStonesAmount}}</span></li>
+        </ul>
+      </div>
+      <div class="summary-right pe-0">
+        <form name="form" #bidHistoryItem="ngForm" novalidate>
+          <div class="inputWrap" style="gap:10px;">
+            <div>
+              <span class="input_label">BID NO: </span>
+              <kendo-dropdownlist [data]="bidingResultDropDownData" [textField]="'bidNumber'" style="width: 200px;"
+                [valueField]="'bidNumber'" [valuePrimitive]="true" [(ngModel)]="bidSearchFilter.bidNumber"
+                [kendoDropDownFilter]="filterSettings" name="bidNumber">
+                <ng-template kendoComboBoxItemTemplate let-dataItem>
+                  <span class="k-state-default temp temp-child">
+                    {{dataItem.bidNumber}} ({{dataItem.startDate| date: 'dd-MM-yy'}} To
+                    {{dataItem.endDate| date:
+                    'dd-MM-yy'}})
+                  </span>
+                </ng-template>
+              </kendo-dropdownlist>
+            </div>
+            <div>
+              <kendo-buttongroup kendoTooltip position="bottom">
+                <button kendoTooltip position="bottom" title="Search" kendoButton class="k-button"
+                  [disabled]="!bidSearchFilter.bidNumber" (click)="bidHistoryItem.form.valid"
+                  (click)="loadApproveHistoryData()"><i class="icon-search"></i></button>
+                <button kendoTooltip position="bottom" title="Download Bid History Excel" kendoButton class="k-button"
+                  [disabled]="!bidSearchFilter.bidNumber" (click)="bidHistoryItem.form.valid"
+                  (click)="downloadExcel()"><i class="icon-excelnew"></i></button>
+              </kendo-buttongroup>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- #endregion -->
+    <div class="content_box content_scroll">
+      <div class="config-main">
+        <div class="panelbar-wrapper">
+          <kendo-panelbar>
+            <kendo-panelbar-item *ngFor="let item of bidHistoryItems">
+              <ng-template kendoPanelBarItemTitle>
+                <ul class="bidhis_summary">
+                  <li>Customer Name: <span>{{item.customer.name}}</span></li>
+                  <li>Total Stones: <span>{{item.totalStones}}</span></li>
+                  <li>Total Weight : <span>{{item.totalWeight.toFixed(2)}}</span></li>
+                  <li>Total $/Ct : <span>{{item.totalPerCarat.toFixed(2)}}</span></li>
+                  <li>Total Amount : <span>{{item.totalAmount.toFixed(2)}}</span></li>
+                </ul>
+              </ng-template>
+              <ng-template kendoPanelBarContent>
+                <div class="grid-wrap">
+                  <kendo-grid [data]="item.invDetailItems" [resizable]="true" [pageable]="false" [sort]="sort"
+                    [reorderable]="true" (sortChange)="sortChange($event)" [sortable]="true" [groupable]="true"
+                    [group]="groups" (groupChange)="groupChange($event)">
+                    <kendo-grid-column field="stoneId" title="StoneId" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="location" title="Location" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="shape" title="Shape" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="weight" title="Carat" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="clarity" title="Clarity" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="cut" title="Cut" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="polish" title="Polish" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="fluorescence" title="fluor" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="measurement" title="Measurement" [width]="80">
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        <span>{{dataItem.measurement?.length}} *
+                          {{dataItem.measurement?.width}} *
+                          {{dataItem.measurement?.height}}</span>
+                      </ng-template>
+                    </kendo-grid-column>
+                    <kendo-grid-column field="measurement.depth" title="Depth %" [width]="80"></kendo-grid-column>
+                    <kendo-grid-column field="measurement.table" title="Table %" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="lab" title="Lab" [width]="50"></kendo-grid-column>
+                    <kendo-grid-column field="certificateNo" title="Report No" [width]="80"></kendo-grid-column>
+                    <kendo-grid-column field="price.rap" title="Rap" [width]="80"></kendo-grid-column>
+                    <kendo-grid-column field="curBidDisc" title="Cur. Bid%" [width]="80"></kendo-grid-column>
+                    <kendo-grid-column field="bidPerCT" title="Bid $/Ct" [width]="80"></kendo-grid-column>
+                    <kendo-grid-column field="bidAmount" title="Bid Amt" [width]="80"></kendo-grid-column>
+                    <kendo-grid-column field="discount" title="Bid Disc" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="isApproved" title="Action" [width]="100">
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        <span *ngIf="dataItem.isApproved" class="approve_sp">Approved</span>
+                      </ng-template>
+                    </kendo-grid-column>
+                    <kendo-grid-column field="approvedBy" title="ApprovedBy" [width]="100"></kendo-grid-column>
+                    <kendo-grid-column field="approvedDate" title="Approved Date" [width]="100">
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        {{dataItem.approvedDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </kendo-grid>
+                </div>
+              </ng-template>
+            </kendo-panelbar-item>
+          </kendo-panelbar>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div kendoDialogContainer></div>

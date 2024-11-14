@@ -1,0 +1,111 @@
+span.u-d-data {
+    padding-left: 4px;
+}
+
+.user-tab i {
+    display: block;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    line-height: 65px;
+    background-color: #e5e5e5;
+    font-size: 22px;
+    text-align: center;
+    padding-right: initial;
+    margin: auto;
+    color: #000;
+}
+
+.user-tab li.active i {
+    background-color: #4d4d4d;
+    color: #fff;
+}
+
+.user-tab a {
+    font-weight: 400;
+    font-size: 14px;
+    color: #000;
+    text-decoration: none;
+}
+
+.user-tab ul {
+    text-align: center;
+}
+
+.user-tab li {
+    display: inline-block;
+    width: 25%;
+    position: relative;
+}
+
+.user-tab li:before {
+    position: absolute;
+    content: "";
+    background: #e5e5e5;
+    width: 40%;
+    height: 2px;
+    top: 40%;
+    left: 80%;
+    transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+}
+
+.user-tab li:last-child:before {
+    content: "";
+    background: transparent;
+}
+
+.c-modal .account-content {
+    margin-top: 15px;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    height: 390px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.c-modal .account-content .form-data {
+    margin-bottom: 10px;
+}
+
+.treeview_parent {
+    display: block;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.treeviewmain {
+    padding: 10px 5px;
+    background: #e5e5e5;
+    font-size: 14px;
+}
+
+.treeview--icon {
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.treeview_child {
+    display: block;
+    padding-bottom: 0;
+    margin-left: 45px;
+}
+
+.treeview_child label {
+    font-size: 14px;
+}
+
+.treeviewmain.abc {
+    padding: 7.5px 0 7.5px 45px;
+}
+
+@media (max-width:767px) {
+    .c-modal .account-content {
+        height: 360px;
+    }
+}

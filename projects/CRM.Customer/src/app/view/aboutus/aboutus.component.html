@@ -1,0 +1,191 @@
+<section class="intro_banner position-relative">
+    <div class="content_wraper">
+        <div class="banner_title">
+            <h1>{{'AboutUs.Excellence, Integrity & Craftsmanship'|translate}}</h1>
+            <h2>{{'AboutUs.ABOUT US'|translate}}</h2>
+        </div>
+        <div class="content1 container" id="shineWith_Sec">
+            <h3 class="secSm_title">{{'AboutUs.SHINE Brighter with us'|translate}}</h3>
+            <h4 class="secLg_title">{{'AboutUs.Crafting Brilliance, Illuminating Stories'|translate}}</h4>
+            <p class="sec_des">{{'AboutUs.ShineSec_Content'|translate}}</p>
+        </div>
+        <div class="img_wrap">
+            <img src="../../../assets/images/abouCrafting_item.png" class="img-fluid mx-auto">
+        </div>
+    </div>
+    <div class="secbg_img">
+        <img src="../../../assets/images/about_intro_bg.jpg" class="img-fluid" alt="glowstar natural diamond">
+    </div>
+</section>
+
+<section class="ourlegacy_sec position-relative">
+    <div class="content_wraper container">
+        <div class="content1">
+            <h3 class="secSm_title">{{'AboutUs.OUR LEGACY'|translate}}</h3>
+            <h4 class="secLg_title">{{'AboutUs.Illuminating Excellence Since 1995'|translate}}</h4>
+            <p class="sec_des">{{'AboutUs.OurLegacy_Content'|translate}}</p>
+        </div>
+    </div>
+</section>
+
+<section class="legacy_sec position-relative" id="legCont_sec">
+    <div class="content_wraper">
+        <div class="content1">
+            <h3 class="secSm_title">{{'AboutUs.LEGACY CONTINUES'|translate}}</h3>
+            <h4 class="secLg_title" [innerHTML]="'AboutUs.Shaping Tomorrow Brilliance, Today'|translate"></h4>
+            <p class="sec_des">{{'AboutUs.LEGACY_Content'|translate}}</p>
+        </div>
+    </div>
+    <div class="secbg_img">
+        <img src="../../../assets/images/about_intro_bg4.png" class="img-fluid" alt="glowstar - LEGACY CONTINUES">
+    </div>
+</section>
+
+<section class="misVision_sec position-relative" id="missVision_sec">
+    <div class="content_wraper">
+        <div class="content1">
+            <h3 class="secSm_title">{{'AboutUs.MISSION_VISION'|translate}}</h3>
+            <h4 class="secLg_title">{{'AboutUs.Guided by Brilliance, Driven by Purpose'|translate}}</h4>
+            <div class="mGrid_wrap">
+                <div class="gridBox">
+                    <div class="img_wrap">
+                        <img src="../../../assets/images/galleryImg_1.png" class="img-fluid"
+                            alt="glowstar natural diamond">
+                    </div>
+                    <p class="sec_des">{{'AboutUs.MisVis_Content_1'|translate}}</p>
+                </div>
+                <div class="gridBox">
+                    <div class="img_wrap">
+                        <img src="../../../assets/images/galleryImg_2.png" class="img-fluid"
+                            alt="glowstar natural diamond">
+                    </div>
+                    <p class="sec_des">{{'AboutUs.MisVis_Content_2'|translate}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="secbg_img">
+        <img src="../../../assets/images/about_intro_bg5.png" class="img-fluid" alt="glowstar natural diamond">
+    </div>
+</section>
+
+<section class="coreValue_sec position-relative">
+    <div class="content_wraper container">
+        <div class="content1">
+            <h3 class="secSm_title">{{'AboutUs.CORE VALUES'|translate}}</h3>
+            <h4 class="secLg_title">{{'AboutUs.A Legacy of Excellence'|translate}}</h4>
+            <swiper [config]="coreValue_Slider" class="corevalue_slider custom_slider">
+                <ng-template swiperSlide>
+                    <div class="content_box">
+                        <div class="icon_wrap"><i class="icon-excellence"></i></div>
+                        <span>{{'AboutUs.Excellence'|translate}}</span>
+                        <p class="sec_des">{{'AboutUs.Excellence_Content'|translate}}</p>
+                    </div>
+                </ng-template>
+                <ng-template swiperSlide>
+                    <div class="content_box">
+                        <div class="icon_wrap"><i class="icon-hand-shake"></i></div>
+                        <span>{{'AboutUs.Integrity'|translate}}</span>
+                        <p class="sec_des">{{'AboutUs.Integrity_content'|translate}}</p>
+                    </div>
+                </ng-template>
+                <ng-template swiperSlide>
+                    <div class="content_box">
+                        <div class="icon_wrap"><i class="icon-Innovation-1"></i></div>
+                        <span>{{'AboutUs.Innovation'|translate}}</span>
+                        <p class="sec_des">{{'AboutUs.Innovation_content'|translate}}</p>
+                    </div>
+                </ng-template>
+                <ng-template swiperSlide>
+                    <div class="content_box">
+                        <div class="icon_wrap"><i class="icon-social_respons"></i></div>
+                        <span>{{'AboutUs.Social Responsibility'|translate}}</span>
+                        <p class="sec_des">{{'AboutUs.SocialRes_Content'|translate}}</p>
+                    </div>
+                </ng-template>
+                <ng-template swiperSlide>
+                    <div class="content_box">
+                        <div class="icon_wrap"><i class="icon-cust_satisfaction"></i></div>
+                        <span>{{'AboutUs.Customer Satisfaction'|translate}}</span>
+                        <p class="sec_des">{{'AboutUs.CustSatis_Content'|translate}}</p>
+                    </div>
+                </ng-template>
+            </swiper>
+        </div>
+    </div>
+    <div class="secbg_img">
+        <img src="../../../assets/images/about_intro_bg6.png" class="img-fluid" alt="glowstar natural diamond">
+    </div>
+</section>
+
+<section class="whyUs_sec position-relative" id="whyUs_sec">
+    <div class="content_wraper container">
+        <div class="content1">
+            <h3 class="secSm_title">{{'AboutUs.WHY US'|translate}}</h3>
+            <h4 class="secLg_title">{{'AboutUs.WHYUS_Content'|translate}}</h4>
+            <swiper [config]="whyUs_slider" class="whyUs_slider custom_slider">
+                <ng-template swiperSlide>
+                    <div class="content_box">
+                        <div class="icon_wrap"><i class="icon-trust_new"></i></div>
+                        <span class="head_txt">{{'AboutUs.Trust and Reliability'|translate}}</span>
+                        <p class="sec_des">{{'AboutUs.TrustRel_Content'|translate}}</p>
+                    </div>
+                </ng-template>
+                <ng-template swiperSlide>
+                    <div class="content_box">
+                        <div class="icon_wrap"><i class="icon-expertise"></i></div>
+                        <span class="head_txt">{{'AboutUs.Expertise and Transparency'|translate}}</span>
+                        <p class="sec_des">{{'AboutUs.ExperTrans_Content'|translate}}</p>
+                    </div>
+                </ng-template>
+                <ng-template swiperSlide>
+                    <div class="content_box">
+                        <div class="icon_wrap"><i class="icon-team-success"></i></div>
+                        <span class="head_txt">{{'AboutUs.Work-Life Balance and Celebration'|translate}}</span>
+                        <p class="sec_des">{{'AboutUs.WorkLife_Content'|translate}}</p>
+                    </div>
+                </ng-template>
+                <ng-template swiperSlide>
+                    <div class="content_box">
+                        <div class="icon_wrap"><i class="icon-Innovation-2"></i></div>
+                        <span class="head_txt">{{'AboutUs.Innovation and Quality'|translate}}</span>
+                        <p class="sec_des">{{'AboutUs.InnovQuality_Content'|translate}}</p>
+                    </div>
+                </ng-template>
+                <ng-template swiperSlide>
+                    <div class="content_box">
+                        <div class="icon_wrap"><i class="icon-professional"></i></div>
+                        <span>{{'AboutUs.Professional Excellence and Effective Communication'|translate}}</span>
+                        <p class="sec_des">{{'AboutUs.ProfeComm_Content'|translate}}</p>
+                    </div>
+                </ng-template>
+            </swiper>
+        </div>
+    </div>
+    <div class="secbg_img">
+        <img src="../../../assets/images/about_intro_bg7.png" class="img-fluid" alt="glowstar natural diamond">
+    </div>
+</section>
+
+<section class="certi_sec position-relative" id="certifi_sec">
+    <div class="content_wraper">
+        <div class="content1">
+            <div class="mGrid_wrap">
+                <div class="gridBox">
+                    <div class="img_wrap">
+                        <img src="../../../assets/images/certi_img.jpg" class="img-fluid"
+                            alt="glowstar natural diamond">
+                    </div>
+                </div>
+                <div class="gridBox">
+                    <h3 class="secSm_title">{{'AboutUs.CERTIFICATIONS'|translate}}</h3>
+                    <h4 class="secLg_title">{{'AboutUs.Where Quality is Certified, Trust is Guaranteed'|translate}}</h4>
+                    <p class="sec_des">{{'AboutUs.CERTIFICATIONS_content'|translate}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="secbg_img">
+        <img src="../../../assets/images/about_intro_bg8.png" class="img-fluid" alt="glowstar natural diamond">
+    </div>
+</section>

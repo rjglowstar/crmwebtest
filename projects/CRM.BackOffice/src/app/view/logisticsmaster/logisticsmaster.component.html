@@ -1,0 +1,347 @@
+<title>Logistics Master</title>
+<section class="logistics-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Logistics Master</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton (click)="openLogisticsMasterDialog()" title="Add Logistic"><i
+                  class="icon-add"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openUpdateLogisticDialog()" title="Edit Logistic">
+                <i class="icon-edit"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openDeleteDialog()" title="Delete Logistic Data"><i
+                  class="icon-trash"></i></button>
+              <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                  class="icon-gridconfig"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <!-- Skeleton start -->
+            <ng-container *ngIf="!gridView">
+              <div class="k-grouping-header k-grouping-header-flex">
+                <div class="k-indicator-container">
+                  <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                  </kendo-skeleton>
+                </div>
+              </div>
+              <table *ngIf="fields && fields.length > 0" class="w-100 skeleton-tbl">
+                <ng-container *ngFor="let field of fields">
+                  <th *ngIf="field.isSelected">
+                    {{field.title}}
+                  </th>
+                </ng-container>
+                <tr *ngFor="let field of skeletonArray">
+                  <ng-container *ngFor="let fieldItem of fields">
+                    <td *ngIf="fieldItem.isSelected">
+                      <kendo-skeleton shape="text" animation="wave" [width]="94" [height]="40">
+                      </kendo-skeleton>
+                    </td>
+                  </ng-container>
+                </tr>
+              </table>
+            </ng-container>
+            <!-- Skeleton End -->
+
+            <!-- Logistic Grid Start -->
+            <kendo-grid #logisticGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+              (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+              [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)"
+              [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+            <!-- Logistic Grid END -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #logisticSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Logistics Name</label>
+                    <input type="text" id="" name="name" [(ngModel)]="logisticCriteria.name" #name="ngModel">
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Country</label>
+                    <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="country" #country="ngModel" (valueChange)="onCountryChange($event)"
+                      [valuePrimitive]="true" [(ngModel)]="logisticCriteria.country">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>State</label>
+                    <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onStateChange($event)" [valuePrimitive]="true" name="state"
+                      #state="ngModel" [(ngModel)]="logisticCriteria.state">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>City</label>
+                    <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city"
+                      #city="ngModel" [(ngModel)]="logisticCriteria.city">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" title="search"
+                      (click)="logisticSearchForm.form.valid && onFilterSubmit(logisticSearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button class="btn btn-action" title="clear" (click)="clearFilter(logisticSearchForm)">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Search End -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="logisticSearchForm.form.valid && onFilterSubmit(logisticSearchForm)"><i
+              class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(logisticSearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Logistics Configuration Modal Start -->
+<div class="modal c-modal addemp la-mas logi-modal" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isLogisticsMaster">
+  <form name="form" #logisticForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-addemployee"></i>Logistics
+            Master</h5>
+          <button type="button" class="close" (click)="closeLogisticsMasterDialog(logisticForm)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form l-master">
+                <h6 class="title"><i class="icon-info"></i>Information</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="lname">Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                    <input type="text" id="" name="name" #name="ngModel" [(ngModel)]="logisticObj.name" required>
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Email<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('email')) || (email.errors?.required && email.touched))}">
+                    <input type="text" id="" name="email" #email="ngModel" [(ngModel)]="logisticObj.email" required
+                      email>
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Mobile No.</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': mobileNo.invalid && (mobileNo.errors?.required && mobileNo.touched) }">
+                    <kendo-maskedtextbox type="text" id="" name="mobileNo" #mobileNo="ngModel"
+                      [(ngModel)]="logisticObj.mobileNo">
+                    </kendo-maskedtextbox>
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Phone No.</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': phoneNo.invalid && (phoneNo.errors?.required && phoneNo.touched) }">
+                    <kendo-maskedtextbox type="text" id="" name="phoneNo" #phoneNo="ngModel"
+                      [(ngModel)]="logisticObj.phoneNo">
+                    </kendo-maskedtextbox>
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Fax No.</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-maskedtextbox type="text" id="" name="faxNo" #faxNo="ngModel"
+                      [(ngModel)]="logisticObj.faxNo">
+                    </kendo-maskedtextbox>
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Website</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': website.invalid && ((website.touched && website.hasError('pattern')) || (website.errors?.required && website.touched))}">
+                    <input type="text" id="" name="website" #website="ngModel" [(ngModel)]="logisticObj.website"
+                      [pattern]="websitePattern">
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Regi.No.</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="registrationNo" #registrationNo="ngModel"
+                      [(ngModel)]="logisticObj.registrationNo">
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">IncomeTax No.</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="incomeTaxNo" #incomeTaxNo="ngModel"
+                      [(ngModel)]="logisticObj.incomeTaxNo">
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Tax No.</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="taxNo" #taxNo="ngModel" [(ngModel)]="logisticObj.taxNo">
+                  </div>
+                </div>
+              </div>
+              <div class="i-form a-add">
+                <h6 class="title"><i class="icon-mapmarker"></i>Address</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label>Line1</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line1" #line1="ngModel"
+                      [(ngModel)]="logisticAddress.line1">
+                    </textarea>
+                  </div>
+                  <div class="form-data">
+                    <label>Line2</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line2" #line2="ngModel"
+                      [(ngModel)]="logisticAddress.line2">
+                    </textarea>
+                  </div>
+                  <div class="form-data">
+                    <label>Type</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listAddressTypeItems" [valuePrimitive]="true" name="addressType"
+                      #addressType="ngModel" [(ngModel)]="logisticAddress.type" [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>Country<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="country" #country="ngModel" (valueChange)="onCountryChange($event)"
+                      [valuePrimitive]="true" [(ngModel)]="logisticAddress.country" required>
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>State</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onStateChange($event)" [valuePrimitive]="true" name="state"
+                      #state="ngModel" [(ngModel)]="logisticAddress.state">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>City</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city"
+                      #city="ngModel" [(ngModel)]="logisticAddress.city">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>ZipCode</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="zipcode" #zipcode="ngModel" [(ngModel)]="logisticAddress.zipCode">
+                  </div>
+                </div>
+
+              </div>
+              <div class="i-form l-con">
+                <h6 class="title"><i class="icon-setting"></i>Configuration</h6>
+                <div class="grid top">
+                  <div class="form-data">
+                    <label for="lname">Tracking API</label>
+                  </div>
+                  <div class="form-data t-ap"
+                    [ngClass]="{ 'error': trackingAPI.invalid && ((trackingAPI.touched && trackingAPI.hasError('pattern')) || (trackingAPI.errors?.required && trackingAPI.touched))}">
+                    <input type="text" id="" name="trackingAPI" #trackingAPI="ngModel"
+                      [(ngModel)]="logisticConfig.trackingAPI" [pattern]="websitePattern">
+                  </div>
+
+                </div>
+                <div class="grid bot mt-1">
+                  <div class="form-data">
+                    <label for="lname">Print Format</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listPrintFormatItems" [valuePrimitive]="true" name="printFormat"
+                      #printFormat="ngModel" [(ngModel)]="logisticConfig.printFormat"
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Excel Format</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listExcelTypeItems" [valuePrimitive]="true" name="excFormat"
+                      #excFormat="ngModel" [(ngModel)]="logisticConfig.excFormat"
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" (click)="onLogisticFormSubmit(logisticForm,false)" [disabled]="!logisticForm.valid"
+            class="btn btn-primary"><i class="icon-add"></i>New</button>
+          <button type="button" (click)="onLogisticFormSubmit(logisticForm,true)" [disabled]="!logisticForm.valid"
+            class="btn btn-primary"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeLogisticsMasterDialog(logisticForm)"></div>
+  </form>
+</div>
+<!-- Logistics Configuration Modal End -->
+
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'Logistic'" [gridName]="'LogisticGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+
+
+<div kendoDialogContainer></div>

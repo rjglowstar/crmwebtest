@@ -1,0 +1,132 @@
+.edinv .modal-body {
+    padding: 7px 0;
+}
+
+.c-modal.edinv .account-content {
+    margin: initial;
+    border: initial;
+    padding: 0 15px;
+    height: auto;
+}
+
+.edinv h5.modal-title i {
+    padding-right: 8px;
+}
+
+.edinv.c-modal .form-data textarea {
+    width: 100%;
+    height: 30px;
+}
+
+.edinv h6.title {
+    margin: initial;
+    padding: initial;
+    border: indigo;
+}
+
+.edinv .i-edit button.active {
+    transform: rotate(90deg);
+}
+
+.edinv .i-edit button {
+    border: initial;
+    background-color: transparent;
+    transform: rotate(-90deg);
+    padding: initial;
+}
+
+.edinv i {
+    font-size: 12px;
+}
+
+.edinv .modal-title i,
+.edinv .i-title i {
+    font-size: 16px;
+}
+
+.gradWrap {
+    display: grid;
+    grid-template-columns: 175px 1fr;
+    gap: 10px;
+}
+
+.grade-info .grid-wrap .k-grid {
+    height: calc(100vh - 39vh) !important;
+    min-height: 200px;
+    height: 100%;
+    position: absolute !important;
+    top: 40px;
+    overflow: auto;
+    width: 100%;
+}
+
+.grade-chart {
+    height: 130px;
+    min-height: 100%;
+}
+
+.chart-height {
+    overflow: auto;
+    height: 100%;
+}
+
+.grade-info .k-chart.k-widget {
+    height: 100%;
+    border: 1px solid #e3e3e3;
+}
+
+.search-stone {
+    margin-top: 5px;
+    height: calc(100vh - 158px);
+    overflow-y: auto;
+}
+
+.search-stone>div {
+    font-size: 14px;
+    padding: 3px 5px;
+    cursor: pointer;
+}
+
+.search-stone>div:hover {
+    background: rgba(77, 77, 77, 0.7);
+    color: #fff;
+}
+
+.search-stone>div.active {
+    background: #4d4d4d;
+    color: #fff;
+}
+
+.grade-grid {
+    overflow-y: hidden !important;
+}
+
+@media (max-width:767px) {
+    .grade-info .grid-wrap .k-grid {
+        position: initial !important;
+        height: calc(100vh - 49vh) !important;
+    }
+
+    .grade-wrap .search-stone {
+        height: initial !important;
+    }
+}
+
+@media (max-width:650px) {
+    .grade-info .grid-wrap .k-grid {
+        position: initial !important;
+        height: calc(100vh - 49vh) !important;
+    }
+}
+
+@media (max-width:575px) {
+    .gradWrap {
+        grid-template: none;
+    }
+
+    .gradWrap .search-stone {
+        height: auto !important;
+        max-height: calc(100vh - 75vh) !important;
+        min-height: 80px !important;
+    }
+}

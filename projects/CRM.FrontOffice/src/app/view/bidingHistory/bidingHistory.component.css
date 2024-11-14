@@ -1,0 +1,47 @@
+.bidhis_summary {
+    display: grid;
+    grid-template-columns: minmax(max-content, 20%) minmax(max-content, 9%) minmax(max-content, 9%) minmax(max-content, 10%) minmax(max-content, 1fr);
+    gap: 15px 25px;
+    line-height: 1;
+    width: 100%;
+}
+
+.bidhis_summary li {
+    font-size: 13px;
+}
+
+.bidhis_summary li span {
+    font-weight: 600;
+}
+
+.bidHis .content_scroll {
+    height: calc(100vh - 140px) !important;
+}
+
+.bidHis .config-main .k-content {
+    padding: 10px;
+}
+
+.bidHis .breadcrumb~.content_box *> :is(.k-grid) {
+    height: auto !important;
+    max-height: 333px !important;
+    min-height: initial !important;
+}
+
+.bidHis kendo-grid-group-panel {
+    display: none !important;
+}
+
+@media(max-width:1199px) {
+    .bidhis_summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 20px;
+    }
+}
+
+@media(max-width:767px) {
+    .bidhis_summary {
+        gap: 10px 15px;
+    }
+}

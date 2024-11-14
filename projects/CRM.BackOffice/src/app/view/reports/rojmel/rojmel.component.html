@@ -1,0 +1,316 @@
+<div class="modal c-modal addemp dialog-xsx-lg" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <form name="form" #rojmelReportForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-reports"></i>Rojmel Report</h5>
+          <button type="button" class="close" (click)="closeReportDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="report-filter">
+                <div class="form-data">
+                  <label for="">From - To Date</label>
+                </div>
+                <div class="form-data">
+                  <kendo-daterange>
+                    <kendo-dateinput kendoDateRangeStartInput [value]="rojmelFilterCriteria.fromDate" class="me-2"></kendo-dateinput>
+                    <kendo-dateinput kendoDateRangeEndInput [value]="rojmelFilterCriteria.toDate"></kendo-dateinput>
+                    <kendo-daterange-popup [animate]="false" adaptiveMode="auto"
+                      subtitle="month/day/year">
+                      <ng-template kendoDateRangePopupTemplate>
+                        <kendo-multiviewcalendar kendoDateRangeSelection [(selectionRange)]="range"
+                          (selectionRangeChange)="dateFilterChanges()">
+                        </kendo-multiviewcalendar>
+                      </ng-template>
+                    </kendo-daterange-popup>
+                  </kendo-daterange>
+                </div>
+                <button kendoButton title="Search" kendoTooltip position="bottom" (click)="filterRojmel()">
+                  <i class=" icon-search pe-0"></i></button>
+                <button kendoButton type="button" kendoTooltip (click)="excelexport.save()" title="Export Excel"> <i
+                    class="icon-excelnew pe-0"></i></button>
+              </div>
+              <div class="rm-title">
+                <h6 class="text-center mb-1"><b>{{fxCredentials.organization}}</b></h6>
+                <p class="text-center mb-0"><label><b>Dates From:</b>
+                    {{rojmelFilterCriteria.fromDate | date: 'dd/MM/yyyy'}} To
+                    {{rojmelFilterCriteria.toDate | date: 'dd/MM/yyyy'}}</label>
+                </p>
+
+                <div class="rm-table k-foot-scroll">
+                  <!-- Credit -->
+                  <div class="grid-1">
+                    <h6 class="text-center mb-0">Credit</h6>
+                    <div class="grid-wrap">
+                      <kendo-grid #creditGrid [resizable]="true" [data]="creditData" class="mb-grid">
+                        <kendo-grid-column field="transactionDate" title="Date" [width]="80">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem.transactionDate | date: 'dd/MM/yyyy'}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="transactionNumber" title="No" [width]="50">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="partyName" title="Party" [width]="150">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="paymentType" title="P. Type" [width]="50">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="addAmount" title="Add. Amt" [width]="50">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.addAmount?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="logisticCharge" title="L. Charge" [width]="50">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.logisticCharge?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="expense" title="Expense" [width]="50">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.expense?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="cashHandlingCharge" title="C. Charge" [width]="50">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.cashHandlingCharge?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="toCurrency" title="Currency" [width]="50">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="amount" title="Amt" [width]="80">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.amount?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="ccAmount" title="CCAmt" [width]="80">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.ccAmount?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+                      </kendo-grid>
+                    </div>
+                  </div>
+
+                  <!-- Debit -->
+                  <div class="grid-1">
+                    <h6 class="text-center mb-0">Debit</h6>
+                    <div class="grid-wrap">
+                      <kendo-grid #debitGrid [resizable]="true" [data]="debitData" class="mb-grid">
+                        <kendo-grid-column field="transactionDate" title="Date" [width]="80">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem.transactionDate | date: 'dd/MM/yyyy'}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="transactionNumber" title="No" [width]="50">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="partyName" title="Party" [width]="150">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="paymentType" title="P. Type" [width]="50">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="addAmount" title="Add. Amt" [width]="50">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.addAmount?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="logisticCharge" title="L. Charge" [width]="50">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.logisticCharge?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="expense" title="Expense" [width]="50">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.expense?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="cashHandlingCharge" title="C. Charge" [width]="50">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.cashHandlingCharge?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="toCurrency" title="Currency" [width]="50">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="amount" title="Amt" [width]="80">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.amount?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="ccAmount" title="CCAmt" [width]="80">
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            {{dataItem?.ccAmount?.toFixed(2)}}
+                          </ng-template>
+                        </kendo-grid-column>
+
+
+                      </kendo-grid>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- #region Summary Section -->
+                <div class="tbl-bg-total">
+                  <div>
+                    <div class="tbl-total" *ngIf="listCreditCurrencyTotal && listCreditCurrencyTotal.length > 0">
+                      <table>
+                        <tr colspan="3">
+                          <td>Credit Summary :</td>
+                        </tr>
+                      </table>
+                      <table *ngIf="listCreditCurrencyTotal && listCreditCurrencyTotal.length > 0">
+                        <tr *ngFor="let item of listCreditCurrencyTotal">
+                          <td>{{item.type}} :</td>
+                          <td>{{item.total}}</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="tbl-total" *ngIf="listDebitCurrencyTotal && listDebitCurrencyTotal.length > 0">
+                      <table>
+                        <tr colspan="3">
+                          <td>Debit Summary :</td>
+                        </tr>
+                      </table>
+                      <table *ngIf="listDebitCurrencyTotal && listDebitCurrencyTotal.length > 0">
+                        <tr *ngFor="let item of listDebitCurrencyTotal">
+                          <td> {{item.type}} :</td>
+                          <td>{{item.total}}</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <!-- #endregion -->
+
+                <div class="rm-table closing-balance">
+                  <h6 class="text-center mb-0">Closing Balance</h6>
+                  <!-- Credit -->
+                  <div class="grid-wrap">
+                    <kendo-grid [resizable]="true" [data]="bankSummary" class="mb-grid">
+                      <kendo-grid-column field="ledger.name" title="Account Name" [width]="150">
+                        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                          {{dataItem.ledger.name}}
+                        </ng-template>
+                        <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                          Total Income
+                        </ng-template>
+                      </kendo-grid-column>
+                      <kendo-grid-column field="ledger.ccType" title="Currency" [width]="80">
+                      </kendo-grid-column>
+                      <kendo-grid-column field="total" title="Amount" [width]="80">
+                        <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                          {{ bankSummaryTotal }}
+                        </ng-template>
+                      </kendo-grid-column>
+
+                    </kendo-grid>
+                  </div>
+
+                  <!-- Debit -->
+                  <div class="grid-wrap">
+                    <kendo-grid [resizable]="true" [data]="cashSummary" class="mb-grid">
+                      <kendo-grid-column field="ledger.name" title="Account Name" [width]="150">
+                        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                          {{dataItem.ledger.name}}
+                        </ng-template>
+                        <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                          Total Income
+                        </ng-template>
+                      </kendo-grid-column>
+                      <kendo-grid-column field="ledger.ccType" title="Currency" [width]="80">
+                      </kendo-grid-column>
+                      <kendo-grid-column field="total" title="Amount" [width]="80">
+                        <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                          {{ cashSummaryTotal }}
+                        </ng-template>
+                      </kendo-grid-column>
+
+                    </kendo-grid>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <kendo-excelexport [data]="exportExcelData" [fileName]="exportFileName" #excelexport>
+      <kendo-excelexport-column-group title="Credit" [headerCellOptions]="{ textAlign: 'center' }">
+        <kendo-excelexport-column field="transactionDateCredit" [locked]="true" title="Date" [width]="100">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="transactionNumberCredit" [locked]="true" title="No" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="partyNameCredit" [locked]="true" title="Party" [width]="200">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="paymentTypeCredit" [locked]="true" title="P.Type" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="addAmountCredit" [locked]="true" title="Add.Amt" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="logisticChargeCredit" [locked]="true" title="L.Charge" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="expenseCredit" [locked]="true" title="Expense" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="cashHandlingChargeCredit" [locked]="true" title="C.Charge" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="toCurrencyCredit" [locked]="true" title="Currency" [width]="50"
+          [groupFooterCellOptions]="{ textAlign: 'right' }"
+          [footerCellOptions]="{ wrap: true, textAlign: 'center',bold:true }">
+          <ng-template kendoExcelExportFooterTemplate let-column="column" height="200">
+            <div [innerHtml]="htmlSummaryCredit()"></div>
+          </ng-template>
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="amountCredit" [locked]="true" title="Amt" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="ccAmountCredit" title="CCAmt" [width]="100"
+          [groupFooterCellOptions]="{ textAlign: 'right' }" [footerCellOptions]="{ wrap: true, textAlign: 'right' }">
+          <ng-template kendoExcelExportFooterTemplate let-column="column">
+            <div [innerHtml]="htmlSummaryCredit(true)"></div>
+          </ng-template>
+        </kendo-excelexport-column>
+      </kendo-excelexport-column-group>
+
+      <kendo-excelexport-column field="blankSpace" [locked]="true" title=" " [width]="100">
+      </kendo-excelexport-column>
+
+      <kendo-excelexport-column-group title="Debit" [headerCellOptions]="{ textAlign: 'center' }">
+        <kendo-excelexport-column field="transactionDateDebit" [locked]="true" title="Date" [width]="100">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="transactionNumberDebit" [locked]="true" title="No" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="partyNameDebit" [locked]="true" title="Party" [width]="200">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="paymentTypeDebit" [locked]="true" title="P.Type" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="addAmountDebit" [locked]="true" title="Add.Amt" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="logisticChargeDebit" [locked]="true" title="L.Charge" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="expenseDebit" [locked]="true" title="Expense" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="cashHandlingChargeDebit" [locked]="true" title="C.Charge" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="toCurrencyDebit" [locked]="true" title="Currency" [width]="50"
+          [groupFooterCellOptions]="{ textAlign: 'right' }"
+          [footerCellOptions]="{ wrap: true, textAlign: 'center' ,bold:true}">
+          <ng-template kendoExcelExportFooterTemplate let-column="column" height="200">
+            <div [innerHtml]="htmlSummaryDebit()"></div>
+          </ng-template>
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="amountDebit" [locked]="true" title="Amt" [width]="50">
+        </kendo-excelexport-column>
+        <kendo-excelexport-column field="ccAmountDebit" title="CCAmt" [width]="100"
+          [groupFooterCellOptions]="{ textAlign: 'right' }" [footerCellOptions]="{ wrap: true, textAlign: 'right' }">
+          <ng-template kendoExcelExportFooterTemplate let-column="column">
+            <div [innerHtml]="htmlSummaryDebit(true)"></div>
+          </ng-template>
+        </kendo-excelexport-column>
+      </kendo-excelexport-column-group>
+    </kendo-excelexport>
+
+    <div (document:keydown.esc)="closeReportDialog()"></div>
+  </form>
+</div>

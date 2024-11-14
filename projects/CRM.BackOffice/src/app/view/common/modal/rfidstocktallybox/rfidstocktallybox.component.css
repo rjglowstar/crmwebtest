@@ -1,0 +1,77 @@
+.stocktally-grid {
+    display: grid;
+    grid-template-columns: 150px 400px 28px 28px;
+    grid-column-gap: 10px;
+    align-items: center;
+    justify-content: end;
+    border-bottom: 1px solid #d3d3d3;
+    padding-bottom: 12px;
+    margin-bottom: 6px;
+}
+
+.boxstaocktally-scroll {
+    height: 400px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.stocktally-grid kendo-floatinglabel {
+    padding-top: 0;
+}
+
+.boxstocktally {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.box-ui {
+    background: whitesmoke;
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #d3d3d3;
+    align-items: center;
+}
+
+.box-ui i {
+    font-size: 16px;
+}
+
+.nrf-div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: 26px;
+    text-align: center;
+    color: #8f8f8f;
+}
+
+@media (max-width:767px) {
+    .boxstocktally {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-gap: 10px;
+    }
+
+    .stocktally-grid {
+        grid-template-columns: 90px 1fr auto auto;
+    }
+
+    .stocktally-grid kendo-floatinglabel {
+        width: 100%;
+    }
+}
+
+@media (max-width:575px) {
+    .boxstocktally {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 10px;
+    }
+}

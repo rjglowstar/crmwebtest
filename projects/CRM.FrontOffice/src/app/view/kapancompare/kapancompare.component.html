@@ -1,0 +1,430 @@
+<title>Kapan Compare</title>
+<section class="kapanCom_sec">
+    <div class="content_wrap">
+        <div class="e-left w-100">
+            <div class="breadcrumb bg">
+                <div class="breadcrumb-left">
+                    <ul>
+                        <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                        <li class="breadcrumb-item active" aria-current="page">Kapan Compare</li>
+                    </ul>
+                </div>
+                <div class="breadcrumb-right pe-0">
+                    <div class="inputWrap">
+                        <div class="d-flex align-items-center">
+                            <span class="input_label">Kapan 1</span>
+                            <kendo-combobox [data]="kapanList" [allowCustom]="false" (valueChange)="filterBySearch()"
+                                [(ngModel)]="kapanFilter.kapanName1">
+                            </kendo-combobox>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="input_label">Kapan 2</span>
+                            <kendo-combobox [data]="kapanList" [allowCustom]="false" (valueChange)="filterBySearch()"
+                                [(ngModel)]="kapanFilter.kapanName2">
+                            </kendo-combobox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content_box">
+                <div class="panelbar-wrapper" style="height: calc(100vh - 138px);overflow: auto;">
+                    <kendo-panelbar *ngIf="compareRes && compareRes.length > 0">
+                        <kendo-panelbar-item [expanded]="true">
+                            <ng-template kendoPanelBarItemTitle>
+                                Summary
+                            </ng-template>
+                            <ng-template kendoPanelBarContent>
+                                <div class="tso-table">
+                                    <table class="tg">
+                                        <thead>
+                                            <tr>
+                                                <th class="tg-0x09" colspan="3">Total</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="tg-0x09"></th>
+                                                <th class="tg-y6fn">{{kapanFilter.kapanName1}}</th>
+                                                <th class="tg-y6fn">{{kapanFilter.kapanName2}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="tg-0x09">Pcs</td>
+                                                <td class="tg-0lax">{{kapan1Summary.totalPcs}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.totalPcs}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Weight</td>
+                                                <td class="tg-0lax">{{kapan1Summary.totalWeight}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.totalWeight}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Amount</td>
+                                                <td class="tg-0lax">{{kapan1Summary.totalAmt}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.totalAmt}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Dcaret</td>
+                                                <td class="tg-0lax">{{kapan1Summary.totalDcaret}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.totalDcaret}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table class="tg">
+                                        <thead>
+                                            <tr>
+                                                <th class="tg-0x09" colspan="3">Sale</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="tg-0x09"></th>
+                                                <th class="tg-y6fn">{{kapanFilter.kapanName1}}</th>
+                                                <th class="tg-y6fn">{{kapanFilter.kapanName2}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="tg-0x09">Pcs</td>
+                                                <td class="tg-0lax">{{kapan1Summary.salePcs}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.salePcs}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Amount</td>
+                                                <td class="tg-0lax">{{kapan1Summary.saleAmount}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.saleAmount}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Difference</td>
+                                                <td class="tg-0lax">{{kapan1Summary.saleDifference}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.saleDifference}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Days</td>
+                                                <td class="tg-0lax">{{kapan1Summary.saleDays}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.saleDays}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table class="tg">
+                                        <thead>
+                                            <tr>
+                                                <th class="tg-0x09" colspan="3">On Hand</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="tg-0x09"></th>
+                                                <th class="tg-y6fn">{{kapanFilter.kapanName1}}</th>
+                                                <th class="tg-y6fn">{{kapanFilter.kapanName2}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="tg-0x09">Pcs</td>
+                                                <td class="tg-0lax">{{kapan1Summary.ohPcs}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.ohPcs}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Amount</td>
+                                                <td class="tg-0lax">{{kapan1Summary.ohAmt}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.ohAmt}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Difference</td>
+                                                <td class="tg-0lax">{{kapan1Summary.ohDifference}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.ohDifference}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Days</td>
+                                                <td class="tg-0lax">{{kapan1Summary.ohDays}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.ohDays}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Stock%</td>
+                                                <td class="tg-0lax">{{kapan1Summary.ohStock}}</td>
+                                                <td class="tg-0lax">{{kapan2Summary.ohStock}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ng-template>
+                        </kendo-panelbar-item>
+
+                        <kendo-panelbar-item [expanded]="false">
+                            <ng-template kendoPanelBarItemTitle>
+                                Color Wise
+                            </ng-template>
+                            <ng-template kendoPanelBarContent>
+                                <div class="tble-scroll">
+                                    <table class="tg" *ngIf="compareRes && compareRes.length > 0">
+                                        <thead>
+                                            <tr>
+                                                <th class="tg-0x09"></th>
+                                                <th class="tg-0x09" *ngFor="let weight of weightRanges"
+                                                    [attr.colspan]="compareRes.length">
+                                                    {{weight.minWeight}}-{{weight.maxWeight}}</th>
+                                                <th class="tg-0x09" [attr.colspan]="compareRes.length">Total
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="tg-0x09">Color</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-y6fn">{{kapanFilter.kapanName1}}</td>
+                                                    <td class="tg-y6fn">{{kapanFilter.kapanName2}}</td>
+                                                </ng-container>
+                                                <td class="tg-0x09">{{kapanFilter.kapanName1}} Total</td>
+                                                <td class="tg-0x09">{{kapanFilter.kapanName2}} Total</td>
+                                            </tr>
+                                            <tr *ngFor="let mI of colorList">
+                                                <td class="tg-0x09">{{mI}}</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-0lax" kendoTooltip position="bottom"
+                                                        [attr.title]="getTooltipVal('color',mI,kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getVal('color',mI,kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                    <td class="tg-0lax" kendoTooltip position="bottom"
+                                                        [attr.title]="getTooltipVal('color',mI,kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getVal('color',mI,kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                </ng-container>
+                                                <td class="tg-0x09" kendoTooltip position="bottom"
+                                                    [attr.title]="getColumnTotalTooltipVal('color',mI,kapanFilter.kapanName1)">
+                                                    {{getColumnTotalVal('color',mI,kapanFilter.kapanName1)}}
+                                                </td>
+                                                <td class="tg-0x09" kendoTooltip position="bottom"
+                                                    [attr.title]="getColumnTotalTooltipVal('color',mI,kapanFilter.kapanName2)">
+                                                    {{getColumnTotalVal('color',mI,kapanFilter.kapanName2)}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Total</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-y6fn" kendoTooltip position="bottom"
+                                                        [attr.title]="getRowTotalTooltipVal('color',kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getRowTotalVal('color',kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                    <td class="tg-y6fn" kendoTooltip position="bottom"
+                                                        [attr.title]="getRowTotalTooltipVal('color',kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getRowTotalVal('color',kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                </ng-container>
+                                                <td class="tg-0x09"></td>
+                                                <td class="tg-0x09"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ng-template>
+                        </kendo-panelbar-item>
+
+                        <kendo-panelbar-item [expanded]="false">
+                            <ng-template kendoPanelBarItemTitle>
+                                Clarity Wise
+                            </ng-template>
+                            <ng-template kendoPanelBarContent>
+                                <div class="tble-scroll">
+                                    <table class="tg" *ngIf="compareRes && compareRes.length > 0">
+                                        <thead>
+                                            <tr>
+                                                <th class="tg-0x09"></th>
+                                                <th class="tg-0x09" *ngFor="let weight of weightRanges"
+                                                    [attr.colspan]="compareRes.length">
+                                                    {{weight.minWeight}}-{{weight.maxWeight}}</th>
+                                                <th class="tg-0x09" [attr.colspan]="compareRes.length">Total
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="tg-0x09">Clarity</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-y6fn">{{kapanFilter.kapanName1}}</td>
+                                                    <td class="tg-y6fn">{{kapanFilter.kapanName2}}</td>
+                                                </ng-container>
+                                                <td class="tg-0x09">{{kapanFilter.kapanName1}} Total</td>
+                                                <td class="tg-0x09">{{kapanFilter.kapanName2}} Total</td>
+                                            </tr>
+                                            <tr *ngFor="let mI of clarityList">
+                                                <td class="tg-0x09">{{mI}}</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-0lax" kendoTooltip position="bottom"
+                                                        [attr.title]="getTooltipVal('clarity',mI,kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getVal('clarity',mI,kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                    <td class="tg-0lax" kendoTooltip position="bottom"
+                                                        [attr.title]="getTooltipVal('clarity',mI,kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getVal('clarity',mI,kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                </ng-container>
+                                                <td class="tg-0x09" kendoTooltip position="bottom"
+                                                    [attr.title]="getColumnTotalTooltipVal('clarity',mI,kapanFilter.kapanName1)">
+                                                    {{getColumnTotalVal('clarity',mI,kapanFilter.kapanName1)}}
+                                                </td>
+                                                <td class="tg-0x09" kendoTooltip position="bottom"
+                                                    [attr.title]="getColumnTotalTooltipVal('clarity',mI,kapanFilter.kapanName2)">
+                                                    {{getColumnTotalVal('clarity',mI,kapanFilter.kapanName2)}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Total</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-y6fn" kendoTooltip position="bottom"
+                                                        [attr.title]="getRowTotalTooltipVal('clarity',kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getRowTotalVal('clarity',kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                    <td class="tg-y6fn" kendoTooltip position="bottom"
+                                                        [attr.title]="getRowTotalTooltipVal('clarity',kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getRowTotalVal('clarity',kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                </ng-container>
+                                                <td class="tg-0x09"></td>
+                                                <td class="tg-0x09"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ng-template>
+                        </kendo-panelbar-item>
+
+                        <kendo-panelbar-item [expanded]="false">
+                            <ng-template kendoPanelBarItemTitle>
+                                CPS Wise
+                            </ng-template>
+                            <ng-template kendoPanelBarContent>
+                                <div class="tble-scroll">
+                                    <table class="tg" *ngIf="compareRes && compareRes.length > 0">
+                                        <thead>
+                                            <tr>
+                                                <th class="tg-0x09"></th>
+                                                <th class="tg-0x09" *ngFor="let weight of weightRanges"
+                                                    [attr.colspan]="compareRes.length">
+                                                    {{weight.minWeight}}-{{weight.maxWeight}}</th>
+                                                <th class="tg-0x09" [attr.colspan]="compareRes.length">Total
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="tg-0x09">CPS</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-y6fn">{{kapanFilter.kapanName1}}</td>
+                                                    <td class="tg-y6fn">{{kapanFilter.kapanName2}}</td>
+                                                </ng-container>
+                                                <td class="tg-0x09">{{kapanFilter.kapanName1}} Total</td>
+                                                <td class="tg-0x09">{{kapanFilter.kapanName2}} Total</td>
+                                            </tr>
+                                            <tr *ngFor="let mI of cpsList">
+                                                <td class="tg-0x09">{{mI}}</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-0lax" kendoTooltip position="bottom"
+                                                        [attr.title]="getTooltipVal('cps',mI,kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getVal('cps',mI,kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                    <td class="tg-0lax" kendoTooltip position="bottom"
+                                                        [attr.title]="getTooltipVal('cps',mI,kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getVal('cps',mI,kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                </ng-container>
+                                                <td class="tg-0x09" kendoTooltip position="bottom"
+                                                    [attr.title]="getColumnTotalTooltipVal('cps',mI,kapanFilter.kapanName1)">
+                                                    {{getColumnTotalVal('cps',mI,kapanFilter.kapanName1)}}
+                                                </td>
+                                                <td class="tg-0x09" kendoTooltip position="bottom"
+                                                    [attr.title]="getColumnTotalTooltipVal('cps',mI,kapanFilter.kapanName2)">
+                                                    {{getColumnTotalVal('cps',mI,kapanFilter.kapanName2)}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Total</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-y6fn" kendoTooltip position="bottom"
+                                                        [attr.title]="getRowTotalTooltipVal('cps',kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getRowTotalVal('cps',kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                    <td class="tg-y6fn" kendoTooltip position="bottom"
+                                                        [attr.title]="getRowTotalTooltipVal('cps',kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getRowTotalVal('cps',kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                </ng-container>
+                                                <td class="tg-0x09"></td>
+                                                <td class="tg-0x09"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ng-template>
+                        </kendo-panelbar-item>
+
+                        <kendo-panelbar-item [expanded]="false">
+                            <ng-template kendoPanelBarItemTitle>
+                                Fluorescence Wise
+                            </ng-template>
+                            <ng-template kendoPanelBarContent>
+                                <div class="tble-scroll">
+                                    <table class="tg" *ngIf="compareRes && compareRes.length > 0">
+                                        <thead>
+                                            <tr>
+                                                <th class="tg-0x09"></th>
+                                                <th class="tg-0x09" *ngFor="let weight of weightRanges"
+                                                    [attr.colspan]="compareRes.length">
+                                                    {{weight.minWeight}}-{{weight.maxWeight}}</th>
+                                                <th class="tg-0x09" [attr.colspan]="compareRes.length">Total
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="tg-0x09">Fluor</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-y6fn">{{kapanFilter.kapanName1}}</td>
+                                                    <td class="tg-y6fn">{{kapanFilter.kapanName2}}</td>
+                                                </ng-container>
+                                                <td class="tg-0x09">{{kapanFilter.kapanName1}} Total</td>
+                                                <td class="tg-0x09">{{kapanFilter.kapanName2}} Total</td>
+                                            </tr>
+                                            <tr *ngFor="let mI of fluoList">
+                                                <td class="tg-0x09">{{mI}}</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-0lax" kendoTooltip position="bottom"
+                                                        [attr.title]="getTooltipVal('fluo',mI,kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getVal('fluo',mI,kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                    <td class="tg-0lax" kendoTooltip position="bottom"
+                                                        [attr.title]="getTooltipVal('fluo',mI,kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getVal('fluo',mI,kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                </ng-container>
+                                                <td class="tg-0x09" kendoTooltip position="bottom"
+                                                    [attr.title]="getColumnTotalTooltipVal('fluo',mI,kapanFilter.kapanName1)">
+                                                    {{getColumnTotalVal('fluo',mI,kapanFilter.kapanName1)}}
+                                                </td>
+                                                <td class="tg-0x09" kendoTooltip position="bottom"
+                                                    [attr.title]="getColumnTotalTooltipVal('fluo',mI,kapanFilter.kapanName2)">
+                                                    {{getColumnTotalVal('fluo',mI,kapanFilter.kapanName2)}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tg-0x09">Total</td>
+                                                <ng-container *ngFor="let weight of weightRanges">
+                                                    <td class="tg-y6fn" kendoTooltip position="bottom"
+                                                        [attr.title]="getRowTotalTooltipVal('fluo',kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getRowTotalVal('fluo',kapanFilter.kapanName1,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                    <td class="tg-y6fn" kendoTooltip position="bottom"
+                                                        [attr.title]="getRowTotalTooltipVal('fluo',kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)">
+                                                        {{getRowTotalVal('fluo',kapanFilter.kapanName2,weight.minWeight+'-'+weight.maxWeight)}}
+                                                    </td>
+                                                </ng-container>
+                                                <td class="tg-0x09"></td>
+                                                <td class="tg-0x09"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ng-template>
+                        </kendo-panelbar-item>
+                    </kendo-panelbar>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div kendoDialogContainer></div>
+</section>

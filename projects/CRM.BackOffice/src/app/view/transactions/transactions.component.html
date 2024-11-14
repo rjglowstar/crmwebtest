@@ -1,0 +1,449 @@
+<title>Transactions</title>
+<section class="party-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <!-- #region Buttons | Header -->
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Transactions</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right pe-0">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton title="Purchase" (click)="openPurchaseDialog()"><i class="icon-addtocart"></i>
+              </button>
+              <button kendoButton title="Sales Invoice" (click)="openSalesDialog(true)"><i class="icon-graph"></i>
+              </button>
+              <button kendoButton title="Proforma Invoice" (click)="openSalesDialog(true,false)"><i
+                  class="icon-invoice-new"></i>
+              </button>
+              <button kendoButton title="Payment" (click)="openPaymentDialog()">
+                <i class="icon-payment"></i>
+              </button>
+              <button kendoButton title="General" (click)="openGeneralDialog()">
+                <i class="icon-transaction"></i>
+              </button>
+              <button kendoButton title="Contra" (click)="openContraDialog()">
+                <i class="icon-contravoucher"></i>
+              </button>
+              <button kendoButton title="Receipt" (click)="openReceiptDialog()">
+                <i class="icon-receipt"></i>
+              </button>
+              <button kendoButton title="Credit Note" (click)="openCreditNoteDialog()">
+                <i class="icon-creditnote"></i>
+              </button>
+              <button kendoButton title="Debit Note" (click)="openDebitNoteDialog()">
+                <i class="icon-debitnote"></i>
+              </button>
+              <button kendoButton title="Convert To Sales" (click)="convertToSales()"
+                [disabled]="mySelection.length != 1 || transactionObj.transactionType.toLowerCase() != 'proforma'"><i
+                  class="icon-convert"></i>
+              </button>
+              <button kendoButton title="Edit" (click)="editTransaction()" [disabled]="mySelection.length != 1"><i
+                  class="icon-edit"></i>
+              </button>
+
+              <button kendoButton #anchor (click)="onPrintToggle()" [disabled]="mySelection.length != 1"
+                title="Print"><i class="icon-print "></i>
+              </button>
+
+              <button kendoButton (click)="filterPartToggle()"><i class="icon-filter"></i></button>
+              <button kendoButton title="Delete" (click)="deleteTransactionConfirm()"
+                [disabled]="(!isDeleteEnabled && mySelection.length != 1) || (isDeleteEnabled && mySelection.length >= 0)"
+                *ngIf="isCanDeleteTransactions"><i class="icon-trash"></i>
+              </button>
+              <button kendoButton title="Export E-Invoice excel" (click)="exportEInvoiceExcel()"
+                [disabled]="mySelection.length == 0"><i class="icon-doc_download"></i>
+              </button>
+              <input #file type="file"
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                (click)="file.value=''" (change)="UploadEWayBillNo($event)" hidden />
+              <button kendoButton title="Upload Eway Bill file" (click)="file.click()">
+                <i class="icon-upload p-0"></i>
+              </button>
+              <button kendoButton [disabled]="mySelection.length == 0" (click)="openExcelDialog()" #anchorExcel
+                title="Export Sale Excel"><i class="icon-excelnew "></i></button>
+              <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                  class="icon-gridconfig"></i></button>
+            </kendo-buttongroup>
+
+            <kendo-popup [anchor]="$any(anchor)" #popup (anchorViewportLeave)="showPrintOption = false"
+              *ngIf="showPrintOption" [anchorAlign]="anchorAlign" [popupAlign]="popupAlign">
+              <div class="p-2 px-2">
+                <div class="text-center">
+                  <button class="btn btn-primary w-100" (click)="transactionPrint(false)">
+                    <i class="icon-print"></i> Print PDF
+                  </button>
+                  <button class="btn btn-primary w-100 d-block mt-1" (click)="transactionPrint(true)">
+                    <i class="icon-print"></i> Above & Below 0.50 CT Invoice
+                  </button>
+                  <button class="btn btn-primary w-100 mt-1"
+                    [disabled]="transactionObj.transactionType.toLowerCase() != 'sales'" (click)="openSendMailDialog()">
+                    <i class="icon-icon_email"></i> Mail PDF
+                  </button>
+                </div>
+              </div>
+            </kendo-popup>
+            <kendo-popup [anchor]="$any(anchorExcel)" #popup (anchorViewportLeave)="showExcelOption = false"
+              *ngIf="showExcelOption" [anchorAlign]="anchorAlign" [popupAlign]="popupAlign">
+              <div class="content p-2 pb-0">
+                <div class="mb-2">
+                  <input type="radio" name="excelOption" value="Export_Trans" #Export_Trans [(ngModel)]="excelOption"
+                    kendoRadioButton />
+                  <label class="k-label" class="ms-2" [for]="Export_Trans">Export Transaction</label>
+                </div>
+                <div class="mb-2" *ngIf="salespackage">
+                  <input type="radio" [disabled]="!salespackage" name="excelOption" value="sales_package" #sales_package
+                    [(ngModel)]="excelOption" kendoRadioButton />
+                  <label class="k-label" class="ms-2" [for]="sales_package">Export Purchase List </label>
+                </div>
+                <div class="col-md-12">
+                  <div class="text-center pb-2">
+                    <button class="btn btn-primary w-100" [disabled]="!excelOption"
+                      (click)="exportToTransactionExcel('export')">
+                      <i class="icon-excelnew"></i> Export to Excel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </kendo-popup>
+          </div>
+        </div>
+        <!-- #endregion -->
+        <!-- #region Page content here -->
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid [data]="gridView" class="grid-ui upload-grid" [sortable]="true" [sort]="sort"
+              (sortChange)="sortChange($event)" [groupable]="true" [group]="groups" (groupChange)="groupChange($event)"
+              (selectionChange)="onSelect($event)" [selectable]="selectableSettings" [resizable]="true"
+              [(selectedKeys)]="mySelection" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+              (pageChange)="pageChange($event)" [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title"
+                      [sortable]="(field.propertyName == 'checkbox')?false:true">
+                      <ng-template *ngIf="field.propertyName == 'checkbox'" kendoGridHeaderTemplate>
+                        <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox" />
+                        <label class="k-checkbox-label" for="headerCheckbox"></label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.title == 'Checkbox'">
+                        <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                          id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Weight'">
+                        {{getWeightOfTransactionItems(dataItem.items)}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'createdDate'">
+                        {{dataItem.createdDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'transactionDate'">
+                        {{dataItem.transactionDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'paidDate'">
+                        {{dataItem.paidDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem
+                        *ngIf="field.propertyName == 'transactionDetail.dueDate'">
+                        {{dataItem.transactionDetail.dueDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+        <!-- #endregion Page content here -->
+      </div>
+      <!-- #region  Search start -->
+
+      <div class="sr-wrap transaction-panel" [ngClass]="{'active': filterFlag}">
+        <div class="sr">
+          <h6>Search By Filter <i class="icon-delete float-end mt-1 me-1" (click)="filterPartToggle()"></i></h6>
+          <form name="form">
+            <div class="i-form">
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">Stone Id</label>
+                  <input type="text" name="stoneId" #stoneId="ngModel" [(ngModel)]="filterStoneId"
+                    placeholder="Filter stoneid in sales/purchase">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">Certi No</label>
+                  <input type="text" name="certiNo" #certiNo="ngModel" [(ngModel)]="filterCertificateNo"
+                    placeholder="Filter certificateno in sales/purchase">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">From Date</label>
+                  <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="fDate" #fDate="ngModel"
+                    [(ngModel)]="transactionSearchCriteria.fromDate">
+                  </kendo-datepicker>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">To Date</label>
+                  <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="tDate" #tDate="ngModel"
+                    [(ngModel)]="transactionSearchCriteria.toDate">
+                  </kendo-datepicker>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="">Invoice No</label>
+                  <input type="text" name="invNo" #invNo="ngModel" [(ngModel)]="transactionSearchCriteria.orderNumber"
+                    placeholder="Ref invoice no">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label>Type</label>
+                  <kendo-multiselect name="status" class="customselect" [data]="transactionTypeList"
+                    [(ngModel)]="transactionSearchCriteria.transactionType" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                    (valueChange)="utilityService.onMultiSelectChange(transactionTypeList, transactionSearchCriteria.transactionType)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="dropdown-header single k-widget k-header">
+                        <span class="temp-single">Select Type</span>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(transactionSearchCriteria.transactionType, true)">
+                        {{utilityService.getCommaSapratedString(transactionSearchCriteria.transactionType)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label>Party Group</label>
+                  <kendo-combobox [data]="ledgerGroupData" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                    [valueField]="'name'" name="partyGroup" #partyGroup="ngModel" [valuePrimitive]="true"
+                    [(ngModel)]="selectedLedgerGroup">
+                  </kendo-combobox>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label>Party</label>
+                  <kendo-combobox [data]="partyItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                    [valueField]="'name'" name="party" #party="ngModel" [valuePrimitive]="true"
+                    [(ngModel)]="selectedLedgerName">
+                  </kendo-combobox>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                  <ng2-tri-state-checkbox id="a-showOnlyUnpaid" name="isshowOnlyUnpaid"
+                    [(ngModel)]="transactionSearchCriteria.showOnlyUnpaid" #isshowOnlyUnpaid="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label for="a-showOnlyUnpaid"> Show Only Unpaid</label>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+                  <div class="grid-2 form-data check-box">
+                    <ng2-tri-state-checkbox [(ngModel)]="transactionSearchCriteria.isOverseas" name="isOverseas"
+                      #isOverseas="ngModel">
+                    </ng2-tri-state-checkbox>
+                    <label class="k-checkbox-label">Is Overseas</label>
+                  </div>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                  <button class="btn btn-action" (click)="filterTransaction()">
+                    <i class="icon-search"></i>Search
+                  </button>
+                  <button class="btn btn-action" (click)="clearTransaction()">
+                    <i class="icon-clear"></i>Clear
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- #endregion -->
+    </div>
+    <!-- <div class="f-btn" [ngClass]="{'active': filterFlag}">
+          <ul>
+            <li><button class="open-filter" (click)="skip=0;filterPartToggle()"><i class="icon-filter"></i></button>
+            </li>
+            <li><button (click)="loadTransaction()"><i class="icon-search"></i></button></li>
+            <li><button (click)="clearTransaction()"><i class="icon-clear"></i></button></li>
+          </ul>
+        </div> -->
+  </div>
+</section>
+
+<!-- Delete Password Modal Start -->
+<div class="modal addemp dialog-ex-xs c-modal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="confirmPassword">
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Authorize Password For Remove Transaction</h5>
+        <button type="button" class="close" (click)="closeConfirmPasswordModel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 form-data">
+            <label for="">Password</label>
+            <input type="password" name="pass" #pass="ngModel" [(ngModel)]="password" placeholder="Password">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button kendoButton (click)="closeConfirmPasswordModel()" class="btn btn-primary">Cancel</button>
+        <button kendoButton (click)="checkPassword()" class="btn btn-primary">Remove</button>
+      </div>
+    </div>
+  </div>
+  <div (document:keydown.esc)="closeConfirmPasswordModel()"></div>
+</div>
+<!-- Delete Password Modal End -->
+
+<!-- #region Purchase Dialog -->
+<ng-container *ngIf="isPurchase">
+  <app-purchase (toggle)="closePurchaseDialog()" (toggleClose)="isPurchase=$event" [transactionObj]="transactionObj">
+  </app-purchase>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Sales Dialog -->
+<ng-container *ngIf="isSales">
+  <app-sales (toggle)="closeSalesDialog($event)" [transactionObj]="transactionObj"></app-sales>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region General Dialog -->
+<ng-container *ngIf="isGeneralDialog">
+  <app-general (toggle)="closeGeneralDialog()" (toggleClose)="isGeneralDialog=$event" [transactionObj]="transactionObj">
+  </app-general>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Receipt Dialog -->
+<ng-container *ngIf="isReceiptDialog">
+  <app-receipt (toggle)="closeReceiptDialog($event)" (toggleClose)="closeReceiptDialog(false)"
+    [transactionObj]="transactionObj">
+  </app-receipt>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Payment Dialog -->
+<ng-container *ngIf="isPaymentDialog">
+  <app-payment (toggle)="closePaymentDialog($event)" (toggleClose)="closePaymentDialog(false)"
+    [transactionObj]="transactionObj">
+  </app-payment>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Contra Dialog -->
+<ng-container *ngIf="isContraDialog">
+  <app-contravoucher (toggle)="closeContraDialog()" (toggleClose)="isContraDialog=$event"
+    [transactionObj]="transactionObj">
+  </app-contravoucher>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Credit Note Dialog -->
+<ng-container *ngIf="isCreditNoteDialog">
+  <app-creditnote (toggle)="closeCreditNoteDialog()" (toggleClose)="isCreditNoteDialog=$event"
+    [transactionObj]="transactionObj">
+  </app-creditnote>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Debit Note Dialog -->
+<ng-container *ngIf="isDebitNoteDialog">
+  <app-debitnote (toggle)="closeDebitNoteDialog()" (toggleClose)="isDebitNoteDialog=$event"
+    [transactionObj]="transactionObj">
+  </app-debitnote>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Grid config -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'Transaction'" [gridName]="'TransactionGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion Grid config -->
+
+<!-- #region Send Mail -->
+<div class="modal addemp c-modal s-email dialog-ex-xs" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isSendMail">
+  <form name="sendMailForm" #sendMailForm="ngForm" novalidate>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="icon-icon_email"></i>Send Mail</h5>
+          <button type="button" class="close" (click)="closeSendMailDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="i-form">
+            <div class="mail-grid">
+              <div class="form-data">
+                <label>To</label>
+              </div>
+              <div class="form-data">
+                <input type="text" name="toEmail" class="k-input" [(ngModel)]="exportToPdfMailObj.toEmail">
+              </div>
+              <div class="form-data">
+                <label>CC</label>
+              </div>
+              <div class="form-data">
+                <textarea cols="4" name="cc" placeholder="comma saperated email address"
+                  [(ngModel)]="exportToPdfMailObj.cc" #cc="ngModel" id="cc"></textarea>
+              </div>
+              <div class="form-data">
+                <label>BCC</label>
+              </div>
+              <div class="form-data">
+                <textarea cols="4" name="bcc" placeholder="comma saperated email address"
+                  [(ngModel)]="exportToPdfMailObj.bcc" #bcc="ngModel" id="bcc"></textarea>
+              </div>
+              <div class="form-data">
+                <label>Subject <span class="require">*</span></label>
+              </div>
+              <div class="form-data">
+                <input type="text" name="subject" class="k-input" [(ngModel)]="exportToPdfMailObj.subject"
+                  #subject="ngModel" id="subject" required placeholder="Subject">
+              </div>
+              <div class="form-data">
+                <label>Body</label>
+              </div>
+              <div class="form-data">
+                <textarea cols="4" name="body" placeholder="Body" [(ngModel)]="exportToPdfMailObj.body" #body="ngModel"
+                  id=""></textarea>
+              </div>
+              <div class="form-data">
+                <label>Attachment</label>
+              </div>
+              <div class="form-data attachment-dialog">
+                <i class="icon-attachament"></i>
+                <a href="javascript:void(0);" (click)="transactionPrint()">Pdf File</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="sendMail(sendMailForm)" [disabled]="!sendMailForm.valid"><i
+              class="icon-icon_email"></i>Send</button>
+          <button class="btn btn-primary" (click)="closeSendMailDialog()"><i class="icon-clear"></i>Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeSendMailDialog()"></div>
+  </form>
+</div>
+<!-- #endregion-->
+
+<div kendoDialogContainer></div>

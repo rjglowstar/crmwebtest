@@ -1,0 +1,473 @@
+<title>Master Config</title>
+<section>
+  <div class="content_wrap">
+    <div class="breadcrumb bg">
+      <div class="breadcrumb-left">
+        <ul>
+          <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+          <li class="breadcrumb-item active" aria-current="page">Configuration</li>
+        </ul>
+      </div>
+      <div class="breadcrumb-right pe-0">
+        <button kendoTooltip position="bottom" (click)="updateConfigurationData()" title="Save Configruation"
+          kendoButton class="k-button"><i class="icon-save"></i></button>
+      </div>
+    </div>
+
+    <div class="config-main">
+      <kendo-panelbar class="configWrap">
+        <kendo-panelbar-item title="Diamond Configuration" [expanded]="true">
+          <ng-template kendoPanelBarContent>
+            <div class="configGrid_wrap">
+              <div class="form-data">
+                <label class="col-from-label">Days For New Diamonds</label>
+                <input type="text" [(ngModel)]="configurations.newDiamondsDays"
+                  (keypress)="utilityService.numberOnly($event)" class="input-sm form-control text-start"
+                  name="newDiamondsDays" />
+              </div>
+              <div class="form-data">
+                <label class="col-from-label">Month For InActivate Account</label>
+                <input type="text" [(ngModel)]="configurations.inActiveAccountMonth"
+                  (keypress)="utilityService.numberOnly($event)" class="input-sm form-control text-start"
+                  name="inActiveAccountMonth" />
+              </div>
+              <div class="form-data">
+                <label class="col-from-label">Minutes For Remove Diamond From Cart</label>
+                <input type="text" [(ngModel)]="configurations.removeDiamondsCartMinutes"
+                  (keypress)="utilityService.numberOnly($event)" class="input-sm form-control text-start"
+                  name="removeDiamondsCartMinutes" />
+              </div>
+              <div class="permission_body--item d-flex">
+                <input type="checkbox" class="k-checkbox" id="allowBidHistory" name="allowBidHistory"
+                  [(ngModel)]="configurations.allowBidHistory">
+                <label class="k-checkbox-label" for="allowBidHistory">Allow User To Show
+                  BidHistory</label>
+              </div>
+              <div class="permission_body--item d-flex">
+                <input type="checkbox" class="k-checkbox" id="vow" name="vow"
+                  [(ngModel)]="configurations.showVOWDiscount">
+                <label class="k-checkbox-label" for="vow">Show V.O.W. Dis</label>
+              </div>
+            </div>
+          </ng-template>
+        </kendo-panelbar-item>
+
+        <kendo-panelbar-item title="Email Credential" [expanded]="true">
+          <ng-template kendoPanelBarContent>
+            <div class="configGrid_wrap">
+              <div class="form-data">
+                <label class="col-from-label">Email ID</label>
+                <input type="text" [(ngModel)]="configurations.emailCredential.emailId"
+                  class="input-sm form-control text-start" name="emailId" />
+              </div>
+              <div class="form-data">
+                <label class="col-from-label">Password</label>
+                <input type="password" [(ngModel)]="configurations.emailCredential.password"
+                  class="input-sm form-control text-start" name="password" />
+              </div>
+              <div class="form-data">
+                <label class="col-from-label">SMTP</label>
+                <input type="text" [(ngModel)]="configurations.emailCredential.smtp"
+                  class="input-sm form-control text-start" name="smtp" />
+              </div>
+              <div class="form-data">
+                <label class="col-from-label">Pert No</label>
+                <input type="text" [(ngModel)]="configurations.emailCredential.pertNo"
+                  class="input-sm form-control text-start" name="pertNo" />
+              </div>
+            </div>
+          </ng-template>
+        </kendo-panelbar-item>
+
+        <kendo-panelbar-item title="Email Configuration" [expanded]="true">
+          <ng-template kendoPanelBarContent>
+            <div class="configGrid_wrap">
+              <div class="form-data">
+                <label class="col-from-label">Contact No</label>
+                <input type="text" [(ngModel)]="configurations.emailConfiguration.contactNo"
+                  class="input-sm form-control text-start" name="contactNo" />
+              </div>
+              <div class="form-data">
+                <label class="col-from-label">LandLine No</label>
+                <input type="text" [(ngModel)]="configurations.emailConfiguration.landlineNo"
+                  class="input-sm form-control text-start" name="landlineNo" />
+              </div>
+              <div class="form-data">
+                <label class="col-from-label">WebSite</label>
+                <input type="text" [(ngModel)]="configurations.emailConfiguration.website"
+                  class="input-sm form-control text-start" name="website" />
+              </div>
+              <div class="form-data">
+                <label class="col-from-label">Address</label>
+                <input type="text" [(ngModel)]="configurations.emailConfiguration.address"
+                  class="input-sm form-control text-start" name="address" />
+              </div>
+              <div class="form-data">
+                <label class="col-from-label">Facebook Link</label>
+                <input type="text" [(ngModel)]="configurations.emailConfiguration.facebookLink"
+                  class="input-sm form-control text-start" name="facebookLink" />
+              </div>
+              <div class="form-data">
+                <label class="col-from-label">Tweeter Link</label>
+                <input type="text" [(ngModel)]="configurations.emailConfiguration.tweeterLink"
+                  class="input-sm form-control text-start" name="tweeterLink" />
+              </div>
+            </div>
+          </ng-template>
+        </kendo-panelbar-item>
+
+        <kendo-panelbar-item title="API" [expanded]="true">
+          <ng-template kendoPanelBarContent>
+            <div class="configGrid_wrap">
+              <div class="form-data">
+                <label class="col-from-label">Sales API</label>
+                <input type="text" [(ngModel)]="configurations.apiConfiguration.salesApi"
+                  class="input-sm form-control text-start" name="salesApi" />
+              </div>
+              <div class="form-data">
+                <label class="col-from-label">Media API</label>
+                <input type="text" [(ngModel)]="configurations.apiConfiguration.mediaApi"
+                  class="input-sm form-control text-start" name="mediaApi" />
+              </div>
+            </div>
+          </ng-template>
+        </kendo-panelbar-item>
+
+        <kendo-panelbar-item title="Currency" [expanded]="true" class="column12">
+          <ng-template kendoPanelBarContent>
+            <form name="form" #currencyForm="ngForm" novalidate>
+              <div class="currency-grid">
+                <div class="form-data">
+                  <label for="lname">From</label>
+                </div>
+                <div class="form-data"
+                  [ngClass]="{ 'error': fromCurrency.invalid && (fromCurrency.dirty || fromCurrency.touched)}">
+                  <kendo-dropdownlist [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+                    valueField="value" name="fromCurrency" [(ngModel)]="currencyTypeObj.fromCurrency"
+                    #fromCurrency="ngModel" required [disabled]="true">
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data">
+                  <label for="lname">Rate</label>
+                </div>
+                <div class="form-data"
+                  [ngClass]="{ 'error': fromRate.invalid && (fromRate.errors?.required && fromRate.touched) }">
+                  <input type="text" name="fromRate" #fromRate="ngModel" [(ngModel)]="currencyTypeObj.fromRate"
+                    (keypress)="utilityService.floatOnly($event)" required disabled="true">
+                </div>
+                <div class="form-data">
+                  <label for="lname">To</label>
+                </div>
+                <div class="form-data"
+                  [ngClass]="{ 'error': toCurrency.invalid && (toCurrency.dirty || toCurrency.touched)}">
+                  <kendo-dropdownlist [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+                    valueField="value" name="toCurrency" [(ngModel)]="currencyTypeObj.toCurrency" #toCurrency="ngModel"
+                    [disabled]="true" required>
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data">
+                  <label for="lname">Rate</label>
+                </div>
+                <div class="form-data"
+                  [ngClass]="{ 'error': toRate.invalid && (toRate.errors?.required && toRate.touched) }">
+                  <input type="text" name="toRate" #toRate="ngModel" [(ngModel)]="currencyTypeObj.toRate"
+                    (keypress)="utilityService.floatOnly($event)" required>
+                </div>
+                <div class="form-data">
+                  <ng-container>
+                    <button class="btn btn-primary icon-add" (click)="onCurrencySubmit(currencyForm)"
+                      [disabled]="!currencyForm.valid"></button>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="currency-list border mt-2">
+                <div class="lab-list ms-config">
+                  <ul *ngIf="currencyTypes && currencyTypes.length > 0">
+                    <li *ngFor="let item of currencyTypes;let i = index">
+                      <div class="w-100 d-inline-flex align-items-center justify-content-between">
+                        <span>
+                          <!-- <span class="font600">fromCurrency: </span> -->
+                          {{item.fromCurrency}}
+                          <!-- <span class="font600">fromRate:</span>
+                          {{item.fromRate}} -->
+                          <span class="font600">To: </span>
+                          {{item.toCurrency}}
+                          <span class="font600">Rate:</span>
+                          {{item.toRate}}
+                        </span>
+                        <button class="btn"><i title="Edit" class="icon-edit"
+                            (click)="editCurrencyType(item,i);"></i></button>
+                        <!-- <button class="btn"><i title="Delete" class="icon-trash" (click)="deleteCurrencyType(item,i);"></i></button> -->
+                      </div>
+                    </li>
+                  </ul>
+                  <ul *ngIf="currencyTypes && currencyTypes.length == 0">
+                    <li>
+                      No Currency Types Found
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </form>
+          </ng-template>
+        </kendo-panelbar-item>
+
+        <kendo-panelbar-item title="Rejected Offer Criteria" [expanded]="true" class="column22">
+          <ng-template kendoPanelBarContent>
+            <form name="form" #rejectedOffer="ngForm" novalidate>
+              <div class="offer-grid">
+                <div class="form-data">
+                  <label for="lname">Shape</label>
+                </div>
+                <div class="form-data mul-select"
+                  [ngClass]="{ 'error': shape.invalid && (shape.dirty || shape.touched)}">
+                  <kendo-multiselect name="shape" class="customselect" [data]="allTheShapes"
+                    [(ngModel)]="rejectedOfferCriteriaObj.shapes" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" #shape="ngModel" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allTheShapes, rejectedOfferCriteriaObj.shapes)"
+                    (open)="filterShapeChk = utilityService.onOpenDropdown(allTheShapes,filterShapeChk, rejectedOfferCriteriaObj.shapes)"
+                    (filterChange)="filterShape = utilityService.handleFilter($event);allTheShapes = utilityService.filterDropdownSearch(ShapesList, $event, rejectedOfferCriteriaObj.shapes)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header form-data mb-0 p-2 position-relative c-fil">
+                        <input type="text" name="filterShape" id="filterShape" [(ngModel)]="filterShape"
+                          placeholder="Search Shape">
+                        <span class="k-icon k-i-search"></span>
+                      </div>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterShapeChk" id="filterShapeChk"
+                          title="Select all" [(ngModel)]="filterShapeChk"
+                          (change)="rejectedOfferCriteriaObj.shapes = utilityService.checkAllListItems(allTheShapes, filterShapeChk, rejectedOfferCriteriaObj.shapes)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(rejectedOfferCriteriaObj.shapes, true)">
+                        {{utilityService.getCommaSapratedString(rejectedOfferCriteriaObj.shapes)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="form-data">
+                  <label for="lname">Weight</label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': wMin.invalid && (wMin.errors?.required && wMin.touched) }">
+                  <input type="text" name="wMin" #wMin="ngModel" [(ngModel)]="rejectedOfferCriteriaObj.weightMin"
+                    (keypress)="utilityService.floatOnly($event)" required placeholder="Min">
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': wMax.invalid && (wMax.errors?.required && wMax.touched) }">
+                  <input type="text" name="wMax" #wMax="ngModel" [(ngModel)]="rejectedOfferCriteriaObj.weightMax"
+                    (keypress)="utilityService.floatOnly($event)" required placeholder="Max">
+                </div>
+                <div class="form-data">
+                  <ng-container>
+                    <button class="btn btn-primary " [disabled]="!rejectedOffer.valid"
+                      (click)="onRejectedOfferSubmit(rejectedOffer)"><i title="Add" class="icon-add"
+                        *ngIf="rejectedOfferIndex < 0"></i>
+                      <i *ngIf="rejectedOfferIndex>=0" title="Edit" class="icon-edit"></i></button>
+                  </ng-container>
+                </div>
+                <div class="form-data">
+                  <ng-container>
+                    <button class="btn btn-primary " [disabled]="rejectedOfferIndex < 0"
+                      (click)="clearRejectedOffer()"><i title="Clear" class="icon-delete"></i></button>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="offer-list border mt-2">
+                <div class="lab-list ms-config">
+                  <ul *ngIf="rejectedOfferCriteriaes && rejectedOfferCriteriaes.length > 0">
+                    <li *ngFor="let item of rejectedOfferCriteriaes;let i = index">
+                      <div class="w-100 d-inline-flex align-items-center justify-content-between">
+                        <span>
+                          <span class="font600">Shapes: <div>{{item.shapes.join(", ")}}</div></span>
+                          <span class="font600">Min: </span>
+                          {{item.weightMin}} CT
+                          <span class="font600">Max:</span>
+                          {{item.weightMax}} CT
+                        </span>
+                        <div class="btnGroup">
+                          <button class="btn" (click)="deleteRejectedOffer(item,i);"><i title="Delete"
+                              class="icon-trash"></i></button>
+                          <button class="btn" (click)="editRejectedOffer(item,i);"><i title="Edit"
+                              class="icon-edit"></i></button>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                  <ul *ngIf="rejectedOfferCriteriaes && rejectedOfferCriteriaes.length == 0">
+                    <li>
+                      No Offer Criteria Types Found
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </form>
+          </ng-template>
+        </kendo-panelbar-item>
+
+        <kendo-panelbar-item title="Make a Default System Admin" [expanded]="true" class="column12">
+          <ng-template kendoPanelBarContent>
+            <form name="form" #dadminForm="ngForm" novalidate>
+              <div class="currency-grid default_sysGrid">
+                <div class="form-data">
+                  <label for="lname">Admin</label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                  <kendo-dropdownlist [data]="listAdmins" textField="text" valueField="value" id="admin" name="name"
+                    [(ngModel)]="selectedAdmin" #name="ngModel" (valueChange)="adminChange()" required>
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data">
+                  <label for="lname">Customer Verification</label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': custVeriUser.invalid && (custVeriUser.dirty || custVeriUser.touched)}">
+                  <kendo-dropdownlist [data]="listAdmins" textField="text" valueField="value" name="custVeriUser"
+                    [(ngModel)]="selectedCustVeriUser" #custVeriUser="ngModel" (valueChange)="custVeriUserChange()" required>
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data">
+                  <label for="lname">Add Discount</label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': addDiscUser.invalid && (addDiscUser.dirty || addDiscUser.touched)}">
+                  <kendo-dropdownlist [data]="listAdmins" textField="text" valueField="value" name="addDiscUser"
+                    [(ngModel)]="selectedAddDiscUser" #addDiscUser="ngModel" (valueChange)="addDiscUserChange()" required>
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data">
+                  <label for="lname">Lead Party change</label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': leadPartyChangeUser.invalid && (leadPartyChangeUser.dirty || leadPartyChangeUser.touched)}">
+                  <kendo-dropdownlist [data]="listAdmins" textField="text" valueField="value" name="leadPartyChangeUser"
+                    [(ngModel)]="selectedLeadPartyChangeUser" #leadPartyChangeUser="ngModel" (valueChange)="leadPartyUserChange()" required>
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data">
+                  <label for="lname">Lead Rejected</label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': leadRejUser.invalid && (leadRejUser.dirty || leadRejUser.touched)}">
+                  <kendo-dropdownlist [data]="listAdmins" textField="text" valueField="value" name="leadRejUser"
+                    [(ngModel)]="selectedLeadRejUser" #leadRejUser="ngModel" (valueChange)="leadRejUserChange()" required>
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data">
+                  <label for="lname">Sales/Order Cancel</label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': salesAndOrderCancelUser.invalid && (salesAndOrderCancelUser.dirty || salesAndOrderCancelUser.touched)}">
+                  <kendo-dropdownlist [data]="listAdmins" textField="text" valueField="value" name="salesCancelUserChange"
+                    [(ngModel)]="selectedSalesOrderCancelUser" #salesAndOrderCancelUser="ngModel" (valueChange)="salesOrderCancelUserChange()" required>
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data">
+                  <label for="lname">Customer Name Change</label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': custNameChangeUser.invalid && (custNameChangeUser.dirty || custNameChangeUser.touched)}">
+                  <kendo-dropdownlist [data]="listAdmins" textField="text" valueField="value" name="custNameChangeUser"
+                    [(ngModel)]="selectedCustNameChangeUser" #custNameChangeUser="ngModel" (valueChange)="custNameUserChange()" required>
+                  </kendo-dropdownlist>
+                </div>
+              </div>
+            </form>
+          </ng-template>
+        </kendo-panelbar-item>
+
+        <kendo-panelbar-item title="Change Stock Name" [expanded]="true" class="column22">
+          <ng-template kendoPanelBarContent>
+            <div class="chgtone_grid">
+              <div class="form-data">
+                <label for="lname">Stone Change</label>
+              </div>
+              <div class="form-data">
+                <input #file1 type="file" (click)="file1.value=''" (change)="onSelectChangeStone(file1.files)" hidden />
+                <button kendoButton title="Upload File" (click)="file1.click()">
+                  <i class="icon-excelnew p-0"></i>
+                </button>
+              </div>
+              <div class="form-data">
+                <label for="lname">Kapan Change</label>
+              </div>
+              <div class="form-data">
+                <input #file type="file" (click)="file.value=''" (change)="onSelectChangeKapan(file.files)" hidden />
+                <button kendoButton title="Upload File" (click)="file.click()">
+                  <i class="icon-excelnew p-0"></i>
+                </button>
+              </div>
+            </div>
+          </ng-template>
+        </kendo-panelbar-item>
+        <kendo-panelbar-item title="Event Image" [expanded]="true" class="w_100">
+          <ng-template kendoPanelBarContent>
+            <form name="form" #form="ngForm" novalidate>
+              <div class="eventAno_wrap">
+                <div>
+                  <label class="c-upload" for="thumbnailImageGlowstar">
+                    <label *ngIf="!isImgselectedGlowstar">
+                      <i class="icon-upload"></i>
+                      <span>Select files</span>
+                    </label>
+                    <input #thumbnailImageGlowstar id="thumbnailImageGlowstar" type="file" class="d-none"
+                      (change)="uploadFiles(form, $event, listAnnounceType.AnnounceGlowstar)"
+                      accept="image/jpeg,image/jpg,image/png,application" type="file" />
+                    <div class="eventImg" *ngIf="isImgselectedGlowstar">
+                      <div class="img_wrap">
+                        <img [src]="imagePreviewGlowstar">
+                      </div>
+                      <button class="btn close_btn" (click)="deleteEventImage(listAnnounceType.AnnounceGlowstar)"><i
+                          title="Delete event image" class="icon-delete"></i></button>
+                    </div>
+                  </label>
+                  <label class="img_title">Glowstar</label>
+                </div>
+                <div>
+                  <label class="c-upload" for="thumbnailImageDiamanto">
+                    <label *ngIf="!isImgselectedDiamanto">
+                      <i class="icon-upload"></i>
+                      <span>Select files</span>
+                    </label>
+                    <input #thumbnailImageDiamanto id="thumbnailImageDiamanto" type="file" class="d-none"
+                      (change)="uploadFiles(form, $event, listAnnounceType.AnnounceDiamanto)"
+                      accept="image/jpeg,image/jpg,image/png,application" type="file" />
+                    <div class="eventImg" *ngIf="isImgselectedDiamanto">
+                      <div class="img_wrap">
+                        <img [src]="imagePreviewDiamanto">
+                      </div>
+                      <button class="btn close_btn" (click)="deleteEventImage(listAnnounceType.AnnounceDiamanto)"><i
+                          title="Delete event image" class="icon-delete"></i></button>
+                    </div>
+                  </label>
+                  <label class="img_title">Diamanto</label>
+                </div>
+                <div>
+                  <label class="c-upload" for="thumbnailImageDiamarthk">
+                    <label *ngIf="!isImgselectedDiamarthk">
+                      <i class="icon-upload"></i>
+                      <span>Select files</span>
+                    </label>
+                    <input #thumbnailImageDiamarthk id="thumbnailImageDiamarthk" type="file" class="d-none"
+                      (change)="uploadFiles(form, $event, listAnnounceType.AnnounceDiamarthk)"
+                      accept="image/jpeg,image/jpg,image/png,application" type="file" />
+                    <div class="eventImg" *ngIf="isImgselectedDiamarthk">
+                      <div class="img_wrap">
+                        <img [src]="imagePreviewDiamarthk">
+                      </div>
+                      <button class="btn close_btn" (click)="deleteEventImage(listAnnounceType.AnnounceDiamarthk)">
+                        <i title="Delete event image" class="icon-delete"></i></button>
+                    </div>
+                  </label>
+                  <label class="img_title">Diamart HK</label>
+                </div>
+              </div>
+            </form>
+          </ng-template>
+        </kendo-panelbar-item>
+      </kendo-panelbar>
+    </div>
+  </div>
+</section>
+
+<div kendoDialogContainer></div>

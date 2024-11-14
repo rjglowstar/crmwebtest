@@ -1,0 +1,105 @@
+<footer>
+  <div class="fLogin_wrap">
+    <div class="bgF_wrap">
+      <div class="f_grid cus_container">
+        <div class="f_add">
+          <a class="f_navbarBrand" href="javascript:void(0);" routerLink="/dashboard">
+            <img [src]="logoPath" class="img-fluid" alt="brand-logo">
+          </a>
+          <div class="add_txt">
+            {{contactUsDetail.address}}
+          </div>
+          <a class="cmail_link" [href]="'mailto:' + contactUsDetail.email">{{contactUsDetail.email}}</a>
+        </div>
+        <div class="f_uLinks">
+          <h4 class="f_title">{{"BasicText.Useful Links" | translate}}</h4>
+          <ul class="ul_grid">
+            <li>
+              <a href="javascript:void(0)" routerLink="/whyus">{{"BasicText.Why Us" | translate}}?</a>
+            </li>
+            <li *ngIf="companyName == 'Glowstar'">
+              <a routerLink="/csr">{{'BasicText.CSR'| translate}}</a>
+            </li>
+            <li *ngIf="companyName !== 'Glowstar'">
+              <a href=" javascript:void(0)" routerLink="/diamondinfo">{{"BasicText.DiamondInfo" | translate}}</a>
+            </li>
+            <li>
+              <a routerLink="/grading">{{'BasicText.Grading'|translate}}</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" routerLink="/contactus">{{"Contact.ContactUs" | translate}}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="f_uLinks">
+          <h4 class="f_title blank" style="opacity:0;">{{"BasicText.Useful Links" | translate}}</h4>
+          <ul class="ul_grid">
+            <li *ngIf="companyName == 'Glowstar'">
+              <a href=" javascript:void(0)" routerLink="/diamondinfo">{{"BasicText.DiamondInfo" | translate}}</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" routerLink="/terms">{{"TermsCondition.TermsCondition" | translate}}</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" (click)="showSuggestionDialog();">{{'BasicText.Suggestion'| translate}}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="f_follow">
+          <h6 class="f_title">{{'BasicText.Follow Us'| translate}}</h6>
+          <div class="f_socGroup">
+            <ul class="f_socialLinks">
+              <li>
+                <a [href]="this.socialPath.fackbook" target="_blank">
+                  <i class="icon-f-facebook" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li>
+                <a [href]="this.socialPath.twitter" target="_blank">
+                  <i class="icon-f-twitter" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li>
+                <a [href]="this.socialPath.linkedin" target="_blank">
+                  <i class="icon-f-linkedin" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li>
+                <a [href]="this.socialPath.instagram" target="_blank">
+                  <i class="icon-f-instagram" aria-hidden="true"></i>
+                </a>
+              </li>
+            </ul>
+            <ul class="apps_dwd">
+              <li>
+                <a href="https://play.google.com/store/apps/details?id=com.glowstar.diamond" target="_blank">
+                  <i class="icon-google_play"></i>
+                  <div>
+                    <span class="sm_txt">{{'BasicText.GetItOn'| translate}}</span>
+                    <span class="h_txt">{{'BasicText.GooglePlay'| translate}}</span>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="https://apps.apple.com/in/app/glow-star-diamond/id1596449262" target="_blank">
+                  <i class="icon-apple"></i>
+                  <div>
+                    <span class="sm_txt">{{'BasicText.DoOnThe'| translate}}</span>
+                    <span class="h_txt">{{'BasicText.AppStore'| translate}}</span>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copyright_txt">Copyright {{copyRightYear}} &copy; All Rights Reserved</div>
+  </div>
+</footer>
+
+<!-- Back-to-Top -->
+<ng-container>
+  <a href="javascript:void(0);" class="goBackToBtn" (click)="scrollToTop()" #backToTop><i
+      class="icon-right-new"></i></a>
+</ng-container>

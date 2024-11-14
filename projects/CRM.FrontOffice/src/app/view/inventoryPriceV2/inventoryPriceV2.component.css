@@ -1,0 +1,92 @@
+.Red {
+    background-color: #EF9A9A !important;
+}
+
+.Yellow {
+    background-color: #FFF59D !important;
+}
+
+.Blue {
+    background-color: #81D4FA !important;
+}
+
+.Brown {
+    background-color: #BCAAA4 !important;
+}
+
+.Green {
+    background-color: #A5D6A7 !important;
+}
+
+.None {
+    background-color: #BDBDBD !important;
+}
+
+.colormark .k-button:hover {
+    background-color: rgba(77, 77, 77, 0.7) !important;
+    color: #fff !important;
+}
+
+.his-grid {
+    grid-template-columns: 900px 450px;
+}
+
+.cut-modal .grid-wrap .k-grid {
+    height: calc(100vh - 50vh);
+}
+
+.cut-modal .form-data {
+    padding: 0 8px;
+}
+
+.cut-modal .form-data input {
+    height: 30px;
+    line-height: 30px;
+}
+
+.whole-cell {
+    display: block;
+    margin: -30px;
+    margin-top: -26px;
+    padding: 20px 30px;
+    width: auto;
+}
+
+.whole-cell i {
+    position: relative;
+    z-index: 10;
+}
+
+.whole-cell i:hover~.arrow-tooltip {
+    display: block;
+}
+
+.grid-wrap.pricing-grid .k-grid {
+    height: calc(100vh - 116px);
+}
+
+.his-grid .k-grid {
+    height: calc(46vh - 80px);
+}
+
+.temp-show .mod-wrap .grid-wrap .k-grid {
+    height: calc(100vh - 48vh);
+}
+
+.i-form.bu-disc .grid {
+    grid-template-columns: auto 32px;
+}
+
+.form-data.pop input {
+    width: initial;
+    height: 30px;
+    line-height: 30px;
+}
+
+.d-details .content.t-details span.l-head {
+    margin-right: 30px;
+}
+
+.t-details li .r-det {
+    white-space: normal;
+}

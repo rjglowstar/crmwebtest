@@ -1,0 +1,147 @@
+<title>Profile</title>
+<section class="edetails-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Profile</li>
+            </ul>
+          </div>
+        </div>
+        <div class="profile_wrap pro_wrap content_scroll">
+          <div class="pro_block">
+            <div class="p_info">
+              <h6 class="p_title">Personal Information</h6>
+              <ul class="pro_data">
+                <li>Full Name : <span>{{employeeObj.fullName}}</span></li>
+                <li>Department : <span>{{employeeObj.department}}</span></li>
+                <li>Origin : <span>{{employeeObj.origin}}</span></li>
+                <li>Organization :<span>{{employeeObj.organization.name}}</span></li>
+                <li>Branch : <span>{{employeeObj.branch.name}}</span></li>
+              </ul>
+            </div>
+            <div class="p_info">
+              <h6 class="p_title">Address</h6>
+              <ul class="pro_data">
+                <li class="w_100">Address line 1 : <span>{{employeeObj.address.line1}}</span></li>
+                <li class="w_100">Address line 2 : <span>{{employeeObj.address.line2}}</span></li>
+                <li>Email : <span>{{employeeObj.email}}</span></li>
+                <li>Mobile No : <span>{{employeeObj.mobile | numberfilter:'mobile'}}</span></li>
+                <li>City : <span>{{employeeObj.address.city}}</span></li>
+                <li>State : <span>{{employeeObj.address.state}}</span></li>
+                <li>Country : <span>{{employeeObj.address.country}}</span></li>
+                <li>Type : <span>{{employeeObj.address.type}}</span></li>
+                <li>Zipcode : <span>{{employeeObj.address.zipCode}}</span></li>
+              </ul>
+            </div>
+            <div class="p_info chPassword bg_box">
+              <h6 class="p_title">
+                <span>Change Password</span>
+                <kendo-buttongroup kendoTooltip position="bottom">
+                  <button type="button" kendoButton title="Save Configuration"
+                    (click)="changePasswordClick(resetPasswordForm)" [disabled]="!resetPasswordForm.valid"><i
+                      class="icon-save"></i></button>
+                </kendo-buttongroup>
+              </h6>
+              <form name="resetPasswordForm" #resetPasswordForm="ngForm">
+                <div ngModelGroup="passwords" #passwords="ngModelGroup" appCheckPassword>
+                  <ul class="pro_data ch_pass">
+                    <li>
+                      <div class="form-data mb-0">
+                        <label for="">Old Password<span class="require">*</span></label>
+                        <div class="position-relative">
+                          <input type="password" id="" #oldpassword="ngModel" name="oldpassword"
+                            [(ngModel)]="changePasswordModel.oldPassword" required #OldPass>
+                          <i (click)="OldPass.type = OldPass.type == 'password' ? 'text' : 'password'"
+                            class="{{OldPass.type == 'password' ?'icon-view':'icon-password-disable'}}"></i>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="form-data mb-0">
+                        <label for="">New Password<span class="require">*</span></label>
+                        <div class="position-relative">
+                          <input type="password" id="" #password="ngModel" name="password"
+                            [(ngModel)]="changePasswordModel.newPassword" required [pattern]="passwordPattern" #NewPass>
+                          <i (click)="NewPass.type = NewPass.type == 'password' ? 'text' : 'password'"
+                            class="{{NewPass.type == 'password' ?'icon-view':'icon-password-disable'}}"></i>
+                        </div>
+                      </div>
+                    </li>
+
+                    <li>
+                      <div class="form-data mb-0">
+                        <label for="">Confirm Password<span class="require">*</span></label>
+                        <div class="position-relative">
+                          <input type="password" id="" #confirmPassword="ngModel" name="confirmPassword"
+                            [(ngModel)]="changePasswordModel.confirmPassword" required #ConfirmPass>
+                          <i (click)="ConfirmPass.type = ConfirmPass.type == 'password' ? 'text' : 'password'"
+                            class="{{ConfirmPass.type == 'password' ?'icon-view':'icon-password-disable'}}"></i>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                  <div class="error">
+                    <span *ngIf="password.errors?.pattern" class="error s-error">
+                      Your password must be 8 characters long and include an uppercase, lowercase, letter,
+                      a number character.
+                    </span>
+                    <span *ngIf="confirmPassword.invalid && (password.dirty || password.touched)" class="error s-error">
+                      Please confirm your password.
+                    </span>
+                    <span *ngIf="passwords.errors?.passwordCheck && (confirmPassword.dirty || confirmPassword.touched)"
+                      class="  s-error">
+                      Passwords do not match.
+                    </span>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="pro_block">
+            <div class="p_info">
+              <h6 class="p_title">Others</h6>
+              <ul class="pro_data">
+                <li class="w_100">Native Address : <span>{{employeeObj.nativeAddress}}</span></li>
+                <li>Enrollment No. :<span>{{employeeObj.enrollmentNumber}}</span></li>
+                <li>Joining Date : <span>{{employeeObj.joiningDate | date: 'dd/MM/yyyy'}}</span></li>
+                <li>Manager : <span><input type="checkbox" class="k-checkbox" disabled
+                      [checked]="employeeObj.isManager" /></span></li>
+                <li>Active : <span><input type="checkbox" class="k-checkbox" disabled
+                      [checked]="employeeObj.isActive" /></span></li>
+                <li>Available : <span><input type="checkbox" class="k-checkbox" disabled
+                      [checked]="employeeObj.isAvailable" /></span></li>
+              </ul>
+            </div>
+            <div class="p_info socMed">
+              <div class="en-form mt-2">
+                <h6 class="p_title">Social Media</h6>
+                <div class="socBox_wrap">
+                  <kendo-card class="w-100" *ngFor="let field of employeeObj.socialMedias">
+                    <kendo-card-body>
+                      <div kendoCardSubtitle>
+                        <div>
+                          <i class="k-icon k-i-star"></i>
+                          <span><b>{{field.provider.providerName}}</b></span>
+                        </div>
+                        <span class="s-title">{{(field.provider.mediaType == '3' || field.provider.mediaType
+                          == 'Messaging') ? (field.mobileNumber | numberfilter:'mobile') :
+                          field.profileName}}</span>
+                      </div>
+                    </kendo-card-body>
+                  </kendo-card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<div kendoDialogContainer></div>

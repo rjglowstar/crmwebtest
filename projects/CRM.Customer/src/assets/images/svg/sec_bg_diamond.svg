@@ -1,0 +1,27 @@
+<svg id="sec_bg_diamond" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="235.89" height="186" viewBox="0 0 235.89 186">
+  <defs>
+    <filter id="Path_106">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feFlood flood-opacity="0.159" result="color"/>
+      <feComposite operator="out" in="SourceGraphic" in2="blur"/>
+      <feComposite operator="in" in="color"/>
+      <feComposite operator="in" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g data-type="innerShadowGroup">
+    <path id="Path_106-2" data-name="Path 106" d="M988.7,132.994h126.165s11.685-.362,17.163,6.694,32.317,44.328,32.317,44.328,6.39,5.066,0,12.122S1057.9,313.019,1057.9,313.019l-2.764,2.847s-5.945,7.032-12.274,0-95.85-105.313-95.85-105.313l-13.633-14.716s-4.686-5.126,0-11.519,34.311-46.443,34.311-46.443,2.814-4.036,11.274-4.459S988.7,132.994,988.7,132.994Z" transform="translate(-931.296 -132.991)" fill="rgba(77,77,77,0.99)"/>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_106)">
+      <path id="Path_106-3" data-name="Path 106" d="M988.7,132.994h126.165s11.685-.362,17.163,6.694,32.317,44.328,32.317,44.328,6.39,5.066,0,12.122S1057.9,313.019,1057.9,313.019l-2.764,2.847s-5.945,7.032-12.274,0-95.85-105.313-95.85-105.313l-13.633-14.716s-4.686-5.126,0-11.519,34.311-46.443,34.311-46.443,2.814-4.036,11.274-4.459S988.7,132.994,988.7,132.994Z" transform="translate(-931.3 -132.99)" fill="#fff"/>
+    </g>
+  </g>
+  <g id="diamond" transform="translate(52.3 23)" opacity="0.85">
+    <path id="Path_141" data-name="Path 141" d="M20.3,35.879H72.6L67.232,18H25.664Z" transform="translate(19.264 7.409)" fill="#fff"/>
+    <path id="Path_142" data-name="Path 142" d="M4.7,31.414l30.394,7.6,5.364-18.1L17.439,15.1Z" transform="translate(0 3.828)" fill="#fff"/>
+    <path id="Path_143" data-name="Path 143" d="M76.229,12H31.979L14.1,16.47l17.879,4.47h44.25l17.879-4.47Z" transform="translate(11.608 0)" fill="#fff"/>
+    <path id="Path_144" data-name="Path 144" d="M20.5,28,46.2,85.212,71.9,28Z" transform="translate(19.511 19.758)" fill="#fff"/>
+    <path id="Path_145" data-name="Path 145" d="M5.9,24.7,56.184,82.136,33.612,31.852Z" transform="translate(1.482 15.683)" fill="#fff"/>
+    <path id="Path_146" data-name="Path 146" d="M43.3,20.911l5.364,18.1,30.394-7.6L66.319,15.1Z" transform="translate(47.665 3.828)" fill="#fff"/>
+    <path id="Path_147" data-name="Path 147" d="M35.6,82.136,85.884,24.7,58.172,31.852Z" transform="translate(38.157 15.683)" fill="#fff"/>
+  </g>
+</svg>

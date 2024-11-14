@@ -1,0 +1,193 @@
+<title>Export Request</title>
+<section class="wrap-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Export Request</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <!-- <button kendoButton (click)="copyToClipboard()" title="Copy To Clipboard"><i class="icon-copy"></i>
+                    </button> -->
+              <button kendoButton #anchor (click)="onCopyToggle()" title="Copy To Clipboard"><i class="icon-copy "></i>
+              </button>
+              <button kendoButton title="Delete" kendoTooltip position="bottom" (click)="deleteExportRequest()"
+                [disabled]="mySelection.length == 0">
+                <i class="icon-trash p-0"></i>
+              </button>
+              <button kendoButton title="Grid Config"><i class="icon-gridconfig" (click)="openGridConfigDialog()"></i>
+              </button>
+            </kendo-buttongroup>
+            <kendo-popup [anchor]="$any(anchor)" #popup (anchorViewportLeave)="showCopyOption = false"
+              *ngIf="showCopyOption" [anchorAlign]="anchorAlign" [popupAlign]="popupAlign">
+              <div class="content">
+                <div class="p-2 pb-0">
+                  <div class="mb-2">
+                    <input type="radio" name="CopyOption" value="searched" #searched [(ngModel)]="copyOption"
+                      kendoRadioButton />
+                    <label class="k-label" class="ms-2" [for]="searched">Searched Stone</label>
+                  </div>
+                  <div class="mb-2">
+                    <input type="radio" name="CopyOption" value="selected" #selected [(ngModel)]="copyOption"
+                      kendoRadioButton />
+                    <label class="k-label" class="ms-2" [for]="selected">Selected Stone</label>
+                  </div>
+                </div>
+                <div class="col-md-12 px-2">
+                  <div class="text-center pb-2">
+                    <button class="btn btn-primary w-100" [disabled]="copyOption == null"
+                      (click)="copyToClipboard('stoneId')">
+                      <i class="icon-copy"></i> Copy StoneId
+                    </button>
+                    <button class="btn btn-primary w-100 mt-2" [disabled]="copyOption == null"
+                      (click)="copyToClipboard('certNo')">
+                      <i class="icon-copy"></i> Copy CertificateNo
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </kendo-popup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid *ngIf="gridView" [data]="gridView" [groupable]="true" [resizable]="true" [sortable]="true"
+              [group]="groups" (groupChange)="groupChange($event)" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+              (pageChange)="pageChange($event)" [selectable]="selectableSettings" [(selectedKeys)]="mySelection"
+              [kendoGridSelectBy]="'stoneId'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+
+                      <ng-template kendoGridHeaderTemplate *ngIf="field.propertyName == 'checkbox'">
+                        <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox" />
+                        <label class="k-checkbox-label" for="headerCheckbox"></label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.propertyName == 'checkbox'">
+                        <input type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                          [kendoGridSelectionCheckbox]="rowIndex" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'createdDate'">
+                        {{dataItem.createdDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <!--#region Filter -->
+      <form class="e-right" name="repairingSearchForm" #repairingSearchForm="ngForm" novalidate>
+        <div class="sr-wrap active" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <div class="i-form">
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Stone Id</label>
+                  <input type="text" name="filterStoneId" [(ngModel)]="stoneId" #filterStoneId="ngModel"
+                    id="filterStoneId" autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Certificate No</label>
+                  <input type="text" name="filterCertNo" [(ngModel)]="certNo" #filterCertNo="ngModel" id="filterCertNo"
+                    autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label>Request By</label>
+                  <kendo-multiselect name="status" class="customselect" [data]="requestByList"
+                    [(ngModel)]="exportrequestSearchCriteriaObj.requestedBy" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                    (valueChange)="utilityService.onMultiSelectChange(requestByList, exportrequestSearchCriteriaObj.requestedBy)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="dropdown-header single k-widget k-header">
+                        <span class="temp-single">Select Request By</span>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(exportrequestSearchCriteriaObj.requestedBy, true)">
+                        {{utilityService.getCommaSapratedString(exportrequestSearchCriteriaObj.requestedBy)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label>Location</label>
+                  <kendo-multiselect name="status" class="customselect" [data]="locationList"
+                    [(ngModel)]="exportrequestSearchCriteriaObj.location" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                    (valueChange)="utilityService.onMultiSelectChange(locationList, exportrequestSearchCriteriaObj.location)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="dropdown-header single k-widget k-header">
+                        <span class="temp-single">Select Location</span>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(exportrequestSearchCriteriaObj.location, true)">
+                        {{utilityService.getCommaSapratedString(exportrequestSearchCriteriaObj.location)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                  <button class="btn btn-action"
+                    (click)="repairingSearchForm.form.valid && onFilterSubmit(repairingSearchForm)">
+                    <i class="icon-search"></i>Search
+                  </button>
+                  <button (click)="clearFilter(repairingSearchForm)" class="btn btn-action">
+                    <i class="icon-clear"></i>Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!--#endregion -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="repairingSearchForm.form.valid && onFilterSubmit(repairingSearchForm)"><i
+              class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(repairingSearchForm)"><i class="icon-clear"></i></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- #region Grid Config Modal -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'ExportRequest'" [gridName]="'ExportRequestGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

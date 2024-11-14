@@ -1,0 +1,130 @@
+<title>Appointment List</title>
+<section class="omaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <!-- #region Header -->
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Appointment List</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton kendoTooltip position="bottom" title="View Appointment"
+                [disabled]="this.mySelection.length != 1" (click)="openAppointmentDialog()">
+                <i class="icon-view"></i>
+              </button>
+              <button kendoButton kendoTooltip position="bottom" title="Approve Appointment"
+                [disabled]="this.mySelection.length != 1" (click)="ApproveAppointment()">
+                <i class="icon-check"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <!-- #endregion -->
+        <!-- #region Grid -->
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid #memoGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+              (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+              [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)"
+              [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='totalstone'">
+                        <span>{{dataItem.stoneIds.length}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'createdDate'">
+                        {{dataItem.createdDate | date: 'dd-MM-yyyy hh:mm'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'appointmentDate'">
+                        {{dataItem.appointmentDate | date: 'dd-MM-yyyy'}} {{dataItem.appointmentTime | date: 'hh:mm'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'approvedDate'">
+                        {{dataItem.approvedDate | date: 'dd-MM-yyyy'}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+        <!-- #endregion -->
+      </div>
+
+      <!-- #region Filter -->
+      <form class="e-right" name="form" #SearchForm="ngForm" novalidate>
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <div class="i-form">
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label class="lbl">Stone Id</label>
+                  <input type="text" placeholder="Search by stone id" autocomplete="off" name="stoneIdStr"
+                    [(ngModel)]="stoneId" #stoneIdStr="ngModel">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">Created From Date</label>
+                  <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="createdfromDate"
+                    [(ngModel)]="appointmentCriteria.createdfromDate" #createdfromDate="ngModel"></kendo-datepicker>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label class="lbl">Created To Date</label>
+                  <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="createdtoDate"
+                    [(ngModel)]="appointmentCriteria.createdtoDate" #createdtoDate="ngModel"></kendo-datepicker>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label class="lbl">Approved From Date</label>
+                  <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="approvedfromDate"
+                    [(ngModel)]="appointmentCriteria.approvedfromDate" #approvedfromDate="ngModel">
+                  </kendo-datepicker>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">Approved To Date</label>
+                  <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="approvedtoDate"
+                    [(ngModel)]="appointmentCriteria.approvedtoDate" #approvedtoDate="ngModel"></kendo-datepicker>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                  <button class="btn btn-action" (click)="onFilterSubmit(SearchForm)">
+                    <i class="icon-search"></i>Search
+                  </button>
+                  <button (click)="clearFilter(SearchForm)" class="btn btn-action">
+                    <i class="icon-clear"></i>Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- #endregion -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="onFilterSubmit(SearchForm)"><i class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(SearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- #region Appoint Model -->
+<ng-container *ngIf="isAppointment">
+  <app-myappoint (closeDialog)="closeDialogHandler($event)" [appointmentObj]="appointmentObj">
+  </app-myappoint>
+</ng-container>
+<!-- #endregion-->
+
+<div kendoDialogContainer></div>

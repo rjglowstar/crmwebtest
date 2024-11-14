@@ -1,0 +1,307 @@
+<title>{{pageName}}</title>
+<section class="ledger-summary">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <!-- #region Header & Buttons -->
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">{{pageName}}</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton #anchorSummary title="Summry" (click)="openSummary()">
+                <i class="icon-summary"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <!-- #endregion -->
+        <div class="content_box">
+          <div class="grid-wrap">
+            <!-- #region Skeleton start -->
+            <ng-container *ngIf="!gridView">
+              <div class="k-grouping-header k-grouping-header-flex">
+                <div class="k-indicator-container">
+                  <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                  </kendo-skeleton>
+                </div>
+              </div>
+              <table *ngIf="fields && fields.length > 0" class="w-100 skeleton-tbl">
+                <ng-container *ngFor="let field of fields">
+                  <th *ngIf="field.isSelected">
+                    {{field.title}}
+                  </th>
+                </ng-container>
+                <tr *ngFor="let field of skeletonArray">
+                  <ng-container *ngFor="let fieldItem of fields">
+                    <td *ngIf="fieldItem.isSelected">
+                      <kendo-skeleton shape="text" animation="wave" [width]="94" [height]="40">
+                      </kendo-skeleton>
+                    </td>
+                  </ng-container>
+                </tr>
+              </table>
+            </ng-container>
+            <!-- #endregion Skeleton End -->
+
+            <!-- #region Transact Item Grid Start -->
+            <kendo-grid #ledgerSummaryGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [group]="groups" [(selectedKeys)]="mySelection" [pageSize]="pageSize"
+              (pageChange)="pageChange($event)" [skip]="skip" [pageable]="true" [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'lastTransaction'">
+                        {{dataItem.lastTransaction | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'total'">
+                        {{dataItem.total.toFixed(2)}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'debit'">
+                        {{dataItem.debit.toFixed(2)}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'credit'">
+                        {{dataItem.credit.toFixed(2)}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'ledger.name'">
+                        <a style="color: blue" href="javascript:void(0)"
+                          (click)="openLedgerDetailModal(dataItem)">{{dataItem.ledger.name}}
+                        </a>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+            <!-- #endregion Transact Item Grid END -->
+          </div>
+        </div>
+      </div>
+      <!-- #region Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #ledgerSummarySearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Ledger Name</label>
+                    <input type="text" name="name" [(ngModel)]="ledgerSummarySearchCriteria.ledgerName" #name="ngModel"
+                      autocomplete="off" />
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Ledger Group</label>
+                    <kendo-combobox [data]="listLedgerGroupItems" name="ledgerGroup" textField="name" valueField="name"
+                      [valuePrimitive]="true" [(ngModel)]="selectedLG" #ledgerGroup="ngModel"
+                      [kendoDropDownFilter]="filterSettings" (valueChange)="onLedgerGChanges($event)">
+                    </kendo-combobox>
+                  </div>
+                  <kendo-daterange class="w-100">
+                    <div class="form-data w-100">
+                      <label>From Date</label>
+                    </div>
+                    <div class="form-data w-100">
+                      <kendo-dateinput kendoDateRangeStartInput [(value)]="ledgerSummarySearchCriteria.fromDate!"
+                        (valueChange)="dateChangeFunction($event, 'from')" format="dd/MM/yyyy" class="w-100">
+                      </kendo-dateinput>
+                    </div>
+                    <div class="form-data w-100">
+                      <label>To Date</label>
+                    </div>
+                    <div class="form-data w-100">
+                      <kendo-dateinput kendoDateRangeEndInput [(value)]="ledgerSummarySearchCriteria.toDate!"
+                        (valueChange)="dateChangeFunction($event, 'to');" format="dd/MM/yyyy"
+                        class="w-100">
+                      </kendo-dateinput>
+                    </div>
+                    <kendo-daterange-popup [animate]="false" adaptiveMode="auto"></kendo-daterange-popup>
+                  </kendo-daterange>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box pt-1">
+                    <ng2-tri-state-checkbox name="isShowZeroBalance"
+                      [(ngModel)]="ledgerSummarySearchCriteria.isShowZeroBalance" #isApprover="ngModel">
+                    </ng2-tri-state-checkbox>
+                    <label for="ledger summary">Show Only Zero Balance</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action"
+                      (click)="ledgerSummarySearchForm.form.valid && filterLedgerSummary()">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button (click)="clearFilter(ledgerSummarySearchForm)" class="btn btn-action">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- #endregion Search End -->
+      <!-- #region summry -->
+      <div class="summary-panel" *ngIf="isSummary">
+        <div class="marketsheet-status ps-2 pe-2">
+          <div class="sr">
+            <h6>Summary <i class="icon-delete float-end mt-1 me-1" (click)="closeSummary()"></i>
+            </h6>
+            <div class="summary-panel-grid">
+              <div class="grid-1">
+                <button type="button" class="btn t-weight">{{ledgerSummaryRes.creditTotal}}</button>
+                <span>Total Credit</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn avg-dis">{{ledgerSummaryRes.debitTotal}}</button>
+                <span>Total Debit</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn avg-ct">{{ledgerSummaryRes.totalAmount}}</button>
+                <span>Grand Total</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- #endregion summry -->
+    </div>
+
+    <!-- #region Responsive Filter Button -->
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button>
+        </li>
+        <li><button (click)="ledgerSummarySearchForm.form.valid && loadLedgerSummaryReport()"><i
+              class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(ledgerSummarySearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+    <!-- #endregion -->
+  </div>
+</section>
+
+<!-- #region Grid Config -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'TransactItem'" [gridName]="'TransactItemGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Ledger Summary Detail -->
+<div class="modal addemp c-modal rorgan dialog-sm-l ledgSumModal" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isLedgerSummaryDetail">
+  <form name="addressForm" #addressForm="ngForm" novalidate>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="icon-mapmarker"></i>{{selectedledgerSummaryData.ledger.name}}
+          </h5>
+          <button type="button" class="close" (click)="closeLedgerDetailModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body pb-3">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="flex">
+                <div class="o-title">
+                  <h6 class="title border-0 mb-0 p-0">Summary</h6>
+                </div>
+                <div class="o-edit">
+                  <label>Current Balance: {{ledgerSummaryAnalysisData.total}}</label>
+                </div>
+              </div>
+              <div class="form-data d-flex align-items-center justify-content-end mb-2">
+                <h6 class="m-0 me-1"><small>Trans. From - To</small></h6>
+                <kendo-daterange class="mx-2 w-auto">
+                  <input type="text" name="name" #anchor (click)="$any(popup).toggle();"
+                    value="{{ledgerSummaryCriteria.fromDate ? (ledgerSummaryCriteria.fromDate | date: 'dd/MM/yyyy') : 'dd/mm/yy'}} - {{ledgerSummaryCriteria.toDate ? (ledgerSummaryCriteria.toDate | date: 'dd/MM/yyyy') : 'dd/mm/yy'}}"
+                    readonly />
+                  <kendo-daterange-popup #popup [animate]="false" [anchor]="$any(anchor)" adaptiveMode="auto">
+                    <ng-template kendoDateRangePopupTemplate>
+                      <kendo-multiviewcalendar kendoDateRangeSelection [(selectionRange)]="range"
+                        (selectionRangeChange)="dateFilterChanges()">
+                      </kendo-multiviewcalendar>
+                    </ng-template>
+                  </kendo-daterange-popup>
+                </kendo-daterange>
+                <div>
+                  <button kendoButton title="Search" kendoTooltip position="bottom" (click)="loadLedgerSummary()" style="height: 30px;
+                  line-height: 30px;">
+                    <i class="icon-search pe-0"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="balancesheet-grid mt-1">
+                <!-- Credit -->
+                <div class="grid-1">
+                  <div class="heading-sheet head">
+                    <h5>Credit</h5>
+                    <h5>Net Amount</h5>
+                  </div>
+                  <div class="ledger-sheet-scroll">
+                    <ul *ngFor="let item of ledgerSummaryAnalysisData.creditData">
+                      <li class="text-ellipsset">{{item.transactionNo}} | {{item.transactionType}} |
+                        <span *ngIf="item?.transactionDetailItem">{{ item.transactionDetailItem }} | </span> ({{item.createdDate |
+                        date: 'dd/MM/yyyy'}})
+                        {{item.items.length > 0 ? (' - ' + item.items) : ''}}</li>
+                      <li>{{item.amount}}</li>
+                    </ul>
+                  </div>
+                  <div class="heading-sheet foot">
+                    <h5></h5>
+                    <h5>Total :</h5>
+                    <h5>{{ledgerSummaryAnalysisData.creditTotal}}</h5>
+                  </div>
+                </div>
+
+                <!-- Debit -->
+                <div class="grid-1">
+                  <div class="heading-sheet head">
+                    <h5>Debit</h5>
+                    <h5>Net Amount</h5>
+                  </div>
+                  <div class="ledger-sheet-scroll">
+                    <ul *ngFor="let item of ledgerSummaryAnalysisData.debitData">
+                      <li>{{item.transactionNo}} | {{item.transactionType}} | <span *ngIf="item?.transactionDetailItem">{{ item.transactionDetailItem }} | </span>
+                        ({{item.createdDate | date: 'dd/MM/yyyy'}})
+                        {{item.items.length > 0 ? (' - ' + item.items) : ''}}</li>
+                      <li>{{item.amount}}</li>
+                    </ul>
+                  </div>
+                  <div class="heading-sheet foot">
+                    <h5></h5>
+                    <h5>Total :</h5>
+                    <h5>{{ledgerSummaryAnalysisData.debitTotal}}</h5>
+                  </div>
+                </div>
+
+              </div>
+              <div class="pagination cus_pag cus_pag justify-content-between align-items-center w-100 p-2">
+                <div class="pagesize d-flex align-items-center">
+                  <p class="cursor" (click)="onClickPage(activePage - 1)"><i class="k-icon k-i-arrow-w"></i>
+                  </p>
+                  <p class="cursor" *ngFor="let i of pageCount" [ngClass]="{'active' : i == activePage}"
+                    (click)="onClickPage(i)">{{i}}</p>
+                  <p class="cursor" (click)="onClickPage(activePage + 1)"><i class="k-icon k-i-arrow-e"></i>
+                  </p>
+                </div>
+                <div class="count-page">{{pageCountString}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer"></div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

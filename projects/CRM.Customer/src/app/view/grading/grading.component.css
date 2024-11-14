@@ -1,0 +1,154 @@
+.grading_sec {
+    padding-bottom: 10%;
+}
+
+.grading_sec .grid_wrap {
+    display: -ms-grid;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc((100% - 40px) / 3), auto));
+    grid-gap: 40px 20px;
+    -webkit-box-align: self-start;
+    -ms-flex-align: self-start;
+    align-items: self-start;
+}
+
+.grading_sec .grid_wrap table {
+    -webkit-box-shadow: 0 0px 5px rgba(0, 0, 0, 7%);
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 7%);
+}
+
+.grid_wrap thead td {
+    color: rgba(255, 255, 255, 92%);
+    padding: 8px 5px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    background-color: rgba(153, 153, 153, 10%);
+    border: 1px solid rgba(153, 153, 153, 20%);
+    border-bottom: none;
+    text-transform: uppercase;
+}
+
+.grid_wrap tbody td {
+    padding: 8px 10px;
+    border: 1px solid rgba(153, 153, 153, 20%);
+    color: rgba(255, 255, 255, 85%);
+}
+
+.grid_wrap tbody :is(td, td *) {
+    font-size: 13px;
+    line-height: 1;
+}
+
+.grid_wrap table:not(:nth-child(-n+3)) tbody :is(td, td *) {
+    white-space: nowrap;
+}
+
+.grid_wrap tbody td i {
+    font-weight: 500;
+}
+
+.grid_wrap tbody td h5 {
+    font-size: 15px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.grid_wrap tbody tr td.blank {
+    border-top: none;
+}
+
+.grid_wrap tbody tr:not(:last-child) td.blank {
+    border-bottom: none;
+}
+
+.cLogIn .grading_sec {
+    padding-bottom: 5% !important;
+}
+
+.cLogIn .grading_sec .grid_wrap table {
+    border-radius: 5px !important;
+    background: #fff !important;
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(77, 77, 77, 0.20) !important;
+    box-shadow: 0px 0px 3px 0px rgba(77, 77, 77, 0.20) !important;
+    overflow: hidden !important;
+}
+
+.cLogIn .grid_wrap thead td {
+    color: #212529 !important;
+}
+
+.cLogIn .grid_wrap tbody td h5,
+.cLogIn .grid_wrap tbody td {
+    color: rgba(33, 37, 41, 0.95) !important;
+}
+
+@media(max-width:1200px) {
+
+    .sec_title,
+    .cLogIn .sec_title {
+        margin: 40px 0 !important;
+    }
+
+    .grading_sec .grid_wrap {
+        grid-template-columns: repeat(auto-fill, minmax(calc((100% - 20px) / 2), auto)) !important;
+    }
+}
+
+@media(max-width:1024px) {
+    .cLogIn .sec_title {
+        margin: 25px 0 !important;
+    }
+}
+
+@media(max-width:991px) {
+
+    .sec_title,
+    .cLogIn .sec_title {
+        margin: 30px 0 !important;
+    }
+}
+
+@media(max-width:767px) {
+
+    .sec_title,
+    .cLogIn .sec_title {
+        margin: 25px 0 !important;
+    }
+
+    .grading_sec .grid_wrap {
+        grid-template-columns: repeat(auto-fill, minmax(100%, auto)) !important;
+        grid-gap: 30px !important;
+    }
+
+    .grading_sec .grid_wrap tbody td h5 {
+        font-size: 14px !important;
+    }
+
+    .grading_sec .grid_wrap table:not(:nth-child(-n+3)) tbody :is(td, td *) {
+        white-space: initial !important;
+        line-height: 1.2 !important;
+    }
+
+    .grading_sec .grid_wrap thead td {
+        font-size: 14px !important;
+    }
+
+    .grading_sec .grid_wrap tbody td.blank {
+        display: none !important;
+    }
+}
+
+@media(max-width:575px) {
+    .sec_title {
+        margin: 20px 0 !important;
+    }
+
+    .cLogIn .sec_title {
+        margin: 15px 0 !important;
+    }
+
+    .cLogIn .grading_sec .grid_wrap {
+        grid-gap: 20px !important;
+    }
+}

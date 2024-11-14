@@ -1,0 +1,70 @@
+.d-prop-wrap {
+    border: 1px solid #dddddd;
+}
+
+.or-config .wrd.grid {
+    grid-template-columns: auto;
+    padding: 10px 10px 5px;
+}
+
+.or-config .form-data input {
+    height: 30px;
+    line-height: 30px;
+    opacity: 0.6;
+    background: #d5d4d4;
+    cursor: not-allowed;
+}
+
+.or-config .form-data {
+    margin-bottom: 5px;
+}
+
+.or-config .d-prop .flex {
+    padding: initial;
+}
+
+.or-config .d-prop span.title {
+    width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.or-config .form-data input.active {
+    border-color: #000;
+    opacity: 1;
+    background: #fff;
+    cursor: initial;
+}
+
+.ms-config .o-edit {
+    display: flex;
+}
+
+.ms-config .o-edit i {
+    margin-right: initial;
+}
+
+.ms-config .in-block .o-edit {
+    padding: initial;
+    align-items: center;
+}
+
+.ms-config button.btn {
+    padding: 0 0 0 5px;
+    vertical-align: middle;
+}
+
+.ms-config .flex.in-block {
+    padding: 5px;
+    border: 0;
+    background-color: #dddddd;
+    height: 30px;
+    margin-bottom: initial;
+}
+
+.ms-config .o-title h6.title {
+    margin: initial;
+    border-bottom: 0;
+    font-size: 14px;
+}

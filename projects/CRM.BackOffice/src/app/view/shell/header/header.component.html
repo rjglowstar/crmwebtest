@@ -1,0 +1,171 @@
+<!-- Header Start -->
+<header>
+  <nav class="header_wrap navbar navbar-expand navbar-light">
+    <div class="c_logo">
+      <a class="navbar_brand" routerLink="/dashboard">
+        <img src="commonAssets/images/GlowstarSmall.png" class="img-fluid" alt="brand-logo">
+        <span>{{fxCredentials.organization}}</span>
+      </a>
+      <i class="icon-menu sidebar_headToggle"></i>
+    </div>
+    <div class="navbar_links d-flex align-items-center w-100">
+      <div class="collapse navbar-collapse res_Topbar h-100">
+        <div class="navbar-nav align-items-center ms-auto h-100">
+          <div #anchor>
+            <div class="dash_search navlink_search">
+              <input type="text" autocomplete="off" placeholder="Search By Stone Id, Certificate No"
+                name="userSearchString" [(ngModel)]="userSearchString">
+              <button class="p-0 m-0 border-0" (click)="searchStone()" [disabled]="!userSearchString.trim()">
+                <i class="icon-search_new"></i>
+              </button>
+            </div>
+            <a class="nav-link d-none mobSearch_btn" (click)="onSearchToggle()">
+              <i class="icon-search_new"
+                [ngClass]="{'icon-search_new': !showSearchOption, 'icon-reject': showSearchOption}"></i>
+            </a>
+          </div>
+          <a class="nav-link notification" (click)="notificationClick()">
+            <span *ngIf="notifications && notifications?.totalCount" class="badge">{{notifications.totalCount
+              <=8 ? notifications.totalCount :"8+"}} </span>
+                <i class="icon-notification_border"></i>
+          </a>
+          <a class="nav-link" (click)="openReleaseNoteDialog()">
+            <i class="icon-help-border"></i>
+          </a>
+          <a class="nav-link Profile_link">
+            <i class="icon-profile_new mobP_icon d-none"></i>
+            <span class="profile_icon">G</span>
+            <div class="dropdown_wrap">
+              <ul>
+                <li>
+                  <a class="nav-link" routerLink="/profile">
+                    <i class="icon-profile"></i>
+                    View Profile
+                  </a>
+                </li>
+                <li>
+                  <a class="nav-link" (click)="logoutClick()">
+                    <i class="icon-logout"></i>
+                    Logout
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="tog_menu">
+        <i class="icon-menu ms-auto"></i>
+      </div>
+      <kendo-popup [anchor]="$any(anchor)" #popup (anchorViewportLeave)="showSearchOption = false"
+        *ngIf="showSearchOption" [anchorAlign]="anchorAlign" [popupAlign]="popupAlign" class="bx-shadow"
+        style="margin-top: 6px;">
+        <div class="content stone-id">
+          <div class="stone-search d-none mobInputFilter_show">
+            <div class="dash_search navlink_search mb-2 me-0">
+              <input type="text" class="w-100" autocomplete="off" placeholder="Search By Stone Id, Certificate No"
+                name="userSearchString" [(ngModel)]="userSearchString">
+              <button class="p-0 m-0 border-0" (click)="searchStone()" [disabled]="!userSearchString.trim()">
+                <i class="icon-search_new"></i>
+              </button>
+            </div>
+          </div>
+          <ul class="stonegrid-scroll" *ngIf="stoneSearchResponse.length > 0">
+            <li class="stone-card" *ngFor="let item of stoneSearchResponse">
+              <div class="d-flex justify-content-between align-items-center flex-wrap pb-1"
+                [ngClass]="{ 'border-bottom': item.isMemo || item.isInward || item.isOrder}">
+                <span>
+                  <img
+                    [src]="getStoneImageByShape(item.shape)"><b>{{item.stoneId}}&nbsp;-&nbsp;{{item.certificateNo}}</b>
+                </span>
+                <div class="d-flex ms-auto">
+                  <div class="ms-1 badge-status badge-red" *ngIf="!item.isLabReturn">Lab Not Return</div>
+                  <div class="ms-1 badge-status badge-sky" *ngIf="item.isPricing">Pricing</div>
+                  <div class="ms-1 badge-status badge-blue" *ngIf="item.isMemo">Memo</div>
+                  <div class="ms-1 badge-status badge-purple" *ngIf="item.isInward">Inward</div>
+                  <div class="ms-1 badge-status badge-yellow" *ngIf="item.isHold">Hold</div>
+                  <div class="ms-1 badge-status"
+                    [ngClass]="{ 'badge-green': item.status == 'Stock','badge-orange': item.status == 'Order','badge-white': item.status == 'Transit','badge-pink': item.status == 'Repair'}">
+                    {{item.status}}</div>
+                </div>
+              </div>
+              <div class="stone-search-grid bo-grid pt-1 pb-1" *ngIf="item.isMemo"
+                [ngClass]="{ 'border-bottom': item.isInward || item.isOrder }">
+                <div class="form-data">
+                  <label>Memo No :</label> <span>{{item.memoNo}}</span>
+                </div>
+                <div class="form-data">
+                  <label>Memo Date :</label> <span>{{item.memoDate | date: 'dd/MM/yyyy'}}</span>
+                </div>
+              </div>
+              <div class="stone-search-grid bo-grid pt-1 pb-1" *ngIf="item.isInward"
+                [ngClass]="{ 'border-bottom': item.isOrder }">
+                <div class="form-data">
+                  <label>Inward No :</label> <span>{{item.inwardNo}}</span>
+                </div>
+                <div class="form-data">
+                  <label>Inward Date :</label> <span>{{item.inwardDate | date: 'dd/MM/yyyy'}}</span>
+                </div>
+              </div>
+              <div class="stone-search-grid bo-grid" *ngIf="item.isOrder">
+                <div class="form-data">
+                  <label>Lead No :</label> <span>{{item.orderLeadNo}}</span>
+                </div>
+                <div class="form-data">
+                  <label>Party :</label> <span>{{item.orderPartyCompany}} | {{item.orderPartyPerson}}</span>
+                </div>
+                <div class="form-data">
+                  <label>Order Date :</label> <span>{{item.orderDate | date: 'dd/MM/yyyy'}}</span>
+                </div>
+                <div class="form-data">
+                  <label>Delivery Date :</label> <span>{{item.orderDeliveryDate | date: 'dd/MM/yyyy'}}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div class="not_found" *ngIf="stoneSearchResponse.length == 0">No Search Stone Found</div>
+        </div>
+      </kendo-popup>
+    </div>
+  </nav>
+</header>
+<!-- Header End -->
+
+
+
+<div class="noti-wrap" *ngIf="notificationShow">
+  <div class="noti-title">
+    <h6>Notifications</h6>
+    <span class="s-click" (click)="notificationShow= false"><i class="icon-delete"></i></span>
+  </div>
+  <div class="noti-list-wrap">
+
+    <ng-container *ngIf="notifications && notifications.notifications.length > 0">
+      <!-- <button class="btn btn-primary mb-2 w-100">Clear All</button> -->
+      <div *ngFor="let notification of notifications.notifications; let i = index" class="noti-list"
+        (click)="notificationActionClick(notification)">
+        <div>
+          <h6><i class="{{notification.icon}}"></i> {{notification.title}}</h6>
+          <p>{{notification.description}}</p>
+          <span *ngIf="notification.createdDate"> {{notification.createdDate |dateAgo}}</span>
+          <!-- <span *ngIf="notification.CreatedDate"> {{notification.CreatedDate |dateAgo}}</span> -->
+          <span class="close-not" *ngIf="notification.categoryType != 'alert'"
+            (click)="removeNotification(i,notification);$event.stopPropagation()"><i class="icon-delete"></i></span>
+        </div>
+      </div>
+    </ng-container>
+    <h6 *ngIf="notifications?.notifications?.length == 0" class="error">No Notifications found</h6>
+  </div>
+  <a href="javascript:void(0)"
+    (click)="sendToNotificationPage()" class="d-block text-center border-top">View
+    All Notifications</a>
+</div>
+
+<!-- #region Grid Config Modal -->
+<ng-container *ngIf="isReleaseNote">
+  <app-releasenote (toggle)="isReleaseNote=$event">
+  </app-releasenote>
+</ng-container>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

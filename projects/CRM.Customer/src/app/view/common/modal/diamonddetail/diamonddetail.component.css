@@ -1,0 +1,320 @@
+.sideDetails.stonedetail .sideDet_body {
+    padding: 15px 20px 20px 25px;
+    overflow: auto;
+}
+
+.stonedetail .side_summary {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 50px;
+    padding-bottom: 15px;
+}
+
+.stonedetail .side_summary li {
+    color: #6D6D6D;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.stonedetail .side_summary li span {
+    display: inline-block;
+    margin-left: 12px;
+    color: #242628;
+}
+
+.stonedetail .side_summary li .avai {
+    color: #128807;
+}
+
+.stonedetail .side_summary li .hold {
+    color: #59aac4;
+}
+
+.subtitle {
+    background: #B5DFF1;
+    padding: 10px;
+    color: #242628;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.dd_grid {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 450px 1fr;
+    grid-template-columns: 450px 1fr;
+    gap: 20px;
+}
+
+.dd_grid .column2 {
+    grid-column: 1 / 3;
+}
+
+.dd_icon {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    background: #B5DFF1;
+}
+
+.dd_icon button,
+.dd_icon button:focus {
+    background: transparent;
+    color: #242628;
+    padding: 12px 5px;
+    font-size: 18px;
+    width: 100%;
+    outline: 0;
+    border-color: #6E6E6E !important;
+    border-radius: 0 !important;
+    box-shadow: none;
+}
+
+.dd_icon button i {
+    font-size: calc(20px + (24 - 20) * ((100vw - 320px) / (1920 - 320)));
+    color: #242628;
+}
+
+.dd_icon button:hover {
+    background: #0C4875;
+    border-color: #0C4875 !important;
+}
+
+.dd_icon button:hover i {
+    color: #fff;
+}
+
+.tabBody {
+    max-height: 425px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.tabBody>img {
+    max-height: 425px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.dtl_grid {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 15px;
+    padding: 10px 0 15px 10px;
+}
+
+.dtl_grid.column3 {
+    -ms-grid-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.dtl_grid.column4 {
+    -ms-grid-columns: minmax(25%, max-content) minmax(20%, max-content) minmax(20%, max-content) minmax(20%, max-content);
+    grid-template-columns: minmax(25%, max-content) minmax(20%, max-content) minmax(20%, max-content) minmax(20%, max-content);
+}
+
+.dtl_grid .w_100 {
+    grid-column: 1 / 4;
+}
+
+.dtl_grid li {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 135px auto;
+    grid-template-columns: 135px auto;
+    color: #6D6D6D;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.28px;
+}
+
+.dtl_grid.pe_grid li {
+    -ms-grid-columns: max-content auto;
+    grid-template-columns: max-content auto;
+    gap: 10px 12px;
+}
+
+.dtl_grid li span {
+    color: #242628;
+    word-break: break-word;
+}
+
+/* Calculator dialog design */
+.search-calc .modal-header button.close {
+    position: absolute;
+    right: -12px;
+    top: -13px;
+    background: #4d4d4d;
+    padding: 0;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+
+.gridsearch-content {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 50px 5px 100px 5px 50px 5px 72px;
+    grid-template-columns: 50px 100px 50px 72px;
+    grid-column-gap: 5px;
+    padding: 5px;
+    background: #f9f8f8;
+}
+
+.gridsearch-price {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 137px 5px 1fr;
+    grid-template-columns: 137px 1fr;
+    grid-column-gap: 5px;
+    padding: 0 5px 0 0;
+}
+
+.gridsearch-price-1 {
+    padding: 5px;
+    background: #f3f3f3;
+}
+
+.gridsearch-price24 {
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 2;
+    grid-column: 1/span 2;
+}
+
+.gridsearch-price24 h5 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 5px 0 16px;
+}
+
+.gridsearch-price25 {
+    display: -ms-grid;
+    display: grid;
+    grid-row-gap: 15px;
+}
+
+.gridsearch-price25 p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.gridsearch-price-2 {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 64px;
+    grid-template-columns: 1fr 64px;
+    grid-column-gap: 5px;
+    padding: 5px;
+}
+
+.gridsearch-price21 {
+    display: -ms-grid;
+    display: grid;
+    grid-row-gap: 10px;
+}
+
+.price-button {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    display: -ms-inline-grid;
+    display: inline-grid;
+}
+
+.gridsearch-price23 label {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.price-button input {
+    text-align: center;
+    font-size: 13px;
+}
+
+/* Calculator dialog design */
+@media(max-width:991px) {
+    .dd_grid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dtl_grid.column3,
+    .dtl_grid.column4 {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .dtl_grid .w_100 {
+        grid-column: initial;
+    }
+
+    .tabBody {
+        max-height: initial !important;
+        min-height: 400px;
+    }
+
+    /* .tabBody {
+        height: 425px;
+    } */
+
+    /* .tabBody iframe.videoFrame {
+        height: 350px !important;
+        max-height: 350px !important;
+    } */
+}
+
+@media(max-width:767px) {
+    .inclusion-grid .pkg-btn {
+        width: auto !important;
+    }
+
+    .inclusion-grid {
+        grid-column-gap: 15px !important;
+    }
+
+    .dd-deatils-grid,
+    .dd-mesurement-grid,
+    .dd-inclusion-grid,
+    .dd-Price-grid {
+        -ms-grid-columns: 1fr !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    .dd-inclusion-grid .form-data:nth-child(21),
+    .dd-inclusion-grid .form-data:last-child {
+        grid-column: auto !important;
+    }
+
+    .dd_grid iframe.videoFrame {
+        max-height: calc(100vw - 48vw + 20px) !important;
+    }
+}
+
+@media(max-width:575px) {
+    .dd_grid {
+        -ms-grid-columns: 1fr !important;
+        grid-template-columns: 1fr !important;
+        grid-row-gap: 20px !important;
+    }
+
+    .dd_grid iframe.videoFrame {
+        max-height: initial !important;
+        height: 100vw !important;
+    }
+
+    .dtl_grid,
+    .dtl_grid.column3,
+    .dtl_grid.column4 {
+        grid-template-columns: 1fr;
+    }
+}

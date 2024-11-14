@@ -1,0 +1,381 @@
+<div class="modal c-modal addemp la-mas" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <form name="custVeriForm" #custVeriForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-customer"></i>Customer Registration</h5>
+          <button type="button" class="close" (click)="closeAddCustomerDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form l-master">
+                <h6 class="title"><i class="icon-info"></i>Personal Information</h6>
+                <div class="customerverify-grid">
+                  <div class="form-img pe-0" [ngClass]="{'error': profileImageErrorFlag}">
+                    <div class="c-upload">
+                      <label for="file-input">
+                        <img [src]="imagePreviewprofile ? imagePreviewprofile : 'commonAssets/images/userprofile.png'">
+                      </label>
+                      <input #profileFileupload type="file"
+                        (change)="uploadFiles(custVeriForm,$event, FileStoreTypes.CustomerProfile)"
+                        accept="image/jpeg,image/png,image/jpg" id="file-input" type="file" name="profileImage" />
+                      <input type="hidden" name="fileHidden">
+                    </div>
+                    <span *ngIf="profileImageErrorFlag" class="s-error">Profile image is
+                      required</span>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">First Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': fname.invalid && (fname.dirty || fname.touched)}">
+                    <input type="text" name="fname" [(ngModel)]="customerdetailsobj.name.firstName" #fname="ngModel"
+                      id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Middle Name<span></span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="mname" [(ngModel)]="customerdetailsobj.name.middleName" #mname="ngModel"
+                      id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Last Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': lname.invalid && (lname.dirty || lname.touched)}">
+                    <input type="text" name="lname" [(ngModel)]="customerdetailsobj.name.lastName" #lname="ngModel"
+                      id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Code</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="code" [(ngModel)]="customerdetailsobj.code" #code="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Birth Date</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-datepicker calendarType="classic" name="Birthdate" #Birthdate="ngModel" format="dd/MM/yyyy"
+                      [(ngModel)]="customerdetailsobj.birthDate">
+                    </kendo-datepicker>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Mobile No 1<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data country-code"
+                    [ngClass]="{ 'error':primaryMobile.invalid && (primaryMobile.dirty || primaryMobile.touched)}">
+                    <ngx-intl-tel-input [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                      [enablePlaceholder]="false" [searchCountryFlag]="true"
+                      [searchCountryField]="[SearchCountryField.All]" [selectFirstCountry]="false"
+                      [selectedCountryISO]="CountryISO.India" [maxLength]="15" [phoneValidation]="true"
+                      [separateDialCode]="separateDialCode" [numberFormat]="PhoneNumberFormat.National"
+                      name="primaryMobile" #primaryMobile="ngModel" [(ngModel)]="primaryMobileNo"
+                      (ngModelChange)="checkIntPhoneValidation($event, IntlTelType.PrimaryMobile, custVeriForm)"
+                      [enablePlaceholder]="true" required>
+                    </ngx-intl-tel-input>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Mobile No 2</label>
+                  </div>
+                  <div class="form-data country-code">
+                    <ngx-intl-tel-input [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                      [enablePlaceholder]="false" [searchCountryFlag]="true"
+                      [searchCountryField]="[SearchCountryField.All]" [selectFirstCountry]="false"
+                      [selectedCountryISO]="CountryISO.India" [maxLength]="15" [phoneValidation]="true"
+                      [separateDialCode]="separateDialCode" [numberFormat]="PhoneNumberFormat.National"
+                      name="SecondaryMobile" #SecondaryMobile="ngModel" [(ngModel)]="secondaryMobileNo"
+                      (ngModelChange)="checkIntPhoneValidation($event, IntlTelType.SecondaryMobile, custVeriForm)"
+                      [enablePlaceholder]="true">
+                    </ngx-intl-tel-input>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Email<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('email')) || (email.errors?.required && email.touched))}">
+                    <input type="email" name="email" [(ngModel)]="customerdetailsobj.email" #email="ngModel" id=""
+                      required email>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Telephone</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-maskedtextbox type="text" id="" name="phoneNo" #phoneNo="ngModel"
+                      [(ngModel)]="customerdetailsobj.phoneNo">
+                    </kendo-maskedtextbox>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Add Business Information-->
+              <div class="i-form a-add">
+                <h6 class="title"><i class="icon-businessinfo"></i>Business Information</h6>
+                <div class="customerverify-grid-02">
+
+                  <div class="form-data">
+                    <label for="">Company Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': companyname.invalid && (companyname.dirty || companyname.touched)}">
+                    <input type="text" name="companyname" [(ngModel)]="customerdetailsobj.companyName"
+                      #companyname="ngModel" id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Designation <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': designation.invalid && (designation.dirty || designation.touched)}">
+                    <kendo-combobox [data]="listDesignationItems" name="designation" #designation="ngModel"
+                      [(ngModel)]="customerdetailsobj.designation" [kendoDropDownFilter]="filterSettings" required>
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Business Type<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listBusinessTypeItems" name="businessType" #businessType="ngModel"
+                      [(ngModel)]="customerdetailsobj.businessType" [kendoDropDownFilter]="filterSettings" required>
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Business Email<span class="require"></span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="businessEmail" [(ngModel)]="customerdetailsobj.businessEmail"
+                      #businessEmail="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Business MobileNo<span class="require"></span></label>
+                  </div>
+                  <div class="form-data country-code">
+                    <ngx-intl-tel-input [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                      [enablePlaceholder]="false" [searchCountryFlag]="true"
+                      [searchCountryField]="[SearchCountryField.All]" [selectFirstCountry]="false"
+                      [selectedCountryISO]="CountryISO.India" [maxLength]="15" [phoneValidation]="true"
+                      [separateDialCode]="separateDialCode" [numberFormat]="PhoneNumberFormat.National"
+                      name="BusinessMobile" [(ngModel)]="businessMobileNo"
+                      (ngModelChange)="checkIntPhoneValidation($event, IntlTelType.BusinessMobile, custVeriForm)"
+                      [enablePlaceholder]="true">
+                    </ngx-intl-tel-input>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Business PhoneNo<span class="require"></span></label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-maskedtextbox type="text" id="" name="businessPhoneNo" #businessPhoneNo="ngModel"
+                      [(ngModel)]="customerdetailsobj.businessPhoneNo">
+                    </kendo-maskedtextbox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Country<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': country.invalid && (country.dirty || country.touched)}">
+                    <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="country" #country="ngModel" (valueChange)="onCountryChange($event)"
+                      [valuePrimitive]="true" required [(ngModel)]="customerdetailsobj.address.country">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>State<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': state.invalid && (state.dirty || state.touched)}">
+                    <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onStateChange($event)" [valuePrimitive]="true" name="state"
+                      #state="ngModel" [(ngModel)]="customerdetailsobj.address.state" required>
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>City<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': city.invalid && (city.dirty || city.touched)}">
+                    <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city"
+                      #city="ngModel" [(ngModel)]="customerdetailsobj.address.city" required>
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Reference Name</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="reference" [(ngModel)]="customerdetailsobj.referenceName"
+                      #reference="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Postal Code<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': zipcode.invalid && (zipcode.dirty || zipcode.touched)}">
+                    <input type="text" name="zipcode" [(ngModel)]="customerdetailsobj.address.zipCode"
+                      #zipcode="ngModel" id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Fax</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-maskedtextbox type="text" id="" name="faxNo" #faxNo="ngModel"
+                      [(ngModel)]="customerdetailsobj.faxNo">
+                    </kendo-maskedtextbox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Address<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data xl-textarea"
+                    [ngClass]="{ 'error': line1.invalid && (line1.dirty || line1.touched)}">
+                    <textarea class="textarea-wrap" cols="4" rows="3" type="text" id="" name="line1" #line1="ngModel"
+                      [(ngModel)]="customerdetailsobj.address.line1" required></textarea>
+                  </div>
+
+                </div>
+
+                <div class="i-form ro-grid mt-2">
+                  <h6 class="title mb-2"><i class="icon-share"></i>Social Media</h6>
+                  <div class="row no-gutters m-0">
+                    <div class="col-5 form-data p-1">
+                      <label>Social Media</label>
+                      <kendo-combobox [data]="listSocialMediaProviderItems" [valuePrimitive]="true"
+                        name="SocialMediaProvider" [(ngModel)]="selectedSocialMediaProviderItem"
+                        [kendoDropDownFilter]="filterSettings" (valueChange)="onSocialMediaProviderChange($event)"
+                        #SocialMediaProvider="ngModel">
+                      </kendo-combobox>
+                    </div>
+                    <div class="col-5 form-data p-1" [hidden]="isMessagingFlag">
+                      <label>Profile Name</label>
+                      <input type="text" id="" name="smpName" #smpName="ngModel"
+                        [(ngModel)]="socialMediaObj.profileName">
+                    </div>
+                    <div class="col-5 form-data p-1" [hidden]="!isMessagingFlag">
+                      <label>Mobile Number</label>
+                      <kendo-maskedtextbox name="smpMobile" [(ngModel)]="socialMediaObj.mobileNumber"
+                        #smpMobile="ngModel" id="">
+                      </kendo-maskedtextbox>
+                    </div>
+                    <div class="col-2 form-data p-1" style="align-self: end;" [hidden]="isSocialMediaUpdateFlag">
+                      <button (click)="onSocialMediaSubmit()" [disabled]="((isMessagingFlag == true ? (socialMediaObj.mobileNumber == undefined || socialMediaObj.mobileNumber == '' || smpMobile.invalid) : false) 
+                        || (isMessagingFlag == false ? (socialMediaObj.profileName == undefined || socialMediaObj.profileName == '') : false) 
+                        || (selectedSocialMediaProviderItem == undefined || selectedSocialMediaProviderItem == ''))"
+                        class="btn btn-primary">
+                        <i class="icon-add"></i>Add</button>
+                    </div>
+                    <div class="col-2 form-data p-1" style="align-self: end;" [hidden]="!isSocialMediaUpdateFlag">
+                      <button (click)="onSocialMediaUpdate()" [disabled]="((isMessagingFlag == true ? (socialMediaObj.mobileNumber == undefined || socialMediaObj.mobileNumber == '' || smpMobile.invalid) : false) 
+                        || (isMessagingFlag == false ? (socialMediaObj.profileName == undefined || socialMediaObj.profileName == '') : false) 
+                        || (selectedSocialMediaProviderItem == undefined || selectedSocialMediaProviderItem == ''))"
+                        class="btn btn-primary">
+                        <i class="icon-edit"></i>Update</button>
+                    </div>
+
+                  </div>
+                  <div class="m-1 o-border mt-1">
+                    <div class="ms-3 me-3 s-media" *ngIf="customerdetailsobj.socialMedias.length > 0">
+                      <div class="row o-scroll">
+                        <div class="col-md-3 p-1" *ngFor="let field of customerdetailsobj.socialMedias">
+                          <kendo-card class="w-100 bg-light">
+                            <kendo-card-body>
+                              <div kendoCardSubtitle>
+                                <span class="k-icon k-i-star"></span>
+                                <span><b>{{field.provider.providerName}}</b></span>
+                                <kendo-buttongroup class="float-end">
+                                  <button kendoButton (click)="onSocialMediaEdit(field)"><i
+                                      class="icon-edit"></i></button>
+                                  <button kendoButton (click)="onSocialMediaDelete(field)"><i
+                                      class="icon-trash"></i></button>
+                                </kendo-buttongroup>
+                              </div>
+                              <div kendoCardSubtitle>
+                                <span class="k-icon k-i-user"></span>
+                                <span class="s-title">{{(field.provider.mediaType == '3' || field.provider.mediaType ==
+                                  'Messaging') ? (field.mobileNumber | numberfilter:'mobile') :
+                                  field.profileName}}</span>
+                              </div>
+                            </kendo-card-body>
+                          </kendo-card>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Add Identity Proofs-->
+              <div class="i-form">
+                <h6 class="title"><i class="icon-proof"></i>Identity Proof Images</h6>
+                <div class="proof-media-grid d-flex justify-content-around">
+
+                  <div class="form-data text-center img-animated">
+                    <label class="d-block">Photo Identity Proof<span class="require"></span></label>
+                    <div class="" [ngClass]="{'c-upload': !isImgselectedPhotoIdent}">
+                      <label *ngIf="!isImgselectedPhotoIdent" for="file-input-ident">
+                        <span><i class="icon-upload"></i></span>
+                        <span>Select files</span>
+                      </label>
+                      <label *ngIf="isImgselectedPhotoIdent" for="file-input-ident">
+                        <img [src]="imagePreviewphoto">
+                      </label>
+                      <input #photoIdentityFileupload type="file" [ngClass]="{'d-none':isImgselectedPhotoIdent}"
+                        (change)="uploadFiles(custVeriForm,$event,FileStoreTypes.CustomerPhotoIdent)"
+                        accept="image/jpeg,image/jpg,image/png,application/pdf" id="file-input-ident" type="file"
+                        name="photoIdentity" />
+                      <input type="hidden" name="fileHidden">
+                    </div>
+                  </div>
+
+                  <div class="form-data text-center img-animated" [ngClass]="{'error' : businessIdentityErrorFlag}">
+                    <label class="d-block">Business Proof<span class="require">*</span></label>
+                    <div class="" [ngClass]="{'c-upload': !isImgselectedBusiness}">
+                      <label *ngIf="!isImgselectedBusiness" for="file-input-business">
+                        <span><i class="icon-upload"></i></span>
+                        <span>Select files</span>
+                      </label>
+                      <label *ngIf="isImgselectedBusiness" for="file-input-business">
+                        <img [src]="imagePreviewbusiness">
+                      </label>
+                      <input #businessIndentityFileupload type="file" [ngClass]="{'d-none':isImgselectedBusiness}"
+                        (change)="uploadFiles(custVeriForm,$event,FileStoreTypes.CustomerBussinessIdent)"
+                        accept="image/jpeg,image/png,image/jpg,application/pdf" id="file-input-business" type="file"
+                        name="businessIdentity" />
+                      <input type="hidden" name="fileHidden">
+                    </div>
+                    <span *ngIf="businessIdentityErrorFlag" class="s-error">businessIdentity image is required</span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="onVerificationCustomerSubmit(custVeriForm,false)"><i
+              class="icon-add"></i>New</button>
+          <button type="button" class="btn btn-primary" (click)="onVerificationCustomerSubmit(custVeriForm,true)"
+            [disabled]="!custVeriForm.valid"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeAddCustomerDialog()"></div>
+  </form>
+</div>

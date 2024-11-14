@@ -1,0 +1,296 @@
+<title>Lead Analysis</title>
+<section class="Lead-wrap">
+    <div class="content_wrap">
+        <div class="e-left w-100">
+            <div class="breadcrumb bg">
+                <div class="breadcrumb-left">
+                    <ul>
+                        <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                        <li class="breadcrumb-item k-cursor-pointer">Lead Analysis</li>
+                    </ul>
+                </div>
+                <div class="breadcrumb-right pe-0">
+                    <kendo-buttongroup kendoTooltip position="bottom">
+                        <button kendoButton title="Filter" class="nf-click z-index-auto" (click)="openFilterDialog()"><i
+                                class="icon-filter"></i></button>
+                    </kendo-buttongroup>
+                </div>
+            </div>
+            <!-- #region Filter on Lead Search -->
+            <div class="n-fil lead-filter" *ngIf="isFilter">
+
+                <div class="lead-search leaNew_filter" [ngClass]="{'leadGridNine':isAdminRole}">
+                    <div class="form-data"><label class="lbl">From Date</label></div>
+                    <div class="form-data">
+                        <kendo-datepicker calendarType="classic" [(ngModel)]="leadSearchCriteria.fromDate"
+                            format="dd/MM/yyyy">
+                        </kendo-datepicker>
+                    </div>
+                    <div class="form-data"><label class="lbl">To Date</label></div>
+                    <div class="form-data">
+                        <kendo-datepicker calendarType="classic" [(ngModel)]="leadSearchCriteria.toDate"
+                            format="dd/MM/yyyy">
+                        </kendo-datepicker>
+                    </div>
+                    <ng-container *ngIf="isAdminRole">
+                        <div class="form-data"><label>By</label></div>
+                        <div class="form-data">
+                            <kendo-combobox [data]="listSellerDNormItems" name="seller"
+                                [(ngModel)]="leadSearchCriteria.sellerId" [textField]="'text'" [valueField]="'value'"
+                                [valuePrimitive]="true" [kendoDropDownFilter]="filterSettings">
+                            </kendo-combobox>
+                        </div>
+                    </ng-container>
+                    <div class="form-data"><label>Expo</label></div>
+                    <div class="form-data">
+                        <kendo-combobox [data]="listExpoMasterDNormItems" [kendoDropDownFilter]="filterSettings"
+                            [textField]="'text'" [valueField]="'value'" name="expoName" #expoName="ngModel"
+                            [valuePrimitive]="true" [(ngModel)]="leadSearchCriteria.expoName">
+                        </kendo-combobox>
+                    </div>
+                    <div>
+                        <button kendoButton title="Clear" (click)="resetFilter()" kendoTooltip position="bottom"><i
+                                class="icon-clear"></i></button>
+                    </div>
+                    <div class="close_btn d-flex align-items-center">
+                        <div class="p-0 me-3">
+                            <button kendoButton kendoTooltip (click)="getLeadAnalysisData()" position="bottom"
+                                title="Search">
+                                <i class="icon-search"></i></button>
+                        </div>
+                        <div class="n-close" (click)="closeFilterDialog()"><i class="icon-delete"
+                                title="Close Filter"></i></div>
+                    </div>
+                </div>
+            </div>
+            <!-- #endregion -->
+            <div class="content_box">
+                <div class="grid-wrap">
+                    <kendo-grid [data]="leadAnalysisData" scrollable="scrollable" [resizable]="true"
+                        [reorderable]="true">
+                        <kendo-grid-column field="seller.name" title="Seller" [width]="150" [locked]="true">
+                        </kendo-grid-column>
+
+                        <!-- Created -->
+                        <kendo-grid-column-group title="Created" [width]="300">
+                            <kendo-grid-column field="createdLeads" title="Leads" [width]="110">
+                                <ng-template kendoGridCellTemplate let-dataItem>
+                                    {{dataItem.createdLeads}}
+                                    <span class="gr-icon" kendoTooltip position="bottom" title="Details"
+                                        (click)="openLeadAnalysisModal('Created',dataItem.seller.id)">
+                                        <i class="icon-info"></i>
+                                    </span>
+                                </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column field="createdStones" title="Stones" [width]="110">
+                            </kendo-grid-column>
+                            <kendo-grid-column field="createdWeight" title="Weight" [width]="110">
+                                <ng-template kendoGridCellTemplate let-dataItem>
+                                    {{dataItem.createdWeight | kendoNumber:'##.00'}}
+                                </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column field="createdAmt" title="Amt" [width]="110">
+                                <ng-template kendoGridCellTemplate let-dataItem>
+                                    {{dataItem.createdAmt | kendoNumber:'##.00'}}
+                                </ng-template>
+                            </kendo-grid-column>
+                        </kendo-grid-column-group>
+
+                        <!-- Won -->
+                        <kendo-grid-column-group title="Order" [width]="300">
+                            <kendo-grid-column field="wonLeads" title="Leads" [width]="110">
+                                <ng-template kendoGridCellTemplate let-dataItem>
+                                    {{dataItem.wonLeads}}
+                                    <span class="gr-icon" kendoTooltip position="bottom" title="Details"
+                                        (click)="openLeadAnalysisModal('Order',dataItem.seller.id)">
+                                        <i class="icon-info"></i>
+                                    </span>
+                                </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column field="wonStones" title="Stones" [width]="110">
+                            </kendo-grid-column>
+                            <kendo-grid-column field="wonWeight" title="Weight" [width]="110">
+                                <ng-template kendoGridCellTemplate let-dataItem>
+                                    {{dataItem.wonWeight | kendoNumber:'##.00'}}
+                                </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column field="wonAmt" title="Amt" [width]="110">
+                                <ng-template kendoGridCellTemplate let-dataItem>
+                                    {{dataItem.wonAmt | kendoNumber:'##.00'}}
+                                </ng-template>
+                            </kendo-grid-column>
+                        </kendo-grid-column-group>
+
+                        <!-- Rejected -->
+                        <kendo-grid-column-group title="Rejected" [width]="300">
+                            <kendo-grid-column field="rejectedLeads" title="Leads" [width]="110">
+                                <ng-template kendoGridCellTemplate let-dataItem>
+                                    {{dataItem.rejectedLeads}}
+                                    <span class="gr-icon" kendoTooltip position="bottom" title="Details"
+                                        (click)="openLeadAnalysisModal('Rejected',dataItem.seller.id)">
+                                        <i class="icon-info"></i>
+                                    </span>
+                                </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column field="rejectedStones" title="Stones" [width]="110">
+                            </kendo-grid-column>
+                            <kendo-grid-column field="rejectedWeight" title="Weight" [width]="110">
+                                <ng-template kendoGridCellTemplate let-dataItem>
+                                    {{dataItem.rejectedWeight | kendoNumber:'##.00'}}
+                                </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column field="rejectedAmt" title="Amt" [width]="110">
+                                <ng-template kendoGridCellTemplate let-dataItem>
+                                    {{dataItem.rejectedAmt | kendoNumber:'##.00'}}
+                                </ng-template>
+                            </kendo-grid-column>
+                        </kendo-grid-column-group>
+                    </kendo-grid>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Lead Analysis -->
+<div class="modal c-modal dialog-lg about-us" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+    *ngIf="isLeadAnalysis">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="main-title">
+                <h5 class="modal-title">
+                    <i class="icon-graph"></i>
+                    Lead Analysis
+                </h5>
+                <button type="button" class="close" (click)="closeLeadAnalysisDialog()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-end mb-2 d-flex justify-content-end">
+                    <kendo-combobox [data]="listStatus" name="seller" (valueChange)="onLeadStatusChange($event)"
+                        [(ngModel)]="defaultStatus" [kendoDropDownFilter]="filterSettings" style="flex: 0 150px;">
+                    </kendo-combobox>
+                    <button kendoButton kendoTooltip position="bottom" title="Analysis" class="ms-2"
+                        (click)="openAnalysisDialog()"><i class="icon-graph p-0"></i></button>
+                </div>
+                <div class="grid-wrap">
+                    <kendo-grid #lanalysis [data]="gridView" [pageable]="true" [skip]="skip" [pageSize]="pageSize"
+                        (pageChange)="pageChange($event)" [reorderable]="true" [resizable]="true"
+                        style="height: calc(100vh - 298px);" class="mb-grid">
+                        <kendo-grid-column field="leadNo" title="Lead No" [width]="90"></kendo-grid-column>
+                        <kendo-grid-column field="leadStatus" title="Lead Status" [width]="100"></kendo-grid-column>
+                        <kendo-grid-column field="customer.name" title="Party" [width]="150"></kendo-grid-column>
+                        <kendo-grid-column field="broker.name" title="Broker" [width]="150"></kendo-grid-column>
+                        <kendo-grid-column field="leadSummary.totalPcs" title="Pcs" [width]="50"></kendo-grid-column>
+                        <kendo-grid-column field="leadSummary.totalCarat" title="Weight" [width]="80">
+                            <ng-template kendoGridCellTemplate let-dataItem>
+                                {{dataItem.leadSummary.totalCarat | kendoNumber:'##.00'}}
+                            </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="leadSummary.discPer" title="Avg Disc" [width]="80">
+                            <ng-template kendoGridCellTemplate let-dataItem>
+                                {{dataItem.leadSummary.avgDiscPer | kendoNumber:'##.00'}}
+                            </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="leadSummary.totalVOWDiscPer" title="VOW Disc" [width]="80">
+                            <ng-template kendoGridCellTemplate let-dataItem>
+                                {{dataItem.leadSummary.totalVOWDiscPer | kendoNumber:'##.00'}}
+                            </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="leadSummary.totalPayableAmount" title="Payeble Amt" [width]="120">
+                            <ng-template kendoGridCellTemplate let-dataItem>
+                                {{dataItem.leadSummary.totalPayableAmount | kendoNumber:'##.00'}}
+                            </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="createdDate" title="Created Date" [width]="120">
+                            <ng-template kendoGridCellTemplate let-dataItem>
+                                {{dataItem.createdDate | date: 'dd-MM-yyyy'}}
+                            </ng-template>
+                        </kendo-grid-column>
+
+
+                        <ng-template kendoGridDetailTemplate let-dataItem let-rowIndex="rowIndex">
+                            <div class="lrm-grid">
+                                <app-leadanalysisdetail [leadAnalysisDetail]="dataItem"></app-leadanalysisdetail>
+                            </div>
+                        </ng-template>
+                    </kendo-grid>
+                </div>
+                <div class="lead-anaysis p-2" *ngIf="isAnalysis">
+                    <div class="d-flex justify-content-end mb-2">
+                        <i class="icon-delete" (click)="closeAnalysisDialog()"></i>
+                    </div>
+
+                    <div class="left-analysis">
+                        <h6>Stone Count by Color/Clarity</h6>
+                        <kendo-chart [seriesColors]="pieColor" style="height: 280px;" *ngIf="ccSeries">
+                            <kendo-chart-series>
+                                <kendo-chart-series-item *ngFor="let item of ccSeries" [data]="item.items"
+                                    [name]="item.value" field="stoneCount" categoryField="color" colorField="barColor"
+                                    type="column">
+                                    <kendo-chart-series-item-tooltip>
+                                        <ng-template let-dataItem="dataItem">
+                                            <div class="toltip-set">
+                                                <h6><strong>{{dataItem.clarity}}</strong></h6>
+                                                <p class="mb-0"><b>Count: {{dataItem.stoneCount}}</b></p>
+                                                <p class="mb-0"><b>Amount: {{dataItem.amt.toFixed(2)}}</b></p>
+                                                <p class="mb-0"><b>Base Disc: {{dataItem.bdisc}}</b></p>
+                                                <p class="mb-0"><b>Discount: {{dataItem.disc}}</b></p>
+                                                <p class="mb-0"><b>Avg Days: {{dataItem.avgDays}}</b></p>
+                                                <p class="mb-0"><b>Avg A.Days: {{dataItem.avgADays}}</b></p>
+                                            </div>
+                                        </ng-template>
+                                    </kendo-chart-series-item-tooltip>
+                                </kendo-chart-series-item>
+                            </kendo-chart-series>
+                        </kendo-chart>
+                    </div>
+                    <div class="analysis-grid">
+                        <div class="left-analysis">
+                            <h6>Daily Sales</h6>
+                            <kendo-chart renderAs="canvas" [transitions]="false" [pannable]="true"
+                                [zoomable]="{ mousewheel: { rate: 0.40 } }" [categoryAxis]="categoryAxis"
+                                [valueAxis]="valueAxis">
+                                <kendo-chart-tooltip [shared]="true"></kendo-chart-tooltip>
+                                <kendo-chart-value-axis>
+                                    <kendo-chart-value-axis-item [majorGridLines]="{ visible: false }"
+                                        [line]="{visible:true}">
+                                    </kendo-chart-value-axis-item>
+                                </kendo-chart-value-axis>
+                                <kendo-chart-series>
+                                    <kendo-chart-category-axis>
+                                        <kendo-chart-category-axis-item [majorGridLines]="{ visible: false }"
+                                            [line]="{visible:true}" [visible]="true">
+                                        </kendo-chart-category-axis-item>
+                                    </kendo-chart-category-axis>
+                                    <kendo-chart-series-item [data]="dailySalesList" field="value"
+                                        categoryField="category">
+                                    </kendo-chart-series-item>
+                                </kendo-chart-series>
+                            </kendo-chart>
+                        </div>
+                        <div class="right-analysis">
+                            <h6>Party Wise Sales</h6>
+                            <kendo-chart [seriesColors]="pieColor" [transitions]="false">
+                                <kendo-chart-tooltip>
+                                    <ng-template kendoChartSeriesTooltipTemplate let-value="value"
+                                        let-category="category">
+                                        <div class="chart-tooltip"> {{category}} : {{value}}</div>
+                                    </ng-template>
+                                </kendo-chart-tooltip>
+                                <kendo-chart-series>
+                                    <kendo-chart-series-item [autoFit]="autofit" type="pie" [padding]="5"
+                                        [data]="partyWiseList" categoryField="partyName" field="amount">
+                                    </kendo-chart-series-item>
+                                </kendo-chart-series>
+                                <kendo-chart-legend [visible]="false"></kendo-chart-legend>
+                            </kendo-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

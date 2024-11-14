@@ -1,0 +1,116 @@
+.msg-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid;
+}
+
+.msg-box i {
+    font-size: 12px;
+}
+
+.msg-box button.btn {
+    padding: 0 0 0 5px;
+}
+
+.msg-box .error {
+    font-size: 11px;
+    color: #ff0000;
+}
+
+.msg-box .success {
+    font-size: 11px;
+    color: #028e02;
+}
+
+.table-bg-red {
+    background-color: #ffdddd;
+    display: block;
+    margin: -26px -30px -30px;
+    padding: 20px 30px;
+    width: auto;
+}
+
+.img-animated a:before {
+    content: "";
+    position: absolute;
+    background: #0000004d;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.5s;
+    transform: scale(0.5);
+}
+
+.img-animated a {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.img-animated a:hover:before {
+    opacity: 1;
+    transform: scale(1.5);
+}
+
+.img-animated a i {
+    margin: auto;
+    display: block;
+    height: 32px;
+    opacity: 0;
+    color: #fff;
+    font-size: 20px;
+    transition: all 0.5s;
+    background: #000;
+    width: 32px;
+    text-align: center;
+    padding: 0;
+    line-height: 32px;
+    border-radius: 100%;
+    position: absolute;
+    z-index: 9999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.img-animated a:hover i {
+    opacity: 1;
+}
+
+.takenby-main {
+    display: grid;
+    grid-template-columns: 130px 1fr 212px;
+    border: 1px solid #d3d3d3;
+    grid-column-gap: 10px;
+}
+
+.takenby-main input {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 20px;
+    color: #a8a8a8;
+    padding: 5px;
+    border: 1px solid #d3d3d3;
+}
+
+.takenby-main .searchcomp {
+    border-right: 1px solid #d3d3d3;
+}
+
+.takenby-main .search-stone {
+    height: 320px;
+    overflow-x: hidden;
+}
+
+.takenby-main .search-stone>div {
+    font-size: 12px;
+}
+
+.takenby-main .search-stone>div>span {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+}

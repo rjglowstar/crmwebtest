@@ -1,0 +1,35 @@
+.logi-modal .i-form.l-con .grid {
+    grid-template-columns: 78px 1fr 80px 1fr;
+}
+
+.logi-modal .i-form.l-master .grid {
+    grid-template-columns: 68px 1fr 90px 1fr 72px 1fr;
+}
+
+.logi-modal .i-form.l-con .grid .form-data.t-ap {
+    grid-column: 2 / 7;
+}
+
+.logi-modal .grid.bot.mt-1 {
+    margin-top: 5px;
+}
+
+.la-mas.c-modal .form-data textarea {
+    height: 30px;
+}
+
+@media (max-width:767px) {
+    .logi-modal .i-form.l-master .grid {
+        grid-template-columns: 68px 1fr 90px 1fr;
+    }
+}
+
+@media (max-width:480px) {
+    .logi-modal .i-form.l-master .grid {
+        grid-template-columns: 90px 1fr;
+    }
+
+    .logi-modal .i-form.l-con .grid {
+        grid-template-columns: 78px 1fr;
+    }
+}

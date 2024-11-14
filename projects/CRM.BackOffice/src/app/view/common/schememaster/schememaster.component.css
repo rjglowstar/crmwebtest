@@ -1,0 +1,17 @@
+.vow-input-grid {
+    display: grid;
+    grid-template-columns: 64px 1fr 58px 1fr;
+    grid-column-gap: 10px;
+    align-items: center;
+    grid-row-gap: 5px;
+}
+
+.vow-input-grid label {
+    line-height: normal !important;
+}
+
+.vow-details-grid {
+    display: grid;
+    grid-template-columns: 56px 1fr 62px 1fr 47px 1fr 38px 1fr;
+    grid-column-gap: 10px;
+}

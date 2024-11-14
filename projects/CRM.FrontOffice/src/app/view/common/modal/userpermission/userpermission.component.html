@@ -1,0 +1,159 @@
+<!-- Users Rights Modal Start -->
+<div class="modal c-modal" id="userrights" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-user_permissions"></i>
+          User Rights For
+          <span class="u-d-data">{{title}}</span></h5>
+        <button type="button" class="close" (click)="closeUserPermissionDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="user-tab">
+              <ul>
+                <li *ngFor="let nav of ['Rights', 'Forms']" [class.active]="currentSection == nav"><a
+                    href="javascript:void(0);"><i class="icon-admin_main"></i>{{nav}}</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="account-content">
+
+              <div class="tab-content" id="user-rights" *ngIf="currentSection == 'Rights'">
+                <div *ngFor="let navGroup of permissionPanels">
+                  <div class="panelbar-wrapper">
+                    <kendo-panelbar class="body-panelbar custompanel">
+                      <kendo-panelbar-item [title]="navGroup.name">
+                        <ng-template kendoPanelBarContent>
+                          <div class="panel-item">
+                            <div class="permission_item">
+                              <div class="permission_body">
+                                <div *ngFor="let permission of setPermissionDetail(navGroup.name)"
+                                  class="permission_body--item">
+                                  <input type="checkbox" id="{{permission.name}}" class="k-checkbox"
+                                    [checked]="permission.isChecked"
+                                    (click)="onCheckPermissionRights(permission.name, permission.isChecked)" />
+                                  <label class="k-checkbox-label" for="{{permission.name}}">{{permission.name}}</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </kendo-panelbar-item>
+                    </kendo-panelbar>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-content" id="user-forms" *ngIf="currentSection == 'Forms'">
+                <div *ngFor="let navGroup of navPanels">
+                  <div #formItem id="{{navGroup.group}}" class="treeview_parent" *ngIf="navGroup?.isAdmin">
+                    <div class="treeviewmain" [ngClass]="{'noitemsicon':navGroup.items.length == 0}">
+                      <ng-container *ngIf="navGroup.items && navGroup.items.length > 0">
+                        <ng-template [ngIf]="expandedFormItems.includes(formItem.id)" [ngIfElse]="defaultIconBlock">
+                          <i class="k-icon k-i-minus-outline treeview--icon"
+                            (click)="onExpandTreeview(formItem.id)"></i>
+                        </ng-template>
+                        <ng-template #defaultIconBlock>
+                          <i class="k-icon k-i-plus-outline treeview--icon" (click)="onExpandTreeview(formItem.id)"></i>
+                        </ng-template>
+                      </ng-container>
+                      <input type="checkbox" id="{{ 'p_' + navGroup.group}}" class="k-checkbox"
+                        [checked]="navGroup.isChecked" (click)="onCheckTreeview('NavGroup', navGroup.group,null)">
+                      <label class="k-checkbox-label customcheckbox"
+                        for="{{ 'p_' +  navGroup.group}}">{{navGroup.group}}</label>
+                    </div>
+                    <div class="treeviechild">
+                      <ng-template [ngIf]="expandedFormItems.includes(formItem.id)">
+                        <ng-container *ngFor="let navItem of navGroup.items">
+                          <div *ngIf="navItem?.isAdmin">
+                            <div class="treeview_child">
+                              <input type="checkbox" id="{{ 'c_' + navItem.name}}" class="k-checkbox"
+                                [checked]="navItem.isChecked"
+                                (click)="onCheckTreeview('NavItem', navItem.name, navGroup.group)" />
+                              <label class="k-checkbox-label" for="{{ 'c_' + navItem.name}}">{{navItem.name}}</label>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Note /* Do not remove below commented code */ -->
+              <!-- <div class="tab-content" id="user-menu" *ngIf="currentSection == 'Menu'">
+                                <div class="form-data check-box">
+                                    <input type="checkbox" id="u-check-r" class="k-checkbox">
+                                    <label for="u-check-r">IsAddBox</label>
+                                </div>
+                                <div class="form-data check-box">
+                                    <input type="checkbox" id="u-check-s" class="k-checkbox">
+                                    <label for="u-check-s">IsAddKapan</label>
+                                </div>
+                                <div class="form-data check-box">
+                                    <input type="checkbox" id="u-check-t" class="k-checkbox">
+                                    <label for="u-check-t">IsPlanMaker</label>
+                                </div>
+                                <div class="form-data check-box">
+                                    <input type="checkbox" id="u-check-u" class="k-checkbox">
+                                    <label for="u-check-u">IsDepartMentIssuePacket</label>
+                                </div>
+                                <div class="form-data check-box">
+                                    <input type="checkbox" id="u-check-v" class="k-checkbox">
+                                    <label for="u-check-v">IsAddEmployee</label>
+                                </div>
+                                <div class="form-data check-box">
+                                    <input type="checkbox" id="u-check-w" class="k-checkbox">
+                                    <label for="u-check-w">IsBulkPlanMaker</label>
+                                </div>
+                            </div>
+                            <div class="tab-content" id="user-reports" *ngIf="currentSection == 'Reports'">
+                                <div class="">
+                                    <div class="treeview_parent" id="Admin">
+                                        <div class="treeviewmain">
+                                            <i class="k-icon k-i-plus-outline treeview--icon "></i>
+                                            <input type="checkbox" class="k-checkbox" id="p_Admin" />
+                                            <label class="k-checkbox-label customcheckbox" for="p_Admin">Admin</label>
+                                        </div>
+                                        <div class="treeviechild">
+                                            <div class="ng-star-inserted">
+                                                <div class="treeview_child">
+                                                    <div class="form-data check-box">
+                                                        <input type="checkbox" class="k-checkbox" id="3" />
+                                                        <label class="k-checkbox-label" for="3">Company</label>
+                                                    </div>
+                                                    <div class="form-data check-box">
+                                                        <input type="checkbox" class="k-checkbox" id="4" />
+                                                        <label class="k-checkbox-label" for="4">Company</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button kendoButton (click)="closeUserPermissionDialog()" class="btn btn-primary">Cancel</button>
+        <button *ngIf="currentSectionIndex != 0" kendoButton (click)="changeSection(-1)"
+          class="btn btn-primary">Back</button>
+        <button *ngIf="currentSectionIndex != 1" kendoButton (click)="changeSection(1)"
+          class="btn btn-primary">Next</button>
+        <button *ngIf="currentSectionIndex == 1" kendoButton (click)="saveUserRights()"
+          class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Users Rights Modal End -->
+
+<div (document:keydown.esc)="closeUserPermissionDialog()"></div>

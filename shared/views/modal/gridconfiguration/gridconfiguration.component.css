@@ -1,0 +1,16 @@
+.c-modal .left,
+.c-modal .right {
+    border: initial;
+}
+
+.modal-body {
+    padding : 15px;
+    height  : calc(100vh - 420px);
+    overflow: auto;
+}
+
+@media(max-width : 767px) {
+    .modal-body {
+        height: 550px;
+    }
+}

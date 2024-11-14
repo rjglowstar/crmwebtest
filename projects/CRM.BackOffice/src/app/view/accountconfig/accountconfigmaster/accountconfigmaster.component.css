@@ -1,0 +1,268 @@
+.add-ledger label {
+    font-size: 14px;
+}
+
+.add-ledger .grid {
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    grid-column-gap: 10px;
+}
+
+.acConfi_wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.acConfi_wrap .pro_block {
+    background: #fff;
+    border-radius: 5px;
+    padding: 10px 5px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 10%);
+}
+
+.acConfi_wrap .pro_block:hover .config_box {
+    border-color: #7A7A7A;
+}
+
+.acConfi_wrap .p_title {
+    width: 100%;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #212529;
+    border-bottom: 1px solid #e3e3e3;
+    padding: 0 5px 10px 5px;
+    margin-bottom: 12px;
+    line-height: 1;
+    min-height: 34px;
+}
+
+.acConfi_wrap .p_title.border_none {
+    border: none;
+    margin: 0;
+}
+
+.acConfi_wrap .p_title.sm {
+    font-size: 13px;
+    border: none;
+    padding: initial;
+}
+
+.acConfi_wrap .p_title.pb_5 {
+    padding-bottom: 5px;
+}
+
+.acConfi_wrap .p_info.bg_box {
+    border: 1px solid #e3e3e3;
+    padding: 0 0 8px 0;
+    margin: 0 5px;
+    height: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.acConfi_wrap .p_info.bg_box .p_title {
+    background-color: #F6F6F6;
+    padding: 8px 10px 8px 10px;
+    margin-bottom: 10px;
+}
+
+.acConfi_wrap .p_info.bg_box .p_title.pb_5 {
+    padding: 5px 10px;
+}
+
+.acConfi_wrap .aconfig_data {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    padding: 0 5px;
+}
+
+.acConfi_wrap .config_box {
+    height: auto;
+    margin: 0 5px;
+}
+
+.acConfi_wrap .config_box .config_ul {
+    margin: 0;
+}
+
+.acConfi_wrap .config_box .config_ul li {
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 6px 10px;
+    line-height: 1.2;
+    gap: 2px 5px;
+}
+
+.acConfi_wrap .config_box .config_ul li .c_label {
+    color: #212529;
+    font-size: 13px;
+    flex-wrap: wrap;
+    justify-content: initial;
+}
+
+.acConfi_wrap .config_box .config_ul li .c_label b {
+    font-size: 12px;
+    font-weight: 600 !important;
+}
+
+.acConfi_wrap .config_ul li .c_label b:not(:first-child) {
+    margin-left: 15px;
+}
+
+.acConfi_wrap .config_box .btnGroup {
+    gap: 10px;
+}
+
+.acConfi_wrap .config_box .btnGroup .btn {
+    padding: 0;
+    line-height: 1;
+}
+
+.acConfi_wrap .config_box .btnGroup .btn:active {
+    border-color: transparent !important;
+}
+
+.acConfi_wrap .config_box .btnGroup {
+    opacity: 0.5;
+}
+
+.acConfi_wrap .config_box .btnGroup i {
+    font-size: 13px;
+}
+
+.acConfi_wrap .config_box .config_ul li:hover {
+    background-color: #e3e3e3;
+}
+
+.acConfi_wrap .config_box .config_ul li:hover .btnGroup {
+    opacity: 1;
+}
+
+.acConfi_wrap .defaultLeader {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
+    margin: 0;
+}
+
+.acConfi_wrap .defaultLeader li {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0 10px;
+    line-height: 1;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.acConfi_wrap .defaultLeader .p_title {
+    background-color: #F6F6F690;
+}
+
+.acConfi_wrap .pro_data.ch_pass {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    padding: 0 10px;
+    margin-bottom: 5px;
+}
+
+.acConfi_wrap .pro_data.ch_pass li label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.acConfi_wrap .pro_data.ch_pass .form-data i {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
+.acConfi_wrap .pro_data.ch_pass .form-data input[type="password"] {
+    padding-right: 30px !important;
+}
+
+.acConfig_sec .lastInvoice input {
+    width: 95px;
+    height: 28px;
+    line-height: 1;
+}
+
+.acConfig_sec .acConfig {
+    grid-template-columns: 1fr 35%;
+}
+
+.acConfig_sec .lInv_num {
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+    white-space: nowrap;
+    flex-wrap: wrap;
+    gap: 5px;
+    line-height: 1;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.acConfig_sec .lInv_num span {
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.acConfig_sec .lInv_num .btnGroup_gap {
+    display: inline-flex;
+    opacity: 0.5;
+}
+
+.acConfig_sec .btnGroup {
+    display: inline-flex;
+    align-items: center;
+}
+
+.acConfig_sec .btnGroup_gap .btn {
+    padding: 0;
+    font-size: 12px;
+}
+
+.acConfig_sec li:hover .lInv_num .btnGroup_gap {
+    opacity: 1;
+}
+
+@media (max-width: 1800px) {
+    .acConfi_wrap .pro_block.lastInv_num {
+        grid-column: 1/span 2 !important;
+    }
+
+    .acConfi_wrap .aconfig_data {
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+}
+
+@media (max-width: 1199px) {
+    .acConfi_wrap {
+        grid-template: none !important;
+    }
+
+    .acConfi_wrap .pro_block.lastInv_num {
+        grid-column: initial !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .acConfi_wrap .pro_data.ch_pass {
+        grid-template: none !important;
+    }
+}

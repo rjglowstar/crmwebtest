@@ -1,0 +1,124 @@
+<footer>
+  <div class="fLogin_wrap">
+    <div class="cus_container">
+      <h3 class="f_head">Excellence In Diamonds</h3>
+      <!-- <h3 class="f_head">{{"FooterLanding.Excellence In Diamonds" | translate}}</h3> -->
+      <div class="partner_block">
+        <div class="img_wrapper">
+          <img src="../../../../assets/images/GJPEC.png" alt="GJPEC Logo" class="img-fluid">
+          <img src="../../../../assets/images/RAPNET.png" alt="GJPEC Logo" class="img-fluid">
+        </div>
+      </div>
+      <div class="f_grid">
+        <ul class="f_add">
+          <li>
+            <a class="f_navbarBrand" href="javascript:void(0);" routerLink="/dashboard">
+              <img [src]="logoPath" class="img-fluid" alt="brand-logo">
+            </a>
+          </li>
+          <li>
+            <a class="cmail_link">
+              <i class="icon-location_new"></i><span class="pe-xxl-5 me-xl-5">{{contactUsDetail.address}}</span>
+            </a>
+          </li>
+          <li>
+            <a class="cmail_link align-items-center" [href]="'mailto:' + contactUsDetail.email">
+              <i class="icon-mail-trans"></i>{{contactUsDetail.email}}
+            </a>
+          </li>
+          <li>
+            <a class="cmail_link align-items-center" [href]="'tel:' + contactUsDetail.email">
+              <i class="icon-phone-trans"></i>+91 991315 3000
+            </a>
+          </li>
+        </ul>
+        <div class="f_uLinks ps-xxl-5 ms-xxl-5">
+          <h4 class="f_title">{{"FooterLanding.Quick Links" | translate}} </h4>
+          <ul class="ul_grid">
+            <li>
+              <a href="javascript:void(0)" routerLink="/aboutus">{{'FooterLanding.Know'|translate}} {{companyName}}</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" routerLink="/products">{{'FooterLanding.Products'|translate}}</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" routerLink="/sustainability">{{'FooterLanding.Sustainability'|translate}}</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" routerLink="/craftsmanship">{{'FooterLanding.Craftsmanship'|translate}}</a>
+            </li>
+            <li *ngIf="companyName == 'Glowstar'">
+              <a routerLink="/csr">{{'FooterLanding.CSR'| translate}}</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" routerLink="/contactus">{{'FooterLanding.Contact'|translate}}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="f_follow me-xl-2">
+          <div class="f_socGroup">
+            <ul class="apps_dwd">
+              <li class="lbl">{{'FooterLanding.Download our app'|translate}}</li>
+              <li>
+                <a href="https://play.google.com/store/apps/details?id=com.glowstar.diamond" target="_blank">
+                  <i class="icon-google_play"></i>
+                </a>
+              </li>
+              <li>
+                <a href="https://apps.apple.com/in/app/glow-star-diamond/id1596449262" target="_blank">
+                  <i class="icon-apple"></i>
+                </a>
+              </li>
+            </ul>
+            <ul class="f_socialLinks">
+              <li>
+                <a [href]="this.socialPath.fackbook" target="_blank">
+                  <i class="icon-f-facebook" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li>
+                <a [href]="this.socialPath.twitter" target="_blank">
+                  <i class="icon-f-twitter" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li>
+                <a [href]="this.socialPath.linkedin" target="_blank">
+                  <i class="icon-f-linkedin" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li>
+                <a [href]="this.socialPath.instagram" target="_blank">
+                  <i class="icon-f-instagram" aria-hidden="true"></i>
+                </a>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+      </div>
+      <div class="copyright_block">
+        <div class="copyright_txt">
+          {{"FooterLanding.Copyright" | translate}} {{copyRightYear}} &copy;
+          {{"FooterLanding.All Rights Reserved" | translate}}
+        </div>
+        <ul>
+          <li>
+            <a href="javascript:void(0)" routerLink="/terms">{{"FooterLanding.TermsCondition" | translate}}</a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" routerLink="/login">{{"FooterLanding.Login" | translate}}</a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" routerLink="/register">{{"FooterLanding.Register" | translate}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Back-to-Top -->
+<!-- <ng-container>
+  <a href="javascript:void(0);" class="goBackToBtn" (click)="scrollToTop()" #backToTop><i
+      class="icon-right-new"></i></a>
+</ng-container> -->

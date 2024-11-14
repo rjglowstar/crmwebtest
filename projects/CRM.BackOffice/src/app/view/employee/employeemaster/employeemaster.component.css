@@ -1,0 +1,62 @@
+.employee-modal.c-modal .modal-body {
+      height: 690px;
+      overflow-y: auto;
+      overflow-x: hidden;
+}
+
+.employee-modal .ro-grid .grid {
+      grid-template-columns: 75px 1fr 84px 1fr 82px 1fr;
+}
+
+.employee-modal .i-form.om-add .grid {
+      grid-template-columns: 52px 1fr 35px 1fr 34px 1fr;
+}
+
+.employee-modal .ot-grid .grid {
+      grid-template-columns: 95px 1fr 85px 1fr 90px 1fr;
+}
+
+.employee-modal.c-modal label {
+      font-size: 12px;
+      white-space: nowrap;
+      line-height: 30px;
+}
+
+.employee-modal.rorgan.c-modal .form-data textarea {
+      height: 30px;
+}
+
+@media only screen and (max-width: 767px) {
+      .employee-modal .ro-grid .grid {
+            grid-template-columns: 75px 145px 84px 1fr;
+      }
+
+      .employee-modal .i-form.om-add .grid {
+            grid-template-columns: 52px 1fr 50px 1fr;
+      }
+
+      .employee-modal .ot-grid .grid {
+            grid-template-columns: 95px 1fr 85px 1fr;
+      }
+
+}
+
+@media only screen and (max-width: 570px) {
+      .employee-modal .ro-grid .grid {
+            grid-template-columns: 75px 115px 84px auto;
+      }
+}
+
+@media only screen and (max-width: 480px) {
+      .employee-modal .ot-grid .grid {
+            grid-template-columns: 95px 1fr;
+      }
+
+      .employee-modal .ro-grid .grid {
+            grid-template-columns: 88px 1fr;
+      }
+
+      .employee-modal .i-form.om-add .grid {
+            grid-template-columns: 52px 1fr;
+      }
+}

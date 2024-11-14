@@ -1,0 +1,601 @@
+<!-- Add Ledger Modal Start -->
+<div class="modal c-modal addemp rorgan dialog-sm" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <form name="ledgerForm" #ledgerForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">
+            <i class="icon-party"></i>
+            {{ledgerObj.id?"Edit":"Add"}} Ledger
+          </h5>
+          <button type="button" class="close" (click)="closeLedgerDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-party">
+                <h6 class="title"><i class="icon-party"></i>Ledger Information</h6>
+                <div class="grid">
+
+                  <div class="form-data" *ngIf="showSearch">
+                    <label>Ledger Search</label>
+                  </div>
+                  <div class="form-data" *ngIf="showSearch">
+                    <kendo-autocomplete class="w-100 border-0" [data]="listLedgerItems" [filterable]="true"
+                      (filterChange)="handleLedgerFilter($event)" [kendoDropDownFilter]="filterSettings" name="Ledger"
+                      [(ngModel)]="ledgerSearch" (valueChange)="onLedgerChange($event)"
+                      [popupSettings]="{width: 'auto'}" #Ledger="ngModel" valueField="value"
+                      placeholder="Search Ledger by name">
+                      <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                        <span>{{dataItem.text}}</span>
+                      </ng-template>
+                    </kendo-autocomplete>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                    <input type="text" name="name" [(ngModel)]="ledgerObj.name" #name="ngModel" id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Ledger Group<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': ledgerGroup.invalid && (ledgerGroup.dirty || ledgerGroup.touched)}">
+                    <kendo-combobox [data]="listLedgerGroupItems" [kendoDropDownFilter]="filterSettings"
+                      name="ledgerGroup" [textField]="'name'" [valueField]="'id'" [(ngModel)]="ledgerGroupId"
+                      (selectionChange)="openSection($event)" required [popupSettings]="{width: 'auto'}"
+                      #ledgerGroup="ngModel">
+                    </kendo-combobox>
+                  </div>
+
+                  <!-- <div class="form-data">
+                    <label>Company</label>
+                  </div>
+                  <div class="form-data d-flex">
+                    <kendo-combobox [data]="listCompanyItems" [kendoDropDownFilter]="filterSettings"
+                      [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true" name="companyItem"
+                      #companyItem="ngModel" [(ngModel)]="ledgerCompanyId" (valueChange)="companyChange($event)">
+                    </kendo-combobox>
+                    <button kendoButton title="Add Company" class="ms-1" (click)="openCompanyMasterDialog()"><i
+                        class="icon-add pe-0"></i></button>
+                  </div> -->
+
+                  <div class="form-data">
+                    <label for="">Code</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="code" [(ngModel)]="ledgerObj.code" #code="ngModel" id=""
+                      [disabled]="iseditledger">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Contact Person<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': contactPerson.invalid && (contactPerson.dirty || contactPerson.touched)}">
+                    <input type="text" name="contactPerson" [(ngModel)]="ledgerObj.contactPerson"
+                      #contactPerson="ngModel" id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Email<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('email')) || (email.errors?.required && email.touched))}">
+                    <input type="email" name="email" [(ngModel)]="ledgerObj.email" #email="ngModel" id="" required
+                      email>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Mobile No<span class="require" *ngIf="ledgerObj.group.name != 'Lab'">*</span></label>
+                  </div>
+                  <div class="form-data country-code"
+                    [ngClass]="{ 'error':primaryMobile.invalid && (primaryMobile.dirty || primaryMobile.touched)}">
+                    <ngx-intl-tel-input [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                      [enablePlaceholder]="false" [searchCountryFlag]="true"
+                      [searchCountryField]="[SearchCountryField.All]" [selectFirstCountry]="false"
+                      [selectedCountryISO]="CountryISO.India" [maxLength]="15" [phoneValidation]="true"
+                      [separateDialCode]="separateDialCode" [numberFormat]="PhoneNumberFormat.National"
+                      name="primaryMobile" #primaryMobile="ngModel" [(ngModel)]="primaryMobileNo"
+                      (ngModelChange)="checkIntPhoneValidation($event, IntlTelType.PrimaryMobile, ledgerForm)"
+                      [enablePlaceholder]="true" [required]="ledgerObj.group.name != 'Lab'">
+                    </ngx-intl-tel-input>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Phone No</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="phoneNo" [(ngModel)]="ledgerObj.phoneNo" #phoneNo="ngModel"
+                      (keypress)="utilityService.numberOnly($event)">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Fax No</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="faxNo" [(ngModel)]="ledgerObj.faxNo" #faxNo="ngModel"
+                      (keypress)="utilityService.numberOnly($event)">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Income Tax No</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="incometaxno" #incometaxno="ngModel"
+                      [(ngModel)]="ledgerObj.incomeTaxNo">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Tax No</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="taxno" #taxno="ngModel" [(ngModel)]="ledgerObj.taxNo">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Line Of Business<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': lineOfBusiness.invalid && (lineOfBusiness.dirty || lineOfBusiness.touched)}">
+                    <kendo-combobox [data]="listBusinessTypeItems" name="lineOfBusiness" [valuePrimitive]="true"
+                      [kendoDropDownFilter]="filterSettings" [(ngModel)]="ledgerObj.lineOfBusiness"
+                      #lineOfBusiness="ngModel" required [popupSettings]="{width: 'auto'}">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Limit (Days)</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="cdays" #cdays="ngModel" [(ngModel)]="ledgerObj.limit.days"
+                      (keypress)="utilityService.numberOnly($event)">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Limit (Amt.)</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="camt" #camt="ngModel" [(ngModel)]="ledgerObj.limit.amount"
+                      (keypress)="utilityService.floatOnly($event)">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Credit </label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="lcredit" #lcredit="ngModel" [(ngModel)]="ledgerObj.credit"
+                      (keypress)="utilityService.floatOnly($event)">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Debit </label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="ldebit" #ldebit="ngModel" [(ngModel)]="ledgerObj.debit"
+                      (keypress)="utilityService.floatOnly($event)">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">TDS Rate</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="tdsRate" [(ngModel)]="ledgerObj.tdsRate" #tdsRate="ngModel" id=""
+                      (keypress)="utilityService.floatOnly($event)">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">TDS Limit</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="tdsLimit" [(ngModel)]="ledgerObj.tdsLimit" #tdsLimit="ngModel" id=""
+                      (keypress)="utilityService.floatOnly($event)">
+                  </div>
+
+                  <div class="c-l-fs">
+                    <input type="checkbox" class="k-checkbox" name="isActive" id="isActive"
+                      [(ngModel)]="ledgerObj.isActive">
+                    <label class="k-checkbox-label" for="isActive">Active</label>
+                  </div>
+                  <div class="form-data"></div>
+                  <div class="form-data">
+                    <label>Logistic Acc</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="logisticAcc" #logisticAcc="ngModel"
+                      [(ngModel)]="ledgerObj.logisticAcc">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Inv Declaration</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="declaration" #declaration="ngModel"
+                      [(ngModel)]="ledgerObj.declaration" style="height: 30px;"></textarea>
+                  </div>
+
+                  <div class="form-data">
+                    <label>CC type</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': convCurrencyType.invalid && (convCurrencyType.dirty || convCurrencyType.touched)}">
+                    <kendo-combobox class="w-auto" [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+                      valueField="value" name="convCurrencyType" [kendoDropDownFilter]="filterSettings"
+                      [(ngModel)]="ledgerObj.ccType" #convCurrencyType="ngModel">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Expired Date</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-datepicker calendarType="classic" name="expiredDate" #expiredDate="ngModel"
+                      format="dd/MM/yyyy" [(ngModel)]="ledgerObj.expiredDate"></kendo-datepicker>
+                  </div>
+                  <div class="form-data">
+                    <label class="k-checkbox-label" for="isActive">IsVerified</label>
+                  </div>
+                  <div class="c-l-fs">
+                    <input type="checkbox" class="k-checkbox" name="isVerified" id="isVerified"
+                      [(ngModel)]="ledgerObj.isVerified">
+                  </div>
+                  <div class="form-data">
+                    <label class="k-checkbox-label" for="isCertReminder">Cert. Remider</label>
+                  </div>
+                  <div class="c-l-fs">
+                    <input type="checkbox" class="k-checkbox" name="isCertReminder" id="isCertReminder"
+                      [(ngModel)]="ledgerObj.isCertReminder">
+                  </div>
+                </div>
+              </div>
+              <!-- START : BROKER SECTION -->
+              <div class="i-form broker-add" *ngIf="showBrokerSection">
+                <h6 class="title"><i class="icon-party"></i>Broker Details</h6>
+                <div class="grid grid-animated">
+
+                  <div class="form-data">
+                    <label for="">Brokrage % <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': brokrage.invalid && (brokrage.dirty || brokrage.touched)}">
+                    <input type="text" name="brokrage" [(ngModel)]="ledgerObj.broker.brokrage" #brokrage="ngModel" id=""
+                      (keypress)="utilityService.floatOnly($event)" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Ref.Company</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="refCompanyName" [(ngModel)]="ledgerObj.broker.refCompanyName"
+                      #refCompanyName="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Ref.Person</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="refPersonName" [(ngModel)]="ledgerObj.broker.refPersonName"
+                      #refPersonName="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Ref.Email</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="refemail" [(ngModel)]="ledgerObj.broker.refemail" #refemail="ngModel"
+                      id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Ref.Mobile No</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="refmobileNo" [(ngModel)]="ledgerObj.broker.refmobileNo"
+                      #refmobileNo="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Ref.Address</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="refAddress" [(ngModel)]="ledgerObj.broker.refAddress" #refAddress="ngModel"
+                      id="">
+                  </div>
+
+                </div>
+              </div>
+              <!-- END : BROKER SECTION -->
+
+              <!-- START : BANK SECTION -->
+              <div class="i-form broker-add" *ngIf="ledgerObj.group.isBankLedger">
+                <h6 class="title"><i class="icon-party"></i>Bank Details</h6>
+                <div class="grid grid-animated">
+
+                  <div class="form-data">
+                    <label for="">BankName <span class="require" *ngIf="isBankRequired">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': bankName.invalid && (bankName.dirty || bankName.touched)}">
+                    <input type="text" name="bankName" [(ngModel)]="ledgerObj.bank.bankName" #bankName="ngModel" id=""
+                      [required]="isBankRequired">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Branch <span class="require" *ngIf="isBankRequired">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': branch.invalid && (branch.dirty || branch.touched)}">
+                    <input type="text" name="branch" [(ngModel)]="ledgerObj.bank.branch" #branch="ngModel" id=""
+                      [required]="isBankRequired">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Account Name <span class="require" *ngIf="isBankRequired">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': accountName.invalid && (accountName.dirty || accountName.touched)}">
+                    <input type="text" name="accountName" [(ngModel)]="ledgerObj.bank.accountName"
+                      #accountName="ngModel" id="" [required]="isBankRequired">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Account No <span class="require" *ngIf="isBankRequired">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': accountNo.invalid && (accountNo.dirty || accountNo.touched)}">
+                    <input type="text" name="accountNo" [(ngModel)]="ledgerObj.bank.accountNo" #accountNo="ngModel"
+                      id="" [required]="isBankRequired">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">IFSC Code</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="ifsc" [(ngModel)]="ledgerObj.bank.ifsc" #ifsc="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">IBan</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="iBan" [(ngModel)]="ledgerObj.bank.iBan" #iBan="ngModel" id="iBan">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Swift </label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="swift" [(ngModel)]="ledgerObj.bank.swift" #swift="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">AD Code </label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="adCode" [(ngModel)]="ledgerObj.bank.adCode" #adCode="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Int. Name </label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="intermediaryBankName" [(ngModel)]="ledgerObj.bank.intermediaryBankName"
+                      #intermediaryBankName="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Int. Address </label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="intermediaryBankAddress"
+                      [(ngModel)]="ledgerObj.bank.intermediaryBankAddress" #intermediaryBankAddress="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Int. Swift Code </label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="intermediaryBankswift" [(ngModel)]="ledgerObj.bank.intermediaryBankswift"
+                      #intermediaryBankswift="ngModel" id="">
+                  </div>
+                </div>
+              </div>
+              <!-- END : BANK SECTION -->
+
+              <!-- START : ADDRESS SECTION -->
+              <div class="i-form om-add">
+                <h6 class="title"><i class="icon-mapmarker"></i>Primary Address</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label>Line1</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line1" #line1="ngModel"
+                      [(ngModel)]="ledgerObj.address.line1"></textarea>
+                  </div>
+                  <div class="form-data">
+                    <label>Line2</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line2" #line2="ngModel"
+                      [(ngModel)]="ledgerObj.address.line2">
+                    </textarea>
+                  </div>
+                  <div class="form-data">
+                    <label>Country<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': country.invalid && (country.dirty || country.touched)}">
+                    <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="country" #country="ngModel" (valueChange)="onCountryChange($event)"
+                      [valuePrimitive]="true" [(ngModel)]="ledgerObj.address.country" required>
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>State<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': state.invalid && (state.dirty || state.touched)}">
+                    <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onStateChange($event)" [valuePrimitive]="true" name="state"
+                      #state="ngModel" [(ngModel)]="ledgerObj.address.state" require>
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>City</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city"
+                      #city="ngModel" [(ngModel)]="ledgerObj.address.city">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>ZipCode</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="zipcode" #zipcode="ngModel" [(ngModel)]="ledgerObj.address.zipCode">
+                  </div>
+                </div>
+              </div>
+              <!-- END : ADDRESS SECTION -->
+
+              <div class="i-form doc-up">
+                <h6 class="title"><i class="icon-proof"></i>Business Indentity Proof</h6>
+                <div class="proof-media-grid d-flex justify-content-around">
+                  <div class="form-data text-center img-animated">
+                    <label class="d-block">Business Proof</label>
+                    <div *ngIf="!isImgselectedBusiness && showUploadBusiness" class="c-upload">
+                      <label class="d-block" for="file-input">
+                        <span><i class="icon-upload"></i></span>
+                        <span>Select files</span>
+                      </label>
+                      <input #businessIndentityFileupload type="file"
+                        (change)="uploadFiles(ledgerForm,$event,FileStoreTypes.CustomerBussinessIdent)"
+                        accept=".jpeg,.jpg,.png,.pdf" id="file-input" type="file" name="businessIdentity" />
+                      <input type="hidden" name="fileHidden">
+                    </div>
+                    <img *ngIf="isImgselectedBusiness && showUploadBusiness" alt="Uploaded Photo Business File"
+                      src="{{imagePreviewbusiness}}">
+                    <a *ngIf="!showUploadBusiness" href="javascript:void(0);">
+                      <span class="proof-remove edit-ledger">
+                        <i class="icon-view" (click)="openDocumentDialog(FileStoreTypes.CustomerBussinessIdent)"></i>
+                        <i class="icon-delete"
+                          (click)="deleteBusinessIndentityProof(FileStoreTypes.CustomerBussinessIdent)"></i>
+                      </span>
+                      <img class="img-thumbnail" *ngIf="businessIndentityFileFound"
+                        src="commonAssets/images/filefound.png" [width]="150">
+                      <img class="img-thumbnail" *ngIf="!businessIndentityFileFound"
+                        src="commonAssets/images/filenotfound.png" [width]="150">
+                    </a>
+                    <div class="msg-box" [ngStyle]="{'border-bottom-color': '#028e02'  }" *ngIf="businessIdentityModel">
+                      <div class="success">File Attached</div>
+                    </div>
+                    <span *ngIf="businessIdentityFlag" class="s-error">Business identity is required</span>
+                  </div>
+
+                  <div class="form-data text-center img-animated ms-2 me-2">
+                    <label class="d-block">Profile Image</label>
+                    <div *ngIf="!isImgselectedProfile && showUploadProfile" class="c-upload">
+                      <label for="file-input">
+                        <span><i class="icon-upload"></i></span>
+                        <span>Select files</span>
+                      </label>
+                      <input #profileFileupload type="file"
+                        (change)="uploadFiles(ledgerForm,$event,FileStoreTypes.CustomerProfile)"
+                        accept="image/png, image/gif, image/jpeg" id="file-input" type="file" name="profileImage" />
+                      <input type="hidden" name="fileHidden">
+                    </div>
+                    <img *ngIf="isImgselectedProfile && showUploadProfile" alt="Uploaded Photo Profile File"
+                      src="{{imagePreviewprofile}}">
+                    <a *ngIf="!showUploadProfile" href="javascript:void(0);">
+                      <span class="proof-remove edit-ledger">
+                        <i class="icon-view" (click)="openDocumentDialog(FileStoreTypes.CustomerProfile)"></i>
+                        <i class="icon-delete"
+                          (click)="deleteBusinessIndentityProof(FileStoreTypes.CustomerProfile)"></i>
+                      </span>
+                      <img class="img-thumbnail" *ngIf="profileImageFileFound" alt="Photo Identity"
+                        src="commonAssets/images/filefound.png" [width]="150">
+                      <img class="img-thumbnail" *ngIf="!profileImageFileFound" alt="Photo Identity"
+                        src="commonAssets/images/filenotfound.png" [width]="150">
+                    </a>
+                    <div class="msg-box" [ngStyle]="{'border-bottom-color': '#028e02'  }" *ngIf="profileImageModel">
+                      <div class="success">File Attached</div>
+                    </div>
+                  </div>
+
+                  <div class="form-data text-center img-animated">
+                    <label class="d-block">Photo Identity Image</label>
+                    <div *ngIf="!isImgselectedPhotoIdent && showUploadIdent" class="c-upload">
+                      <label for="file-input">
+                        <span><i class="icon-upload"></i></span>
+                        <span>Select files</span>
+                      </label>
+                      <input #photoIdentityFileupload type="file"
+                        (change)="uploadFiles(ledgerForm,$event,FileStoreTypes.CustomerPhotoIdent)"
+                        accept=".jpg,.png,.pdf" id="file-input" type="file" name="photoIdentity" />
+                      <input type="hidden" name="fileHidden">
+                    </div>
+                    <img *ngIf="isImgselectedPhotoIdent && showUploadIdent" alt="Uploaded Photo Identity File"
+                      src="{{imagePreviewphoto}}">
+                    <a *ngIf="!showUploadIdent" href="javascript:void(0);">
+                      <span class="proof-remove edit-ledger">
+                        <i class="icon-view" (click)="openDocumentDialog(FileStoreTypes.CustomerPhotoIdent)"></i>
+                        <i class="icon-delete"
+                          (click)="deleteBusinessIndentityProof(FileStoreTypes.CustomerPhotoIdent)"></i>
+                      </span>
+                      <img class="img-thumbnail" *ngIf="photoIdentityFileFound" alt="Photo Identity"
+                        src="commonAssets/images/filefound.png" [width]="150">
+                      <img class="img-thumbnail" *ngIf="!photoIdentityFileFound" alt="Photo Identity"
+                        src="commonAssets/images/filenotfound.png" [width]="150">
+                    </a>
+                    <div class="msg-box" [ngStyle]="{'border-bottom-color': '#028e02' }" *ngIf="photoIdentityModel">
+                      <div class="success">File Attached</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button *ngIf="!ledgerIdent && !ledgerObj.id" (click)="onLedgerSubmit(ledgerForm,false)"
+            [disabled]="!ledgerForm.valid" class="btn btn-primary"><i class="icon-add"></i>New</button>
+          <button (click)="onLedgerSubmit(ledgerForm,true)" [disabled]="!ledgerForm.valid" class="btn btn-primary"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal c-modal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+      *ngIf="isShowDocument">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="main-title">
+            <h5>Document</h5>
+            <button type="button" class="close" (click)="closeDocumentDialog()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div>
+              <div class="content">
+                <iframe
+                  [src]="sanitizeURL((imgSrcDisplay != null && imgSrcDisplay.length > 0) ? imgSrcDisplay : 'commonAssets/images/image-not-found.jpg')"
+                  width="100%" height="588" frameborder="0"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeLedgerDialog()"></div>
+  </form>
+</div>
+
+<!-- Add Ledger Modal End -->

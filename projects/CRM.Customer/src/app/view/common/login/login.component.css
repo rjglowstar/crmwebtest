@@ -1,0 +1,542 @@
+.authScr_bg {
+    background-color: #b5def0;
+}
+
+.authGrid {
+    position: relative;
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 0 1fr;
+    grid-template-columns: 0 1fr;
+}
+
+.bg_wrap {
+    height: 100dvh;
+    overflow: hidden;
+}
+
+.bg_wrap .img_wrap {
+    position: absolute;
+    top: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    background: #b5def0;
+}
+
+.bg_wrap .img_wrap img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: left center;
+}
+
+.right_wrap {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    min-height: 100dvh;
+    margin-left: auto;
+    padding-right: 9vw;
+    overflow-y: auto;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.right_wrap .log_wrap {
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.goTohome_btn {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    padding: 8px 16px;
+    color: #242628;
+    border-radius: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    transition: background-color 0.3s ease;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.goTohome_btn span {
+    display: inline-block;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.goTohome_btn:hover {
+    background-color: #B5DFF1;
+}
+
+.goTohome_btn:hover span {
+    max-width: 100px;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.goTohome_btn i {
+    font-size: 16px;
+    color: #595959;
+}
+
+.logo_wrap {
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+
+.logrid_wrap .logo_wrap {
+    margin-top: 3.5dvh;
+}
+
+.logo_wrap img {
+    max-width: 220px;
+    width: 100%;
+    height: auto;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+.logrid_wrap .right_wrap h6 {
+    font-family: "Rollgates Luxury";
+    font-size: calc(30px + (40 - 30) * ((100vw - 320px) / (1920 - 320)));
+    text-align: center;
+    color: #242628;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding: 0;
+    margin: 6dvh 0 4dvh 0;
+}
+
+.logrid_wrap .form-data:not(:last-child) {
+    margin-bottom: 12px;
+}
+
+.authScr_bg .form-data :is(input:not([type='radio'], [type='checkbox']), input:not([type='radio'], [type='checkbox']):focus) {
+    background: transparent !important;
+    border-radius: 0 !important;
+    height: 3.81vw !important;
+    min-height: 56px !important;
+    border: 1px solid #595959 !important;
+    padding: 5px 0 5px 20px !important;
+    color: #595959 !important;
+    font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1920 - 320))) !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+}
+
+.authScr_bg .form-data :is(input[type='password'], input[type='password']:focus) {
+    padding-right: 60px !important;
+}
+
+.authScr_bg .form-data input:not([type='radio'], [type='checkbox']):-webkit-autofill,
+.authScr_bg .form-data input:not([type='radio'], [type='checkbox']):-webkit-autofill:hover,
+.authScr_bg .form-data input:not([type='radio'], [type='checkbox']):-webkit-autofill:focus,
+.authScr_bg .form-data input:not([type='radio'], [type='checkbox']):-webkit-autofill:active {
+    -webkit-transition: background-color 9999s ease-in-out 0s !important;
+    transition: background-color 9999s ease-in-out 0s !important;
+    -webkit-text-fill-color: #595959 !important;
+    border: 1px solid #595959 !important;
+    -webkit-text-font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1920 - 320))) !important;
+    padding-left: 20px !important;
+    font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1920 - 320))) !important;
+    line-height: 1 !important;
+    box-shadow: none;
+}
+
+.authScr_bg .form-data .error>input:not([type='radio'], [type='checkbox']) {
+    border: none !important;
+    border: 1px solid #ff0000 !important;
+}
+
+.authScr_bg .form-data .input_lbl {
+    color: #595959 !important;
+    font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1920 - 320))) !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0;
+    position: absolute;
+    pointer-events: none;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    transition: 0.1s ease-in-out all;
+}
+
+.authScr_bg .form-data input:not(:placeholder-shown)~.input_lbl {
+    opacity: 0;
+}
+
+.logrid_wrap .form-data label span.require {
+    color: #595959 !important;
+}
+
+.war-alert span,
+.sus-alert span {
+    font-weight: 500;
+    font-size: 12px;
+    color: #000;
+    line-height: 18px;
+    letter-spacing: 0.36px;
+}
+
+.alert-primary.war-alert {
+    background-color: #fff1ba;
+    border-color: #e1b403;
+    border: 1px solid #e1b403;
+    padding: 7px 15px;
+    border-radius: 5px;
+}
+
+.alert-primary.sus-alert {
+    background-color: #ffebeb;
+    border-color: #ff0000;
+    border: 1px solid #ff0000;
+    padding: 7px 15px;
+    border-radius: 5px;
+}
+
+.sus-alert span {
+    text-align: center;
+    display: block;
+}
+
+.c-btn,
+.c-btn:hover {
+    display: inline-block;
+    width: 100%;
+    border-radius: 0px 30px;
+    background: #0C4875;
+    padding: 13px 15px;
+    color: #FFF;
+    font-size: calc(15px + (18 - 15) * ((100vw - 320px) / (1920 - 320)));
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 5.76px;
+    text-transform: uppercase;
+    border: 0;
+    cursor: pointer;
+    text-align: center;
+    -webkit-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+}
+
+.c-btn i {
+    margin-right: 7px;
+    font-size: 14px;
+}
+
+.c-btn[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.logrid_wrap .pass-view {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    right: 20px;
+}
+
+.logrid_wrap .pass-view i {
+    font-size: 20px;
+    color: #595959 !important;
+}
+
+.actBtns_wrap {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 38px 10px;
+    margin: 4.36dvh 0 6dvh 0;
+}
+
+.keepLogin {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #595959;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    flex-basis: calc(50% - 5px);
+}
+
+.cusCheck_box {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #595959;
+    margin: 0;
+    cursor: pointer;
+}
+
+.cusCheck_box:after {
+    position: absolute;
+    content: '';
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #595959;
+    opacity: 0;
+}
+
+input:checked~.cusCheck_box:after {
+    opacity: 1;
+}
+
+.keepLogin label {
+    color: #595959;
+    font-size: calc(15px + (18 - 15) * ((100vw - 320px) / (1920 - 320)));
+    font-style: normal;
+    font-weight: 400;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.logrid_wrap .forPass_btn {
+    display: inline-block;
+    color: #0C4875;
+    font-size: calc(15px + (18 - 15) * ((100vw - 320px) / (1920 - 320)));
+    font-style: italic;
+    font-weight: 600;
+    line-height: 34px;
+    text-align: right;
+    flex-basis: calc(50% - 5px);
+    margin-left: auto;
+}
+
+.logrid_wrap .new_cus {
+    flex-basis: 100%;
+    text-align: center;
+    color: #595959;
+    font-style: normal;
+    font-weight: 400;
+    font-size: calc(15px + (18 - 15) * ((100vw - 320px) / (1920 - 320)));
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.logrid_wrap .new_cus a,
+.logrid_wrap .new_cus a:hover {
+    color: #0C4875;
+    font-size: calc(15px + (18 - 15) * ((100vw - 320px) / (1920 - 320)));
+    font-style: italic;
+    font-weight: 600;
+}
+
+.logrid_wrap ul.cLiImg_wrap {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: space-around;
+    -ms-flex-pack: space-around;
+    justify-content: space-around;
+    width: 100%;
+    gap: 30px;
+    padding-top: 5dvh;
+    margin-top: 5dvh;
+    margin-bottom: 1vw;
+    position: relative;
+}
+
+.logrid_wrap ul.cLiImg_wrap:before {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 1px;
+    background: #595959;
+    top: 0;
+}
+
+.logrid_wrap ul.cLiImg_wrap img {
+    display: block;
+    margin: 0 auto;
+}
+
+@media(max-width:1800px) {
+    .right_wrap {
+        padding-right: 5vw;
+    }
+
+    .right_wrap .log_wrap {
+        max-width: 480px;
+    }
+
+    .logrid_wrap ul.cLiImg_wrap {
+        gap: 15px;
+    }
+
+    .logrid_wrap ul.cLiImg_wrap img {
+        max-width: 75%;
+    }
+
+    .logrid_wrap .right_wrap h6 {
+        margin: 5dvh 0 3dvh 0;
+    }
+
+    .actBtns_wrap {
+        margin: 4dvh 0;
+        gap: 30px 10px;
+    }
+}
+
+@media(max-width:1500px) {
+    .bg_wrap .img_wrap img {
+        object-position: center center;
+    }
+
+    .actBtns_wrap {
+        margin: 4dvh 0;
+        gap: 15px 10px;
+    }
+
+    .logrid_wrap ul.cLiImg_wrap {
+        padding-top: 3dvh;
+        margin-top: 4dvh;
+    }
+
+    .logrid_wrap ul.cLiImg_wrap img {
+        max-width: 55%;
+    }
+}
+
+@media(max-width:1199px) {
+    .bg_wrap .img_wrap img {
+        object-position: 55% center;
+    }
+
+    .authGrid {
+        grid-template-columns: 1fr minmax(440px, 1fr);
+    }
+
+    .right_wrap {
+        padding: 0 30px 30px 0 !important;
+    }
+
+    .logo_wrap img {
+        max-width: 200px !important;
+    }
+
+    .actBtns_wrap {
+        gap: 20px 10px;
+    }
+
+}
+
+@media(min-height:750px) and (max-width:1800px) {
+
+    .logrid_wrap ul.cLiImg_wrap img {
+        max-width: 85%;
+    }
+}
+
+@media(max-width:767px) {
+    .right_wrap {
+        background-color: #BBE2F2;
+    }
+
+    .right_wrap {
+        width: 100%;
+    }
+
+    .authGrid {
+        grid-template-columns: 0 1fr;
+    }
+
+    .actBtns_wrap {
+        gap: 20px 10px;
+    }
+
+    .logrid_wrap ul.cLiImg_wrap img {
+        max-width: 95%;
+    }
+}
+
+@media(max-width:575px) {
+    .right_wrap {
+        padding: 30px 20px !important;
+    }
+
+    .logrid_wrap .right_wrap h6 {
+        margin: 5dvh 0 4dvh 0;
+    }
+
+    .logrid_wrap .logo_wrap {
+        margin-top: 0;
+        padding-top: 3dvh;
+    }
+
+    .goTohome_btn {
+        top: 0;
+        left: -20px;
+    }
+
+    .actBtns_wrap {
+        margin: 5dvh 0;
+        gap: 15px 10px;
+    }
+
+    .logrid_wrap ul.cLiImg_wrap {
+        padding-top: 3dvh;
+        margin-top: 3dvh;
+    }
+
+    .logrid_wrap ul.cLiImg_wrap img {
+        max-width: 100%;
+    }
+
+    .authScr_bg .form-data :is(input[type='password'], input[type='password']:focus) {
+        padding-right: 50px !important;
+    }
+
+}
+
+@media(max-width:420px) {
+    .logrid_wrap .forPass_btn {
+        flex-basis: auto;
+    }
+}
+
+@media(max-height:450px) and (orientation: landscape) {
+    .logrid_wrap .right_wrap h6 {
+        margin: 25px 0;
+    }
+
+    .actBtns_wrap {
+        margin: 25px 0;
+    }
+}

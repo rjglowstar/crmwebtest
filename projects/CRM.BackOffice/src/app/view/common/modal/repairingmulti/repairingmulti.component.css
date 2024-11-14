@@ -1,0 +1,60 @@
+button.spanbutton {
+    height: 30px;
+    border: 0;
+    background: none;
+    width: 31px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+button.spanbutton:hover {
+    background-color: #4d4d4d;
+    color: #fff;
+}
+
+button[disabled].spanbutton:hover {
+    background-color: transparent;
+    color: #d3d3d3;
+}
+
+span.formicon {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.ps-ico i {
+    padding-right: initial;
+}
+
+.ms-config .o-edit {
+    display: flex;
+}
+
+.ms-config .o-edit i {
+    margin-right: initial;
+}
+
+.ms-config .in-block .o-edit {
+    padding: initial;
+    align-items: center;
+}
+
+.ms-config button.btn {
+    padding: 0 0 0 5px;
+    vertical-align: middle;
+}
+
+.ms-config .flex.in-block {
+    padding: 5px;
+    border: 0;
+    background-color: #dddddd;
+    height: 30px;
+    margin-bottom: initial;
+}
+
+.ms-config .o-title h6.title {
+    margin: initial;
+    border-bottom: 0;
+    font-size: 14px;
+}

@@ -1,0 +1,212 @@
+<div class="modal c-modal addemp dialog-sm rorgan" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <form name="rejecetdMultiForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="icon-block"></i>{{leadObj.leadStatus == "Order" ? 'Order Cancel' : 'Sales Cancel'}}</h5>
+          <button type="button" class="close" (click)="closeLeadCancel()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="cancel-grids">
+            <div class="form-data"><label>Customer : <span><b>{{leadObj.customer.companyName}}</b> -
+                  {{leadObj.customer.name}}</span></label>
+            </div>
+            <div class="form-data"><label>Sellername : <span>{{leadObj.seller.name}}</span></label></div>
+            <div class="form-data"><label>Broker :
+                <span>{{leadObj.broker.name}}</span></label></div>
+            <div class="form-data"><label>LeadNo : <span>{{leadObj.leadNo}}</span></label></div>
+            <div class="form-data"><label>OrderDate : <span><b>{{leadObj.orderDate | date}}</b></span></label></div>
+          </div>
+          <ng-container *ngIf="!isAdmin">
+            <div class="d-flex justify-content-end pt-2">
+              <div class="form-data me-1">
+                <input type="text" name="comment" autocomplete="off" maxlength="100" id="comment"
+                    [(ngModel)]="filterComment" #comment="ngModel" placeholder="Comment">
+            </div>
+            <button kendoTooltip position="bottom" kendoButton title="Apply"
+                [disabled]="cancelInvItems.length == 0"
+                (click)="updateCommentOrOffer()"><i class="icon-check p-0"></i>
+            </button>
+          </div>
+          </ng-container>
+          
+          <div class="panelbar-wrapper ms-config">
+            <div class="grid-wrap mt-2 grid-rejecetd">
+              <kendo-grid class="rejected-offer-grid" [resizable]="true" [sortable]="true" [sortable]="true"
+                style="height:calc(100vh - 490px);" [data]="gridViewInvItemList">
+                <kendo-grid-column field="stoneId" title="Stone Id" [width]="100">
+                </kendo-grid-column>
+                <kendo-grid-column field="shape" title="Shape" [width]="100">
+                </kendo-grid-column>
+                <kendo-grid-column field="weight" title="Ct" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="price.rap" title="Rap" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="price.discount" title="Discount" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="price.netAmount" title="NetAmount" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="price.perCarat" title="$/CT" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="comment" title="Comment" [width]="100">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                      <div class="whole-cell"
+                          [ngClass]="{ 'grid-highlight': !((dataItem.comment == null || dataItem.comment == undefined || dataItem.comment == '')) ? false:dataItem.isRequired }">
+                          {{dataItem.reason}}
+                      </div>
+                  </ng-template>
+              </kendo-grid-column>
+              </kendo-grid>
+            </div>
+          </div>
+          <div class="cart-info" [ngStyle]="{'justify-content':  'space-between' }">
+            <div class="left-count">
+              <p class="tbl-title mb-1">
+                Sales Summary :
+              </p>
+              <table class="position-relative me-4">
+                <tr>
+                  <td>TOTAL PCS : </td>
+                  <td>{{leadObj.leadSummary.totalPcs}}</td>
+                </tr>
+                <tr>
+                  <td>TOTAL CARAT : </td>
+                  <td>{{leadObj.leadSummary.totalCarat|
+                    number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>AVG. RAP ($) : </td>
+                  <td>{{leadObj.leadSummary.avgRap| number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>AVG. DISC. (%) :</td>
+                  <td>{{leadObj.leadSummary.avgDiscPer|
+                    number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>PER CARAT ($) : </td>
+                  <td>{{leadObj.leadSummary.perCarat| number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>TOTAL AMOUNT ($) : </td>
+                  <td>{{leadObj.leadSummary.totalAmount|
+                    number:'0.2-2'}}
+                  </td>
+                </tr>
+              </table>
+              <table>
+                <tr>
+                  <td>{{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. (%) : </td>
+                  <td>{{leadObj.leadSummary.totalVOWDiscPer|
+                    number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>{{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. ($) : </td>
+                  <td>{{leadObj.leadSummary.totalVOWDiscAmount|
+                    number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>DISC. (%) : </td>
+                  <td>{{leadObj.leadSummary.discPer|
+                    number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>PRICE PER CARAT ($) : </td>
+                  <td>{{leadObj.leadSummary.pricePerCarat|
+                    number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>TOTAL PAYABLE AMOUNT ($) : </td>
+                  <td>{{leadObj.leadSummary.totalPayableAmount|
+                    number:'0.2-2'}}</td>
+                </tr>
+              </table>
+            </div>
+            <div class="left-count">
+              <p class="tbl-title mb-2">
+                Cancel Sales Summary:</p>
+              <table class="position-relative me-4">
+                <tr>
+                  <td>TOTAL PCS : </td>
+                  <td>{{cancelStoneLeadSummary.totalPcs}}</td>
+                </tr>
+                <tr>
+                  <td>TOTAL CARAT : </td>
+                  <td>{{cancelStoneLeadSummary.totalCarat|
+                    number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>AVG. RAP ($) : </td>
+                  <td>{{cancelStoneLeadSummary.avgRap| number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>AVG. DISC. (%) :</td>
+                  <td>{{cancelStoneLeadSummary.avgDiscPer|
+                    number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>PER CARAT ($) : </td>
+                  <td>{{cancelStoneLeadSummary.perCarat| number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>TOTAL AMOUNT ($) : </td>
+                  <td>{{cancelStoneLeadSummary.totalAmount|
+                    number:'0.2-2'}}
+                  </td>
+                </tr>
+              </table>
+              <table>
+                <tr>
+                  <td>{{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. (%) : </td>
+                  <td>{{cancelStoneLeadSummary.totalVOWDiscPer|
+                    number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>{{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. ($) : </td>
+                  <td>{{cancelStoneLeadSummary.totalVOWDiscAmount|
+                    number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>DISC. (%) : </td>
+                  <td>{{cancelStoneLeadSummary.discPer|
+                    number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>PRICE PER CARAT ($) : </td>
+                  <td>{{cancelStoneLeadSummary.pricePerCarat|
+                    number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>TOTAL PAYABLE AMOUNT ($) : </td>
+                  <td>{{cancelStoneLeadSummary.totalPayableAmount|
+                    number:'0.2-2'}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" *ngIf="isAdmin" (click)="acceptOrRejectSalesCancel(true)"><i
+              class="icon-check"></i>Accept</button>
+          <button class="btn btn-primary" *ngIf="isAdmin" (click)="acceptOrRejectSalesCancel(false)"><i
+              class="icon-delete"></i>Reject</button>
+          <button class="btn btn-primary" *ngIf="!isAdmin" (click)="saveSaleCancel(true)"><i 
+            class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+  </form>
+  <div (document:keydown.esc)="closeLeadCancel()"></div>
+</div>

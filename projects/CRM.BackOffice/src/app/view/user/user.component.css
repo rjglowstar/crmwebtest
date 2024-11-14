@@ -1,0 +1,145 @@
+.usergrid-ht {
+    height: calc(100vh - 142px) !important;
+}
+
+.f-group input.background-textbox {
+    padding-left: 25px !important;
+}
+
+.drp-header {
+    position: relative;
+}
+
+.drp-header .icon-filter {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 8px;
+    color: #d3d3d3;
+}
+
+li.drpmenu-main {
+    position: relative;
+}
+
+.fil-config button {
+    width: 150px;
+    justify-content: space-between;
+    height: 30px;
+    transition: none;
+}
+
+.fil-config i.icon-right-new {
+    transform: rotate(90deg);
+    display: inline-block;
+    vertical-align: middle;
+    font-size: small;
+}
+
+.n-fil {
+    background: #f9f9f9;
+    background: #fff;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    transition: all 0.5s ease;
+    animation: slideTopDown 0.2s both linear;
+    position: relative;
+    z-index: 1;
+}
+
+.n-fil.resUser_fil {
+    position: absolute;
+    width: calc(100% - 20px);
+    box-shadow: 0px 20px 10px rgba(255, 255, 255, 20%);
+    padding: 4px 10px;
+    left: 10px;
+}
+
+.n-fil .k-multiselect .k-input-values {
+    padding: initial;
+}
+
+.n-fil .f-group {
+    display: flex;
+}
+
+.n-fil.active {
+    display: flex;
+}
+
+.n-fil-left {
+    flex: 0 0 60%;
+    max-width: 60%;
+}
+
+.n-fil-right {
+    flex: 0 0 40%;
+    max-width: 40%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.n-fil-right .f-group {
+    padding-right: 15px;
+}
+
+.n-fil .f-group {
+    margin: initial;
+}
+
+.n-fil li {
+    display: flex;
+    align-items: center;
+    padding-right: 15px;
+}
+
+.n-fil-right li {
+    padding: 5px 8px;
+    border-radius: 3px;
+}
+
+.n-fil-right li:hover {
+    background-color: #ececec;
+}
+
+.n-fil-left .f-group label {
+    width: initial;
+    padding-right: 10px;
+}
+
+.n-fil-left .f-group label.c-wid {
+    width: 190px;
+}
+
+.n-fil select {
+    border: 0;
+    background-color: transparent;
+    font-weight: 500;
+    font-size: 14px;
+    color: #000;
+}
+
+.n-fil-right li:active {
+    background-color: #4d4d4d;
+    color: #fff;
+}
+
+.n-fil-right li:active select {
+    color: #fff;
+}
+
+.n-fil-right li:active option {
+    color: #000;
+}
+
+.n-fil .f-group input {
+    background: #ffffff8c;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    height: 30px;
+}

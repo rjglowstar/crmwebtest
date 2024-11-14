@@ -1,0 +1,225 @@
+<title>Profile</title>
+<section class="edetails-wrap">
+  <div class="content_wrap">
+    <div class="e-left w-100">
+      <div class="breadcrumb">
+        <div class="breadcrumb-left">
+          <ul>
+            <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+            <li class="breadcrumb-item active" aria-current="page">Profile</li>
+          </ul>
+        </div>
+      </div>
+      <div class="profile_wrap pro_wrap content_scroll">
+        <div class="pro_block">
+          <div class="p_info">
+            <h6 class="p_title">Personal Information</h6>
+            <ul class="pro_data">
+              <li>Full Name : <span>{{systemUserObj.fullName}}</span></li>
+              <li>Origin : <span>{{systemUserObj.origin}}</span></li>
+            </ul>
+          </div>
+          <div class="p_info">
+            <h6 class="p_title">Address</h6>
+            <ul class="pro_data">
+              <li class="w_100"> Address line 1 : <span>{{systemUserObj.address.line1}}</span></li>
+              <li class="w_100"> Address line 2 : <span>{{systemUserObj.address.line2}}</span></li>
+              <li>Email : <span>{{systemUserObj.email}}</span></li>
+              <li>Mobile No : <span>{{systemUserObj.mobile}}</span></li>
+              <li>City : <span>{{systemUserObj.address.city}}</span></li>
+              <li>State : <span>{{systemUserObj.address.state}}</span></li>
+              <li>Country : <span>{{systemUserObj.address.country}}</span></li>
+              <li>Type : <span>{{systemUserObj.address.type}}</span></li>
+              <li>Zipcode : <span>{{systemUserObj.address.zipCode}}</span></li>
+            </ul>
+          </div>
+          <div class="p_info bg_box mt-2" *ngIf="systemUserObj.origin == 'Seller'">
+            <h6 class="p_title">Marketing Email</h6>
+            <ul class="pro_data column2">
+              <li>Email : <span>{{emailConfig.emailId}}</span></li>
+              <li>Password : <span>{{emailConfig.password}}</span></li>
+              <li>Host : <span>{{emailConfig.host}}</span></li>
+              <li>Port : <span>{{emailConfig.port}}</span></li>
+            </ul>
+          </div>
+          <div class="p_info bg_box chPassword mt-2">
+            <h6 class="p_title pb_5">
+              <span>Change Password</span>
+              <kendo-buttongroup kendoTooltip position="bottom">
+                <button type="button" kendoButton title="Save Configuration"
+                  (click)="changePasswordClick(resetPasswordForm)" [disabled]="!resetPasswordForm.valid"><i
+                    class="icon-save"></i></button>
+              </kendo-buttongroup>
+            </h6>
+            <form name="resetPasswordForm" #resetPasswordForm="ngForm">
+              <div ngModelGroup="passwords" #passwords="ngModelGroup" appCheckPassword>
+                <ul class="pro_data ch_pass column3">
+                  <li>
+                    <div class="form-data mb-0">
+                      <label for="">Old Password<span class="require">*</span></label>
+                      <input type="password" #oldpassword="ngModel" name="oldpassword"
+                        [(ngModel)]="changePasswordModel.oldPassword" required>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="form-data mb-0">
+                      <label for="">New Password<span class="require">*</span></label>
+                      <input type="password" #password="ngModel" name="password"
+                        [(ngModel)]="changePasswordModel.newPassword" required [pattern]="passwordPattern">
+                    </div>
+                  </li>
+                  <li>
+                    <div class="form-data mb-0">
+                      <label for="">Confirm Password<span class="require">*</span></label>
+                      <input type="password" #confirmPassword="ngModel" name="confirmPassword"
+                        [(ngModel)]="changePasswordModel.confirmPassword" required>
+                    </div>
+                  </li>
+                </ul>
+                <div class="error">
+                  <span *ngIf="password.errors?.pattern" class="error s-error">
+                    Your password must be 8 characters long and include an uppercase, lowercase, letter,
+                    a number character.
+                  </span>
+                  <span *ngIf="confirmPassword.invalid && (password.dirty || password.touched)" class="error s-error">
+                    Please confirm your password.
+                  </span>
+                  <span *ngIf="passwords.errors?.passwordCheck && (confirmPassword.dirty || confirmPassword.touched)"
+                    class="  s-error">
+                    Passwords do not match.
+                  </span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="pro_block">
+          <div class="p_info">
+            <h6 class="p_title">Others</h6>
+            <ul class="pro_data">
+              <li class="w_100">Native Address : <span>{{systemUserObj.nativeAddress}}</span></li>
+              <li>Enrollment No. : <span>{{systemUserObj.enrollmentNumber}}</span></li>
+              <li>Joining Date : <span>{{systemUserObj.joiningDate | date:'dd/MM/yyyy'}}</span></li>
+              <li>Manager : <input type="checkbox" class="k-checkbox" disabled [checked]="systemUserObj.isManager" />
+              </li>
+              <li>Active : <input type="checkbox" class="k-checkbox" disabled [checked]="systemUserObj.isActive" /></li>
+              <li>Available : <input type="checkbox" class="k-checkbox" disabled
+                  [checked]="systemUserObj.isAvailable" />
+              </li>
+              <li>Load Dashboard : <input type="checkbox" class="k-checkbox" disabled
+                  [checked]="systemUserObj.isLoadDash" /></li>
+            </ul>
+          </div>
+          <div class="p_info socMed">
+            <h6 class="p_title pb_5">Social Media</h6>
+            <div class="socBox_wrap">
+              <kendo-card class="w-100" *ngFor="let field of systemUserObj.socialMedias">
+                <kendo-card-body>
+                  <div kendoCardSubtitle kendoTooltip position="bottom" title="{{(field.provider.mediaType
+                    == '3' || field.provider.mediaType
+                    == 'Messaging') ? (field.mobileNumber) :
+                    field.profileName}}">
+
+                    <div class="d-flex align-items-center">
+                      <i class="k-icon k-i-star"></i>
+                      <span>{{field.provider.providerName}}</span>
+                    </div>
+                    <span class="s-title">{{(field.provider.mediaType
+                      == '3' || field.provider.mediaType
+                      == 'Messaging') ? (field.mobileNumber) :
+                      field.profileName}}</span>
+                  </div>
+                </kendo-card-body>
+              </kendo-card>
+            </div>
+          </div>
+        </div>
+
+        <div class="pro_block column2" *ngIf="systemUserObj.origin == 'Pricing'">
+          <div class="p_info" *ngIf="systemUserObj.origin == 'Pricing'">
+            <h6 class="p_title">Pricing Criteria</h6>
+            <div class="config_Wrapper Criteria" *ngIf="systemUserCriteriaData.length > 0">
+              <div class="config_box" *ngFor="let criteria of systemUserCriteriaData;let i = index">
+                <div class="config_head">
+                  <div class="config_title">
+                    {{criteria.minWeight}} -
+                    {{criteria.maxWeight}}&nbsp;
+                    {{criteria.name ? ("(" +
+                    criteria.name +
+                    ")") : ""}}
+                  </div>
+                </div>
+                <ul class="config_ul">
+                  <li>
+                    Shape : <span *ngFor="let item of criteria.shape; let isLast=last">
+                      {{item}}{{isLast ? '' : ','}}
+                    </span>
+                  </li>
+                  <li>
+                    Lab : <span *ngFor="let item of criteria.lab; let isLast=last">
+                      {{item}}{{isLast ? '' : ','}}
+                    </span>
+                  </li>
+                  <li>
+                    Color : <span *ngFor="let item of criteria.color; let isLast=last">
+                      {{item}}{{isLast ? '' : ','}}
+                    </span>
+                  </li>
+                  <li>
+                    Clarity : <span *ngFor="let item of criteria.clarity; let isLast=last">
+                      {{item}}{{isLast ? '' : ','}}
+                    </span>
+                  </li>
+                  <li>
+                    Cut : <span>
+                      <i *ngFor="let item of criteria.cut; let isLast=last">
+                        {{item}}{{isLast ? '' : ','}}
+                      </i>
+                    </span>
+                  </li>
+                  <li>
+                    Polish : <span *ngFor="let item of criteria.polish; let isLast=last">
+                      {{item}}{{isLast ? '' : ','}}
+                    </span>
+                  </li>
+                  <li>
+                    Symmentry : <span *ngFor="let item of criteria.symmetry; let isLast=last">
+                      {{item}}{{isLast ? '' : ','}}
+                    </span>
+                  </li>
+                  <li>
+                    Fluor : <span *ngFor="let item of criteria.fluorescence; let isLast=last">
+                      {{item}}{{isLast ? '' : ','}}
+                    </span>
+                  </li>
+                  <li>
+                    Days : <span>
+                      {{(criteria.minDay ||
+                      criteria.maxDay) ?
+                      (criteria.minDay + ' - ' +
+                      criteria.maxDay) : ''}}
+                    </span>
+                  </li>
+                  <li>
+                    UpDown : <span>
+                      {{criteria.upLimit}} -
+                      {{criteria.downLimit}}
+                    </span>
+                  </li>
+                  <li>
+                    Organization : <span *ngFor="let item of criteria.organizations; let isLast=last">
+                      {{item}}{{isLast ? '' : ','}}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div kendoDialogContainer></div>

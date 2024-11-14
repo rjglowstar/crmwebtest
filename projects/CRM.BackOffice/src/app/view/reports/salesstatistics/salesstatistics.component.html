@@ -1,0 +1,226 @@
+<div class="modal c-modal addemp dialog-lg salesStatics" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <form name="form" #departmentForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-reports"></i>Sales Statistics Report</h5>
+          <button type="button" class="close" (click)="closeReportDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="sales-report">
+                <div class="form-data">
+                  <label for="">Status</label>
+                </div>
+                <div class="form-data mul-select">
+                  <kendo-multiselect name="status" class="customselect" [data]="listStatus"
+                    [(ngModel)]="salesstatisticsFilterCriteria.status" [textField]="'name'" [valueField]="'value'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                    (valueChange)="utilityService.onMultiSelectValueChange(listStatus, salesstatisticsFilterCriteria.status)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="dropdown-header single k-widget k-header">
+                        <span class="temp-single">Select Status</span>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(salesstatisticsFilterCriteria.status, true)">
+                        {{utilityService.getCommaSapratedString(salesstatisticsFilterCriteria.status)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="form-data">
+                  <label for="">Party</label>
+                </div>
+                <div class="form-data">
+                  <kendo-autocomplete class="w-100" [data]="listPartyLedgerItems" [filterable]="true"
+                    (filterChange)="partyLedgerFilter($event)" [kendoDropDownFilter]="filterSettings" name="Party"
+                    [(ngModel)]="selectedPartyLedgerItem" (valueChange)="partyLedgerChange($event)"
+                    placeholder="Search by name" [popupSettings]="{width: 'auto'}" #Party="ngModel" valueField="value"
+                    required>
+                    <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                      <span>{{dataItem.text}}</span>
+                    </ng-template>
+                  </kendo-autocomplete>
+                </div>
+                <div class="form-data">
+                  <label for="">deliv. From - To</label>
+                </div>
+                <div class="form-data">
+                  <kendo-daterange>
+                    <input type="text" name="name" #deliveryAnchor (click)="$any(deliveryPopup).toggle();"
+                      value="{{salesstatisticsFilterCriteria.deliveryFromDate ? (salesstatisticsFilterCriteria.deliveryFromDate | date: 'dd/MM/yyyy') : 'dd/mm/yy'}} - {{salesstatisticsFilterCriteria.deliveryToDate ? (salesstatisticsFilterCriteria.deliveryToDate | date: 'dd/MM/yyyy') : 'dd/mm/yy'}}"
+                      readonly />
+                    <kendo-daterange-popup #deliveryPopup [animate]="false" [anchor]="$any(deliveryAnchor)" adaptiveMode="auto">
+                      <ng-template kendoDateRangePopupTemplate>
+                        <kendo-multiviewcalendar kendoDateRangeSelection [(selectionRange)]="deliveryRange"
+                          (selectionRangeChange)="deliveredDateFilterChanges()">
+                        </kendo-multiviewcalendar>
+                      </ng-template>
+                    </kendo-daterange-popup>
+                  </kendo-daterange>
+                </div>
+                <div class="form-data">
+                  <label for="">Paid From - To</label>
+                </div>
+                <div class="form-data">
+                  <kendo-daterange>
+                    <input type="text" name="name" #paymentAnchor (click)="$any(paymentPopup).toggle();"
+                      value="{{salesstatisticsFilterCriteria.paymentFromDate ? (salesstatisticsFilterCriteria.paymentFromDate | date: 'dd/MM/yyyy') : 'dd/mm/yy'}} - {{salesstatisticsFilterCriteria.paymentToDate ? (salesstatisticsFilterCriteria.paymentToDate | date: 'dd/MM/yyyy') : 'dd/mm/yy'}}"
+                      readonly />
+                    <kendo-daterange-popup #paymentPopup [animate]="false" [anchor]="$any(paymentAnchor)" adaptiveMode="auto">
+                      <ng-template kendoDateRangePopupTemplate>
+                        <kendo-multiviewcalendar kendoDateRangeSelection [(selectionRange)]="paymentRange"
+                          (selectionRangeChange)="paymentDateFilterChanges()">
+                        </kendo-multiviewcalendar>
+                      </ng-template>
+                    </kendo-daterange-popup>
+                  </kendo-daterange>
+                </div>
+                <div class="form-data">
+                  <label for="">Trans. From - To</label>
+                </div>
+                <div class="form-data">
+                  <kendo-daterange>
+                    <input type="text" name="name" #anchor (click)="$any(popup).toggle();"
+                      value="{{salesstatisticsFilterCriteria.fromDate ? (salesstatisticsFilterCriteria.fromDate | date: 'dd/MM/yyyy') : 'dd/mm/yy'}} - {{salesstatisticsFilterCriteria.toDate ? (salesstatisticsFilterCriteria.toDate | date: 'dd/MM/yyyy') : 'dd/mm/yy'}}"
+                      readonly />
+                    <kendo-daterange-popup #popup [animate]="false" [anchor]="$any(anchor)" adaptiveMode="auto">
+                      <ng-template kendoDateRangePopupTemplate>
+                        <kendo-multiviewcalendar kendoDateRangeSelection [(selectionRange)]="range"
+                          (selectionRangeChange)="dateFilterChanges()">
+                        </kendo-multiviewcalendar>
+                      </ng-template>
+                    </kendo-daterange-popup>
+                  </kendo-daterange>
+                </div>
+                <button kendoButton title="Search" kendoTooltip position="bottom" (click)="getReport()">
+                  <i class="icon-search pe-0"></i>
+                </button>
+                <button kendoButton title="Clear" kendoTooltip position="bottom" (click)="clearFilter()">
+                  <i class="icon-clear pe-0"></i>
+                </button>
+                <button kendoButton title="Export to Excel" [disabled]="reportData.length == 0" kendoTooltip
+                  position="bottom" (click)="exportExcel()">
+                  <i class="icon-excelnew pe-0"></i>
+                </button>
+                <button kendoButton title="Grid Configuration" kendoTooltip position="bottom"
+                  (click)="openGridConfigDialog()">
+                  <i class="icon-gridconfig pe-0"></i>
+                </button>
+              </div>
+              <div class="rm-title">
+                <div class="rm-table">
+                  <div class="grid-1">
+                    <div class="grid-wrap">
+                      <kendo-grid [resizable]="true" [data]="reportData" class="mb-grid">
+                        <ng-container *ngIf="fields && fields.length > 0">
+                          <ng-container *ngFor="let field of fields">
+                            <ng-container *ngIf="field.isSelected">
+                              <kendo-grid-column [width]="field.width" [field]="field.propertyName"
+                                [title]="field.title">
+
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                  *ngIf="field.propertyName == 'transactionNo'">
+                                  <a href="javascript::void(0)"
+                                    (click)="openSalesTransaction(dataItem.transactionId)"><u>{{dataItem.transactionNo}}</u></a>
+                                </ng-template>
+                                <ng-template kendoGridFooterTemplate let-dataItem let-rowIndex="rowIndex"
+                                  *ngIf="field.propertyName == 'partyLedger.name'">
+                                  Count: {{ totalRecords }}
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                  *ngIf="field.propertyName == 'createdDate'">
+                                  {{dataItem.createdDate | date: 'dd/MM/yyyy'}}
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                  *ngIf="field.propertyName == 'transactionDate'">
+                                  {{dataItem.transactionDate == null ? '' : (dataItem.transactionDate | date:
+                                  'dd/MM/yyyy')}}
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                  *ngIf="field.propertyName == 'deliveryDate'">
+                                  {{dataItem.deliveryDate == null ? '' : (dataItem.deliveryDate | date: 'dd/MM/yyyy')}}
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                  *ngIf="field.propertyName == 'dueDate'">
+                                  {{dataItem.dueDate == null ? '' : (dataItem.dueDate | date: 'dd/MM/yyyy')}}
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                  *ngIf="field.propertyName == 'paymentDate'">
+                                  {{dataItem.paymentDate == null ? '' : (dataItem.paymentDate | date: 'dd/MM/yyyy')}}
+                                </ng-template>
+                                <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex"
+                                  *ngIf="field.propertyName == 'netTotal'">
+                                  Total
+                                </ng-template>
+                                <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex"
+                                  *ngIf="field.propertyName == 'ccAmount'">
+                                  {{ totalCCAmt }}
+                                </ng-template>
+                                <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex"
+                                  *ngIf="field.propertyName == 'paidAmount'">
+                                  {{ totalPaidAmt }}
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                  *ngIf="field.propertyName == 'status'">
+                                  <span [ngClass]="{'green': dataItem.status == 'Full',
+                                    'orange': dataItem.status == 'Part',
+                                    'red': dataItem.status == 'Not Paid',
+                                    'blue': dataItem.status == 'Advance'}">{{dataItem.status}}</span>
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                  *ngIf="field.propertyName == 'receiptTransactionNo'">
+                                  <a href="javascript::void(0)"
+                                    (click)="openReceiptTransaction(dataItem.receiptTransactionId)"><u>{{dataItem.receiptTransactionNo}}</u></a>
+                                </ng-template>
+
+                              </kendo-grid-column>
+                            </ng-container>
+                          </ng-container>
+                        </ng-container>
+                      </kendo-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeReportDialog()"></div>
+  </form>
+</div>
+
+<!-- #region Sales Dialog -->
+<ng-container *ngIf="isSales">
+  <app-sales (toggle)="closeSalesDialog($event)" [transactionObj]="transactionObj"></app-sales>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Receipt Dialog -->
+<ng-container *ngIf="isReceiptDialog">
+  <app-receipt (toggle)="closeReceiptDialog()" (toggleClose)="isReceiptDialog=$event" [transactionObj]="transactionObj">
+  </app-receipt>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Grid Configuration -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'SalesStatistics'" [gridName]="'SalesStatisticsGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->

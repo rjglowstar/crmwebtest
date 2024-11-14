@@ -1,0 +1,134 @@
+<title>Lab Config</title>
+<section class="ms-config-wrap">
+  <div class="content_wrap">
+    <div class="breadcrumb">
+      <div class="breadcrumb-left">
+        <ul>
+          <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+          <li class="breadcrumb-item active" aria-current="page">Lab Config</li>
+        </ul>
+      </div>
+    </div>
+    <div class="summarybar bg">
+      <div class="summary-left title">
+        <ul>
+          <li><span>Lab Services</span></li>
+        </ul>
+      </div>
+      <div class="summary-right pe-0">
+        <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+          <button kendoTooltip position="bottom" kendoButton (click)="openAddDialog()" title="Add">
+            <i class="icon-add"></i>
+          </button>
+          <button kendoTooltip position="bottom" kendoButton [disabled]="insertFlag" (click)="openUpdateDialog()"
+            title="Edit">
+            <i class="icon-edit"></i>
+          </button>
+          <button kendoTooltip position="bottom" kendoButton [disabled]="insertFlag" (click)="openDeleteDialog()"
+            title="Delete">
+            <i class="icon-trash"></i>
+          </button>
+          <input #file type="file"
+            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv"
+            (click)="file.value=''" (change)="onSelectExcelFile($event)" hidden />
+          <button kendoTooltip position="bottom" kendoButton (click)="file.click()" title="Lab Service Upload">
+            <i class="icon-excelnew p-0"></i>
+          </button>
+        </kendo-buttongroup>
+      </div>
+    </div>
+    <div class="content_box">
+      <div class="grid-wrap grid-summury">
+        <kendo-grid #orgGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+          [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+          (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+          [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'" style="height: calc(100vh - 180px);">
+          <ng-container *ngIf="fields && fields.length > 0">
+            <ng-container *ngFor="let field of fields">
+              <ng-container *ngIf="field.isSelected">
+                <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                </kendo-grid-column>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add Modal Start -->
+<div class="modal c-modal addemp br-ref dialog-ex-xs" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isReg">
+  <form name="form" #Form="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-lab"></i>Add</h5>
+          <button type="button" class="close" (click)="closeDialog(Form)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-labservice">
+                <h6 class="title"><i class="icon-labconfig"></i>Service Information</h6>
+                <div class="grid">
+
+                  <div class="form-data">
+                    <label for="">Lab<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': labName.invalid && (labName.dirty || labName.touched)}">
+                    <kendo-combobox [data]="listLabItems" textField="name" valueField="name" [valuePrimitive]="true"
+                      name="Lab" [(ngModel)]="labServiceObj.labName" #labName="ngModel" required
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Service<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': service.invalid && (service.dirty || service.touched)}">
+                    <input type="text" name="service" [(ngModel)]="labServiceObj.service" #service="ngModel" id=""
+                      required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Service Code<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': serviceCode.invalid && (serviceCode.dirty || serviceCode.touched)}">
+                    <input type="text" name="serviceCode" [(ngModel)]="labServiceObj.serviceCode" #serviceCode="ngModel"
+                      id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Action<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': action.invalid && (action.dirty || action.touched)}">
+                    <kendo-combobox [data]="listActionType" [valuePrimitive]="true" textField="text"
+                      [kendoDropDownFilter]="filterSettings" valueField="value" name="action"
+                      [(ngModel)]="labServiceObj.action" #action="ngModel" required>
+                    </kendo-combobox>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="onSubmit(Form,false)" [disabled]="!Form.valid" class="btn btn-primary"><i
+              class="icon-add"></i>New</button>
+          <button (click)="onSubmit(Form,true)" [disabled]="!Form.valid" class="btn btn-primary"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+    <div (document:keydown.esc)="closeDialog(Form)"></div>
+  </form>
+</div>
+<!-- Add Modal End -->
+
+<div kendoDialogContainer></div>

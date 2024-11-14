@@ -1,0 +1,91 @@
+.la-mas.c-modal .form-data textarea {
+    height: 30px;
+}
+
+.img-animated a:before {
+    content: "";
+    position: absolute;
+    background: #0000004d;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.5s;
+    transform: scale(0.5);
+}
+
+.img-animated a {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.img-animated a:hover:before {
+    opacity: 1;
+    transform: scale(1.5);
+}
+
+.img-animated a i {
+    margin: auto;
+    display: block;
+    height: 32px;
+    opacity: 0;
+    color: #fff;
+    font-size: 20px;
+    transition: all 0.5s;
+    background: #000;
+    width: 32px;
+    text-align: center;
+    padding: 0;
+    line-height: 32px;
+    border-radius: 100%;
+    position: absolute;
+    z-index: 9999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.img-animated a:hover i {
+    opacity: 1;
+}
+
+.proof-media-grid img {
+    height: 98px;
+    object-fit: cover;
+    width: 117px;
+}
+
+.customerverify-grid .form-img {
+    grid-row-start: 1;
+    grid-row-end: 5;
+}
+
+.customerverify-grid {
+    display: grid;
+    grid-template-columns: 110px 72px 1fr 82px 1fr 74px 1.4fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+}
+
+.customerverify-grid .c-upload {
+    height: 96px;
+}
+
+.customerverify-grid .form-img img {
+    width: 110px;
+    height: 96px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.customerverify-grid-02 {
+    display: grid;
+    grid-template-columns: 112px 17% 125px 17% 120px 16%;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+}
+
+.xl-textarea {
+    grid-column: 5 span / 7;
+}

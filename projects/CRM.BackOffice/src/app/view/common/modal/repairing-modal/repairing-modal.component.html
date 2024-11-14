@@ -1,0 +1,491 @@
+<!-- #region Repairing Modal -->
+<div class="modal c-modal addemp edinv rorgan" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <form name="repairingForm" #repairingForm="ngForm" novalidate>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="icon-add"></i>Repairing</h5>
+          <button type="button" class="close" (click)="closeRepairingDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body ps-2 pe-2">
+          <div class="grid d-flex justify-content-between mb-2">
+            <div class="form-data ps-ico">
+              <input type="text" name="stoneIdSearch" [(ngModel)]="searchStoneId" #stoneIdSearch="ngModel"
+                id="stoneIdSearch" autocomplete="off" placeholder="Search Stone Id" [disabled]="repairingObj.id">
+              <span class="formicon">
+                <button class="spanbutton" [disabled]="((searchStoneId != null) ? (searchStoneId.length == 0) : true)"
+                  (click)="getInventoryMeasurementData(true)"><i class="icon-search"></i></button>
+              </span>
+            </div>
+
+            <!-- <div class="repairing-btn">
+                            <kendo-label class="k-radio-label" [for]="Issue" text="Issue"></kendo-label>
+                            <input type="radio" name="repairing" (ngModelChange)="repairingTypeChange($event)"
+                                value="Issue" [(ngModel)]="repairingType" #Issue kendoRadioButton />
+
+                            <kendo-label class="k-radio-label" [for]="Receive" text="Receive">
+                            </kendo-label>
+                            <input type="radio" name="repairing" (ngModelChange)="repairingTypeChange($event)"
+                                value="Receive" [(ngModel)]="repairingType" #Receive
+                                [disabled]="!(inventoryObj.stoneId)" kendoRadioButton />
+                        </div> -->
+
+          </div>
+
+          <div class="panelbar-wrapper ms-config">
+            <kendo-panelbar [expandMode]="expandMode">
+              <kendo-panelbar-item [title]="'Basic Info'" [expanded]="isOpen">
+                <ng-template kendoPanelBarContent>
+                  <div class="i-form ed-basic-01">
+                    <div class="grid">
+                      <!-- [disabled]="(repairingType=='Issue' || repairingObj.isIssue=='Receive')" -->
+                      <div class="form-data" *ngIf="inclusionConfig.ktoS">
+                        <label for="">StoneId<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data" *ngIf="inclusionConfig.ktoS"
+                        [ngClass]="{ 'error': stoneId.invalid && (stoneId.dirty || stoneId.touched) }">
+                        <input type="text" name="stoneId" [disabled]="repairingType" [(ngModel)]="inventoryObj.stoneId"
+                          #stoneId="ngModel" id="stoneId" required autocomplete="off">
+                      </div>
+                      <div class="form-data">
+                        <label>Weight<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data"
+                        [ngClass]="{ 'error': weight.invalid && (weight.dirty || weight.touched) }">
+                        <input type="text" name="weight" autocomplete="off" maxlength="10"
+                          (keypress)="utilityService.floatOnly($event)" [(ngModel)]="inventoryObj.weight"
+                          #weight="ngModel" id="weight" required>
+                      </div>
+                      <div class="form-data">
+                        <label>Clarity<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data"
+                        [ngClass]="{ 'error': clarity.invalid && (clarity.dirty || clarity.touched) }">
+                        <kendo-dropdownlist [data]="allClarities" [valuePrimitive]="true" textField="name"
+                          valueField="name" name="clarity" [(ngModel)]="inventoryObj.clarity" #clarity="ngModel"
+                          id="clarity" required>
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data">
+                        <label>Cut<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data" [ngClass]="{ 'error': cut.invalid && (cut.dirty || cut.touched) }">
+                        <kendo-dropdownlist [data]="allTheCPS" [valuePrimitive]="true" textField="name"
+                          valueField="name" name="cut" [(ngModel)]="inventoryObj.cut" #cut="ngModel" id="cut" required>
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data">
+                        <label>Polish<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data"
+                        [ngClass]="{ 'error': polish.invalid && (polish.dirty || polish.touched) }">
+                        <kendo-dropdownlist [data]="allTheCPS" [valuePrimitive]="true" textField="name"
+                          valueField="name" name="polish" [(ngModel)]="inventoryObj.polish" #polish="ngModel"
+                          id="polish" required>
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data">
+                        <label>Symmentry<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data"
+                        [ngClass]="{ 'error': symmetry.invalid && (symmetry.dirty || symmetry.touched) }">
+                        <kendo-dropdownlist [data]="allTheCPS" [valuePrimitive]="true" textField="name"
+                          valueField="name" name="symmetry" [(ngModel)]="inventoryObj.symmetry" #symmetry="ngModel"
+                          id="symmetry" required>
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data">
+                        <label>Fluorescence<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data"
+                        [ngClass]="{ 'error': fluorescence.invalid && (fluorescence.dirty || fluorescence.touched) }">
+                        <kendo-dropdownlist [data]="allTheFluorescences" [valuePrimitive]="true" textField="name"
+                          valueField="name" name="fluorescence" [(ngModel)]="inventoryObj.fluorescence"
+                          #fluorescence="ngModel" id="fluorescence" required>
+                        </kendo-dropdownlist>
+                      </div>
+
+                    </div>
+                  </div>
+                </ng-template>
+              </kendo-panelbar-item>
+              <kendo-panelbar-item [title]="'Inclusion'">
+                <ng-template kendoPanelBarContent>
+                  <div class="i-form ed-basic-01">
+                    <div class="grid">
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.shade && (inclusionData | typefilter:'Shade').length > 0">
+                        <label>Shade</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.shade && (inclusionData | typefilter:'Shade').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'Shade'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="shade" [(ngModel)]="inventoryObj.inclusion.shade"
+                          #shade="ngModel" id="shade">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.brown && (inclusionData | typefilter:'Brown').length > 0">
+                        <label for="">Brown</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.brown && (inclusionData | typefilter:'Brown').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'Brown'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="brown" [(ngModel)]="inventoryObj.inclusion.brown"
+                          #brown="ngModel" id="brown">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.green && (inclusionData | typefilter:'Green').length > 0">
+                        <label>Green</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.green && (inclusionData | typefilter:'Green').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'Green'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="green" [(ngModel)]="inventoryObj.inclusion.green"
+                          #green="ngModel" id="green">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.milky && (inclusionData | typefilter:'Milky').length > 0">
+                        <label>Milky</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.milky && (inclusionData | typefilter:'Milky').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'Milky'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="milky" [(ngModel)]="inventoryObj.inclusion.milky"
+                          #milky="ngModel" id="milky">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.sideBlack && (inclusionData | typefilter:'SideBlack').length > 0">
+                        <label>SideBlack</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.sideBlack && (inclusionData | typefilter:'SideBlack').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'SideBlack'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="sideBlack"
+                          [(ngModel)]="inventoryObj.inclusion.sideBlack" #sideBlack="ngModel" id="sideBlack">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.centerBlack && (inclusionData | typefilter:'centerBlack').length > 0">
+                        <label>CenterBlack</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.centerBlack && (inclusionData | typefilter:'centerBlack').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'centerBlack'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="centerBlack"
+                          [(ngModel)]="inventoryObj.inclusion.centerBlack" #centerBlack="ngModel" id="centerBlack">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.openCrown && (inclusionData | typefilter:'openCrown').length > 0">
+                        <label>OpenCrown</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.openCrown && (inclusionData | typefilter:'openCrown').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'openCrown'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="openCrown"
+                          [(ngModel)]="inventoryObj.inclusion.openCrown" #openCrown="ngModel" id="openCrown">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.openTable && (inclusionData | typefilter:'openTable').length > 0">
+                        <label>OpenTable</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.openTable && (inclusionData | typefilter:'openTable').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'openTable'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="openTable"
+                          [(ngModel)]="inventoryObj.inclusion.openTable" #openTable="ngModel" id="openTable">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.openPavilion && (inclusionData | typefilter:'openPavilion').length > 0">
+                        <label>OpenPavilion</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.openPavilion && (inclusionData | typefilter:'openPavilion').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'openPavilion'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="openPavilion"
+                          [(ngModel)]="inventoryObj.inclusion.openPavilion" #openPavilion="ngModel" id="openPavilion">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.openGirdle && (inclusionData | typefilter:'openGirdle').length > 0">
+                        <label>OpenGirdle</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.openGirdle && (inclusionData | typefilter:'openGirdle').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'openGirdle'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="openGirdle"
+                          [(ngModel)]="inventoryObj.inclusion.openGirdle" #openGirdle="ngModel" id="openGirdle">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.girdleCondition && (inclusionData | typefilter:'GirdleCondition').length > 0">
+                        <label>GirdleCondition</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.girdleCondition && (inclusionData | typefilter:'GirdleCondition').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'GirdleCondition'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="girdleCondition"
+                          [(ngModel)]="inventoryObj.inclusion.girdleCondition" #girdleCondition="ngModel"
+                          id="girdleCondition">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.efoc && (inclusionData | typefilter:'efoc').length > 0">
+                        <label>EFOC</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.efoc && (inclusionData | typefilter:'efoc').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'efoc'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="efoc"
+                          [(ngModel)]="inventoryObj.inclusion.efoc" #efoc="ngModel" id="efoc">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.efop && (inclusionData | typefilter:'efop').length > 0">
+                        <label>EFOP</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.efop && (inclusionData | typefilter:'efop').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'efop'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="efop"
+                          [(ngModel)]="inventoryObj.inclusion.efop" #efop="ngModel" id="efop">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.culet && (inclusionData | typefilter:'culet').length > 0">
+                        <label>Culet</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.culet && (inclusionData | typefilter:'culet').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'culet'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="culet"
+                          [(ngModel)]="inventoryObj.inclusion.culet" #culet="ngModel" id="culet">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.hna && (inclusionData | typefilter:'hna').length > 0">
+                        <label>HNA</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.hna && (inclusionData | typefilter:'hna').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'hna'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="hna" [(ngModel)]="inventoryObj.inclusion.hna"
+                          #hna="ngModel" id="hna">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.eyeClean && (inclusionData | typefilter:'eyeClean').length > 0">
+                        <label>EyeClean</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.eyeClean && (inclusionData | typefilter:'eyeClean').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'eyeClean'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="eyeClean"
+                          [(ngModel)]="inventoryObj.inclusion.eyeClean" #eyeClean="ngModel" id="eyeClean">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.naturalOnGirdle && (inclusionData | typefilter:'naturalOnGirdle').length > 0">
+                        <label>NOG</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.naturalOnGirdle && (inclusionData | typefilter:'naturalOnGirdle').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalOnGirdle'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="naturalOnGirdle"
+                          [(ngModel)]="inventoryObj.inclusion.naturalOnGirdle" #naturalOnGirdle="ngModel"
+                          id="naturalOnGirdle">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.naturalOnCrown && (inclusionData | typefilter:'naturalOnCrown').length > 0">
+                        <label>NOC</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.naturalOnCrown && (inclusionData | typefilter:'naturalOnCrown').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalOnCrown'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="naturalOnCrown"
+                          [(ngModel)]="inventoryObj.inclusion.naturalOnCrown" #naturalOnCrown="ngModel"
+                          id="naturalOnCrown">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.naturalOnPavilion && (inclusionData | typefilter:'naturalonpavilion').length > 0">
+                        <label>NOP</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.naturalOnPavilion && (inclusionData | typefilter:'naturalonpavilion').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalonpavilion'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="naturalOnPavillion"
+                          [(ngModel)]="inventoryObj.inclusion.naturalOnPavillion" #naturalOnPavillion="ngModel"
+                          id="naturalOnPavillion">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.bowtie && (inclusionData | typefilter:'bowtie').length > 0">
+                        <label>BowTie</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="inclusionConfig.bowtie && (inclusionData | typefilter:'bowtie').length > 0">
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'bowtie'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="bowtie"
+                          [(ngModel)]="inventoryObj.inclusion.bowtie" #bowtie="ngModel" id="bowtie">
+                        </kendo-dropdownlist>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </kendo-panelbar-item>
+              <kendo-panelbar-item [title]="'Measurement'">
+                <ng-template kendoPanelBarContent>
+                  <div class="i-form ed-basic-01">
+                    <div class="grid">
+                      <div class="form-data" *ngIf="measurementConfig.length">
+                        <label>Length<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.length"
+                        [ngClass]="{ 'error': length.invalid && (length.dirty || length.touched) }">
+                        <input type="text" name="length" [(ngModel)]="inventoryObj.measurement.length" #length="ngModel"
+                          autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="length"
+                          required>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.width">
+                        <label>Width<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.width"
+                        [ngClass]="{ 'error': width.invalid && (width.dirty || width.touched) }">
+                        <input type="text" name="width" [(ngModel)]="inventoryObj.measurement.width" #width="ngModel"
+                          autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="width"
+                          required>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.height">
+                        <label>Height<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.height"
+                        [ngClass]="{ 'error': height.invalid && (height.dirty || height.touched) }">
+                        <input type="text" name="height" [(ngModel)]="inventoryObj.measurement.height" #height="ngModel"
+                          autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="width"
+                          required>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.depth">
+                        <label for="">Depth<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.depth"
+                        [ngClass]="{ 'error': depth.invalid && (depth.dirty || depth.touched) }">
+                        <input type="text" name="depth" [(ngModel)]="inventoryObj.measurement.depth" #depth="ngModel"
+                          id="depth" autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)"
+                          required>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.table">
+                        <label>Table<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.table"
+                        [ngClass]="{ 'error': table.invalid && (table.dirty || table.touched) }">
+                        <input type="text" name="table" [(ngModel)]="inventoryObj.measurement.table" #table="ngModel"
+                          autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="table"
+                          required>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.crownHeight">
+                        <label>Cr Height</label>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.crownHeight">
+                        <input type="text" name="crownHeight" [(ngModel)]="inventoryObj.measurement.crownHeight"
+                          #crownHeight="ngModel" autocomplete="off" maxlength="10"
+                          (keypress)="utilityService.floatOnly($event)" id="crownHeight">
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.crownAngle">
+                        <label>Cr Angle</label>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.crownAngle">
+                        <input type="text" name="crownAngle" [(ngModel)]="inventoryObj.measurement.crownAngle"
+                          #crownAngle="ngModel" autocomplete="off" maxlength="10"
+                          (keypress)="utilityService.floatOnly($event)" id="crownAngle">
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.pavillionDepth">
+                        <label>Pvl Depth</label>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.pavillionDepth">
+                        <input type="text" name="pavilionDepth" [(ngModel)]="inventoryObj.measurement.pavilionDepth"
+                          #pavilionDepth="ngModel" autocomplete="off" maxlength="10"
+                          (keypress)="utilityService.floatOnly($event)" id="pavilionDepth">
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.pavillionAngle">
+                        <label>Pvl Angle</label>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.pavillionAngle">
+                        <input type="text" name="pavilionAngle" [(ngModel)]="inventoryObj.measurement.pavilionAngle"
+                          #pavilionAngle="ngModel" autocomplete="off" maxlength="10"
+                          (keypress)="utilityService.floatOnly($event)" id="pavilionAngle">
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.girdlePer">
+                        <label>Girdle Per</label>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.girdlePer">
+                        <input type="text" name="girdlePer" [(ngModel)]="inventoryObj.measurement.girdlePer"
+                          #girdlePer="ngModel" autocomplete="off" maxlength="10"
+                          (keypress)="utilityService.floatOnly($event)" id="girdlePer">
+                      </div>
+                      <div class="form-data"
+                        *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                        <label>Min Girdle</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                        <kendo-dropdownlist [data]="measurementData  | typefilter:'girdle'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="mingirdle"
+                          [(ngModel)]="inventoryObj.measurement.minGirdle" #mingirdle="ngModel" id="mingirdle">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                        <label>Max Girdle</label>
+                      </div>
+                      <div class="form-data"
+                        *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                        <kendo-dropdownlist [data]="measurementData  | typefilter:'girdle'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="maxgirdle"
+                          [(ngModel)]="inventoryObj.measurement.maxGirdle" #maxgirdle="ngModel" id="maxgirdle">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.ratio">
+                        <label>Ratio<span class="require">*</span></label>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.ratio">
+                        <input type="text" name="ratio" [(ngModel)]="inventoryObj.measurement.ratio" #ratio="ngModel"
+                          autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="ratio"
+                          required>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </kendo-panelbar-item>
+              <kendo-panelbar-item [title]="'Description'">
+                <ng-template kendoPanelBarContent>
+                  <div class="form-data mb-3">
+                    <textarea cols="4" type="text" name="description" #description="ngModel"
+                      [(ngModel)]="repairingObj.description" placeholder="Description" style="height: 60px;"></textarea>
+                  </div>
+                </ng-template>
+              </kendo-panelbar-item>
+            </kendo-panelbar>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" *ngIf="repairingObj.isIssue!='Receive'" (click)="onSubmit(repairingForm)"
+            [disabled]="!repairingForm.valid"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeRepairingDialog()"></div>
+  </form>
+</div>
+<!-- #endregion -->

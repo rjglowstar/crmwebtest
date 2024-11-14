@@ -1,0 +1,234 @@
+<title>Suppliers</title>
+<section class="omaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Expo Master</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton (click)="openAddExpoMasterDialog()" title="Add Expo master"><i
+                  class="icon-add"></i></button>
+              <button [disabled]="insertFlag" (click)="openUpdateExpoMasterDialog()" kendoButton
+                title="Edit Organization"> <i class="icon-edit"></i></button>
+              <button [disabled]="insertFlag" kendoButton title="Delete" (click)="openDeleteDialog()"><i
+                  class="icon-trash"></i></button>
+              <!-- <button kendoButton title="Grid Configuration"><i class="icon-gridconfig"></i></button> -->
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid [resizable]="true" [sortable]="true" #orgGrid [data]="gridView!" [groupable]="true"
+              [selectable]="selectableSettings" [group]="groups" (groupChange)="groupChange($event)" [pageable]="true"
+              [kendoGridSelectBy]="'id'" class="rs-grid" [pageSize]="pageSize" [skip]="skip"
+              (selectionChange)="selectedRowChange($event)" (pageChange)="pageChange($event)"
+              [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+              <!-- <kendo-grid-checkbox-column [width]="45" [headerClass]="{ 'text-center': true }"
+                    [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false"
+                   ></kendo-grid-checkbox-column> -->
+              <kendo-grid-column field="id" title="Id" [width]="90"></kendo-grid-column>
+              <kendo-grid-column field="name" title="Name" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="fromDate" title="From Date" [width]="100">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem.fromDate | date: 'MM/dd/yyyy'}}
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column field="toDate" title="To Date" [width]="100">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem.toDate | date: 'MM/dd/yyyy'}}
+                </ng-template>
+              </kendo-grid-column>
+              <!-- <kendo-grid-column field="offerDate | date: 'ddMMyyyy'" title="OfferDate" [width]="70"></kendo-grid-column> -->
+              <kendo-grid-column field="address.line1" title="Address" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="address.country" title="Country" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="address.state" title="State" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="address.city" title="City" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="isActive" title="Active" [width]="70">
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #orgSearchForm="ngForm" novalidate>
+              <div class="i-form ">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Name</label>
+                    <input type="text" id="" name="name" [(ngModel)]="expomastersearchcriteria.name" #name="ngModel">
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Country</label>
+                    <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="country" (valueChange)="expomastersearchcriteria.country = $event"
+                      [valuePrimitive]="true" [(ngModel)]="expomastersearchcriteria.country" #country="ngModel">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">From Date - To Date</label>
+                    <kendo-daterange>
+                      <div class="form-data  mb-2 w-100">
+                        <kendo-datepicker calendarType="classic" class="w-100" format="dd/MM/yyyy"
+                          (valueChange)="expomastersearchcriteria.fromDate = $event" name="fromDate"
+                          [(ngModel)]="expomastersearchcriteria.fromDate" id="" #fromDate="ngModel">
+                        </kendo-datepicker>
+                      </div>
+                      <div class="form-data w-100">
+                        <kendo-datepicker calendarType="classic" class="w-100" format="dd/MM/yyyy"
+                          (valueChange)="expomastersearchcriteria.toDate = $event" name="toDate"
+                          [(ngModel)]="expomastersearchcriteria.toDate" id="" #toDate="ngModel">
+                        </kendo-datepicker>
+                      </div>
+                      <kendo-daterange-popup [animate]="false" #popup></kendo-daterange-popup>
+                    </kendo-daterange>
+                  </div>
+                  <div class="col-xl-12 mb-2 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                    <ng2-tri-state-checkbox name="filterIsActive" [(ngModel)]="expomastersearchcriteria.isActive"
+                      #filterIsActive="ngModel">
+                    </ng2-tri-state-checkbox>
+
+                    <label for="a-systemUser">IsActive</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" (click)="orgSearchForm.form.valid && onFilterSubmit(orgSearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button (click)="clearFilter(orgSearchForm)" class="btn btn-action">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="orgSearchForm.form.valid && onFilterSubmit(orgSearchForm)"><i
+              class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(orgSearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Expo Master Modal Start -->
+<div class="modal c-modal addemp rorgan" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isRegOrganization">
+  <form name="form" #expomasterForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-expo-img"></i>Expo Master</h5>
+          <button type="button" class="close" (click)="closeExpoOrganDialog(expomasterForm)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form  expo-grid expoM">
+                <h6 class="title"><i class="icon-expo-img"></i>Expo Master Information</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                    <input type="text" name="name" [(ngModel)]="expomasterObj.name" #name="ngModel" id="" required>
+                  </div>
+                  <div class="form-data">
+                    <label for="">From Date<span class="require">*</span></label>
+                  </div>
+                  <kendo-daterange class="d-flex">
+                    <div class="form-data me-2 w-100">
+                      <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" (valueChange)="expomasterObj.fromDate = $event"
+                        name="fromDate" [(ngModel)]="expomasterObj.fromDate" #fromDate="ngModel" id="" required
+                        format="MM/dd/yyyy">
+                      </kendo-datepicker>
+                    </div>
+                    <div class="form-data w-100">
+                      <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" (valueChange)="expomasterObj.toDate = $event" name="ToDate"
+                        [(ngModel)]="expomasterObj.toDate" #ToDate="ngModel" id="" required format="MM/dd/yyyy">
+                      </kendo-datepicker>
+                    </div>
+                    <kendo-daterange-popup [animate]="false" #popup></kendo-daterange-popup>
+                  </kendo-daterange>
+                </div>
+              </div>
+              <div class="i-form rs-add">
+                <h6 class="title"><i class="icon-mapmarker"></i>Address</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label>Line1</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line1" #line1="ngModel"
+                      [(ngModel)]="expomasterObj.address.line1">
+                                          </textarea>
+                  </div>
+                  <div class="form-data">
+                    <label>Line2</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line2" #line2="ngModel"
+                      [(ngModel)]="expomasterObj.address.line2">
+                                          </textarea>
+                  </div>
+                  <div class="form-data">
+                    <label>Country</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="country" #country="ngModel" (valueChange)="onCountryChange($event)"
+                      [valuePrimitive]="true" [(ngModel)]="expomasterObj.address.country">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>State</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="state" #state="ngModel" (valueChange)="onStateChange($event)"
+                      [valuePrimitive]="true" [(ngModel)]="expomasterObj.address.state">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>City</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city"
+                      #city="ngModel" [(ngModel)]="expomasterObj.address.city">
+                    </kendo-combobox>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- <button (click)="onOrgSubmit(expomasterForm,false)" [disabled]="!expomasterForm.valid"
+                      class="btn btn-primary"><i class="icon-add"></i>New</button> -->
+          <button (click)="onExpoSubmit(expomasterForm,true)" [disabled]="!expomasterForm.valid"
+            class="btn btn-primary"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+    <div (document:keydown.esc)="closeExpoOrganDialog(expomasterForm)"></div>
+  </form>
+</div>
+<!-- Expo master Modal End -->
+<div kendoDialogContainer></div>

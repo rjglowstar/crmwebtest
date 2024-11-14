@@ -1,0 +1,167 @@
+/* Report Page Css */
+.report-div {
+    background: #eee;
+    border-radius: 3px;
+    font-weight: 600;
+    position: relative;
+    height: 155px;
+    overflow: hidden;
+    padding: 8px;
+    border: 1px dashed;
+
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    padding: 2px;
+    grid-gap: 10px;
+    overflow-y: auto;
+}
+
+.report-div h4 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    height: 27px;
+    text-transform: uppercase;
+    word-spacing: 5px;
+    font-size: 15px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.optionicons {
+    text-align: right;
+    opacity: 0;
+    position: relative;
+    top: -10px;
+    transition: all 0.3s;
+}
+
+
+.report-div:hover .optionicons {
+    opacity: 1;
+    top: 0;
+}
+
+.rpt-icon i:hover {
+    background: #4d4d4d;
+    color: #fff;
+}
+
+.rpt-icon i {
+    padding: 4px;
+}
+
+/* Report Page Css */
+
+/* Dialog Css */
+.report-filter {
+    display: grid;
+    grid-template-columns: 94px auto auto auto;
+    align-items: center;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+    justify-content: end;
+}
+
+.rm-title p {
+    font-size: 14px;
+}
+
+.rm-title {
+    margin-top: 15px;
+    border: 1px solid #d3d3d3;
+    padding-top: 5px;
+}
+
+.rm-table .pf-design {
+    max-height: calc(100vh - 470px);
+    min-height: 470px;
+    height: auto;
+}
+
+.rm-table h6 {
+    background: #eeeeee;
+    padding: 5px;
+    font-weight: 600;
+}
+
+.rm-table {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.closing-balance h6 {
+    grid-column: 2 span/3;
+}
+
+.rm-table.closing-balance {
+    margin-top: 20px;
+}
+
+.rm-table .k-grid {
+    height: calc(100vh - 545px);
+}
+
+.rm-table.closing-balance .k-grid {
+    height: 160px;
+}
+
+.tbl-total {
+    display: flex;
+    justify-content: space-between;
+}
+
+.tbl-total td:nth-child(1) {
+    font-weight: 600;
+}
+
+.tbl-total td {
+    font-size: 14px;
+    padding: 0 5px !important;
+}
+
+.tbl-bg-total {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    background: #ebebeb;
+    align-items: baseline;
+}
+
+.tbl-bg-total .tbl-total:first-child {
+    border-right: 1px solid #d3d3d3;
+}
+
+@media (max-width: 900px) {
+    .rm-table .k-grid {
+        height: 240px !important;
+    }
+}
+
+/* Dialog Css */
+@media (max-width:850px) {
+    .rm-table {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-row-gap: 10px;
+    }
+
+    .closing-balance h6 {
+        grid-column: auto;
+    }
+}
+
+@media (max-width:600px) {
+    .tbl-bg-total {
+        grid-template-columns: 1fr;
+    }
+
+    .tbl-total:last-child {
+        border-top: 1px solid #d3d3d3;
+    }
+}

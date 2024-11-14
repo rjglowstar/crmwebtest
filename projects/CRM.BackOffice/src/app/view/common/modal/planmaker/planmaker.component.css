@@ -1,0 +1,352 @@
+.c-modal.plan-maker .modal-dialog {
+    max-width: 1000px;
+}
+
+.plk-autosearch {
+    display: grid;
+    grid-template-columns: 98px 180px;
+    align-items: center;
+    grid-column-gap: 10px;
+}
+
+.plan-maker .ci-top-right i {
+    padding-right: initial;
+}
+
+.plan-maker .ci-top-left h6 {
+    font-size: 11px;
+}
+
+.plan-maker .k-dropdown .k-dropdown-wrap {
+    background: transparent;
+}
+
+.pm-middle {
+    display: grid;
+    grid-template-columns: 315px 1fr;
+    grid-gap: 6px;
+}
+
+.plan-maker .company-info,
+.pm-middle,
+.cal-item1 {
+    border: 1px solid #4d4d4d;
+    padding: 7px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+.cal-item1 {
+    padding: 0 0 6px;
+}
+
+.sub-item-wrap {
+    margin-bottom: initial;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 6px;
+    grid-row-gap: 6px;
+    grid-template-rows: repeat(7, 25px);
+    grid-gap: 8px;
+    padding: 7px;
+    height: 268px;
+    overflow-y: auto;
+}
+
+.sub-item1 label {
+    display: inline-block;
+    padding: 4px 12px;
+    margin: -2px -2px 0;
+    font-size: 12px;
+    line-height: 20px;
+    color: #000;
+    width: 100%;
+    height: 29px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    background-image: linear-gradient(180deg, #fff, #e6e6e6);
+    background-repeat: repeat-x;
+    border: 1px solid rgba(0, 0, 0, .1);
+    border-bottom-color: #b3b3b3;
+}
+
+.plan-maker .button {
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 1px solid #dedede;
+    background-image: -webkit-linear-gradient(top, #f8f8f8, #f1f1f1);
+    font-size: 13px;
+}
+
+.plan-maker button.button:hover {
+    background: #4d4d4d;
+    color: #fff;
+}
+
+.plan-maker .pm-bo-1 button.button:hover {
+    background-image: -webkit-linear-gradient(top, #f1f1f1, #4d4d4d);
+}
+
+.pm-middle input[type="radio"] {
+    display: none;
+}
+
+.pm-middle input[type="radio"]:checked+label {
+    background: #4d4d4d;
+}
+
+.pm-middle input[type=radio]:checked+label {
+    color: #fff;
+}
+
+.pm-left {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+    border-radius: 3px;
+}
+
+.pm-right {
+    display: grid;
+    grid-row-gap: 5px;
+}
+
+.pm-r-top {
+    grid-column-gap: 10px;
+    border: 1px solid #4d4d4d;
+    padding: 5px;
+}
+
+.sub-grid-wrap {
+    max-width: 620px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 43px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.s-item {
+    display: flex;
+}
+
+.pm-r-top .sub-item1 {
+    margin: 0 5px;
+    flex: auto;
+    white-space: nowrap;
+}
+
+.pm-r-bottom {
+    display: grid;
+    grid-template-columns: 140px 1fr 1fr 100px;
+    grid-column-gap: 6px;
+    grid-row-gap: 8px;
+}
+
+.pm-bo-1 {
+    display: grid;
+    grid-row-gap: 5px;
+    border: 1px solid #4d4d4d;
+    padding: 5px;
+    grid-template-rows: repeat(1, 32px);
+}
+
+.pm-middle input[type="text"] {
+    width: 100%;
+}
+
+.subitem-calc-1 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+    border-top: 1px solid #ddd;
+    padding-top: 6px;
+}
+
+.subitem-calc-1 button {
+    width: 100%;
+    height: 34px !important;
+}
+
+.pm-bo-2 {
+    display: grid;
+    border: 1px solid #4d4d4d;
+    padding: 7px;
+    grid-template-columns: 94px 1fr;
+    grid-row-gap: 5px;
+}
+
+.pm-form-data label {
+    font-size: 11px;
+    line-height: 16px;
+}
+
+.pm-form-data .k-widget.k-dropdown {
+    width: 100%;
+    height: 28px;
+    background-color: transparent;
+}
+
+
+.pm-bo-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 6px;
+    grid-row-gap: 6px;
+}
+
+.pm-bo3-item1 {
+    border: 1px solid #4d4d4d;
+    padding: 5px;
+    grid-column-gap: 5px;
+    grid-template-columns: 1fr;
+    display: grid;
+    grid-row-gap: 5px;
+}
+
+.pm-bo-4 {
+    display: grid;
+    grid-template-columns: 1fr;
+    border: 1px solid #4d4d4d;
+    grid-row-gap: 13px;
+    grid-column-gap: 13px;
+    padding: 7px;
+}
+
+.sym-item4 {
+    display: grid;
+    grid-row-gap: 5px;
+}
+
+.pm-bo3-item2 {
+    border: 1px solid #4d4d4d;
+    padding: 5px;
+}
+
+.pm-sub-item {
+    display: grid;
+    grid-row-gap: 11px;
+    grid-template-rows: repeat(4, 26px);
+}
+
+.pm-bo3-item3 {
+    grid-column: 2 span/3;
+    border: 1px solid #4d4d4d;
+    padding: 7px 7px 0 7px;
+    background: #f1f1f1;
+}
+
+.plan-maker label {
+    font-size: 12px;
+    color: #000;
+}
+
+.pm-bo3-item3 .col-form-label {
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    text-align: left !important;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 26px;
+}
+
+.pm-bo3-item3 label.n-a {
+    display: inline-block;
+    margin-top: 0;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 3px;
+    line-height: 22px;
+}
+
+.tab-plan {
+    overflow: hidden;
+    position: relative;
+    z-index: 9999;
+    float: right;
+}
+
+.tab-plan .tab-hide {
+    float: right;
+    margin-right: 5px;
+}
+
+.grid-container-symetry {
+    display: flex;
+    /* grid-template-columns: 83px 83px 83px 83px 84px 84px 84px 84px 84px 84px 84px 83px 83px 83px 83px 84px 84px 84px; */
+    grid-column-gap: 5px;
+}
+
+.grid-container-symetry .sym-item8 {
+    flex: 0 0 10%;
+    max-width: 10%;
+}
+
+.grid-container-symetry1 {
+    border: 0;
+    padding: 0;
+    overflow: hidden;
+    margin: -16px 0;
+    width: 100%;
+    position: relative;
+    top: -18px;
+}
+
+.plan-maker-tab.k-tabstrip>.k-content.k-state-active {
+    padding: 5px 4px;
+}
+
+.pm-bottom .k-widget.k-dropdown {
+    width: 100%;
+}
+
+.pm-footer .grid-wrap .k-grid {
+    height: initial;
+}
+
+.in-me-data .form-data input {
+    background: transparent;
+    height: 30px;
+}
+
+@media only screen and (max-width: 991px) {
+    .pm-middle {
+        grid-template-columns: 250px 1fr;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .pm-middle {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .grid-container-symetry .sym-item8 {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+
+@media only screen and (max-width: 625px) {
+    .pm-r-top {
+        overflow-y: auto;
+    }
+
+    .pm-r-bottom {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .grid-container-symetry .sym-item8 {
+        flex: 0 0 30%;
+        max-width: 30%;
+    }
+}

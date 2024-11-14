@@ -1,0 +1,407 @@
+<section class="secbg_wrap prodit_sec">
+    <div class="wrapper-full">
+        <div class="sec_topbar">
+            <div class="flex_box">
+                <h3 class="page_title">Edit Profile</h3>
+                <div class="btntop_group">
+                    <button kendoButton class="border_btn" (click)="navigateBackward()">Cancel</button>
+                    <button kendoButton class="border_btn" [ngClass]="{'active':resetPasswordForm.valid}"
+                        position="bottom" title="Save Configuration" (click)="changePasswordClick(resetPasswordForm)"
+                        [disabled]="!resetPasswordForm.valid">Update</button>
+                </div>
+            </div>
+        </div>
+        <div class="profile_banner">
+            <img src="../../../assets/images/editProfile_topBg.png" alt="diamond-image" class="img-fluid">
+            <div class="proImg_wrap">
+                <div class="img_wrap">
+                    <ng-container *ngIf="profileFileStore.fileThumbnail || this.imagePreviewprofile">
+                        <img [src]="this.imagePreviewprofile ? this.imagePreviewprofile : profileFileStore.fileThumbnail"
+                            alt="profile-photo" class="img-fluid">
+                    </ng-container>
+                    <ng-container *ngIf="!profileFileStore.fileThumbnail && !this.imagePreviewprofile">
+                        {{ customerObj.name.firstName[0] }}
+                    </ng-container>
+                </div>
+                <label class="editPro" for="profileUpload">
+                    <input type="file" id="profileUpload" (change)="uploadFiles($event, FileStoreTypes.CustomerProfile)"
+                        accept="image/jpeg,image/png,image/jpg" hidden>
+                    <i class="icon-edit_new"></i>
+                </label>
+            </div>
+        </div>
+        <div class="profile_wrap">
+            <h6 class="subtitle">Personal Details</h6>
+            <div class="detail_grid">
+                <div class="form-data">
+                    <input type="text" placeholder="First Name*" [disabled]="true"
+                        [(ngModel)]="customerObj.name.firstName">
+                </div>
+                <div class="form-data">
+                    <input type="text" placeholder="Middle Name*" [disabled]="true"
+                        [(ngModel)]="customerObj.name.middleName">
+                </div>
+                <div class="form-data">
+                    <input type="text" placeholder="Last Name*" [disabled]="true"
+                        [(ngModel)]="customerObj.name.lastName">
+                </div>
+                <div class="form-data">
+                    <input type="text" placeholder="Email ID*" [disabled]="true" [(ngModel)]="customerObj.email">
+                </div>
+                <div class="form-data country-code">
+                    <ngx-intl-tel-input [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                        [enablePlaceholder]="false" [searchCountryFlag]="true" [disabled]="true"
+                        [searchCountryField]="[SearchCountryField.All]" [selectFirstCountry]="false"
+                        [phoneValidation]="true" [separateDialCode]="separateDialCode"
+                        [numberFormat]="PhoneNumberFormat.International"
+                        [selectedCountryISO]="loadCountryCode(customerObj.mobile1)" name="primaryMobile"
+                        #primaryMobile="ngModel" [ngModel]="primaryMobileNo" [enablePlaceholder]="true"
+                        customPlaceholder="Mobile No.*">
+                    </ngx-intl-tel-input>
+                </div>
+                <div class="form-data country-code">
+                    <ngx-intl-tel-input [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                        [enablePlaceholder]="false" [searchCountryFlag]="true" [disabled]="true"
+                        [searchCountryField]="[SearchCountryField.All]" [selectFirstCountry]="false"
+                        [selectedCountryISO]="loadCountryCode(customerObj.mobile2)" [phoneValidation]="true"
+                        [separateDialCode]="separateDialCode" [numberFormat]="PhoneNumberFormat.International"
+                        name="secondaryMobileNo" #primaryMobile="ngModel" [ngModel]="secondaryMobileNo"
+                        [enablePlaceholder]="true" customPlaceholder="Whatsapp No.*">
+                    </ngx-intl-tel-input>
+                </div>
+            </div>
+            <h6 class="subtitle">Company Details</h6>
+            <div class="detail_grid">
+                <div class="form-data">
+                    <input type="text" placeholder="Company Name*" [disabled]="true"
+                        [(ngModel)]="customerObj.companyName">
+                </div>
+                <div class="form-data">
+                    <input type="text" placeholder="Designation" [disabled]="true"
+                        [(ngModel)]="customerObj.designation">
+                </div>
+                <div class="form-data">
+                    <input type="text" placeholder="Bussiness Type*" [disabled]="true"
+                        [(ngModel)]="customerObj.businessType">
+                </div>
+                <div class="form-data">
+                    <input type="text" placeholder="Country*" [disabled]="true"
+                        [(ngModel)]="customerObj.address.country">
+                </div>
+                <div class="form-data">
+                    <input type="text" placeholder="State*" [disabled]="true" [(ngModel)]="customerObj.address.state">
+                </div>
+                <div class="form-data">
+                    <input type="text" placeholder="City*" [disabled]="true" [disabled]="true"
+                        [(ngModel)]="customerObj.address.city">
+                </div>
+                <div class="form-data">
+                    <input type="text" placeholder="Pin Code" [disabled]="true"
+                        [(ngModel)]="customerObj.address.zipCode">
+                </div>
+                <div class="form-data">
+                    <input type="text" placeholder="Company Address*" [disabled]="true"
+                        [(ngModel)]="customerObj.address.line1">
+                </div>
+                <div class="form-data country-code">
+                    <ngx-intl-tel-input [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                        [enablePlaceholder]="false" [searchCountryFlag]="true" [disabled]="true"
+                        [searchCountryField]="[SearchCountryField.All]" [selectFirstCountry]="false"
+                        [selectedCountryISO]="loadCountryCode(customerObj.businessMobileNo)" [phoneValidation]="true"
+                        [separateDialCode]="separateDialCode" [numberFormat]="PhoneNumberFormat.National"
+                        name="businessMobile" #primaryMobile="ngModel" [ngModel]="businessMobile"
+                        [enablePlaceholder]="true" [maxLength]="15" customPlaceholder="Office No.*">
+                    </ngx-intl-tel-input>
+                </div>
+            </div>
+
+            <div class="detail_grid">
+                <form name="resetPasswordForm" #resetPasswordForm="ngForm" class="d-prop-wrap">
+                    <div ngModelGroup="passwords" #passwords="ngModelGroup" appCheckPassword>
+                        <h6 class="subtitle">{{'BasicText.Change Password'| translate}}</h6>
+                        <div class="pasInput_grid">
+                            <div class="form-data">
+                                <input type="password" placeholder="{{'BasicText.Old Password'| translate}}"
+                                    #oldpassword="ngModel" name="oldpassword"
+                                    [(ngModel)]="changePasswordModel.oldPassword" required>
+                            </div>
+                            <div class="form-data">
+                                <input type="password" placeholder="{{'BasicText.New Password'| translate}}"
+                                    #password="ngModel" name="password" [(ngModel)]="changePasswordModel.newPassword"
+                                    required [pattern]="passwordPattern">
+                            </div>
+                            <div class="form-data">
+                                <input type="password" placeholder="{{'BasicText.Confirm Password'| translate}}"
+                                    #confirmPassword="ngModel" name="confirmPassword"
+                                    [(ngModel)]="changePasswordModel.confirmPassword" required>
+                            </div>
+                        </div>
+                        <div class="error">
+                            <span *ngIf="password.errors?.pattern" class="error s-error">
+                                Your password must be 8 characters long and include an uppercase, lowercase,
+                                letter,
+                                a number character.
+                            </span>
+                            <span *ngIf="confirmPassword.invalid && (password.dirty || password.touched)"
+                                class="error s-error">
+                                Please confirm your password.
+                            </span>
+                            <span
+                                *ngIf="passwords.errors?.passwordCheck && (confirmPassword.dirty || confirmPassword.touched)"
+                                class="s-error">
+                                Passwords do not match.
+                            </span>
+                        </div>
+                    </div>
+                </form>
+                <div>
+                    <h6 class="subtitle">KYC Details</h6>
+                    <div class="kycWrap" (click)="openDocumentDialog(FileStoreTypes.CustomerPhotoIdent)">
+                        <div class="kyc_head">
+                            <div class="docImg_wrap" *ngIf="photoIdentityFileFound">
+                                <img class="img-fluid" alt="Photo Identity"
+                                    [src]="photoIdentityFileStore.fileThumbnail">
+                            </div>
+                            <ng-container *ngIf="!photoIdentityFileFound">
+                                <i class="icon-uploadNew"></i>
+                                <span class="ms-2">Document not found</span>
+                            </ng-container>
+                        </div>
+                        <div class="kyc_body">{{'BasicText.Photo identity proof'| translate}}</div>
+                    </div>
+                </div>
+                <div>
+                    <h6 class="subtitle">&nbsp;</h6>
+                    <div class="kycWrap" (click)="openDocumentDialog(FileStoreTypes.CustomerBussinessIdent)">
+                        <div class="kyc_head">
+                            <div class="docImg_wrap" *ngIf="businessIndentityFileFound">
+                                <img class="img-fluid" alt="Bussiness Identity"
+                                    [src]="businessIndentityFileStore.fileThumbnail">
+                            </div>
+                            <ng-container *ngIf="!businessIndentityFileFound">
+                                <i class="icon-uploadNew"></i>
+                                <span class="ms-2" *ngIf="!businessIndentityFileFound">Document not found</span>
+                            </ng-container>
+                        </div>
+                        <div class="kyc_body">{{'BasicText.Bussiness Identity'| translate}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Edit Column Modal Start -->
+<div class="modal c-modal editcell" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+    *ngIf="isEditColumn">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-editcell"></i>{{columnModalTitle}}
+                    {{'BasicText.Column'| translate}}
+                </h5>
+                <button type="button" class="close" (click)="closeEditColumnDialog()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 nfc-grid">
+                        <div class="form-data">
+                            <label>{{'BasicText.Name'| translate}}<span class="require">*</span></label>
+                        </div>
+                        <div class="form-data">
+                            <input type="text" name="exportName" #exportName="ngModel"
+                                [(ngModel)]="exportConfigObj.name">
+                        </div>
+                        <div class="form-data">
+                            <label>{{'BasicText.Format'| translate}}<span class="require">*</span></label>
+                        </div>
+                        <div class="form-data">
+                            <kendo-dropdownlist [data]="listExportFormat" [valuePrimitive]="true" name="format"
+                                [(ngModel)]="exportConfigObj.format" #format="ngModel">
+                            </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data">
+                            <label>{{'BasicText.Conditions'| translate}}</label>
+                        </div>
+                        <div class="form-data">
+                            <input type="text" name="conditions" #conditions="ngModel"
+                                [(ngModel)]="exportConfigObj.conditions">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-sm-6 col-xs-12 p-r-7">
+                        <div class="i-form">
+                            <h6 class="title b-fill">{{'BasicText.All Columns'| translate}}</h6>
+                            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 ex-search">
+                                <input type="text" placeholder="Search field name" #searchData="ngModel"
+                                    name="searchData" [(ngModel)]="searchColumn" (keyup)="searchColumns()">
+                                <span class="i-search"><i class="icon-search"></i></span>
+                                <button type="button" class="btn btn-primary"
+                                    (click)="searchColumn='';searchColumns()"><i
+                                        class="icon-clear"></i>{{'BasicText.Clear All'| translate}}</button>
+                            </div>
+                            <div class="row ex-wrap ex-left-data m-0">
+                                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                    <h6 class="title">{{'BasicText.Basic'| translate}}</h6>
+                                    <ul>
+                                        <li *ngFor="let item of listBasicExportColumns">
+                                            <button type="button" class="btn btn-primary ex-btn"
+                                                (click)="addExportColumn(item)">{{item.title}}</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                    <h6 class="title">{{'BasicText.Measurement'| translate}}</h6>
+                                    <ul>
+                                        <li *ngFor="let item of listMeasurementExportColumns">
+                                            <button type="button" class="btn btn-primary ex-btn"
+                                                (click)="addExportColumn(item)">{{item.title}}</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                    <h6 class="title">{{'BasicText.INCLUSION'| translate}}</h6>
+                                    <ul>
+                                        <li *ngFor="let item of listIncusionExportColumns">
+                                            <button type="button" class="btn btn-primary ex-btn"
+                                                (click)="addExportColumn(item)">{{item.title}}</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                    <h6 class="title">{{'BasicText.LOCATION & AVAIABILITY'| translate}}</h6>
+                                    <ul>
+                                        <li *ngFor="let item of listOthersExportColumns">
+                                            <button type="button" class="btn btn-primary ex-btn"
+                                                (click)="addExportColumn(item)">{{item.title}}</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                    <h6 class="title">{{'BasicText.CUSTOMIZE TITLE'| translate}}</h6>
+                                    <ul>
+                                        <li>
+                                            <button type="button" class="btn btn-primary ex-btn"
+                                                (click)="openEditExportColumnDialog()">
+                                                <i class="icon-add"></i> {{'BasicText.Add Customize Title'| translate}}
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6 col-lg-6 col-sm-6 col-xs-12 p-l-7">
+                        <div class="i-form">
+                            <h6 class="title b-fill">{{'BasicText.Selected Columns'| translate}}</h6>
+                            <div class="row ex-wrap ex-right-data mx-0">
+                                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                    <div class="table-data">
+                                        <div>
+                                            <div class="th-header">
+                                                <div>{{'BasicText.Title'| translate}}</div>
+                                                <div class="t-title">{{'BasicText.CUSTOMIZE TITLE'| translate}}</div>
+                                                <div>{{'BasicText.Value'| translate}}</div>
+                                                <div></div>
+                                            </div>
+                                            <div dragula="GridMasterConfiguration"
+                                                [(dragulaModel)]="exportConfigObj.fields" class="export-column-table">
+                                                <div class="tr-data"
+                                                    *ngFor="let item of exportConfigObj.fields;let i = index">
+                                                    <div>{{item.title}}</div>
+                                                    <div class="text-end">
+                                                        <input type="text" name="custName" [(ngModel)]="item.custTitle">
+                                                    </div>
+                                                    <div *ngIf="item.title == 'Custom'">
+                                                        <input type="text" name="value" [(ngModel)]="item.value">
+                                                    </div>
+                                                    <div *ngIf="item.title != 'Custom'"></div>
+                                                    <div><i class="icon-delete" (click)="removeExportField(i)"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="addUpdateExportConfig()"><i
+                        class="icon-save"></i>Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit Column Modal End -->
+
+<!-- Edit Column Modal Start -->
+<div class="modal c-modal edittable" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+    *ngIf="isEditExportColumn">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-editcell"></i>
+                    {{'BasicText.Add Customize Title'| translate}}
+                </h5>
+                <button type="button" class="close" (click)="closeEditExportColumnDialog()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="i-form">
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                            <label for="">{{'BasicText.CUSTOMIZE TITLE'| translate}}</label>
+                            <input type="text" name="custTtitle" #custTtitle="ngModel"
+                                [(ngModel)]="exportColumnObj.custTitle">
+                            <span class="s-error">{{'BasicText.customize title required'| translate}}</span>
+                        </div>
+                        <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                            <label for="">{{'BasicText.Value'| translate}}</label>
+                            <input type="text" name="custValue" #custValue="ngModel"
+                                [(ngModel)]="exportColumnObj.value">
+                            <span class="s-error">{{'BasicText.value required'| translate}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="addExportColumn(exportColumnObj)"><i
+                        class="icon-add"></i>{{'BasicText.Add'| translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit Column Modal End -->
+
+<!-- #region Document Modal Start-->
+<div class="modal c-modal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+    *ngIf="isShowDocument">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="main-title">
+                <h5>{{'BasicText.Document'| translate}}</h5>
+                <button type="button" class="close" (click)="closeDocumentDialog()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="attach-img">
+                        <img [src]="sanitizeURL(imgSrcDisplay)" alt="document image" class="img-fluid w-100" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div (document:keydown.esc)="closeDocumentDialog()"></div>
+</div>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

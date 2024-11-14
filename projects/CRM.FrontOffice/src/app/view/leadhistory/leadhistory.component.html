@@ -1,0 +1,129 @@
+<title>Login History</title>
+<section class="omaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="company-info">
+          <div class="breadcrumb">
+            <div class="breadcrumb-left">
+              <ul>
+                <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                <li class="breadcrumb-item active" aria-current="page">Lead History</li>
+              </ul>
+            </div>
+            <div class="breadcrumb-right">
+            </div>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid [resizable]="true" [sortable]="true" #invGrid [data]="gridView!" [sortable]="true"
+              [groupable]="true" [sort]="sort" (sortChange)="sortChange($event)" [selectable]="selectableSettings"
+              [group]="groups" (groupChange)="groupChange($event)" [pageable]="true" [kendoGridSelectBy]="'id'"
+              [pageSize]="pageSize" [skip]="skip" (pageChange)="pageChange($event)">
+              <kendo-grid-column field="leadNo" title="Lead No" [width]="40"></kendo-grid-column>
+              <kendo-grid-column field="description" title="Description" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="action" title="Action" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="broker.name" title="Broker" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="customer.companyName" title="Company Name" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="seller.name" title="Seller" [width]="70"></kendo-grid-column>
+              <kendo-grid-column field="createdDate" title="Created Date" [width]="70">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem.createdDate |date: 'dd/MM/yyyy hh:mm a'}}
+                </ng-template>
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #leadhistorySearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="Lead No">Lead No</label>
+                    <input type="text" name="leadNoV" #leadNoV="ngModel"
+                      (keypress)="utilityService.numberWithSpaceOnly($event)" [(ngModel)]="leadNo" />
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label class="lbl">From Date</label>
+                    <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="fDate" #fDate="ngModel"
+                      [(ngModel)]="leadHistorySearchCriteria.fromDate">
+                    </kendo-datepicker>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label class="lbl">To Date</label>
+                    <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="tDate" #tDate="ngModel"
+                      [(ngModel)]="leadHistorySearchCriteria.toDate">
+                    </kendo-datepicker>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Company Name</label>
+                    <kendo-multiselect name="Customer" class="customselect" [data]="listCustomerItems"
+                      [(ngModel)]="leadHistorySearchCriteria.companyName" [textField]="'name'" [valueField]="'value'"
+                      [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                      [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                      (valueChange)="onMultiSelectCustChange(listCustomerItems, leadHistorySearchCriteria.companyName);customerValueChange(leadHistorySearchCriteria.companyName)">
+                      <ng-template kendoComboBoxHeaderTemplate>
+                        <div class="dropdown-header single k-widget k-header">
+                          <span class="temp-single">Select Company Name</span>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom"
+                          [title]="utilityService.getCommaSapratedString(selectedCustomer, true)">
+                          {{utilityService.getCommaSapratedString(selectedCustomer)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Seller</label>
+                    <kendo-dropdownlist [data]="sellerItems" [(ngModel)]="leadHistorySearchCriteria.sellerId"
+                      #seller="ngModel" [kendoDropDownFilter]="filterSettings" [textField]="'fullName'"
+                      [valueField]="'id'" name="seller" [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Broker</label>
+                    <kendo-dropdownlist [data]="brokerItems" [(ngModel)]="leadHistorySearchCriteria.brokerId"
+                      #seller="ngModel" [kendoDropDownFilter]="filterSettings" [textField]="'name'" [valueField]="'id'"
+                      name="seller" [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" (click)="leadhistorySearchForm.form.valid && onFilterSubmit()">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button class="btn btn-action" (click)="clearFilter()">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Search End -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="leadhistorySearchForm.form.valid && onFilterSubmit()">
+            <i class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter()">
+            <i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+<div kendoDialogContainer></div>

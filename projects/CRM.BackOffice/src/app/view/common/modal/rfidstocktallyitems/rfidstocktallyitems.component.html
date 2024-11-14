@@ -1,0 +1,169 @@
+<div class="modal addemp c-modal dialog-lg-l" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-stock"></i>StockTally List
+                </h5>
+                <button type="button" class="close" (click)="closeDetailsDialog()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="en-form f-12 mt-1">
+                    <h6 class="title"><i class="icon-addpacket"></i>Search</h6>
+                    <div class="stocktally-filter mb-2">
+                        <div class="form-data">
+                            <label>Kapan</label>
+                        </div>
+                        <div class="form-data mul-select">
+                            <kendo-multiselect name="kapan" class="customselect" [data]="listKapanItems"
+                                [(ngModel)]="filterKapan" [textField]="'name'" [valueField]="'name'"
+                                [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                                [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                                (valueChange)="onMultiSelectChange(listKapanItems, filterKapan)">
+                                <ng-template kendoComboBoxHeaderTemplate>
+                                    <div class="dropdown-header single k-widget k-header">
+                                        <span class="temp-single">Select Kapan</span>
+                                    </div>
+                                </ng-template>
+                                <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                                    <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                                    <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                                </ng-template>
+                                <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                                    <span kendoTooltip position="bottom"
+                                        [title]="utilityService.getCommaSapratedString(filterKapan, true)">
+                                        {{utilityService.getCommaSapratedString(filterKapan)}}
+                                    </span>
+                                </ng-template>
+                            </kendo-multiselect>
+                        </div>
+
+                        <div class="form-data">
+                            <input type="text" name="stoneId" autocomplete="off" id="stoneId" placeholder="StoneId"
+                                [(ngModel)]="filterStoneId" #stoneId="ngModel">
+                        </div>
+                        <div class="form-data">
+                            <input type="text" name="rfId" autocomplete="off" id="rfId" placeholder="rfId"
+                                [(ngModel)]="filterRFID" #rfId="ngModel">
+                        </div>
+
+                        <div class="form-data check-box">
+                            <div class="grid-2">
+                                <ng2-tri-state-checkbox name="filterIsHold" [(ngModel)]="filterHold"
+                                    #filterIsHold="ngModel">
+                                </ng2-tri-state-checkbox>
+                                <label class="k-checkbox-label" class="me-3">Hold</label>
+
+                                <ng2-tri-state-checkbox name="filterIsLabReturn" [(ngModel)]="filterLabReturn"
+                                    #filterIsLabReturn="ngModel">
+                                </ng2-tri-state-checkbox>
+                                <label class="k-checkbox-label" class="me-3">Lab Return</label>
+
+                                <ng2-tri-state-checkbox name="filterIsMemo" [(ngModel)]="filterMemo"
+                                    #filterIsMemo="ngModel">
+                                </ng2-tri-state-checkbox>
+                                <label class="k-checkbox-label" class="me-3">Memo</label>
+
+                                <ng2-tri-state-checkbox name="filterIsTallied" [(ngModel)]="filterTallied"
+                                    #filterIsTallied="ngModel">
+                                </ng2-tri-state-checkbox>
+                                <label class="k-checkbox-label" class="me-3">Tallied</label>
+                            </div>
+                        </div>
+                        <div class="form-data">
+                            <label>Status</label>
+                        </div>
+                        <div class="form-data mul-select">
+                            <kendo-multiselect name="status" class="customselect" [data]="listStatusItems"
+                                [(ngModel)]="filterStatus" [textField]="'name'" [valueField]="'name'"
+                                [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                                [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                                (valueChange)="onMultiSelectChange(listStatusItems, filterStatus)">
+                                <ng-template kendoComboBoxHeaderTemplate>
+                                    <div class="dropdown-header single k-widget k-header">
+                                        <span class="temp-single">Select Kapan</span>
+                                    </div>
+                                </ng-template>
+                                <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                                    <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                                    <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                                </ng-template>
+                                <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                                    <span kendoTooltip position="bottom"
+                                        [title]="utilityService.getCommaSapratedString(filterStatus, true)">
+                                        {{utilityService.getCommaSapratedString(filterStatus)}}
+                                    </span>
+                                </ng-template>
+                            </kendo-multiselect>
+                        </div>
+                        <div>
+                            <button kendoButton title="Filter" class="me-2" kendoTooltip position="bottom"
+                                (click)="filterItemsList()">
+                                <i class="icon-search p-0"></i>
+                            </button>
+
+                            <button kendoButton title="Clear" kendoTooltip position="bottom"
+                                (click)="clearItemsFilter()">
+                                <i class="icon-clear p-0"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="grid-wrap">
+                    <kendo-grid [data]="gridDetailView" [reorderable]="true" [resizable]="true" [sortable]="true"
+                        [skip]="detailSkip" [pageSize]="detailPageSize" [pageable]="true"
+                        (pageChange)="pageChangeDetail($event)" style="height: calc(100vh - 298px);" class="mb-grid">
+
+                        <kendo-grid-column [width]="40" field="stoneId" title="Stone ID">
+                        </kendo-grid-column>
+                        <kendo-grid-column [width]="40" field="kapan" title="Kapan">
+                        </kendo-grid-column>
+                        <kendo-grid-column [width]="25" field="isMemo" title="Memo">
+                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                <input type="checkbox" class="k-checkbox" id="checkbox-isMemo-{{rowIndex}}"
+                                    [checked]="dataItem.isMemo" [disabled]="true" />
+                                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                </label>
+                            </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column [width]="25" field="isLabReturn" title="LabRtn">
+                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                <input type="checkbox" class="k-checkbox" id="checkbox-isLabReturn-{{rowIndex}}"
+                                    [checked]="dataItem.isLabReturn" [disabled]="true" />
+                                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                </label>
+                            </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column [width]="25" field="isHold" title="Hold">
+                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                <input type="checkbox" class="k-checkbox" id="checkbox-isHold-{{rowIndex}}"
+                                    [checked]="dataItem.isHold" [disabled]="true" />
+                                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                </label>
+                            </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column [width]="25" field="status" title="Status">
+                        </kendo-grid-column>
+                        <kendo-grid-column [width]="50" field="rfid" title="RFID">
+                            <ng-template kendoGridCellTemplate let-dataItem="dataItem" let-rowIndex="rowIndex">
+                                <span kendoTooltip position="bottom" title="{{dataItem.rfid}}">{{dataItem.rfid}}</span>
+
+                            </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column [width]="25" field="isTally" title="Tallied">
+                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                <input type="checkbox" class="k-checkbox" id="checkbox-isTally-{{rowIndex}}"
+                                    [checked]="dataItem.isTally" [disabled]="true" />
+                                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                </label>
+                            </ng-template>
+                        </kendo-grid-column>
+                    </kendo-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

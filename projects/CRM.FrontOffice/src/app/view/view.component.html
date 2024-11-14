@@ -1,0 +1,62 @@
+<!-- Top Bar Start -->
+<app-header (toggleNotification)="toggleNotification($event)"></app-header>
+<!-- Top Bar End -->
+
+<!-- Sidebar Start -->
+<app-side-menu></app-side-menu>
+<!-- Sidebar End -->
+
+<ng-container *ngIf="notificationActionFlag">
+  <app-leadmodal [leadId]="leadId" (toggle)="closeDialogLead($event)"></app-leadmodal>
+</ng-container>
+
+<!-- #region Edit Request Customer Model-->
+<ng-container *ngIf="isEditableCustomer">
+  <app-leadcustomerrequestmodal [leadId]="leadId" [notificationId]="notificationObj.id"
+    (toggle)="isEditableCustomer=$event.isOpen">
+  </app-leadcustomerrequestmodal>
+</ng-container>
+<!-- #endregion -->
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff"
+  template="<img src='commonAssets/images/gl.gif' style='width:80px;' />" [fullScreen]="true">
+  <!-- <p style="color: white"> Loading... </p> -->
+</ngx-spinner>
+
+<!-- Page main content -->
+<router-outlet></router-outlet>
+<!-- Page main content -->
+
+<!-- Page main content -->
+<ng-container *ngIf="isCustVerification">
+  <app-customerverify [registerCustomerId]="registerCustomerId" (toggle)="isCustVerification=$event;">
+  </app-customerverify>
+</ng-container>
+<!-- Page main content -->
+
+<!-- #region Rejected Offer with Reason Model-->
+<ng-container *ngIf="isRejectedOffer">
+  <app-leadrejectedmodal [leadRejectedId]="leadRejectedId" (toggle)="closeRejectedDialog($event)">
+  </app-leadrejectedmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Release stone Lead Modal Start -->
+<ng-container *ngIf="isStoneRelease">
+  <app-leadstonereleasemodal [requestId]="leadReleaseId" (toggle)="isStoneRelease=$event"
+    [notificationId]="notificationObj.id"></app-leadstonereleasemodal>
+</ng-container>
+<!-- #endregion Release stone Lead Modal End -->
+
+<!-- #region Sales Cancel stone Lead Modal Start -->
+<ng-container *ngIf="isSalesCancel">
+  <app-leadcancelmodal (toggle)="closeLeadCancel()" [notificationId]="notificationObj.id">
+  </app-leadcancelmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region QC request Detail -->
+<ng-container *ngIf="isQcShowDetails">
+  <app-qcrequestdetailmodal (toggle)="closeQcDetailsDialog()" [qcRequestId]="qcRequestId"></app-qcrequestdetailmodal>
+</ng-container>
+<!-- #endregion -->

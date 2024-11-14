@@ -1,0 +1,141 @@
+<!-- #region Add Cart Modal Start -->
+<div class="addemp c-modal modal cart-item-grid" tabindex="-1" role="dialog" data-keyboard="false"
+    data-backdrop="static">
+    <form name="cartform" #Cart="ngForm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id=""><i class="icon-lead"></i>Cart
+                        Information</h5>
+                    <button type="button" class="close" (click)="toggleCartDialog()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+                            <div class="en-form f-12">
+                                <div class="align-items-center d-flex justify-content-between p-wrap">
+                                    <h6 class="title"><i class="icon-party"></i>Customer Information</h6>
+                                </div>
+                                <div class="e-details-n mt-2">
+                                    <ul class="info-block we-4">
+                                        <li>CompanyName : <span>{{leadCartItem.customer.companyName}}</span></li>
+                                        <li>Name : <span>{{leadCartItem.customer.name}}</span></li>
+                                        <li>Email : <span>{{leadCartItem.customer.email}}</span></li>
+                                        <li>Mobile No. : <span>{{leadCartItem.customer.mobile}}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-wrap mt-2">
+                        <kendo-tabstrip>
+                            <kendo-tabstrip-tab title="" [selected]="true">
+                                <ng-template kendoTabTitle>
+                                    <i class="icon-info" title="Details"></i>&nbsp;
+                                </ng-template>
+                                <ng-template kendoTabContent>
+                                    <div class="tab-data le-details">
+                                        <div class="en-form f-12">
+                                            <div class="i-form lab-iss-mod a-lead m-0">
+                                                <div class="ci-top-right">
+                                                    <kendo-buttongroup kendoTooltip position="bottom">
+                                                        <button type="button" kendoButton title="Copy StoneIds"
+                                                            (click)="copyToClipboard()"><i
+                                                                class="icon-copy pe-0"></i></button>
+                                                    </kendo-buttongroup>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mod-wrap mt-2">
+                                            <div class="grid-wrap">
+                                                <kendo-grid [data]="gridViewCartInventory" class="grid-ui upload-grid"
+                                                    [sortable]="true" [pageSize]="pageSize" [skip]="skip"
+                                                    [pageable]="true" [resizable]="true"
+                                                    (pageChange)="pageChange($event)">
+                                                    <ng-container *ngIf="fields && fields.length > 0">
+                                                        <ng-container *ngFor="let field of fields;let i= index">
+                                                            <ng-container *ngIf="field.isSelected">
+                                                                <kendo-grid-column [width]="field.width"
+                                                                    [field]="field.propertyName" [title]="field.title">
+
+                                                                    <ng-template kendoGridCellTemplate let-dataItem
+                                                                        let-rowIndex="rowIndex"
+                                                                        *ngIf="field.title == 'IsLabReturn'">
+                                                                        <input type="checkbox" class="k-checkbox"
+                                                                            id="checkbox-isLabReturn-{{rowIndex}}"
+                                                                            [checked]="dataItem.isLabReturn"
+                                                                            [disabled]="true" />
+                                                                        <label class="k-checkbox-label"
+                                                                            for="checkbox-{{rowIndex}}">
+                                                                        </label>
+                                                                    </ng-template>
+
+                                                                    <ng-template kendoGridCellTemplate let-dataItem
+                                                                        let-rowIndex="rowIndex"
+                                                                        *ngIf="field.title == 'Hold'">
+                                                                        <input type="checkbox" class="k-checkbox"
+                                                                            id="checkbox-{{rowIndex}}"
+                                                                            [checked]="dataItem.isHold"
+                                                                            [disabled]="true" />
+                                                                        <label class="k-checkbox-label"
+                                                                            for="checkbox-{{rowIndex}}">
+                                                                        </label>
+                                                                    </ng-template>
+
+                                                                </kendo-grid-column>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </kendo-grid>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+                            <kendo-tabstrip-tab title="">
+                                <ng-template kendoTabTitle>
+                                    <i class="icon-history" title="History"></i>&nbsp;
+                                </ng-template>
+                                <ng-template kendoTabContent>
+                                    <div class="tab-data le-history">
+                                        <img style="width: 24%;margin: auto;display: block;position: absolute;top: 0;bottom: 0;left: 0;right: 0;"
+                                            src="commonAssets/images/coming-soon.png" />
+                                    </div>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+                            <kendo-tabstrip-tab title="">
+                                <ng-template kendoTabTitle>
+                                    <i class="icon-wechat" title="Chat"></i>&nbsp;
+                                </ng-template>
+                                <ng-template kendoTabContent>
+                                    <div class="tab-data le-link">
+                                        <img style="width: 24%;margin: auto;display: block;position: absolute;top: 0;bottom: 0;left: 0;right: 0;"
+                                            src="commonAssets/images/coming-soon.png" />
+                                    </div>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+                            <kendo-tabstrip-tab title="">
+                                <ng-template kendoTabTitle>
+                                    <i class="icon-attachament" title="Attachment"></i>&nbsp;
+                                </ng-template>
+                                <ng-template kendoTabContent>
+                                    <div class="tab-data le-file">
+                                        <img style="width: 24%;margin: auto;display: block;position: absolute;top: 0;bottom: 0;left: 0;right: 0;"
+                                            src="commonAssets/images/coming-soon.png" />
+                                    </div>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+                        </kendo-tabstrip>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- #endregion Add cart Modal End -->

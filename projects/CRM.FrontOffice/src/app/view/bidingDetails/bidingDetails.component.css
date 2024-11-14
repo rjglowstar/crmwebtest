@@ -1,0 +1,42 @@
+.approve-button {
+    background-color: green !important;
+    color: white !important;
+}
+
+.reject-button {
+    background-color: #f44336 !important;
+    color: white !important;
+}
+
+.actions-btn {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.badge-Pending-bidstatus {
+    border-style: solid;
+    box-sizing: border-box;
+    display: inline-flex;
+    border-color: var(--kendo-color-primary, #1274AC);
+    color: var(--kendo-color-on-primary, #fff);
+    background-color: var(--kendo-color-primary, #1274AC);
+    padding-block: var(--kendo-spacing-1, .25rem);
+    border-radius: var(--kendo-border-radius-md, .25rem);
+    padding-inline: var(--kendo-spacing-1, .25rem);
+    font-size: var(--kendo-font-size-xs, inherit);
+    line-height: 1;
+}
+
+.badge-approve-bidstatus {
+    border-style: solid;
+    box-sizing: border-box;
+    display: inline-flex;
+    border-color: var(--kendo-color-primary, #278200);
+    color: var(--kendo-color-on-primary, #fff);
+    background-color: var(--kendo-color-primary, #278200);
+    padding-block: var(--kendo-spacing-1, .25rem);
+    border-radius: var(--kendo-border-radius-md, .25rem);
+    padding-inline: var(--kendo-spacing-1, .25rem);
+    font-size: var(--kendo-font-size-xs, inherit);
+    line-height: 1;
+}

@@ -1,0 +1,291 @@
+<title>Events</title>
+<section>
+    <div class="content_wrap">
+        <div class="d-flex">
+            <div class="e-left">
+                <div class="breadcrumb bg">
+                    <div class="breadcrumb-left">
+                        <ul>
+                            <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                            <li class="breadcrumb-item active" aria-current="page">Events</li>
+                        </ul>
+                    </div>
+                    <div class="breadcrumb-right">
+                        <kendo-buttongroup kendoTooltip position="bottom">
+                            <button kendoButton (click)="openAddEventDialog()" title="Add Event"><i
+                                    class="icon-add"></i></button>
+                            <button [disabled]="isEditModFlag" kendoButton (click)="openUpdateEventDialog()"
+                                title="Edit Event"> <i class="icon-edit"></i></button>
+                            <button [disabled]="isEditModFlag" kendoButton (click)="openDeleteDialog()"
+                                title="Delete"><i class="icon-trash"></i></button>
+                        </kendo-buttongroup>
+                    </div>
+                </div>
+                <div class="content_box">
+                    <div class="grid-wrap">
+                        <!-- Skeleton start -->
+                        <ng-container *ngIf="!gridView">
+                            <div class="k-grouping-header k-grouping-header-flex">
+                                <div class="k-indicator-container">
+                                    <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                                    </kendo-skeleton>
+                                </div>
+                            </div>
+                            <table *ngIf="fields && fields.length > 0" class="w-100 table-responsive skeleton-tbl">
+                                <ng-container *ngFor="let field of fields">
+                                    <th *ngIf="field.isSelected">
+                                        {{field.title}}
+                                    </th>
+                                </ng-container>
+                                <tr *ngFor="let field of skeletonArray">
+                                    <ng-container *ngFor="let fieldItem of fields">
+                                        <td *ngIf="fieldItem.isSelected">
+                                            <kendo-skeleton shape="text" animation="wave" [width]="80" [height]="40">
+                                            </kendo-skeleton>
+                                        </td>
+                                    </ng-container>
+                                </tr>
+                            </table>
+                        </ng-container>
+                        <!-- Skeleton end -->
+                        <!-- Grid Start-->
+                        <kendo-grid #orgGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+                            [groupable]="true" [sortable]="true" [selectable]="selectableSettings" [pageSize]="pageSize"
+                            (selectionChange)="selectedRowChange($event)" [skip]="skip" [pageable]="false"
+                            [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+                            <ng-container *ngIf="fields && fields.length > 0">
+                                <ng-container *ngFor="let field of fields">
+                                    <ng-container *ngIf="field.isSelected">
+                                        <kendo-grid-column [width]="field.width" [field]="field.propertyName"
+                                            [title]="field.title">
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.title == 'Event Start Date'">
+                                                {{ dataItem.startDate | date: 'dd/MM/yyyy' }}
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.title == 'Event End Date'">
+                                                {{ dataItem.endDate | date: 'dd/MM/yyyy' }}
+                                            </ng-template>
+                                        </kendo-grid-column>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </kendo-grid>
+                        <!-- Grid End -->
+                    </div>
+                </div>
+            </div>
+            <!-- Search start -->
+            <div class="e-right">
+                <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+                    <div class="sr">
+                        <h6>Search By Filter</h6>
+                        <form name="form" #eventsSearchForm="ngForm" novalidate>
+                            <div class="i-form">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label for="">From Date</label>
+                                        <kendo-datepicker calendarType="classic" name="toDate" #toDate="ngModel"
+                                            format="dd/MM/yyyy" [(ngModel)]="manageEventCriteria.toDate">
+                                        </kendo-datepicker>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label for=""> To Date</label>
+                                        <kendo-datepicker calendarType="classic" name="fromDate" #fromDate="ngModel"
+                                            format="dd/MM/yyyy" [(ngModel)]="manageEventCriteria.fromDate">
+                                        </kendo-datepicker>
+                                    </div>
+
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                                        <button class="btn btn-action"
+                                            (click)="eventsSearchForm.form.valid && onFilterSubmit(eventsSearchForm)">
+                                            <i class=" icon-search"></i>Search
+                                        </button>
+                                        <button class="btn btn-action" (click)="clearFilter(eventsSearchForm)">
+                                            <i class="icon-clear"></i>Clear
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Search End -->
+        </div>
+        <div class="f-btn" [ngClass]="{'active': filterFlag}">
+            <ul>
+                <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button>
+                </li>
+                <li><button (click)="eventsSearchForm.form.valid && onFilterSubmit(eventsSearchForm)"><i
+                            class="icon-search"></i></button></li>
+                <li><button (click)="clearFilter(eventsSearchForm)"><i class="icon-clear"></i></button></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+<!-- Register Modal Start -->
+<div class="modal c-modal addemp rorgan" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+    *ngIf="showEventDialog">
+    <form name="form" #manageEventForm="ngForm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">
+                        <i class="icon-news"></i>
+                        {{manageEventObj.id?"Edit":"Add"}} Event
+                    </h5>
+                    <button type="button" class="close" (click)="closeEventDialog()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-sm-12 col-xs-12 event-select">
+                            <div>
+                                <div class="form-data">
+                                    <label for="">Event Image<span class="require">*</span></label>
+                                </div>
+                                <img *ngIf="isImgselectedProfile" src="{{ imagePreviewprofile}}">
+                                <div class="c-upload" *ngIf="!isImgselectedProfile">
+                                    <label for="file-input" class="w-100">
+                                        <span><i class="icon-upload"></i></span>
+                                        <span>Select files</span>
+                                    </label>
+                                    <input #eventImage type="file" (change)="uploadFiles(manageEventForm,$event)"
+                                        accept="image/jpeg,image/png,image/jpg" id="file-input" type="file"
+                                        name="profileImage" />
+                                    <input type="hidden" name="fileHidden" />
+                                </div>
+                                <div class="msg-box" [ngStyle]="{'border-bottom-color': '#028e02' }"
+                                    *ngIf="profileImageModel">
+                                    <div class="success">File successfully attached
+                                    </div>
+                                    <span class="im-bottom"></span>
+                                    <button type="button" class="btn" (click)="clearEventThumbnil()"><i
+                                            class="icon-delete"></i></button>
+                                </div>
+                                <span *ngIf="profileImageErrorFlag" class="s-error">Profile image is
+                                    required</span>
+                            </div>
+                            <div class="mt-2">
+                                <div class="form-data">
+                                    <label for="">Event Place Logo<span class="require">*</span></label>
+                                </div>
+                                <img *ngIf="isEventLogoselected" src="{{ eventLogoimagePreview}}">
+                                <div class="c-upload" *ngIf="!isEventLogoselected">
+                                    <label for="file-input" class="w-100">
+                                        <span><i class="icon-upload"></i></span>
+                                        <span>Select files</span>
+                                    </label>
+                                    <input #eventLogoImage type="file"
+                                        (change)="uploadEventLogo(manageEventForm,$event)"
+                                        accept="image/jpeg,image/png,image/jpg" id="file-input" type="file"
+                                        name="eventLogoImage" />
+                                    <input type="hidden" name="fileHidden" />
+                                </div>
+                                <div class="msg-box" [ngStyle]="{'border-bottom-color': '#028e02' }"
+                                    *ngIf="eventLogoModel">
+                                    <div class="success">File successfully attached
+                                    </div>
+                                    <span class="im-bottom"></span>
+                                    <button type="button" class="btn" (click)="clearEventLogoThumbnil()"><i
+                                            class="icon-delete"></i></button>
+                                </div>
+                                <span *ngIf="eventLogoErrorFlag" class="s-error">Profile image is
+                                    required</span>
+                            </div>
+                        </div>
+                        <div class="col-xl-8 col-lg-8 col-sm-12 col-xs-12">
+                            <div class="form-data">
+                                <label for="">Event Name</label>
+                            </div>
+                            <div class="form-data">
+                                <input type="text" name="eventName" [(ngModel)]="manageEventObj.eventName"
+                                    #eventName="ngModel" id="">
+                            </div>
+                            <div class="form-data">
+                                <label for="">Tagline</label>
+                            </div>
+                            <div class="form-data">
+                                <input type="text" name="tagline" [(ngModel)]="manageEventObj.tagline"
+                                    #tagline="ngModel" id="">
+                            </div>
+                            <div class="form-data">
+                                <label for="">Event Venue</label>
+                            </div>
+                            <div class="form-data">
+                                <input type="text" name="venue" [(ngModel)]="manageEventObj.venue" #venue="ngModel"
+                                    id="">
+                            </div>
+                            <div class="form-data">
+                                <label for="">Booth No</label>
+                            </div>
+                            <div class="form-data">
+                                <input type="text" name="boothNo" [(ngModel)]="manageEventObj.boothNo"
+                                    #boothNo="ngModel" id="">
+                            </div>
+                            <!-- <div class="form-data">
+                                <label>Description</label>
+                            </div>
+                            <div class="form-data">
+                                <textarea cols="4" type="text" name="description" style="height:80px"
+                                    #description="ngModel" [(ngModel)]="manageEventObj.description">
+                                                    </textarea>
+                            </div> -->
+                            <div class="d-flex">
+                                <div class="me-2">
+                                    <div class="form-data">
+                                        <label>Start Date <span class="require">*</span></label>
+                                    </div>
+                                    <div class="form-data">
+                                        <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="startDate"
+                                            [(ngModel)]="manageEventObj.startDate" #startDate="ngModel" id="" required>
+                                        </kendo-datepicker>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="form-data">
+                                        <label>End Date <span class="require">*</span></label>
+                                    </div>
+                                    <div class="form-data">
+                                        <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="endDate"
+                                            [(ngModel)]="manageEventObj.endDate" #endDate="ngModel" id="" required>
+                                        </kendo-datepicker>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="multiple-gallery o-title d-flex align-items-center justify-content-between">
+                        <span class="title">Gallery Photos</span>
+                        <div class="o-edit">
+                            <button kendobutton class="k-button" (click)="file.click()">Upload
+                                Photos</button>
+                            <input #file type='file' multiple accept="image/*" (change)="uploadEventImages($event)"
+                                style="display: none;">
+                        </div>
+                    </div>
+                    <div class="gallery-pic p-2 border border-top-0">
+                        <span *ngFor='let evt of manageEventObj.images'>
+                            <i class="icon-delete" (click)="removeImage(evt)"></i>
+                            <img [src]="evt.imageString" height="100" width="100">
+                        </span>
+                    </div> -->
+
+                </div>
+                <div class="modal-footer">
+                    <button (click)="onManageEventSubmit(manageEventForm,true)"
+                        [disabled]="!manageEventForm.valid || !isImgselectedProfile || !isEventLogoselected"
+                        class="btn btn-primary"><i class="icon-save"></i>Save</button>
+                </div>
+            </div>
+        </div>
+        <div (document:keydown.esc)="closeEventDialog()"></div>
+    </form>
+</div>
+<!-- Register Modal End -->
+
+<div kendoDialogContainer></div>

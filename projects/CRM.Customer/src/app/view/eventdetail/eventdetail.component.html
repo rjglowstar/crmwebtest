@@ -1,0 +1,44 @@
+<section class="new_ui">
+    <div class="wrapper-full gridtbl_wrap eventDetail mt-0">
+
+        <!-- #region Button action panel start-->
+        <div class="button-panel sec_topbar bg_gray">
+            <div class="left-cn">
+                <a href="javascript:void(0)" (click)="redirectToParentPage()" class="goback_btn">
+                    <i class="icon-back_new"></i>
+                    Back To Event
+                </a>
+            </div>
+            <div class="right-cn text-end"></div>
+        </div>
+        <!-- #endregion -->
+
+        <div class="container pt-2">
+            <div class="row">
+                <div class="col-12 event-description my-2 my-lg-4">
+                    <h4>{{eventObj.eventName}}</h4>
+                </div>
+                <div class="col-12 eventdetail-img">
+                    <img alt="img" src="{{ eventObj.eventImage}}" />
+                </div>
+                <div class="col-12 event-description mt-4">
+                    <p>{{eventObj.description}}</p>
+                </div>
+                <div class="col-12 photo-gallery">
+                    <h4 class="position-relative mb-3 text-center">Photo Gallery</h4>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 fancy-img"
+                            *ngFor='let evt of eventObj.images let i = index'>
+                            <a [href]="evt.imageString" data-fancybox="gallery" data-width="1000" data-height="1000">
+                                <img [src]="evt.imageString" class="img-fluid" />
+                            </a>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- <ng-image-fullscreen-view [images]="imageObject" [imageIndex]="currentIndex" [show]="showFlag"
+    (close)="closeEventHandler()"></ng-image-fullscreen-view> -->

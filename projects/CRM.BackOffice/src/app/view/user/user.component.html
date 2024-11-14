@@ -1,0 +1,113 @@
+<title>User</title>
+<section class="wrap-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">User</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right pe-0">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton title="Filter" class="nf-click" (click)="openFilterDialog()"><i
+                  class="icon-filter"></i></button>
+              <button kendoButton title="Remove" [disabled]="!isSelected" class="nf-click"
+                (click)="removeSelectedUser()"><i class="icon-trash"></i></button>
+              <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                  class="icon-gridconfig"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="n-fil user-filter resUser_fil" *ngIf="isFilter">
+          <div class="n-fil-left">
+            <ul class="f-group">
+              <li style="padding-right:0 !important;">
+                <label for="">Email</label>
+                <input class="form-control" [(ngModel)]="filterObj.email" type="text" name="email" id=""
+                  (ngModelChange)="this.emailUpdate.next($event)">
+                <label for="">PhoneNo</label>
+                <input class="form-control" [(ngModel)]="filterObj.phoneNumber" type="text" name="phoneNumber" id=""
+                  (ngModelChange)="this.phoneUpdate.next($event)">
+              </li>
+            </ul>
+          </div>
+          <div class="n-fil-right">
+            <div class="f-group">
+              <div class="fil-config">
+                <button #anchorAssignto (click)="toggleAssignto()" class="k-button">
+                  {{AssignToText}}<i class="icon-right-new"></i>
+                </button>
+              </div>
+              <kendo-popup [anchor]="{ nativeElement: anchorAssignto }" (anchorViewportLeave)="showAssignto = false"
+                *ngIf="showAssignto">
+                <div class="content">
+                  <div class="drpmenu-main">
+                    <div class="drp-submenu main">
+                      <div class="drp-header">
+                        <span><i class="icon-filter"></i></span>
+                        <input type="text" name="filterOrigin" [(ngModel)]="filterOrigin" (keyup)="filterOriginList()"
+                          class="background-textbox" placeholder="Filter By keyword">
+                      </div>
+                      <ul class="drp-submenu">
+                        <li *ngFor="let item of listOriginItems"
+                          (click)="filterObj.origin = item; toggleAssignto(); filterData();">
+                          <label class="k-checkbox-label">{{item}}</label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </kendo-popup>
+            </div>
+            <li class="n-close" (click)="closeFilterDailog()"><i class="icon-delete" title="Close Filter"></i></li>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid [data]="gridView" [ngClass]="{'usergrid-ht': isFilter}" [groupable]="true" [resizable]="true"
+              [sortable]="true" [group]="groups" (groupChange)="groupChange($event)" [(selectedKeys)]="mySelection"
+              [selectable]="selectableSettings" (selectionChange)="selectedRowChange($event)"
+              [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'EmailConfirm'">
+                        <input type="checkbox" class="k-checkbox" disabled [checked]="dataItem.emailConfirmed" />
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'PhoneNoConfirm'">
+                        <input type="checkbox" class="k-checkbox" disabled [checked]="dataItem.phoneNumberConfirmed" />
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'TwoFactorEnabled'">
+                        <input type="checkbox" class="k-checkbox" disabled [checked]="dataItem.twoFactorEnabled" />
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'LockoutEnabled'">
+                        <input type="checkbox" class="k-checkbox" disabled [checked]="dataItem.lockoutEnabled" />
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'LockoutEnd'">
+                        {{dataItem.lockoutEnd | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Grid Configuration -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'User'" [gridName]="'UserGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+
+<div kendoDialogContainer></div>

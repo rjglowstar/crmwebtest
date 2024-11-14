@@ -1,0 +1,317 @@
+.diainfo_sec {
+    padding-bottom: 10%;
+}
+
+.diainfo_sec .content_wrap:not(:last-child) {
+    margin-bottom: 50px;
+}
+
+.diainfo_sec .bg_content {
+    background-color: rgba(153, 153, 153, 20%);
+    padding: 30px 30px;
+    -webkit-box-shadow: 0 0px 5px rgba(0, 0, 0, 7%);
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 7%);
+}
+
+.diainfo_sec .img_wrap {
+    width: 555px;
+    height: 375px;
+    float: left;
+    margin-bottom: 20px;
+    margin-right: 30px;
+    overflow: hidden;
+}
+
+.diainfo_sec .img_wrap img {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: center center;
+    object-position: center center;
+}
+
+.diainfo_sec .bloc_title {
+    font-size: calc(19px + (26 - 19) * ((100vw - 320px) / (1920 - 320)));
+    color: rgba(255, 255, 255, 92%);
+    text-transform: capitalize;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.diainfo_sec .bloc_title :is(svg, i, img) {
+    margin-right: 5px;
+}
+
+.diainfo_sec h3 {
+    position: relative;
+    font-size: calc(17px + (20 - 17) * ((100vw - 320px) / (1920 - 320)));
+    color: rgba(255, 255, 255, 90%);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-weight: 600;
+    counter-increment: my_counter;
+    padding-left: 30px;
+}
+
+.diainfo_sec h3:before {
+    position: absolute;
+    content: counter(my_counter, lower-alpha) ")";
+    left: 0;
+    color: rgba(255, 255, 255, 90%);
+    font-size: calc(19px + (20 - 19) * ((100vw - 320px) / (1920 - 320)));
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.diainfo_sec .bg_content p,
+.diainfo_sec .bg_content ul li {
+    font-size: calc(15px + (16 - 15) * ((100vw - 320px) / (1920 - 320)));
+    color: rgba(255, 255, 255, 85%);
+    overflow: hidden;
+    margin-bottom: 35px;
+    line-height: 1.8;
+}
+
+.diainfo_sec .bg_content p:last-child {
+    margin-bottom: 0;
+}
+
+.diainfo_sec .bg_content ul {
+    margin-left: 50px;
+}
+
+.diainfo_sec .bg_content ul li {
+    position: relative;
+    margin-bottom: 10px;
+    padding-left: 25px;
+}
+
+.diainfo_sec .bg_content ul li:before {
+    position: absolute;
+    content: "\e178b";
+    font-family: icomoon;
+    top: 3px;
+    left: 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 75%);
+}
+
+.move_btn {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    gap: 10px 25px;
+    margin-top: 10px;
+}
+
+.move_btn :is(a, a:hover) {
+    position: relative;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 80%);
+    cursor: pointer;
+    padding-left: 20px;
+}
+
+.move_btn a:before {
+    position: absolute;
+    font-family: icomoon;
+    left: 0;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: rgba(255, 255, 255, 80%);
+}
+
+.move_btn a.u:before {
+    content: "\e113b";
+}
+
+.move_btn a.d:before {
+    content: "\e114b";
+}
+
+.move_btn a:hover:is(a, a:before) {
+    color: rgba(255, 255, 255, 95%);
+}
+
+.cLogIn .diainfo_sec {
+    padding-bottom: 5% !important;
+}
+
+.cLogIn .diainfo_sec .content_wrap:not(:last-child) {
+    margin-bottom: 30px !important;
+}
+
+.cLogIn .diainfo_sec .bloc_title,
+.cLogIn .terms_sec .bloc_title {
+    margin-bottom: 20px !important;
+}
+
+.cLogIn .diainfo_sec .bloc_title,
+.cLogIn .diainfo_sec .bloc_title i{
+    font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1920 - 320))) !important;
+    color: #212529 !important;
+}
+
+.cLogIn .diainfo_sec .bloc_title :is(img) {
+    -webkit-filter: invert(1) !important;
+    filter: invert(1) !important;
+    width: 28px !important;
+    margin-right: 8px !important;
+}
+
+.cLogIn :is(.diainfo_sec h3,
+    .diainfo_sec .bg_content p,
+    .diainfo_sec .bg_content ul li) {
+    color: rgba(33, 37, 41, 0.95) !important;
+}
+
+.cLogIn :is(.diainfo_sec h3) {
+    font-size: calc(16px + (18 - 16) * ((100vw - 320px) / (1920 - 320))) !important;
+    margin-bottom: 15px !important;
+}
+
+.cLogIn :is(.diainfo_sec .bg_content p,
+    .diainfo_sec .bg_content ul li) {
+    font-size: 15px !important;
+    margin-bottom: 20px !important;
+}
+
+.cLogIn :is(.diainfo_sec .bg_content p,
+    .diainfo_sec .bg_content ul li):last-child {
+    margin-bottom: 0 !important;
+}
+
+.cLogIn .diainfo_sec h3:before {
+    color: rgba(33, 37, 41, 0.95) !important;
+    font-size: calc(16px + (18 - 16) * ((100vw - 320px) / (1920 - 320))) !important;
+}
+
+.cLogIn .diainfo_sec .bg_content ul li:before {
+    color: rgba(33, 37, 41, 0.95) !important;
+}
+
+.cLogIn .move_btn :is(a, a:hover),
+.cLogIn .move_btn a:before {
+    color: rgba(33, 37, 41, 0.95) !important;
+}
+
+@media(max-width:1200px) {
+
+    .sec_title,
+    .cLogIn .sec_title {
+        margin: 40px 0 !important;
+    }
+}
+
+@media(max-width:1024px) {
+    .cLogIn .sec_title {
+        margin: 25px 0 !important;
+    }
+
+    .cLogIn .diainfo_sec .bg_content {
+        padding: 15px !important;
+    }
+
+    .cLogIn :is(.diainfo_sec .bg_content p,
+        .diainfo_sec .bg_content ul li,
+        .cLogIn .diainfo_sec .bloc_title) {
+        margin-bottom: 15px !important;
+    }
+
+    .cLogIn .diainfo_sec .content_wrap:not(:last-child) {
+        margin-bottom: 40px !important;
+    }
+
+    .cLogIn .diainfo_sec .bg_content ul {
+        margin-left: 30px !important;
+    }
+}
+
+@media(max-width:991px) {
+
+    .sec_title,
+    .cLogIn .sec_title {
+        margin: 30px 0 !important;
+    }
+}
+
+@media(max-width:767px) {
+
+    .sec_title,
+    .cLogIn .sec_title {
+        margin: 25px 0 !important;
+    }
+
+    .diainfo_sec .bg_content {
+        padding: 25px !important;
+    }
+
+    .diainfo_sec .bloc_title {
+        margin-bottom: 20px !important;
+    }
+
+    .diainfo_sec .bg_content p,
+    .diainfo_sec .bg_content ul li {
+        margin-bottom: 20px !important;
+    }
+
+    .diainfo_sec .bloc_title :is(svg, i, img),
+    .cLogIn .diainfo_sec .bloc_title :is(img) {
+        width: 25px !important;
+    }
+
+    .cLogIn :is(.diainfo_sec h3) {
+        padding-left: 25px !important;
+    }
+}
+
+@media(max-width:575px) {
+    .sec_title {
+        margin: 20px 0 !important;
+    }
+
+    .cLogIn .sec_title {
+        margin: 15px 0 !important;
+    }
+
+    .diainfo_sec .bg_content {
+        padding: 15px !important;
+    }
+
+    .diainfo_sec h3 {
+        margin-bottom: 15px !important;
+    }
+
+    .diainfo_sec .bg_content p:not(:last-child),
+    .diainfo_sec .bg_content ul li,
+    .cLogIn :is(.diainfo_sec .bg_content p, .diainfo_sec .bg_content ul li) {
+        margin-bottom: 15px !important;
+    }
+
+    .diainfo_sec .content_wrap:not(:last-child) {
+        margin-bottom: 40px !important;
+    }
+
+    .diainfo_sec .bg_content ul {
+        margin-left: 0 !important;
+    }
+
+    .cLogIn :is(.diainfo_sec .bg_content p,
+        .diainfo_sec .bg_content ul li) {
+        font-size: 14px !important;
+        line-height: 1.6 !important;
+    }
+
+    .cLogIn .diainfo_sec .bloc_title :is(img) {
+        width: 20px !important;
+    }
+}

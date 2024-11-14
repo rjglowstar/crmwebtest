@@ -1,0 +1,38 @@
+.la-mas.c-modal .form-data textarea {
+    height: 30px;
+}
+
+.lab-list {
+    margin: 10px 0;
+}
+
+.lab-list ul {
+    padding: 0 10px;
+}
+
+.lab-list ul {
+    padding: 0 5px 0 25px !important;
+}
+
+.lab-list li {
+    font-size: 13px;
+    list-style: disc;
+    padding: 0 5px;
+}
+
+.lab-list a {
+    float: right;
+    padding-right: 5px;
+}
+
+.lab-list li i {
+    opacity: 0.5;
+}
+
+.lab-list li:hover {
+    background-color: #e3e3e3;
+}
+
+.data-list li:hover i {
+    opacity: 1;
+}

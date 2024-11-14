@@ -1,0 +1,1658 @@
+<title>Sales Sheet</title>
+<section class="sales-sheet-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <!-- #region Header -->
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Sales Sheet</li>
+            </ul>
+          </div>
+        </div>
+        <div class="summarybar bg">
+          <div class="summary-left">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isAllSelected || mySelection.length > 0">
+              <button kendoButton title="Select All Stone(s)" class="me-1 pt-0 pb-0" style="line-height: 1.8;"
+                *ngIf="isAllSelected" (click)="selectAllData('checked', true)">
+                Select All
+              </button>
+              <button kendoButton title="DeSelect Stone(s)" class="me-1 pt-0 pb-0" style="line-height: 1.8;"
+                *ngIf="mySelection.length > 0" (click)="selectAllData('uncheckedAll', true)">
+                DeSelect All
+              </button>
+            </kendo-buttongroup>
+            <ul>
+              <li>Selected Stone(s) : <span>{{mySelection.length == this.salesSheetSummary.totalPcs &&
+                  mySelection.length != 0 ?
+                  salesSheetSummary.totalPcs.toFixed(2) : selectedCount.toFixed(2)}}</span></li>
+              <li>Selected Weight(s) : <span>{{mySelection.length == this.salesSheetSummary.totalPcs &&
+                  mySelection.length != 0 ?
+                  salesSheetSummary.totalWeight.toFixed(2) : selectedWeight.toFixed(2)}}</span></li>
+              <li>Selected Value(s) : <span>{{mySelection.length == this.salesSheetSummary.totalPcs &&
+                  mySelection.length != 0 ?
+                  salesSheetSummary.totalAmt.toFixed(2) : selectedValue.toFixed(2)}}</span></li>
+            </ul>
+          </div>
+          <div class="summary-right pe-0">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton title="Search" (click)="openSearchDialog()">
+                <i class="icon-search"></i>
+              </button>
+              <button kendoButton #anchorSummary title="Summry" (click)="openSummary()">
+                <i class="icon-summary"></i>
+              </button>
+              <button kendoButton #anchorExcel (click)="onExcelToggle()" title="Export Excel"><i
+                  class="icon-excelnew "></i>
+              </button>
+              <button kendoButton #anchorCopy (click)="onCopyToggle()" title="Copy To Clipboard"><i
+                  class="icon-copy"></i>
+              </button>
+              <button kendoButton title="Grid Configuration" (click)="openGridConfigDialog()">
+                <i class="icon-gridconfig"></i>
+              </button>
+            </kendo-buttongroup>
+            <kendo-popup [anchor]="$any(anchorExcel)" #popupExcel (anchorViewportLeave)="showExcelOption = false"
+              *ngIf="showExcelOption">
+              <div class="content p-2 pb-0">
+                <div class="mb-2">
+                  <input type="radio" name="excelOption" value="searched" #searched [(ngModel)]="excelOption"
+                    kendoRadioButton />
+                  <label class="k-label" class="ms-2" [for]="searched">Searched Stone</label>
+                </div>
+                <div class="mb-2">
+                  <input type="radio" name="excelOption" value="selected" #selected [(ngModel)]="excelOption"
+                    kendoRadioButton />
+                  <label class="k-label" class="ms-2" [for]="selected">Selected Stone</label>
+                </div>
+                <div class="col-md-12">
+                  <div class="text-center px-1 pb-2">
+                    <button class="btn btn-primary w-100" [disabled]="excelOption == null" (click)="exportToExcel()">
+                      <i class="icon-excelnew"></i> Export to Excel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </kendo-popup>
+            <kendo-popup [anchor]="$any(anchorCopy)" #popupCopy (anchorViewportLeave)="showCopyOption = false"
+              *ngIf="showCopyOption">
+              <div class="content p-2 pb-0">
+                <div class="mb-2">
+                  <input type="radio" name="copyOption" value="searched" #searched [(ngModel)]="copyOption"
+                    kendoRadioButton />
+                  <label class="k-label" class="ms-2" [for]="searched">Searched Stone</label>
+                </div>
+                <div class="mb-2">
+                  <input type="radio" name="copyOption" value="selected" #selected [(ngModel)]="copyOption"
+                    kendoRadioButton />
+                  <label class="k-label" class="ms-2" [for]="selected">Selected Stone</label>
+                </div>
+                <div class="col-md-12">
+                  <div class="text-center px-1 pb-2">
+                    <button class="btn btn-primary w-100" [disabled]="copyOption == null" (click)="copyToClipboard()">
+                      <i class="icon-copy"></i> Copy StoneId(s)
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </kendo-popup>
+          </div>
+        </div>
+        <!-- #endregion -->
+        <!-- #region Grid -->
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid #invGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [sort]="sort" (sortChange)="sortChange($event)" [group]="groups"
+              (groupChange)="groupChange($event)" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+              (selectionChange)="selectedRowChange($event)" (pageChange)="pageChange($event)"
+              class="grid-ui upload-grid" [selectable]="selectableSettings" [(selectedKeys)]="mySelection"
+              [kendoGridSelectBy]="'stoneId'">
+
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields;">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title"
+                      class="{{field.title=='StoneId' ? 'of-initial' : ''}}">
+                      <ng-template *ngIf="isShowCheckBoxAll && field.title == 'Checkbox'" kendoGridHeaderTemplate>
+                        <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox"
+                          (selectAllChange)="selectAllData($event, false)" />
+                        <label class="k-checkbox-label" for="headerCheckbox"></label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.title == 'Checkbox'">
+                        <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                          id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Media'">
+                        <span class="gr-icon"
+                          (click)="copyDiamondDetailLink(dataItem.stoneId);$event.stopPropagation()">
+                          <i class="icon-share" kendoTooltip position="top" title="Share"></i>
+                        </span>
+                        <span
+                          *ngIf="dataItem.media.isHtmlVideo || dataItem.media.isPrimaryImage || dataItem.media.isCertificate">
+                          <span class="gr-icon" *ngIf="dataItem.media.isHtmlVideo"
+                            (click)="openMediaDialog('360 Vision View', dataItem.stoneId, 'iframe')">
+                            <i class="icon-diamond" kendoTooltip position="top" title="360 Vision"></i>
+                          </span>
+                          <span class="gr-icon" *ngIf="dataItem.media.isPrimaryImage"
+                            (click)="openMediaDialog('Image View', dataItem.stoneId, 'img')">
+                            <i class="icon-camera" kendoTooltip position="top" title="Image"></i>
+                          </span>
+                          <span class="gr-icon" *ngIf="dataItem.media.isCertificate"
+                            (click)="openMediaDialog('Certificate View', dataItem.certificateNo, 'cert')">
+                            <i class="icon-cerificate" kendoTooltip position="top" title="Certificate"></i>
+                          </span>
+                          <span class="gr-icon" *ngIf="dataItem.media.isDownloadableVideo"
+                            (click)="openMediaDialog('Download Video', dataItem.stoneId, 'download')">
+                            <i class="icon-videodownload" kendoTooltip position="top" title="Download Video"></i>
+                          </span>
+                        </span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'MarketSheetDays'">
+                        {{utilityService.getDayDifference(dataItem.marketSheetDate,dataItem?.orderDate)}}
+                      </ng-template>
+                      <!-- <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'availableDays'">
+                          {{utilityService.calculateAvailableDateDiff(dataItem.marketSheetDate, dataItem.holdDays, dataItem.isHold == true ? dataItem.holdDate : null)}}
+                        </ng-template> -->
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'orderDate'">
+                        {{dataItem.orderDate != null ? (dataItem.orderDate | date: 'dd/MM/yyyy') : ''}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'soldDate'">
+                        {{dataItem.soldDate != null ? (dataItem.soldDate | date: 'dd/MM/yyyy') : ''}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='StoneId'"
+                        let-rowIndex="rowIndex">
+                        <span class="sales-sheet-cell">
+                          <i>{{dataItem.stoneId}}</i>
+                          <div class="arrow-tooltip {{(rowIndex - skip) > 14 ? 'top-tooltip' : ''}}">
+                            <table>
+                              <tr style="width:100px">
+                                <td><strong>Stones</strong></td>
+                                <td>{{dataItem.stoneCount}}</td>
+                              </tr>
+                              <tr>
+                                <td><strong>Total</strong></td>
+                                <td>{{dataItem.totalAmount.toFixed(2)}}</td>
+                              </tr>
+                              <tr>
+                                <td><strong>Vow Disc. Amt</strong></td>
+                                <td>{{dataItem.totalVOWDiscAmount > 0 ? dataItem.totalVOWDiscAmount.toFixed(2) : '0'}}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><strong>Payable Amt</strong></td>
+                                <td>{{dataItem.totalPayableAmount.toFixed(2)}}</td>
+                              </tr>
+                            </table>
+                          </div>
+                        </span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'M. Disc'">
+                        <div class="whole-cell"
+                          [ngStyle]="{'background-color': getColorMarkRGB(dataItem.discColorMark, true)}">
+                          <span>{{dataItem.price.discount}}</span>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Diameter'">
+                        <span>{{dataItem.measurement.length}} - {{dataItem.measurement.width}} x
+                          {{dataItem.measurement.height}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.title == 'Order'">
+                        <input type="checkbox" class="k-checkbox" id="checkbox-isDOrder-{{rowIndex}}"
+                          [checked]="dataItem.isDOrder" [disabled]="true" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+              <ng-template kendoGridDetailTemplate let-dataItem>
+                <app-searchdetail [invItemsSearchResult]="dataItem"></app-searchdetail>
+                <ng-template kendoGridNoRecordsTemplate>
+                  <span style="text-align: center;display: block">No Records Found</span>
+                </ng-template>
+              </ng-template>
+            </kendo-grid>
+          </div>
+        </div>
+        <!-- #endregion -->
+      </div>
+      <!-- #region summry -->
+      <div class="summary-panel" *ngIf="isSummary">
+        <div class="marketsheet-status ps-2 pe-2">
+          <div class="sr" *ngIf="!summaryLoading">
+            <h6>Summary <i class="icon-delete float-end mt-1 me-1" (click)="closeSummary()"></i>
+            </h6>
+            <div class="summary-panel-grid">
+              <div class="grid-1">
+                <button type="button" class="btn t-weight">{{salesSheetSummary.totalPcs}}</button>
+                <span>Total Count</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn t-weight">{{salesSheetSummary.totalWeight}}</button>
+                <span>Total Weight</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn t-weight">{{salesSheetSummary.avgDiscount}}</button>
+                <span>F.Avg Disc</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn avg-ct">{{salesSheetSummary.totalDcaret}}</button>
+                <span>F.Avg$/Ct.</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn avg-dis">{{salesSheetSummary.totalAmt}}</button>
+                <span>F.Total Amount</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn t-weight">{{salesSheetSummary.avgBaseDiscount}}</button>
+                <span>B.Avg Disc</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn t-weight">{{salesSheetSummary.avgBasePerCart}}</button>
+                <span>B.Avg$/Ct.</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn t-weight">{{salesSheetSummary.totalBaseNetAmount}}</button>
+                <span>B.Net Amount</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn avg-ct">{{salesSheetSummary.avgDay}}</button>
+                <span>Avg Days</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn avg-ct">{{salesSheetSummary.avgAvailableDay}}</button>
+                <span>Avg Available Day</span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="summaryLoading">
+            <img src='commonAssets/images/loader.gif' class="w-100" />
+          </div>
+        </div>
+      </div>
+      <!-- #endregion summry -->
+    </div>
+  </div>
+</section>
+
+<!-- #region Search Filter -->
+<div class="modal c-modal dialog-lg rorgan addemp" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isSearchFilter">
+  <form name="form" #filterForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="main-title">
+          <h5>Search Filter</h5>
+          <button type="button" class="close" (click)="closeSearchDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body search-filter">
+          <!-- Input -->
+          <div class="input-search">
+            <div class="form-data">
+              <label>Stone Id</label>
+            </div>
+            <div class="form-data">
+              <input type="text" class="input-sm form-control text-start" name="stoneId" [(ngModel)]="stoneId"
+                autocomplete="off" />
+            </div>
+            <div class="form-data">
+              <label>Certi.No.</label>
+            </div>
+            <div class="form-data">
+              <input type="text" class="input-sm form-control text-start" name="certificateNo"
+                [(ngModel)]="certificateNo" autocomplete="off" />
+            </div>
+            <div class="form-data">
+              <label>Seller</label>
+            </div>
+            <div class="form-data mul-select">
+              <kendo-multiselect name="seller" class="customselect" [data]="listSellerItems"
+                [(ngModel)]="inventorySearchCriteriaObj.empId" [textField]="'name'" [valueField]="'value'"
+                [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                (valueChange)="utilityService.onMultiSelectValueChange(listSellerItems, inventorySearchCriteriaObj.empId)">
+                <ng-template kendoComboBoxHeaderTemplate>
+                  <div class="dropdown-header single k-widget k-header">
+                    <span class="temp-single">Select Seller</span>
+                  </div>
+                </ng-template>
+                <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                  <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                  <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                </ng-template>
+                <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                  <span kendoTooltip position="bottom"
+                    [title]="utilityService.getCommaSapratedStringFromData(inventorySearchCriteriaObj.empId, listSellerItems, true)">
+                    {{utilityService.getCommaSapratedStringFromData(inventorySearchCriteriaObj.empId,
+                    listSellerItems)}}
+                  </span>
+                </ng-template>
+              </kendo-multiselect>
+            </div>
+            <div class="form-data">
+              <label>Kapan</label>
+            </div>
+            <div class="form-data mul-select">
+              <kendo-multiselect name="kapan" class="customselect" [data]="listKapanItems"
+                [(ngModel)]="inventorySearchCriteriaObj.kapan" [textField]="'name'" [valueField]="'name'"
+                [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                (valueChange)="utilityService.onMultiSelectChange(listKapanItems, inventorySearchCriteriaObj.kapan)">
+                <ng-template kendoComboBoxHeaderTemplate>
+                  <div class="dropdown-header single k-widget k-header">
+                    <span class="temp-single">Select Kapan</span>
+                  </div>
+                </ng-template>
+                <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                  <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                  <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                </ng-template>
+                <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                  <span kendoTooltip position="bottom"
+                    [title]="utilityService.getCommaSapratedString(inventorySearchCriteriaObj.kapan, true)">
+                    {{utilityService.getCommaSapratedString(inventorySearchCriteriaObj.kapan)}}
+                  </span>
+                </ng-template>
+              </kendo-multiselect>
+            </div>
+            <div class="form-data">
+              <label>IGrade</label>
+            </div>
+            <div class="form-data mul-select">
+              <kendo-multiselect name="iGrade" class="customselect" [data]="listIGradeItems"
+                [(ngModel)]="inventorySearchCriteriaObj.iGrade" [textField]="'name'" [valueField]="'name'"
+                [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                (valueChange)="utilityService.onMultiSelectChange(listIGradeItems, inventorySearchCriteriaObj.iGrade)">
+                <ng-template kendoComboBoxHeaderTemplate>
+                  <div class="dropdown-header single k-widget k-header">
+                    <span class="temp-single">Select IGrade</span>
+                  </div>
+                </ng-template>
+                <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                  <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                  <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                </ng-template>
+                <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                  <span kendoTooltip position="bottom"
+                    [title]="utilityService.getCommaSapratedString(inventorySearchCriteriaObj.iGrade, true)">
+                    {{utilityService.getCommaSapratedString(inventorySearchCriteriaObj.iGrade)}}
+                  </span>
+                </ng-template>
+              </kendo-multiselect>
+            </div>
+            <div class="form-data">
+              <label>MGrade</label>
+            </div>
+            <div class="form-data mul-select">
+              <kendo-multiselect name="mGrade" class="customselect" [data]="listMGradeItems"
+                [(ngModel)]="inventorySearchCriteriaObj.mGrade" [textField]="'name'" [valueField]="'name'"
+                [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                (valueChange)="utilityService.onMultiSelectChange(listMGradeItems, inventorySearchCriteriaObj.mGrade)">
+                <ng-template kendoComboBoxHeaderTemplate>
+                  <div class="dropdown-header single k-widget k-header">
+                    <span class="temp-single">Select MGrade</span>
+                  </div>
+                </ng-template>
+                <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                  <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                  <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                </ng-template>
+                <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                  <span kendoTooltip position="bottom"
+                    [title]="utilityService.getCommaSapratedString(inventorySearchCriteriaObj.mGrade, true)">
+                    {{utilityService.getCommaSapratedString(inventorySearchCriteriaObj.mGrade)}}
+                  </span>
+                </ng-template>
+              </kendo-multiselect>
+            </div>
+            <div class="form-data">
+              <label>Location</label>
+            </div>
+            <div class="form-data mul-select">
+              <kendo-multiselect name="location" class="customselect" [data]="listLocation"
+                [(ngModel)]="inventorySearchCriteriaObj.location" [textField]="'name'" [valueField]="'name'"
+                [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                (valueChange)="utilityService.onMultiSelectChange(listLocation, inventorySearchCriteriaObj.location)">
+                <ng-template kendoComboBoxHeaderTemplate>
+                  <div class="dropdown-header single k-widget k-header">
+                    <span class="temp-single">Select Location</span>
+                  </div>
+                </ng-template>
+                <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                  <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                  <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                </ng-template>
+                <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                  <span kendoTooltip position="bottom"
+                    [title]="utilityService.getCommaSapratedString(inventorySearchCriteriaObj.location, true)">
+                    {{utilityService.getCommaSapratedString(inventorySearchCriteriaObj.location)}}
+                  </span>
+                </ng-template>
+              </kendo-multiselect>
+            </div>
+            <div class="form-data">
+              <label>Type A</label>
+            </div>
+            <div class="form-data mul-select">
+              <kendo-multiselect name="typeA" class="customselect" [data]="listTypeA"
+                [(ngModel)]="inventorySearchCriteriaObj.typeA" [textField]="'name'" [valueField]="'name'"
+                [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                (valueChange)="utilityService.onMultiSelectChange(listTypeA, inventorySearchCriteriaObj.typeA)">
+                <ng-template kendoComboBoxHeaderTemplate>
+                  <div class="dropdown-header single k-widget k-header">
+                    <span class="temp-single">Select TypeA</span>
+                  </div>
+                </ng-template>
+                <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                  <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                  <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                </ng-template>
+                <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                  <span kendoTooltip position="bottom"
+                    [title]="utilityService.getCommaSapratedString(inventorySearchCriteriaObj.typeA, true)">
+                    {{utilityService.getCommaSapratedString(inventorySearchCriteriaObj.typeA)}}
+                  </span>
+                </ng-template>
+              </kendo-multiselect>
+            </div>
+            <div class="form-data">
+              <label>From - To</label>
+            </div>
+            <kendo-daterange class="d-flex">
+              <div class="form-data me-2">
+                <kendo-dateinput kendoDateRangeStartInput [(value)]="inventorySearchCriteriaObj.fromDate!"
+                  (valueChange)="inventorySearchCriteriaObj.fromDate = $event">
+                </kendo-dateinput>
+              </div>
+              <div class="form-data">
+                <kendo-dateinput kendoDateRangeEndInput [(value)]="inventorySearchCriteriaObj.toDate!"
+                  (valueChange)="popup.toggle();inventorySearchCriteriaObj.toDate = $event">
+                </kendo-dateinput>
+              </div>
+              <kendo-daterange-popup [animate]="false" #popup adaptiveMode="auto"></kendo-daterange-popup>
+            </kendo-daterange>
+            <div class="form-data">
+              <label>Color Mark</label>
+            </div>
+            <div class="form-data mul-select">
+              <kendo-multiselect name="discColorMark" class="customselect" [data]="listColorMark"
+                [(ngModel)]="inventorySearchCriteriaObj.discColorMark" [textField]="'name'" [valueField]="'name'"
+                [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                (valueChange)="utilityService.onMultiSelectChange(listColorMark, inventorySearchCriteriaObj.discColorMark)">
+                <ng-template kendoComboBoxHeaderTemplate>
+                  <div class="dropdown-header single k-widget k-header">
+                    <span class="temp-single">Select Color Mark</span>
+                  </div>
+                </ng-template>
+                <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                  <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                  <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                </ng-template>
+                <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                  <span kendoTooltip position="bottom"
+                    [title]="utilityService.getCommaSapratedString(inventorySearchCriteriaObj.discColorMark, true)">
+                    {{utilityService.getCommaSapratedString(inventorySearchCriteriaObj.discColorMark)}}
+                  </span>
+                </ng-template>
+              </kendo-multiselect>
+            </div>
+          </div>
+
+          <!-- Shape -->
+          <div class="search-ul mt-2">
+            <div class="grid-1 d-flex align-items-center">
+              <label class="col-form-label"><strong>Shape</strong></label>
+            </div>
+            <div class="grid-1 d-flex flex-wrap" style="gap: 8px;">
+              <label class="shape-txt p-0 d-flex justify-content-center align-items-center" for="all"
+                [ngClass]="{'select': inventorySearchCriteriaObj.shape.length === 0 }"
+                (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.shape, 'All')">
+                <span>All</span>
+              </label>
+              <label *ngFor="let item of allTheShapes" class="shape-txt {{item.displayName.toUpperCase()}}"
+                for="{{item.name.toUpperCase()}}"
+                [ngClass]="{'select': inventorySearchCriteriaObj.shape.indexOf(item.name)>-1 }"
+                (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.shape, item.name)">
+                {{item.name}}
+              </label>
+            </div>
+          </div>
+
+          <!-- Weight -->
+          <div class="search-ul mt-2">
+            <div class="grid-1 d-flex align-items-center">
+              <label class="col-form-label"><strong>Size</strong></label>
+            </div>
+            <div class="grid-1 d-flex justify-content-center">
+              <input class="me-1 input-sm form-control" placeholder="Min Size" [(ngModel)]="firstCaratFrom"
+                PosDecimal="true" name="minSize1">
+              <input type="text" class="me-2 input-sm form-control" placeholder="Max Size" [(ngModel)]="firstCaratTo"
+                PosDecimal="true" name="maxSize1">
+              <input class="me-1 input-sm form-control" placeholder="Min Size" [(ngModel)]="secondCaratFrom"
+                PosDecimal="true" name="minSize2">
+              <input type="text" class="me-2 input-sm form-control" placeholder="Max Size" [(ngModel)]="secondCaratTo"
+                PosDecimal="true" name="maxSize2">
+              <input class="me-1 input-sm form-control" placeholder="Min Size" [(ngModel)]="thirdCaratFrom"
+                PosDecimal="true" name="minSize3">
+              <input type="text" class="me-2 input-sm form-control" placeholder="Max Size" [(ngModel)]="thirdCaratTo"
+                PosDecimal="true" name="maxSize3">
+              <input class="me-1 input-sm form-control" placeholder="Min Size" [(ngModel)]="fourthCaratFrom"
+                PosDecimal="true" name="minSize4">
+              <input type="text" class="me-2 input-sm form-control" placeholder="Max Size" [(ngModel)]="fourthCaratTo"
+                PosDecimal="true" name="maxSize4">
+            </div>
+          </div>
+
+          <div class="inv-cps-grid mt-2">
+            <div class="grid-1">
+              <!-- Color -->
+              <div class="search-ul mt-2">
+                <div class="grid-1 d-flex align-items-center">
+                  <label class="col-form-label"><strong>Color</strong></label>
+                </div>
+                <div class="grid-1 d-flex">
+                  <button kendoButton class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.color.length === 0 }"
+                    (click)="utilityService.addRemoveStringInArrayFilterColor(inventorySearchCriteriaObj.color, 'All')">
+                    <span>All</span>
+                  </button>
+                  <button kendoButton *ngFor="let item of allColors" class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.color.indexOf(item.name)>-1 }"
+                    (click)="utilityService.addRemoveStringInArrayFilterColor(inventorySearchCriteriaObj.color, item.name)">
+                    {{item.name}}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Clarity -->
+              <div class="search-ul mt-2">
+                <div class="grid-1 d-flex align-items-center">
+                  <label class="col-form-label"><strong>Clarity</strong></label>
+                </div>
+                <div class="grid-1 d-flex">
+                  <button kendoButton class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.clarity.length === 0 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.clarity, 'All')">
+                    <span>All</span>
+                  </button>
+                  <button kendoButton *ngFor="let item of allClarities" class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.clarity.indexOf(item.name)>-1 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.clarity, item.name)">
+                    {{item.name}}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Flour -->
+              <div class="search-ul mt-2">
+                <div class="grid-1 d-flex align-items-center">
+                  <label class="col-form-label"><strong>Flour</strong></label>
+                </div>
+                <div class="grid-1 d-flex">
+                  <button kendoButton class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.flour.length === 0 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.flour, 'All')">
+                    <span>All</span>
+                  </button>
+                  <button kendoButton *ngFor="let item of allTheFluorescences" class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.flour.indexOf(item.name)>-1 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.flour, item.name)">
+                    {{item.name}}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Lab -->
+              <div class="search-ul mt-2">
+                <div class="grid-1 d-flex align-items-center">
+                  <label class="col-form-label"><strong>Lab</strong></label>
+                </div>
+                <div class="grid-1 d-flex">
+                  <button kendoButton class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.lab.length === 0 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.lab, 'All')">
+                    <span>All</span>
+                  </button>
+                  <button kendoButton *ngFor="let item of allTheLab" class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.lab.indexOf(item.name)>-1 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.lab, item.name)">
+                    {{item.name}}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="grid-1">
+              <!-- CPS -->
+              <div class="search-ul mt-2">
+                <div class="grid-1 d-flex align-items-center">
+                  <label class="col-form-label"><strong>CPS</strong></label>
+                </div>
+                <div class="grid-1 d-flex">
+                  <button kendoButton class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.cps.length === 0 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.cps, 'All');">
+                    <span>All</span>
+                  </button>
+                  <button kendoButton *ngFor="let item of allTheCut" class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.cps.indexOf(item.name)>-1 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.cps, item.name);">
+                    {{item.name}}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Cut -->
+              <div class="search-ul mt-2">
+                <div class="grid-1 d-flex align-items-center">
+                  <label class="col-form-label"><strong>Cut</strong></label>
+                </div>
+                <div class="grid-1 d-flex">
+                  <button kendoButton class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.cut.length === 0 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.cut, 'All');">
+                    <span>All</span>
+                  </button>
+                  <button kendoButton *ngFor="let item of allTheCPS" class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.cut.indexOf(item.name)>-1 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.cut, item.name);">
+                    {{item.name}}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Polish -->
+              <div class="search-ul mt-2">
+                <div class="grid-1 d-flex align-items-center">
+                  <label class="col-form-label"><strong>Polish</strong></label>
+                </div>
+                <div class="grid-1 d-flex">
+                  <button kendoButton class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.polish.length === 0 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.polish, 'All');">
+                    <span>All</span>
+                  </button>
+                  <button kendoButton *ngFor="let item of allTheCPS" class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.polish.indexOf(item.name)>-1 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.polish, item.name);">
+                    {{item.name}}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Symmetry -->
+              <div class="search-ul mt-2">
+                <div class="grid-1 d-flex align-items-center">
+                  <label class="col-form-label"><strong>Symm</strong></label>
+                </div>
+                <div class="grid-1 d-flex">
+                  <button kendoButton class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.symm.length === 0 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.symm, 'All');">
+                    <span>All</span>
+                  </button>
+                  <button kendoButton *ngFor="let item of allTheCPS" class="pkg-btn"
+                    [ngClass]="{'select': inventorySearchCriteriaObj.symm.indexOf(item.name)>-1 }"
+                    (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.symm, item.name);">
+                    {{item.name}}
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Stock Filter -->
+          <div class="stock-filter">
+            <h6 class="title">Stock Filter</h6>
+            <div class="stock-search-grid">
+              <div class="form-data">
+                <label>Supplier</label>
+              </div>
+              <div class="form-data mul-select">
+                <kendo-multiselect name="supplier" class="customselect" [data]="listSupplierDNormItems"
+                  [(ngModel)]="inventorySearchCriteriaObj.supplierIds" [textField]="'name'" [valueField]="'value'"
+                  [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                  [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                  (valueChange)="utilityService.onMultiSelectValueChange(listSupplierDNormItems, inventorySearchCriteriaObj.supplierIds)">
+                  <ng-template kendoComboBoxHeaderTemplate>
+                    <div class="dropdown-header single k-widget k-header">
+                      <span class="temp-single">Select Suppliers</span>
+                    </div>
+                  </ng-template>
+                  <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                    <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                    <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                  </ng-template>
+                  <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                    <span kendoTooltip position="bottom"
+                      [title]="utilityService.getCommaSapratedStringFromData(inventorySearchCriteriaObj.supplierIds, listSupplierDNormItems, true)">
+                      {{utilityService.getCommaSapratedStringFromData(inventorySearchCriteriaObj.supplierIds,
+                      listSupplierDNormItems)}}
+                    </span>
+                  </ng-template>
+                </kendo-multiselect>
+              </div>
+              <div class="form-data">
+                <label>Party</label>
+              </div>
+              <div class="form-data mul-select">
+                <kendo-multiselect name="party" class="customselect" [data]="listCustomer"
+                  [(ngModel)]="inventorySearchCriteriaObj.partyIds" [textField]="'name'" [valueField]="'value'"
+                  [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                  [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                  (valueChange)="utilityService.onMultiSelectValueChange(listCustomer, inventorySearchCriteriaObj.partyIds)">
+                  <ng-template kendoComboBoxHeaderTemplate>
+                    <div class="dropdown-header single k-widget k-header">
+                      <span class="temp-single">Select Party</span>
+                    </div>
+                  </ng-template>
+                  <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                    <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                    <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                  </ng-template>
+                  <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                    <span kendoTooltip position="bottom"
+                      [title]="utilityService.getCommaSapratedStringFromData(inventorySearchCriteriaObj.partyIds, listCustomer, true)">
+                      {{utilityService.getCommaSapratedStringFromData(inventorySearchCriteriaObj.partyIds,
+                      listCustomer)}}
+                    </span>
+                  </ng-template>
+                </kendo-multiselect>
+              </div>
+              <div class="form-data">
+              </div>
+              <div class="form-data check-box">
+                <div class="grid-2 d-flex align-items-center">
+                  <ng2-tri-state-checkbox name="filterisDOrder" [(ngModel)]="inventorySearchCriteriaObj.isDOrder"
+                    #filterisDOrder="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label for="k-checkbox-label" class="me-3">Order</label>
+                  <ng2-tri-state-checkbox name="filterisHold" [(ngModel)]="inventorySearchCriteriaObj.isHold"
+                    #filterisHold="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label class="k-checkbox-label" class="me-3">OnHold</label>
+                  <ng2-tri-state-checkbox name="filterisRapnetHold"
+                    [(ngModel)]="inventorySearchCriteriaObj.isRapnetHold" #filterisRapnetHold="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label class="k-checkbox-label" class="me-3">Rapnet Hold</label>
+                  <ng2-tri-state-checkbox name="filterisMemo" [(ngModel)]="inventorySearchCriteriaObj.isMemo"
+                    #filterisMemo="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label for="k-checkbox-label" class="me-3">On Memo</label>
+                  <ng2-tri-state-checkbox name="filterisFancy" [(ngModel)]="inventorySearchCriteriaObj.isFancy"
+                    #filterisFancy="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label for="k-checkbox-label" class="me-3">Is Fancy</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <kendo-panelbar class="body-panelbar custompanelbar mt-3">
+            <kendo-panelbar-item [title]="'Advance Search'">
+              <ng-template kendoPanelBarContent>
+                <div class="panel-item">
+                  <div class="adv-filter">
+
+                    <!-- Price and Comments -->
+                    <h6 class="title">Price and Comments</h6>
+                    <div class="pc-grid">
+                      <div class="form-data" *ngIf="inclusionConfig.ktoS && listKToS.length > 0">
+                        <label>Key To Symbol</label>
+                      </div>
+                      <div class="form-data mul-select" *ngIf="inclusionConfig.ktoS && listKToS.length > 0">
+                        <kendo-multiselect name="ktos" class="customselect" [data]="listKToS"
+                          [(ngModel)]="inventorySearchCriteriaObj.kToS" [textField]="'name'" [valueField]="'name'"
+                          [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                          [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                          (valueChange)="utilityService.onMultiSelectChange(listKToS, inventorySearchCriteriaObj.kToS)">
+                          <ng-template kendoComboBoxHeaderTemplate>
+                            <div class="dropdown-header single k-widget k-header">
+                              <span class="temp-single">Select Key to Symbol</span>
+                            </div>
+                          </ng-template>
+                          <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                            <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                            <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                          </ng-template>
+                          <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                            <span kendoTooltip position="bottom"
+                              [title]="utilityService.getCommaSapratedString(inventorySearchCriteriaObj.kToS, true)">
+                              {{utilityService.getCommaSapratedString(inventorySearchCriteriaObj.kToS)}}
+                            </span>
+                          </ng-template>
+                        </kendo-multiselect>
+                      </div>
+                      <div class="form-data" *ngIf="inclusionConfig.culet && listCulet.length > 0">
+                        <label>Culet</label>
+                      </div>
+                      <div class="form-data mul-select" *ngIf="inclusionConfig.culet && listCulet.length > 0">
+                        <kendo-multiselect name="culet" class="customselect" [data]="listCulet"
+                          [(ngModel)]="inventorySearchCriteriaObj.culet" [textField]="'name'" [valueField]="'name'"
+                          [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                          [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                          (valueChange)="utilityService.onMultiSelectChange(listCulet, inventorySearchCriteriaObj.culet)">
+                          <ng-template kendoComboBoxHeaderTemplate>
+                            <div class="dropdown-header single k-widget k-header">
+                              <span class="temp-single">Select Culet</span>
+                            </div>
+                          </ng-template>
+                          <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                            <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                            <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                          </ng-template>
+                          <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                            <span kendoTooltip position="bottom"
+                              [title]="utilityService.getCommaSapratedString(inventorySearchCriteriaObj.culet, true)">
+                              {{utilityService.getCommaSapratedString(inventorySearchCriteriaObj.culet)}}
+                            </span>
+                          </ng-template>
+                        </kendo-multiselect>
+                      </div>
+                    </div>
+
+                    <!-- Measurement -->
+                    <h6 class="title mt-2">Measurement</h6>
+                    <div class="measurement-grid">
+                      <div class="form-data" *ngIf="measurementConfig.depth">
+                        <label>Depth%</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errTotalDepth.length > 0 }"
+                        *ngIf="measurementConfig.depth">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minDepth"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromDepth" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errTotalDepth = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromDepth, inventorySearchCriteriaObj.toDepth)" />
+                          <input type="text" class="input-sm form-control" name="maxDepth"
+                            [(ngModel)]="inventorySearchCriteriaObj.toDepth" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errTotalDepth = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromDepth, inventorySearchCriteriaObj.toDepth)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errTotalDepth.length > 0 ? '(' + errTotalDepth + ')' :
+                          ''}}</span>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.table">
+                        <label>Table%</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errTable.length > 0 }"
+                        *ngIf="measurementConfig.table">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minTable"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromTable" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errTable = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromTable, inventorySearchCriteriaObj.toTable)" />
+                          <input type="text" class="input-sm form-control" name="maxTable"
+                            [(ngModel)]="inventorySearchCriteriaObj.toTable" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errTable = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromTable, inventorySearchCriteriaObj.toTable)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errTable.length > 0 ? '(' + errTable + ')' : ''}}</span>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.girdlePer">
+                        <label>Girdle%</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errGirdle.length > 0 }"
+                        *ngIf="measurementConfig.girdlePer">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minGirdlePer"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromGirdlePer" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errGirdle = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromGirdlePer, inventorySearchCriteriaObj.toGirdlePer)" />
+                          <input type="text" class="input-sm form-control" name="maxGirdlePer"
+                            [(ngModel)]="inventorySearchCriteriaObj.toGirdlePer" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errGirdle = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromGirdlePer, inventorySearchCriteriaObj.toGirdlePer)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errGirdle.length > 0 ? '(' + errGirdle + ')' : ''}}</span>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.pavillionAngle">
+                        <label>Pav.Ang</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errPavAngle.length > 0 }"
+                        *ngIf="measurementConfig.pavillionAngle">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minPavilionAngle"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromPavilionAngle" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errPavAngle = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromPavilionAngle, inventorySearchCriteriaObj.toPavilionAngle)" />
+                          <input type="text" class="input-sm form-control" name="maxPavilionAngle"
+                            [(ngModel)]="inventorySearchCriteriaObj.toPavilionAngle" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errPavAngle = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromPavilionAngle, inventorySearchCriteriaObj.toPavilionAngle)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errPavAngle.length > 0 ? '(' + errPavAngle + ')' :
+                          ''}}</span>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.pavillionDepth">
+                        <label>Pav.Dep</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errPavDepth.length > 0 }"
+                        *ngIf="measurementConfig.pavillionDepth">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minPavilionDepth"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromPavilionDepth" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errPavDepth = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromPavilionDepth, inventorySearchCriteriaObj.toPavilionDepth)" />
+                          <input type="text" class="input-sm form-control" name="maxPavilionDepth"
+                            [(ngModel)]="inventorySearchCriteriaObj.toPavilionDepth" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errPavDepth = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromPavilionDepth, inventorySearchCriteriaObj.toPavilionDepth)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errPavDepth.length > 0 ? '(' + errPavDepth + ')' :
+                          ''}}</span>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.crownAngle">
+                        <label>Crw.Ang</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errCrnAngle.length > 0 }"
+                        *ngIf="measurementConfig.crownAngle">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minCrownAngle"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromCrownAngle" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errCrnAngle = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromCrownAngle, inventorySearchCriteriaObj.toCrownAngle)" />
+                          <input type="text" class="input-sm form-control" name="maxCrownAngle"
+                            [(ngModel)]="inventorySearchCriteriaObj.toCrownAngle" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errCrnAngle = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromCrownAngle, inventorySearchCriteriaObj.toCrownAngle)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errCrnAngle.length > 0 ? '(' + errCrnAngle + ')' :
+                          ''}}</span>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.crownHeight">
+                        <label>Crw.Height</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errCrnHeight.length > 0 }"
+                        *ngIf="measurementConfig.crownHeight">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minCrownHeight"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromCrownHeight" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errCrnHeight = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromCrownHeight, inventorySearchCriteriaObj.toCrownHeight)" />
+                          <input type="text" class="input-sm form-control" name="maxCrownHeight"
+                            [(ngModel)]="inventorySearchCriteriaObj.toCrownHeight" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errCrnHeight = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromCrownHeight, inventorySearchCriteriaObj.toCrownHeight)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errCrnHeight.length > 0 ? '(' + errCrnHeight + ')' :
+                          ''}}</span>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.length">
+                        <label>Length</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errLength.length > 0 }"
+                        *ngIf="measurementConfig.length">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minLength"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromLength" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errLength = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromLength, inventorySearchCriteriaObj.toLength)" />
+                          <input type="text" class="input-sm form-control" name="maxLength"
+                            [(ngModel)]="inventorySearchCriteriaObj.toLength" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errLength = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromLength, inventorySearchCriteriaObj.toLength)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errLength.length > 0 ? '(' + errLength + ')' : ''}}</span>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.width">
+                        <label>Width</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errWidth.length > 0 }"
+                        *ngIf="measurementConfig.width">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minWidth"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromWidth" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errWidth = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromWidth, inventorySearchCriteriaObj.toWidth)" />
+                          <input type="text" class="input-sm form-control" name="maxWidth"
+                            [(ngModel)]="inventorySearchCriteriaObj.toWidth" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errWidth = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromWidth, inventorySearchCriteriaObj.toWidth)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errWidth.length > 0 ? '(' + errWidth + ')' : ''}}</span>
+                      </div>
+                      <div class="form-data" *ngIf="measurementConfig.height">
+                        <label>Height</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errHeight.length > 0 }"
+                        *ngIf="measurementConfig.height">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minHeight"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromHeight" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errHeight = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromHeight, inventorySearchCriteriaObj.toHeight)" />
+                          <input type="text" class="input-sm form-control" name="maxHeight"
+                            [(ngModel)]="inventorySearchCriteriaObj.toHeight" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errHeight = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromHeight, inventorySearchCriteriaObj.toHeight)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errHeight.length > 0 ? '(' + errHeight + ')' : ''}}</span>
+                      </div>
+
+                      <div class="form-data">
+                        <label>$/Ct</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errDollarPerCt.length > 0 }">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minPerCarat"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromPerCarat" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errDollarPerCt = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromPerCarat, inventorySearchCriteriaObj.toPerCarat)" />
+                          <input type="text" class="input-sm form-control" name="maxPerCarat"
+                            [(ngModel)]="inventorySearchCriteriaObj.toPerCarat" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errDollarPerCt = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromPerCarat, inventorySearchCriteriaObj.toPerCarat)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errDollarPerCt.length > 0 ? '(' + errDollarPerCt + ')' :
+                          ''}}</span>
+                      </div>
+
+                      <div class="form-data">
+                        <label>DISC%</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errDiscPer.length > 0 }">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="fromDiscount"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromDiscount" PosDecimal="true"
+                            (keypress)="utilityService.discountfloat($event);"
+                            (blur)="errDiscPer = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromDiscount, inventorySearchCriteriaObj.toDiscount)" />
+                          <input type="text" class="input-sm form-control" name="toDiscount"
+                            [(ngModel)]="inventorySearchCriteriaObj.toDiscount" PosDecimal="true"
+                            (keypress)="utilityService.discountfloat($event);"
+                            (blur)="errDiscPer = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromDiscount, inventorySearchCriteriaObj.toDiscount)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errDiscPer.length > 0 ? '(' +
+                          errDiscPer + ')' :
+                          ''}}</span>
+                      </div>
+
+                      <div class="form-data">
+                        <label>Net Amount</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errNetAmount.length > 0 }">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minNetAmt"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromNetAmt" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errNetAmount = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromNetAmt, inventorySearchCriteriaObj.toNetAmt)" />
+                          <input type="text" class="input-sm form-control" name="maxNetAmt"
+                            [(ngModel)]="inventorySearchCriteriaObj.toNetAmt" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errNetAmount = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromNetAmt, inventorySearchCriteriaObj.toNetAmt)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errNetAmount.length > 0 ? '(' + errNetAmount + ')' :
+                          ''}}</span>
+                      </div>
+
+                      <div class="form-data" *ngIf="measurementConfig.ratio">
+                        <label>Ratio</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errRation.length > 0 }"
+                        *ngIf="measurementConfig.ratio">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="minRation"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromRatio" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errRation = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromRatio, inventorySearchCriteriaObj.toRatio)" />
+                          <input type="text" class="input-sm form-control"
+                            (keypress)="utilityService.floatOnly($event);" name="maxRation"
+                            [(ngModel)]="inventorySearchCriteriaObj.toRatio" PosDecimal="true"
+                            (blur)="errRation = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromRatio, inventorySearchCriteriaObj.toRatio)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errRation.length > 0 ? '(' + errRation + ')' : ''}}</span>
+                      </div>
+
+                      <div class="form-data">
+                        <label>Marketsheet Day</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errMDay.length > 0 }">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="fromMarketsheetDay"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromMarketsheetDay" PosDecimal="true"
+                            (keypress)="utilityService.numberOnly($event);"
+                            (blur)="errMDay = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromMarketsheetDay, inventorySearchCriteriaObj.toMarketsheetDay)" />
+                          <input type="text" class="input-sm form-control" name="toMarketsheetDay"
+                            [(ngModel)]="inventorySearchCriteriaObj.toMarketsheetDay" PosDecimal="true"
+                            (keypress)="utilityService.numberOnly($event);"
+                            (blur)="errMDay = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromMarketsheetDay, inventorySearchCriteriaObj.toMarketsheetDay)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errMDay.length > 0 ? '(' + errMDay + ')' :
+                          ''}}</span>
+                      </div>
+
+                      <div class="form-data">
+                        <label>Avai. Day</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errADay.length > 0 }">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="fromAvailableDay"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromAvailableDay" PosDecimal="true"
+                            (keypress)="utilityService.numberOnly($event);"
+                            (blur)="errADay = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromAvailableDay, inventorySearchCriteriaObj.toAvailableDay)" />
+                          <input type="text" class="input-sm form-control" name="toAvailableDay"
+                            [(ngModel)]="inventorySearchCriteriaObj.toAvailableDay" PosDecimal="true"
+                            (keypress)="utilityService.numberOnly($event);"
+                            (blur)="errADay = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromAvailableDay, inventorySearchCriteriaObj.toAvailableDay)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errADay.length > 0 ? '(' + errADay + ')' :
+                          ''}}</span>
+                      </div>
+
+                      <div class="form-data">
+                        <label>Str Ln</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errStr.length > 0 }">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="fromStrLn"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromStrLn" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errStr = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromStrLn, inventorySearchCriteriaObj.toStrLn)" />
+                          <input type="text" class="input-sm form-control" name="toStrLn"
+                            [(ngModel)]="inventorySearchCriteriaObj.toStrLn" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errStr = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromStrLn, inventorySearchCriteriaObj.toStrLn)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errStr.length > 0 ? '(' + errStr + ')' :
+                          ''}}</span>
+                      </div>
+
+                      <div class="form-data">
+                        <label>Lr Half</label>
+                      </div>
+                      <div class="form-data" [ngClass]="{'error': errLrh.length > 0 }">
+                        <div class="d-flex">
+                          <input type="text" class="input-sm form-control" name="fromLrHalf"
+                            [(ngModel)]="inventorySearchCriteriaObj.fromLrHalf" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errLrh = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromLrHalf, inventorySearchCriteriaObj.toLrHalf)" />
+                          <input type="text" class="input-sm form-control" name="toLrHalf"
+                            [(ngModel)]="inventorySearchCriteriaObj.toLrHalf" PosDecimal="true"
+                            (keypress)="utilityService.floatOnly($event);"
+                            (blur)="errLrh = utilityService.checkMinMaxValidation(inventorySearchCriteriaObj.fromLrHalf, inventorySearchCriteriaObj.toLrHalf)" />
+                        </div>
+                        <span class="font-smaller s-error">{{errLrh.length > 0 ? '(' + errLrh + ')' :
+                          ''}}</span>
+                      </div>
+
+                    </div>
+
+                    <!-- Inclusion -->
+                    <h6 class="title mt-2">Inclusion</h6>
+                    <div class="cps-btn">
+                      <button kendoButton class="pkg-btn" [ngClass]="{'select': isNoBGM }"
+                        (click)="changeBGMData('NoBGM')">NO
+                        BGM</button>
+                      <button kendoButton class="pkg-btn" [ngClass]="{'select': isBGM }" (click)="changeBGMData('BGM')">
+                        BGM</button>
+                      <button kendoButton class="pkg-btn" (click)="changeBGMData('Clear')"><i
+                          class="icon-clear pe-0"></i></button>
+                    </div>
+                    <div class="inclusion-grid">
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.sideBlack && (inclusionData | typefilter:'SideBlack').length > 0">
+                        <label>Blk Crown</label>
+                        <div class="d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.sideBlack.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.sideBlack, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'SideBlack'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.sideBlack.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.sideBlack, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.centerBlack && (inclusionData | typefilter:'CenterBlack').length > 0">
+                        <label>Blk Table</label>
+                        <div class="d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.centerBlack.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.centerBlack, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'CenterBlack'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.centerBlack.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.centerBlack, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.sideWhite && (inclusionData | typefilter:'SideWhite').length > 0">
+                        <label>White Table</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.sideWhite.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.sideWhite, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'SideWhite'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.sideWhite.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.sideWhite, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.centerWhite && (inclusionData | typefilter:'CenterWhite').length > 0">
+                        <label>White Crw</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.centerWhite.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.centerWhite, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'CenterWhite'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.centerWhite.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.centerWhite, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.brown && (inclusionData | typefilter:'Brown').length > 0">
+                        <label>Brown</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.brown.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.brown, 'All');checkBGM();">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'Brown'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.brown.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.brown, item.name);checkBGM();">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.green && (inclusionData | typefilter:'Green').length > 0">
+                        <label>Green</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.green.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.green, 'All');checkBGM();">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'Green'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.green.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.green, item.name);checkBGM();">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.milky && (inclusionData | typefilter:'Milky').length > 0">
+                        <label>Milky</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.milky.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.milky, 'All');checkBGM();">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'Milky'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.milky.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.milky, item.name);checkBGM();">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <!-- Shade -->
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.shade && (inclusionData | typefilter:'Shade').length > 0">
+                        <label>Shade</label>
+                        <div class="d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.shade.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.shade, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData  | typefilter:'Shade'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.shade.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.shade, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.openTable && (inclusionData | typefilter:'OpenTable').length > 0">
+                        <label>Open Tbl</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.openTable.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.openTable, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'OpenTable'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.openTable.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.openTable, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.openCrown && (inclusionData | typefilter:'OpenCrown').length > 0">
+                        <label>Open Crown</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.openCrown.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.openCrown, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'OpenCrown'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.openCrown.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.openCrown, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.openPavilion && (inclusionData | typefilter:'OpenPavilion').length > 0">
+                        <label>Open Pav</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.openPavilion.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.openPavilion, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'OpenPavilion'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.openPavilion.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.openPavilion, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.openGirdle && (inclusionData | typefilter:'OpenGirdle').length > 0">
+                        <label>Open Girdle</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.openGirdle.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.openGirdle, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'OpenGirdle'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.openGirdle.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.openGirdle, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.naturalOnPavilion && (inclusionData | typefilter:'NaturalOnPavilion').length > 0">
+                        <label>NOP</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.naturalOnPavillion.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.naturalOnPavillion, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'NaturalOnPavilion'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.naturalOnPavillion.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.naturalOnPavillion, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.naturalOnCrown && (inclusionData | typefilter:'NaturalOnCrown').length > 0">
+                        <label>NOC</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.naturalOnCrown.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.naturalOnCrown, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'NaturalOnCrown'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.naturalOnCrown.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.naturalOnCrown, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.naturalOnGirdle && (inclusionData | typefilter:'NaturalOnGirdle').length > 0">
+                        <label>NOG</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.naturalOnGirdle.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.naturalOnGirdle, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'NaturalOnGirdle'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.naturalOnGirdle.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.naturalOnGirdle, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.naturalOnTable && (inclusionData | typefilter:'NaturalOnTable').length > 0">
+                        <label>NOT</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.naturalOnTable.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.naturalOnTable, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'NaturalOnTable'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.naturalOnTable.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.naturalOnTable, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.eyeClean && (inclusionData | typefilter:'EyeClean').length > 0">
+                        <label>Eye Clean</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.eyeClean.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.eyeClean, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'EyeClean'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.eyeClean.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.eyeClean, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.hna && (inclusionData | typefilter:'HNA').length > 0">
+                        <label>HNA</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.hNA.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.hNA, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'HNA'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.hNA.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.hNA, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.efoc && (inclusionData | typefilter:'EFOC').length > 0">
+                        <label>EFOC</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.eFOC.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.eFOC, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'EFOC'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.eFOC.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.eFOC, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.efop && (inclusionData | typefilter:'EFOP').length > 0">
+                        <label>EFOP</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.eFOP.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.eFOP, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'EFOP'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.eFOP.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.eFOP, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.efot && (inclusionData | typefilter:'EFOT').length > 0">
+                        <label>EFOT</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.eFOT.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.eFOT, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'EFOT'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.eFOT.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.eFOT, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.efog && (inclusionData | typefilter:'EFOG').length > 0">
+                        <label>EFOG</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.eFOG.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.eFOG, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'EFOG'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.eFOG.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.eFOG, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.girdleCondition && (inclusionData | typefilter:'GirdleCondition').length > 0">
+                        <label>Gdl.Cond</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.girdleCondition.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.girdleCondition, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'GirdleCondition'"
+                            class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.girdleCondition.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.girdleCondition, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.luster && (inclusionData | typefilter:'Luster').length > 0">
+                        <label>Luster</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.luster.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.luster, 'All')">
+                            <span>All</span>
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'Luster'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.luster.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.luster, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="inclusion-subgrid"
+                        *ngIf="inclusionConfig.bowtie && (inclusionData | typefilter:'Bowtie').length > 0">
+                        <label>Bowtie</label>
+                        <div class=" d-flex">
+                          <button kendoButton class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.bowtie.length === 0 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.bowtie, 'All')">
+                            All
+                          </button>
+                          <button kendoButton *ngFor="let item of inclusionData | typefilter:'Bowtie'" class="pkg-btn"
+                            [ngClass]="{'select': inventorySearchCriteriaObj.bowtie.indexOf(item.name)>-1 }"
+                            (click)="utilityService.addRemoveStringInArrayFilter(inventorySearchCriteriaObj.bowtie, item.name)">
+                            {{item.name}}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-panelbar-item>
+          </kendo-panelbar>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="filterBySearch()"><i class="icon-search"></i>Search</button>
+          <button class="btn btn-primary" (click)="clearSearchCriteria(filterForm)"><i
+              class="icon-clear"></i>Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeSearchDialog()"></div>
+  </form>
+</div>
+<!-- #endregion-->
+
+<!-- #region Media Modal -->
+<ng-container *ngIf="isShowMedia">
+  <app-media [mediaTitle]="mediaTitle" [mediaSrc]="mediaSrc" [mediaType]="mediaType"
+    (closeDialog)="closeMediaDialog($event)"></app-media>
+</ng-container>
+<!-- #endregion-->
+
+<!-- #region Grid Config Modal -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'SalesSheet'" [gridName]="'SalesSheetGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

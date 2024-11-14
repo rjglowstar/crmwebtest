@@ -1,0 +1,689 @@
+<div class="modal c-modal plan-maker" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-Calculater"></i>Plan Maker</h5>
+        <button type="button" class="close" (click)="closePlanmakerDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form name="form" #PlanMakerForm="ngForm" novalidate>
+        <div class="modal-body">
+          <div class="company-info"> 
+              <div class="plk-autosearch">
+                <label class="m-0">Available Stone</label>
+                <!-- <kendo-dropdownlist [data]="listPacketsItems" [valuePrimitive]="true" textField="text"
+                  valueField="value" name="stoneId" id="stoneId" [(ngModel)]="inventoryObj.stoneId" #stoneId="ngModel"
+                  (valueChange)="packetChange($event)" [filterable]="true" (filterChange)="handleFilter($event)">
+                </kendo-dropdownlist> -->
+                <kendo-autocomplete class="w-100" [data]="listPacketsItems" [filterable]="true"
+                  (filterChange)="handleFilter($event)" [kendoDropDownFilter]="filterSettings" name="stoneId"
+                  [(ngModel)]="inventoryObj.stoneId" (valueChange)="packetChange($event)" [popupSettings]="{width: 'auto'}"
+                  #stoneId="ngModel" valueField="value" required>
+                  <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                    <span>{{dataItem.text}}</span>
+                  </ng-template>
+                </kendo-autocomplete>
+              </div> 
+          </div>
+          <!-- #region Perameter CURD -->
+          <div class="pm-middle-wrap">
+            <div class="">
+              <div class="pm-middle">
+                <div class="pm-left">
+                  <div class="cal-item1 mb-0">
+                    <div class="sub-item-wrap">
+                      <div class="sub-item1" *ngFor="let item of allColors">
+                        <input type="radio" name="clr-top" id="clr-{{item.displayName.toUpperCase()}}"
+                          [checked]="(item.displayName == inventoryObj.color)">
+                        <label class="color-txt {{item.displayName.toUpperCase()}}"
+                          for="clr-{{item.displayName.toUpperCase()}}" (click)="inventoryObj.color = item.displayName">
+                          {{item.displayName}}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="cal-item1 mb-0">
+                    <div class="sub-item-wrap">
+                      <div class="sub-item1" *ngFor="let item of allClarities">
+                        <input type="radio" name="cl-top" id="cl-d-{{item.displayName.toUpperCase()}}"
+                          [checked]="(item.displayName == inventoryObj.clarity)">
+                        <label for="cl-d-{{item.displayName.toUpperCase()}}"
+                          (click)="inventoryObj.clarity=item.displayName">
+                          {{item.displayName}}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pm-right">
+                  <div class="pm-r-top">
+                    <div class="sub-grid-wrap">
+                      <div class="s-item">
+                        <div class="sub-item1" *ngFor="let item of allTheShapes">
+                          <input type="radio" name="shp-top" id="shp-{{item.name.toUpperCase()}}"
+                            [checked]="(item.name == inventoryObj.shape)">
+                          <label class="{{item.name.toUpperCase()}}" for="shp-{{item.name.toUpperCase()}}"
+                            (click)="inventoryObj.shape=item.name">
+                            {{item.displayName}}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pm-r-bottom">
+                    <div class="pm-bo-1">
+                      <div class="item-calc-1">
+                        <input type="text" name="Weight" id="weight" [(ngModel)]="calculateValue" #weight="ngModel"
+                          class="k-textbox form-control">
+                      </div>
+                      <div class="subitem-calc-1">
+                        <div class="calculator-1">
+                          <button class="btncolor button button-hover" (click)="calcData('1')">1</button>
+                        </div>
+                        <div class="calculator-2">
+                          <button class="btncolor button button-hover" (click)="calcData('2')">2</button>
+                        </div>
+                        <div class="calculator-3">
+                          <button class="btncolor button button-hover" (click)="calcData('3')">3</button>
+                        </div>
+                        <div class="calculator-4">
+                          <button class="btncolor button button-hover" (click)="calcData('4')">4</button>
+                        </div>
+                        <div class="calculator-5">
+                          <button class="btncolor button button-hover" (click)="calcData('5')">5</button>
+                        </div>
+                        <div class="calculator-6">
+                          <button class="btncolor button button-hover" (click)="calcData('6')">6</button>
+                        </div>
+                        <div class="calculator-7">
+                          <button class="btncolor button button-hover" (click)="calcData('7')">7</button>
+                        </div>
+                        <div class="calculator-8">
+                          <button class="btncolor button button-hover" (click)="calcData('8')">8</button>
+                        </div>
+                        <div class="calculator-9">
+                          <button class="btncolor button button-hover" (click)="calcData('9')">9</button>
+                        </div>
+                        <div class="calculator-11">
+                          <button class="btncolor button button-hover" (click)="calcData('0')">0</button>
+                        </div>
+                        <div class="calculator-12">
+                          <button class="btncolor button button-hover" (click)="calcData('.')">.</button>
+                        </div>
+                        <div class="calculator-13">
+                          <button class="btncolor button button-hover" (click)="calcData('BS')">BS</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="pm-bo-2">
+                      <div class="pm-form-data">
+                        <label class="col-form-label">CUT</label>
+                      </div>
+                      <div class="form-data mb-0">
+                        <kendo-dropdownlist [data]="allTheCPS" [valuePrimitive]="true" textField="name"
+                          valueField="name" name="cut" [(ngModel)]="inventoryObj.cut" #cut="ngModel" id="cut" required>
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="pm-form-data">
+                        <label class="col-form-label">POLISH</label>
+                      </div>
+                      <div class="form-data mb-0">
+                        <kendo-dropdownlist [data]="allTheCPS" [valuePrimitive]="true" textField="name"
+                          valueField="name" name="polish" [(ngModel)]="inventoryObj.polish" #polish="ngModel"
+                          id="polish" required>
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="pm-form-data">
+                        <label class="col-form-label">SYMMETRY</label>
+                      </div>
+                      <div class="form-data mb-0">
+                        <kendo-dropdownlist [data]="allTheCPS" [valuePrimitive]="true" textField="name"
+                          valueField="name" name="symmetry" [(ngModel)]="inventoryObj.symmetry" #symmetry="ngModel"
+                          id="symmetry" required>
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="pm-form-data">
+                        <label class="col-form-label">FLUORESCENCE</label>
+                      </div>
+                      <div class="form-data mb-0">
+                        <kendo-dropdownlist [data]="allTheFluorescences" [valuePrimitive]="true" textField="name"
+                          valueField="name" name="fluorescence" [(ngModel)]="inventoryObj.fluorescence"
+                          #fluorescence="ngModel" id="fluorescence" required>
+                        </kendo-dropdownlist>
+                      </div>
+                    </div>
+
+                    <div class="pm-bo-3">
+                      <div class="pm-bo3-item1">
+                        <div class="sym-item4">
+                          <button class="btncolor button button-hover" (click)="changeCPSData('3EX')">3X</button>
+                        </div>
+                        <div class="sym-item10-6">
+                          <button class="btncolor button button-hover" (click)="changeCPSData('2EX')">2EX</button>
+                        </div>
+                        <div class="sym-item11-6">
+                          <button class="btncolor button button-hover" (click)="changeCPSData('3VG')">3VG</button>
+                        </div>
+                        <div class="sym-item12-6">
+                          <button class="btncolor button button-hover" (click)="changeCPSData('BGM')">BGM</button>
+                        </div>
+                      </div>
+                      <div class="pm-bo3-item2">
+                        <div class="">
+                          <div class="pm-sub-item">
+                            <div class="sub-item1">
+                              <input type="radio" name="pm-bo-3" value="color" id="pm-auto">
+                              <label for="pm-auto">AUTO</label>
+                            </div>
+                            <div class="sub-item1">
+                              <input type="radio" name="pm-bo-3" value="color" id="pm-gia">
+                              <label for="pm-gia">GIA</label>
+                            </div>
+                            <div class="sub-item1">
+                              <input type="radio" name="pm-bo-3" value="color" id="pm-igi">
+                              <label for="pm-igi">IGI</label>
+                            </div>
+                            <div class="sub-item1">
+                              <input type="radio" name="pm-bo-3" value="color" id="pm-none">
+                              <label for="pm-none">NONE</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="pm-bo3-item3">
+                        <label class="col-form-label d-block border-bottom">Grade : </label>
+                        <label class="n-a">N/A</label>
+                      </div>
+                    </div>
+
+                    <div class="pm-bo-4">
+                      <div class="pm-bo4-item1">
+                        <button kendobutton="" (click)="AddStoneToGrid()"
+                          class="btncolor calcbtn button button-hover"><i class="icon-add me-2"></i>Add</button>
+                      </div>
+                      <div class="pm-bo4-item3">
+                        <button kendobutton="" (click)="AddStoneToGrid()"
+                          class="btncolor calcbtn button button-hover"><i class="icon-edit me-2"></i>Update</button>
+                      </div>
+                      <div class="pm-bo4-item2" (click)="clearFilter(PlanMakerForm)">
+                        <button kendobutton="" class="btncolor calcbtn button button-hover"><i
+                            class="icon-clear me-2"></i>Clear</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-plan">
+            <button class="float-end" kendoButton title="Grid Configuration" (click)="openGridConfigDialog()">
+              <i class="icon-gridconfig pe-0"></i>
+            </button>
+            <button kendoButton class="tab-hide" title="View" (click)="extraData =!extraData">
+              <i class="icon-view pe-0"></i>
+            </button>
+          </div>
+          <!-- #endregion -->
+
+          <!-- #region Inclusion-->
+          <div class="pm-bottom">
+            <div class="in-me-data">
+              <kendo-tabstrip class="grid-container-symetry1 plan-maker-tab">
+                <kendo-tabstrip-tab title="Inclusion" [selected]="true">
+                  <ng-template kendoTabContent>
+                    <div class="grid-container-symetry" *ngIf="extraData">
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.brown && (inclusionData  | typefilter:'Brown').length > 0">
+                        <label>BROWN</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'Brown'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="brown" [(ngModel)]="inventoryObj.inclusion.brown"
+                          #brown="ngModel" id="brown">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.green && (inclusionData  | typefilter:'Green').length > 0">
+                        <label>GREEN</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'Green'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="green" [(ngModel)]="inventoryObj.inclusion.green"
+                          #green="ngModel" id="green">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.milky && (inclusionData  | typefilter:'Milky').length > 0">
+                        <label>MILKY</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'Milky'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="milky" [(ngModel)]="inventoryObj.inclusion.milky"
+                          #milky="ngModel" id="milky">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.shade && (inclusionData  | typefilter:'Shade').length > 0">
+                        <label>SHADE</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'Shade'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="shade" [(ngModel)]="inventoryObj.inclusion.shade"
+                          #shade="ngModel" id="shade">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.sideBlack && (inclusionData  | typefilter:'SideBlack').length > 0">
+                        <label>SIDE BLACK</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'SideBlack'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="sideBlack"
+                          [(ngModel)]="inventoryObj.inclusion.sideBlack" #sideBlack="ngModel" id="sideBlack">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.centerSideBlack && (inclusionData  | typefilter:'centerSideBlack').length > 0">
+                        <label>CS Black</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'centerSideBlack'"
+                          [valuePrimitive]="true" textField="name" valueField="name" name="centerSideBlack"
+                          [(ngModel)]="inventoryObj.inclusion.centerSideBlack" #centerSideBlack="ngModel"
+                          id="centerSideBlack">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.centerBlack && (inclusionData  | typefilter:'centerBlack').length > 0">
+                        <label>CenterBlack</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'centerBlack'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="centerBlack"
+                          [(ngModel)]="inventoryObj.inclusion.centerBlack" #girdleBlack="ngModel" id="centerBlack">
+                        </kendo-dropdownlist>
+                      </div>
+
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.sideWhite && (inclusionData  | typefilter:'sideWhite').length > 0">
+                        <label>SideWhite</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'sideWhite'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="sideWhite"
+                          [(ngModel)]="inventoryObj.inclusion.sideWhite" #sideWhite="ngModel" id="sideWhite">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.centerSideWhite && (inclusionData  | typefilter:'centerSideWhite').length > 0">
+                        <label>CS White</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'centerSideWhite'"
+                          [valuePrimitive]="true" textField="name" valueField="name" name="centerSideWhite"
+                          [(ngModel)]="inventoryObj.inclusion.centerSideWhite" #centerSideWhite="ngModel"
+                          id="centerSideWhite">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.centerWhite && (inclusionData  | typefilter:'centerWhite').length > 0">
+                        <label>CenterWhite</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'centerWhite'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="centerWhite"
+                          [(ngModel)]="inventoryObj.inclusion.centerWhite" #centerWhite="ngModel" id="centerWhite">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.openCrown && (inclusionData  | typefilter:'openCrown').length > 0">
+                        <label>OpenCrown</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'openCrown'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="openCrown"
+                          [(ngModel)]="inventoryObj.inclusion.openCrown" #openCrown="ngModel" id="openCrown">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.openTable && (inclusionData  | typefilter:'openTable').length > 0">
+                        <label>OpenTable</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'openTable'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="openTable"
+                          [(ngModel)]="inventoryObj.inclusion.openTable" #openTable="ngModel" id="openTable">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.openPavilion && (inclusionData  | typefilter:'openPavilion').length > 0">
+                        <label>OpenPav</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'openPavilion'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="openPavilion"
+                          [(ngModel)]="inventoryObj.inclusion.openPavilion" #openPavilion="ngModel" id="openPavilion">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.openGirdle && (inclusionData  | typefilter:'openGirdle').length > 0">
+                        <label>OpenGirdle</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'openGirdle'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="openGirdle"
+                          [(ngModel)]="inventoryObj.inclusion.openGirdle" #openGirdle="ngModel" id="openGirdle">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.girdleCondition && (inclusionData  | typefilter:'girdleCondition').length > 0">
+                        <label>GirdleCond</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'girdleCondition'"
+                          [valuePrimitive]="true" textField="name" valueField="name" name="girdleCondition"
+                          [(ngModel)]="inclusionConfig.girdleCondition" #girdleCondition="ngModel" id="girdleCondition">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.efoc && (inclusionData  | typefilter:'eFOC').length > 0">
+                        <label>EFOC</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'eFOC'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="eFOC" [(ngModel)]="inventoryObj.inclusion.efoc"
+                          #eFOC="ngModel" id="eFOC">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.efot && (inclusionData  | typefilter:'eFOT').length > 0">
+                        <label>EFOT</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'eFOT'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="eFOT" [(ngModel)]="inventoryObj.inclusion.efot"
+                          #eFOT="ngModel" id="eFOT">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.efog && (inclusionData  | typefilter:'eFOG').length > 0">
+                        <label>EFOG</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'eFOG'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="eFOG" [(ngModel)]="inventoryObj.inclusion.efog"
+                          #eFOG="ngModel" id="eFOG">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.efop && (inclusionData  | typefilter:'eFOP').length > 0">
+                        <label>EFOP</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'eFOP'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="eFOP" [(ngModel)]="inventoryObj.inclusion.efop"
+                          #eFOP="ngModel" id="eFOP">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.culet && (inclusionData  | typefilter:'culet').length > 0">
+                        <label>Culet</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'culet'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="culet" [(ngModel)]="inventoryObj.inclusion.culet"
+                          #culet="ngModel" id="culet">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.hna && (inclusionData  | typefilter:'hNA').length > 0">
+                        <label>HNA</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'hNA'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="hNA" [(ngModel)]="inventoryObj.inclusion.hna"
+                          #hNA="ngModel" id="hNA">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.eyeClean && (inclusionData  | typefilter:'eyeClean').length > 0">
+                        <label>EyeClean</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'eyeClean'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="eyeClean"
+                          [(ngModel)]="inventoryObj.inclusion.eyeClean" #eyeClean="ngModel" id="eyeClean">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.ktoS && (inclusionData  | typefilter:'ktoS').length > 0">
+                        <label>KToS</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'ktoS'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="ktoS" [(ngModel)]="inventoryObj.inclusion.ktoS"
+                          #ktoS="ngModel" id="ktoS">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.naturalOnTable && (inclusionData  | typefilter:'naturalOnTable').length > 0">
+                        <label>N Table</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalOnTable'"
+                          [valuePrimitive]="true" textField="name" valueField="name" name="naturalOnTable"
+                          [(ngModel)]="inventoryObj.inclusion.naturalOnTable" #naturalOnTable="ngModel"
+                          id="naturalOnTable">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.naturalOnGirdle && (inclusionData  | typefilter:'naturalOnGirdle').length > 0">
+                        <label>N Girdle</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalOnGirdle'"
+                          [valuePrimitive]="true" textField="name" valueField="name" name="naturalOnGirdle"
+                          [(ngModel)]="inventoryObj.inclusion.naturalOnGirdle" #naturalOnGirdle="ngModel"
+                          id="naturalOnGirdle">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.naturalOnCrown && (inclusionData  | typefilter:'naturalOnCrown').length > 0">
+                        <label>N Crown</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalOnCrown'"
+                          [valuePrimitive]="true" textField="name" valueField="name" name="naturalOnCrown"
+                          [(ngModel)]="inventoryObj.inclusion.naturalOnCrown" #ktos="ngModel" id="naturalOnCrown">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.naturalOnPavilion && (inclusionData  | typefilter:'naturalOnPavilion').length > 0">
+                        <label>N Pavillion</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalOnPavilion'"
+                          [valuePrimitive]="true" textField="name" valueField="name" name="naturalOnPavilion"
+                          [(ngModel)]="inventoryObj.inclusion.naturalOnPavillion" #naturalOnPavilion="ngModel"
+                          id="naturalOnPavilion">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.flColor && (inclusionData  | typefilter:'fLColor').length > 0">
+                        <label>FLColor</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'fLColor'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="fLColor" [(ngModel)]="inventoryObj.inclusion.flColor"
+                          #fLColor="ngModel" id="fLColor">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.redSpot && (inclusionData  | typefilter:'redSpot').length > 0">
+                        <label>RedSpot</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'redSpot'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="redSpot" [(ngModel)]="inventoryObj.inclusion.redSpot"
+                          #redSpot="ngModel" id="redSpot">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.luster && (inclusionData  | typefilter:'luster').length > 0">
+                        <label>Luster</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'luster'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="luster" [(ngModel)]="inventoryObj.inclusion.luster"
+                          #luster="ngModel" id="luster">
+                        </kendo-dropdownlist>
+                      </div>
+
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="inclusionConfig.bowtie && (inclusionData  | typefilter:'bowtie').length > 0">
+                        <label>BowTie</label>
+                        <kendo-dropdownlist [data]="inclusionData  | typefilter:'bowtie'" [valuePrimitive]="true"
+                          textField="name" valueField="name" name="bowtie" [(ngModel)]="inventoryObj.inclusion.bowtie"
+                          #bowtie="ngModel" id="bowtie">
+                        </kendo-dropdownlist>
+                      </div>
+
+                    </div>
+                  </ng-template>
+                </kendo-tabstrip-tab>
+                <!-- #endregion -->
+                <!-- #region Measurement -->
+                <kendo-tabstrip-tab title="Measurement">
+                  <ng-template kendoTabContent>
+                    <div class="grid-container-symetry" *ngIf="extraData">
+                      <div class="form-data mb-0">
+                        <label>Length</label>
+                        <input type="text" name="length" [(ngModel)]="inventoryObj.measurement.length" #length="ngModel"
+                          autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="length"
+                          (change)="calculateDept(inventoryObj)">
+                      </div>
+                      <div class="form-data mb-0">
+                        <label>Width</label>
+                        <input type="text" name="width" [(ngModel)]="inventoryObj.measurement.width" #width="ngModel"
+                          autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="width"
+                          (change)="calculateDept(inventoryObj)">
+                      </div>
+                      <div class="form-data mb-0">
+                        <label>Height</label>
+                        <input type="text" name="height" [(ngModel)]="inventoryObj.measurement.height" #height="ngModel"
+                          autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="width"
+                          (change)="calculateDept(inventoryObj)">
+                      </div>
+                      <div class="form-data mb-0">
+                        <label>Depth</label>
+                        <input type="text" name="depth" [(ngModel)]="inventoryObj.measurement.depth" #depth="ngModel"
+                          autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="depth">
+                      </div>
+                      <div class="form-data mb-0">
+                        <label>Table</label>
+                        <input type="text" name="table" [(ngModel)]="inventoryObj.measurement.table" #table="ngModel"
+                          autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="table">
+                      </div>
+                      <div class="form-data mb-0">
+                        <label>CrHeight</label>
+                        <input type="text" name="crownHeight" [(ngModel)]="inventoryObj.measurement.crownHeight"
+                          #crownHeight="ngModel" autocomplete="off" maxlength="10"
+                          (keypress)="utilityService.floatOnly($event)" id="crownHeight">
+                      </div>
+                      <div class="form-data mb-0">
+                        <label>CrAngle</label>
+                        <input type="text" name="crownAngle" [(ngModel)]="inventoryObj.measurement.crownAngle"
+                          #crownAngle="ngModel" autocomplete="off" maxlength="10"
+                          (keypress)="utilityService.floatOnly($event)" id="crownAngle">
+                      </div>
+                      <div class="form-data mb-0">
+                        <label>PvlDepth</label>
+                        <input type="text" name="pavilionDepth" [(ngModel)]="inventoryObj.measurement.pavilionDepth"
+                          #pavilionDepth="ngModel" autocomplete="off" maxlength="10"
+                          (keypress)="utilityService.floatOnly($event)" id="pavilionDepth">
+                      </div>
+                      <div class="form-data mb-0">
+                        <label>PvlAngle</label>
+                        <input type="text" name="pavilionAngle" [(ngModel)]="inventoryObj.measurement.pavilionAngle"
+                          #pavilionAngle="ngModel" autocomplete="off" maxlength="10"
+                          (keypress)="utilityService.floatOnly($event)" id="pavilionAngle">
+                      </div>
+                      <div class="form-data mb-0">
+                        <label>GirdlePer</label>
+                        <input type="text" name="girdlePer" [(ngModel)]="inventoryObj.measurement.girdlePer"
+                          #girdlePer="ngModel" autocomplete="off" maxlength="10"
+                          (keypress)="utilityService.floatOnly($event)" id="girdlePer">
+                      </div>
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                        <label>Min Girdle</label>
+                        <kendo-dropdownlist [data]="measurementData  | typefilter:'girdle'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="mingirdle"
+                          [(ngModel)]="inventoryObj.measurement.minGirdle" #mingirdle="ngModel" id="mingirdle">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="sym-item8 form-data mb-0"
+                        *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                        <label>Max Girdle</label>
+                        <kendo-dropdownlist [data]="measurementData  | typefilter:'girdle'" textField="name"
+                          valueField="name" [valuePrimitive]="true" name="maxgirdle"
+                          [(ngModel)]="inventoryObj.measurement.maxGirdle" #maxgirdle="ngModel" id="maxgirdle">
+                        </kendo-dropdownlist>
+                      </div>
+                      <div class="form-data mb-0">
+                        <label>Ratio</label>
+                        <input type="text" name="ratio" [(ngModel)]="inventoryObj.measurement.ratio" #ratio="ngModel"
+                          autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="ratio">
+                      </div>
+                    </div>
+                  </ng-template>
+                </kendo-tabstrip-tab>
+                <!-- #endregion -->
+              </kendo-tabstrip>
+            </div>
+          </div>
+          <div class="pm-footer">
+            <!-- #region Grid -->
+            <div class="grid-wrap">
+              <ng-container *ngIf="!gridView">
+                <div class="k-grouping-header k-grouping-header-flex">
+                  <div class="k-indicator-container">
+                    <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                    </kendo-skeleton>
+                  </div>
+                </div>
+                <table *ngIf="fields && fields.length > 0" class="w-100">
+                  <th *ngFor="let field of fields">{{field.propertyName}}</th>
+                  <tr *ngFor="let field of skeletonArray">
+                    <td *ngFor="let field of fields">
+                      <kendo-skeleton shape="text" animation="wave" [width]="75" [height]="40">
+                      </kendo-skeleton>
+                    </td>
+                  </tr>
+                </table>
+              </ng-container>
+
+              <kendo-grid [data]="gridView" class="grid-ui upload-grid" [sortable]="true"
+                (selectionChange)="onSelect($event)" [selectable]="selectableSettings" [resizable]="true"
+                (cellClick)="cellClickHandler($event)" [reorderable]="true" [skip]="skip">
+                <ng-container *ngIf="fields && fields.length > 0">
+                  <ng-container *ngIf="fields && fields.length > 0">
+                    <ng-container *ngFor="let field of fields">
+                      <ng-container *ngIf="field.isSelected">
+                        <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                          <ng-template *ngIf="isShowCheckBoxAll && field.title == 'Checkbox'" kendoGridHeaderTemplate>
+                            <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox" />
+                            <label class="k-checkbox-label" for="headerCheckbox"></label>
+                          </ng-template>
+                          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                            *ngIf="field.title == 'Checkbox'">
+                            <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                              id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                            <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                            </label>
+                          </ng-template>
+                        </kendo-grid-column>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </kendo-grid>
+              <!-- #endregion -->
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button kendoButton class="btn btn-primary" (click)="clearFilter(PlanMakerForm)"><i
+            class="icon-add"></i>New</button>
+        <button kendoButton class="btn btn-primary" (click)="onSavePlan(PlanMakerForm,true)"><i
+            class="icon-save"></i>Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #region Grid Config-->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'PlanMaker'" [gridName]="'PlanMakerGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<div (document:keydown.esc)="closePlanmakerDialog()"></div>
+
+<div kendoDialogContainer></div>

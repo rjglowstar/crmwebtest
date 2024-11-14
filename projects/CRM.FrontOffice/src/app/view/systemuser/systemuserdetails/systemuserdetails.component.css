@@ -1,0 +1,44 @@
+.pricing-criteria-grid {
+    display: grid;
+    grid-template-columns: 42px 1fr 60px 1fr;
+    grid-column-gap: 15px;
+    grid-row-gap: 5px;
+}
+
+/*front-userprofile*/
+#pf-avatar-container {
+    position: relative;
+}
+
+#pf-avatar-photo,
+#ad-photo-overlay {
+    height: 5rem;
+    width: 5rem;
+}
+
+#ad-photo-overlay {
+    position: absolute;
+    top: 0px;
+    z-index: 2;
+    background-color: rgba(233, 236, 239, 0.6);
+}
+
+#ad-profile-photo-button {
+    position: absolute;
+    z-index: 3;
+    color: #13293d;
+}
+
+.center-positon-absolute {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pf-avatar-photo {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}

@@ -1,0 +1,209 @@
+.new_ui {
+    margin: 0 15px;
+    font-family: 'Inter', sans-serif;
+}
+
+.new_ui .sec_topbar {
+    border-radius: 5px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.new_ui .sec_topbar.bg_white {
+    background: #FFF;
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(77, 77, 77, 0.20);
+    box-shadow: 0px 0px 3px 0px rgba(77, 77, 77, 0.20);
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+}
+
+.new_ui .sec_topbar.bg_gray {
+    background: #F7F7F7;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.gridtbl_wrap {
+    border-radius: 5px;
+    background: #FFF;
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(77, 77, 77, 0.20);
+    box-shadow: 0px 0px 3px 0px rgba(77, 77, 77, 0.20);
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.sec_topbar .left-cn:not(.line_grid) {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: minmax(50px, auto) 10px minmax(50px, auto) 10px minmax(50px, auto);
+    grid-template-columns: repeat(3, minmax(50px, auto));
+    grid-gap: 10px;
+    width: 100%;
+    max-width: 550px;
+}
+
+.sec_topbar .left-cn.line_grid {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    grid-gap: 10px 15px;
+    max-width: 100%;
+}
+
+.sec_topbar .left-cn span {
+    position: relative;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.sec_topbar .left-cn.line_grid span:not(:first-child) {
+    display: inline-block;
+    padding-left: 15px;
+}
+
+.sec_topbar .left-cn.line_grid span:not(:first-child):before {
+    position: absolute;
+    content: '';
+    width: 1px;
+    background-color: #4d4d4d;
+    height: calc(100% - 6px);
+    left: 0;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.sec_topbar .left-cn span :is(*) {
+    font-size: 12px;
+}
+
+.eventDetail {
+    min-height: calc((100vh - 85px) - 20px);
+}
+
+.eventDetail .sec_topbar {
+    padding: 15px 10px;
+}
+
+.eventdetail-img img {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: center center;
+    object-position: center center;
+}
+
+.fancy-img {
+    margin-bottom: 15px;
+}
+
+.fancy-img img {
+    width: 100%;
+    height: 142px;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+.event-description h4 {
+    font-size: 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+}
+
+.event-description p {
+    color: #212529;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.photo-gallery h4 {
+    font-size: 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+}
+
+.photo-gallery h4:before {
+    content: "";
+    background: #000;
+    position: absolute;
+    width: 40%;
+    height: 1px;
+    right: 0;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+}
+
+.photo-gallery h4:after {
+    content: "";
+    background: #000;
+    position: absolute;
+    width: 40%;
+    height: 1px;
+    left: 0;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+}
+
+@media(max-width:1199px) {
+    .sec_topbar .left-cn.line_grid {
+        grid-gap: 10px !important;
+    }
+
+    .sec_topbar .left-cn.line_grid span:not(:first-child) {
+        padding-left: 10px !important;
+    }
+}
+
+@media(max-width:991px) {
+    .photo-gallery h4:before,
+    .photo-gallery h4:after {
+        width: 30% !important;
+    }
+}
+
+@media(max-width:600px) {
+    .right-cn {
+        text-align: center !important;
+    }
+}
+
+@media(max-width:575px) {
+    .sec_topbar .left-cn:not(.line_grid) {
+        -ms-grid-columns: minmax(calc((100% - 10px) / 2), auto) 10px minmax(calc((100% - 10px) / 2), auto) !important;
+        grid-template-columns: repeat(2, minmax(calc((100% - 10px) / 2), auto)) !important;
+    }
+}
+
+@media(max-width:480px) {
+    .photo-gallery h4:before,
+    .photo-gallery h4:after {
+        width: 20% !important;
+    }
+}
+
+@media(max-width:350px) {
+    .sec_topbar .left-cn:not(.line_grid) {
+        -ms-grid-columns: auto !important;
+        grid-template-columns: auto !important;
+    }
+}

@@ -1,0 +1,218 @@
+<title>Scheme Master</title>
+<section>
+  <div class="content_wrap">
+    <div class="e-left w-100">
+      <div class="breadcrumb bg">
+        <div class="breadcrumb-left">
+          <ul>
+            <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+            <li class="breadcrumb-item active" aria-current="page">Scheme Details</li>
+          </ul>
+        </div>
+        <div class="breadcrumb-right">
+          <!-- #region Actions for Scheme grid -->
+          <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+            <button kendoButton title="Add Scheme" (click)="openSchemeDialog(true)"><i class="icon-add"></i></button>
+            <button kendoButton title="Edit Scheme" [disabled]="!schemeObj.id" (click)="openSchemeDialog(false)"><i
+                class="icon-edit"></i></button>
+            <button kendoButton title="Delete Scheme" [disabled]="!schemeObj.id" (click)="openDeleteDialog()"><i
+                class="icon-trash"></i></button>
+          </kendo-buttongroup>
+          <!-- #endregion -->
+        </div>
+      </div>
+      <!-- #region Scheme Grid -->
+      <div class="content_box">
+        <div class="grid-wrap">
+          <kendo-grid [data]="listSchemes" [resizable]="true" [selectable]="selectableSettings"
+            (selectionChange)="selectedRowChange($event)" [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+            <kendo-grid-column field="name" title="Name" [width]="120">
+            </kendo-grid-column>
+            <kendo-grid-column field="origin" title="Origin" [width]="120">
+            </kendo-grid-column>
+            <kendo-grid-column field="startDate" title="Start Date" [width]="80">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.startDate | date: 'dd/MM/yyyy'}}
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="endDate" title="End Date" [width]="80">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.endDate | date: 'dd/MM/yyyy'}}
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="isActive" title="Active" [width]="20">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <input type="checkbox" class="k-checkbox" disabled [checked]="dataItem.isActive" />
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid>
+        </div>
+      </div>
+      <!-- #endregion -->
+    </div>
+  </div>
+</section>
+
+
+<!-- #region Add Scheme dialog start -->
+<div class="modal c-modal addemp" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isSchemeDialog">
+  <form name="form" #schemeForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-scheme"></i>{{schemeObj.id?"Edit":"Add"}}
+            Scheme
+          </h5>
+          <button type="button" class="close" (click)="closeSchemeDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- #region Scheme Form -->
+          <h6 class="title justify-content-between mb-0"><span><i class="icon-info"></i>Scheme
+              Information</span>
+            <div class="f-group mt-0">
+              <kendo-switch class="k-widget k-switch-off me-1" name="isActive" [(ngModel)]="schemeObj.isActive"
+                #isActive="ngModel" id=""></kendo-switch>
+            </div>
+          </h6>
+          <div class="vow-input-grid mt-2">
+            <div class="form-data">
+              <label for="">Name<span class="require">*</span></label>
+            </div>
+            <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+              <input type="text" name="name" [(ngModel)]="schemeObj.name" #name="ngModel" id="" required>
+            </div>
+
+            <div class="form-data"><label class="col-form-label">Origin</label></div>
+            <div class="form-data  mul-select">
+              <kendo-multiselect name="origin" class="customselect" [data]="listOrigins" [(ngModel)]="schemeObj.origin"
+                [textField]="'name'" [valueField]="'name'" [valuePrimitive]="true" [popupSettings]="{width: 'auto'}"
+                [autoClose]="false" [kendoMultiSelectSummaryTag]="0" #origin="ngModel" [filterable]="true"
+                (valueChange)="utilityService.onMultiSelectChange(listOrigins, schemeObj.origin)"
+                (open)="filterOriginChk = utilityService.onOpenDropdown(listOrigins,filterOriginChk,  schemeObj.origin)"
+                (filterChange)="filterOrigin = utilityService.handleFilter($event);listOrigins = utilityService.filterDropdownSearchDefault(listOriginItems, $event,  schemeObj.origin)">
+                <ng-template kendoComboBoxHeaderTemplate>
+                  <div class="single k-widget k-header form-data mb-0 p-2 position-relative c-fil">
+                    <input type="text" name="filterOrigin" id="filterOrigin" [(ngModel)]="filterOrigin"
+                      placeholder="Search Origin">
+                    <span class="k-icon k-i-search"></span>
+                  </div>
+                  <div class="single k-widget k-header ps-2">
+                    <input type="checkbox" class="k-checkbox me-1" name="filterOriginChk" id="filterOriginChk"
+                      title="Select all" [(ngModel)]="filterOriginChk"
+                      (change)=" schemeObj.origin = utilityService.checkAllListItems(listOrigins, filterOriginChk,  schemeObj.origin)">
+                    <label>Select all</label>
+                  </div>
+                </ng-template>
+                <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                  <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                  <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                </ng-template>
+                <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                  <span kendoTooltip position="bottom"
+                    [title]="utilityService.getCommaSapratedString( schemeObj.origin, true)">
+                    {{utilityService.getCommaSapratedString( schemeObj.origin)}}
+                  </span>
+                </ng-template>
+              </kendo-multiselect>
+            </div>
+            <div class="form-data">
+              <label class="col-form-label">Start Date <span class="require">*</span></label>
+            </div>
+            <div class="form-data">
+              <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="startDate" [(ngModel)]="schemeObj.startDate"
+                #startDate="ngModel" id="" (blur)="compareTwoDates()" required></kendo-datepicker>
+            </div>
+            <div class="form-data">
+              <label class="col-form-label">End Date <span class="require">*</span></label>
+            </div>
+            <div class="form-data">
+              <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="endDate" [(ngModel)]="schemeObj.endDate" #endDate="ngModel"
+                id="" (blur)="compareTwoDates()" required></kendo-datepicker>
+            </div>
+          </div>
+          <!-- #endregion -->
+          <!-- #region SchemeDetail Form -->
+          <form name="form" #volDisForm="ngForm">
+            <h6 class="title mb-0 mt-3 justify-content-between"><span><i class="icon-info"></i>Scheme
+                Details</span>
+              <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons" class="btnGroup_gap">
+                <button kendoButton [disabled]="!volDisForm.valid || !(schemeDetailObj.discount>0)"
+                  (click)="sumbitDiscountCriteria(volDisForm)" title="Add Dis Criteria">
+                  <i *ngIf="myDetailSelection.length==0" class="icon-add pe-0"></i>
+                  <i *ngIf="myDetailSelection.length==1" class="icon-edit pe-0"></i>
+
+                </button>
+                <button kendoButton *ngIf="myDetailSelection.length==1" (click)="clearDetailForm(volDisForm)"
+                  title="Clear Dis Criteria">
+                  <i class="icon-delete pe-0"></i>
+                </button>
+                <button kendoButton [disabled]="myDetailSelection.length==0" (click)="openDetailDeleteDialog()"
+                  title="Delete Dis Criteria">
+                  <i class="icon-trash pe-0"></i>
+                </button>
+              </kendo-buttongroup>
+            </h6>
+            <div class="vow-details-grid mt-2">
+              <div class="form-data"><label class="col-form-label">Discount <span class="require">*</span></label></div>
+              <div class="form-data" [ngClass]="{ 'error': dis.invalid && (dis.dirty || dis.touched)}">
+                <input type="text" class="form-control" name="dis" [(ngModel)]="schemeDetailObj.discount" #dis="ngModel"
+                  id="" (keypress)="utilityService.floatOnly($event);" required />
+              </div>
+              <div class=" form-data">
+                <label class="col-form-label">From Amt<span class="require">*</span></label>
+              </div>
+              <div class="form-data" [ngClass]="{ 'error': famount.invalid && (famount.dirty || famount.touched)}">
+                <input type="text" class="form-control" name="famount" [(ngModel)]="schemeDetailObj.from"
+                  #famount="ngModel" id="" (keypress)="utilityService.floatOnly($event);" (blur)="validateSizes()"
+                  required />
+              </div>
+              <div class="form-data"><label class="col-form-label">To Amt<span class="require">*</span></label></div>
+              <div class="form-data" [ngClass]="{ 'error': tamount.invalid && (tamount.dirty || tamount.touched)}">
+                <input type="text" class="form-control" name="tamount" [(ngModel)]="schemeDetailObj.to"
+                  #tamount="ngModel" id="" (keypress)="utilityService.floatOnly($event);" (blur)="validateSizes()"
+                  required />
+              </div>
+              <div class=" form-data">
+                <label class="col-form-label">Days<span class="require">*</span></label>
+              </div>
+              <div class="form-data" [ngClass]="{ 'error': days.invalid && (days.dirty || days.touched)}">
+                <input type="text" class="form-control" name="days" [(ngModel)]="schemeDetailObj.days" #days="ngModel"
+                  id="" (keypress)="utilityService.numberOnly($event);" required />
+              </div>
+            </div>
+          </form>
+          <!-- #endregion -->
+          <!-- #region SchemeDetail Grid -->
+          <div class="grid-wrap">
+            <kendo-grid [data]="schemeObj.details" [selectable]="selectableSettings"
+              (selectionChange)="selectedDetailRowChange($event)" [(selectedKeys)]="myDetailSelection"
+              [kendoGridSelectBy]="selectedDetailCallback" [resizable]="true" [height]="250">
+              <kendo-grid-column field="discount" title="Discount(%)" [width]="120">
+              </kendo-grid-column>
+              <kendo-grid-column field="from" title="From Amount($)" [width]="120">
+              </kendo-grid-column>
+              <kendo-grid-column field="to" title="To Amount($)" [width]="120">
+              </kendo-grid-column>
+              <kendo-grid-column field="days" title="Days" [width]="120">
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+          <!-- #endregion -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="button" [disabled]="!(schemeForm.valid && schemeDatesFlag)"
+            (click)="sumbitScheme(schemeForm,false)"><i class="icon-add"></i>New</button>
+          <button class="btn btn-primary" type="button" [disabled]="!(schemeForm.valid && schemeDatesFlag)"
+            (click)="sumbitScheme(schemeForm,true)"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+<div (document:keydown.esc)="closeSchemeDialog()"></div>
+
+<div kendoDialogContainer></div>

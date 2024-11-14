@@ -1,0 +1,19 @@
+.his-grid {
+    grid-template-columns: 900px 450px;
+}
+
+.grid-wrap.pricing-grid .k-grid {
+    height: calc(100vh - 116px);
+}
+
+.his-grid .k-grid {
+    height: calc(46vh - 80px);
+}
+
+.d-details .content.t-details span.l-head {
+    margin-right: 30px;
+}
+
+.t-details li .r-det {
+    white-space: normal;
+}

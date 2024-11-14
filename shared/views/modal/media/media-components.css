@@ -1,0 +1,5 @@
+@media(max-width:1200px) {
+    .media_img {
+        min-height: auto !important;
+    }
+}

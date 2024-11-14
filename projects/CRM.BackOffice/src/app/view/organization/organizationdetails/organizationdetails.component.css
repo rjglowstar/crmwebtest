@@ -1,0 +1,8 @@
+.adddep .i-form.ad-branch .grid {
+    grid-template-columns: 84px 1fr;
+}
+
+.adddep .modal-dialog {
+    max-width: 350px !important;
+    margin: auto;
+}

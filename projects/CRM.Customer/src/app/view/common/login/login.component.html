@@ -1,0 +1,102 @@
+<title>Login</title>
+<div class="form-wrap authScr_bg">
+    <div class="authGrid logrid_wrap">
+
+        <div class="bg_wrap">
+            <div class="img_wrap">
+                <img src="../../../../assets/images/loginbg.png" class="img-fluid" />
+            </div>
+        </div>
+
+        <div class="right_wrap">
+            <div class="log_wrap">
+                <!-- logo -->
+                <div class="logo_wrap">
+                    <!-- go back -->
+                    <ng-container *ngIf="companyName == 'Glowstar'">
+                        <a class="goTohome_btn" title="Go Back" (click)="navigateBackward()"><i
+                                class="icon-left-new"></i><span>BACK</span></a>
+                    </ng-container>
+                    <a routerLink="/home">
+                        <img [src]="logoPath" class="img-fluid white_logo" alt="brand-logo">
+                    </a>
+                </div>
+
+                <!-- title -->
+                <h6>Log In</h6>
+
+                <div class="ri-form-wrap">
+                    <form #LoginForm="ngForm">
+                        <div class="war-wrap">
+                            <div class="alert alert-primary war-alert d-none" role="alert">
+                                <span>{{'BasicText.LoginAttemptRemaining'| translate}}</span>
+                            </div>
+                            <div class="alert alert-primary sus-alert d-none" role="alert">
+                                <span>{{'BasicText.LoginAttemptWarning'| translate}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-data">
+                            <input type="text" placeholder="&nbsp;" id="email" name="username"
+                                [(ngModel)]="loginModelObj.user_id" #username required>
+                            <label for="email" class="input_lbl">Username</label>
+                            <span class="s-error">{{'BasicText.Enter valid email address!'| translate}}</span>
+                        </div>
+                        <div class="form-data">
+                            <div class="position-relative">
+                                <input type="password" placeholder="&nbsp;" id="password" name="pwd"
+                                    [(ngModel)]="loginModelObj.password" #Pass>
+                                <label class="input_lbl">{{'BasicText.Password'| translate}}</label>
+                                <span class="pass-view"
+                                    (click)="Pass.type = Pass.type == 'password' ? 'text' : 'password'">
+                                    <i class="{{Pass.type == 'password' ?'icon-view':'icon-password-disable'}}"></i>
+                                </span>
+                            </div>
+                            <span class="s-error">
+                                {{'BasicText.Password must be 6 character long and contain special character &numeric!'|
+                                translate}}
+                            </span>
+                            <span class="require position-absolute" style="padding-left: 0;font-size: 12px;"
+                                *ngIf="loginError">{{errorMsg}}</span>
+                            <div class="actBtns_wrap">
+                                <div class="keepLogin">
+                                    <input type="checkbox" id="checkLogin" hidden />
+                                    <label for="checkLogin" class="cusCheck_box"></label>
+                                    <label for="checkLogin">Keep me logged in</label>
+                                </div>
+                                <a href="javascript:void(0)" class="forPass_btn"
+                                    (click)="forgotClick()">{{'BasicText.Forgot
+                                    Password'|
+                                    translate}} ?</a>
+
+                                <!-- new customer link -->
+                                <div class="new_cus">
+                                    Don't have an account?
+                                    <a href="javascript:void(0)" (click)="registerClick()">{{"BasicText.Register Now" |
+                                        translate}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-btn text-center">
+                            <button class="c-btn" (click)="login(LoginForm)"
+                                [disabled]="!LoginForm.valid || loginLoading">{{'BasicText.Login'| translate}}</button>
+                        </div>
+                    </form>
+                </div>
+                <ul class="cLiImg_wrap">
+                    <li><img src="../../../../assets/images/cliImg_3.png" class="img-fluid" /></li>
+                    <li><img src="../../../../assets/images/igi.png" class="img-fluid" /></li>
+                    <li><img src="../../../../assets/images/hj.png" class="img-fluid" /></li>
+                    <li><img src="../../../../assets/images/Rapnet-c.png" class="img-fluid" /></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff"
+    template="<img src='commonAssets/images/gl.gif' style='width:80px;' />" [fullScreen]="true">
+    <!-- <p style="color: white"> Loading... </p> -->
+</ngx-spinner>
+
+<div kendoDialogContainer></div>

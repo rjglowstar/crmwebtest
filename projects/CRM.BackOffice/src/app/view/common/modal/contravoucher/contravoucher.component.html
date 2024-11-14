@@ -1,0 +1,245 @@
+<div class="modal c-modal addemp dialog-sm-l" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form class="modal-content" name="GenForm" #GenForm="ngForm" novalidate>
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="icon-transaction"></i>{{this.transactionObj.transactionType}} Transaction
+        </h5>
+        <button type="button" class="close" (click)="closeGeneralDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="title d-flex justify-content-between"><span><i class="icon-ledger"></i>Ledger
+            Information</span>
+          <div class="form-data d-flex">
+            <div class="grid-3 d-flex align-items-center">
+              <div class="form-data me-2">
+                <label>Date<span class="require">*</span></label>
+              </div>
+              <div class="form-data">
+                <kendo-datepicker calendarType="classic" name="eDate" #eDate="ngModel" format="dd/MM/yyyy"
+                  [(ngModel)]="contraTransactionObj.transactionDate" required></kendo-datepicker>
+              </div>
+            </div>
+          </div>
+        </h6>
+
+        <div class="general-input-grid">
+          <div class="grid-1">
+            <div class="d-flex">
+              <div class="form-data me-2">
+                <label>From Ledger<span class="require">*</span></label>
+              </div>
+              <div class="form-data basis-100" style="flex-basis: 75%;">
+                <kendo-autocomplete [disabled]="isEdit" class="w-100" [data]="listFromLedgerItems" [filterable]="true"
+                  (filterChange)="FromLedgerFilter($event)" [kendoDropDownFilter]="filterSettings" name="FromLedger"
+                  [(ngModel)]="selectedFromLedgerItem" (valueChange)="fromLedgerChange($event)"
+                  [popupSettings]="{width: 'auto'}" #FromLedger="ngModel" valueField="value" required>
+                  <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                    <span>{{dataItem.text}}</span>
+                  </ng-template>
+                </kendo-autocomplete>
+              </div>
+            </div>
+            <div class="e-details-n mt-2">
+              <div class="info-block">
+                <li>
+                  <h6 class="c-name"><span>Name:</span>{{this.contraTransactionObj.fromLedger.name}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Contact Person:</span>{{this.contraTransactionObj.fromLedger.contactPerson}}
+                  </h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Email:</span>{{this.contraTransactionObj.fromLedger.email}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Mobile No:</span>{{this.contraTransactionObj.fromLedger.mobileNo}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Address:</span>
+                    {{this.contraTransactionObj.fromLedger.address.line1}}
+                    {{this.contraTransactionObj.fromLedger.address.line2}}
+                    {{this.contraTransactionObj.fromLedger.address.city}}
+                    {{this.contraTransactionObj.fromLedger.address.state}}
+                    {{this.contraTransactionObj.fromLedger.address.country}}
+                  </h6>
+                </li>
+              </div>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="d-flex">
+              <div class="form-data me-2">
+                <label>To Ledger<span class="require">*</span></label>
+              </div>
+              <div class="form-data basis-100" style="flex-basis: 75%;">
+                <kendo-autocomplete [disabled]="isEdit" class="w-100" [data]="listToLedgerItems" [filterable]="true"
+                  (filterChange)="ToLedgerFilter($event)" [kendoDropDownFilter]="filterSettings" name="ToLedger"
+                  [(ngModel)]="selectedToLedgerItem" (valueChange)="toLedgerChange($event)"
+                  [popupSettings]="{width: 'auto'}" #ToLedger="ngModel" valueField="value" required>
+                  <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                    <span>{{dataItem.text}}</span>
+                  </ng-template>
+                </kendo-autocomplete>
+              </div>
+            </div>
+            <div class="e-details-n mt-2">
+              <div class="info-block">
+                <li>
+                  <h6 class="c-name"><span>Name:</span>{{this.contraTransactionObj.toLedger.name}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Contact Person:</span>{{this.contraTransactionObj.toLedger.contactPerson}}
+                  </h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Email:</span>{{this.contraTransactionObj.toLedger.email}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Mobile No:</span>{{this.contraTransactionObj.toLedger.mobileNo}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Address:</span>
+                    {{this.contraTransactionObj.toLedger.address.line1}}
+                    {{this.contraTransactionObj.toLedger.address.line2}}
+                    {{this.contraTransactionObj.toLedger.address.city}}
+                    {{this.contraTransactionObj.toLedger.address.state}}
+                    {{this.contraTransactionObj.toLedger.address.country}}
+                  </h6>
+                </li>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <h6 class="title"><i class="icon-currency"></i>Currency</h6>
+        <div class="ledger-grid mt-2">
+          <div class="form-data">
+            <label>Currency<span class="require">*</span></label>
+          </div>
+          <div class="form-data"
+            [ngClass]="{ 'error': CurrencyType.invalid && (CurrencyType.dirty || CurrencyType.touched)}">
+            <kendo-combobox class="w-auto" [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+              valueField="value" name="CurrencyType" [kendoDropDownFilter]="filterSettings"
+              [(ngModel)]="contraTransactionObj.transactionDetail.fromCurrency" #CurrencyType="ngModel" required
+              (valueChange)="currencyChange()" [disabled]="disableFromCurrType">
+            </kendo-combobox>
+          </div>
+
+          <div class="form-data">
+            <label>Currency Rate<span class="require">*</span></label>
+          </div>
+          <div class="form-data"
+            [ngClass]="{ 'error': currencyRate.invalid && (currencyRate.dirty || currencyRate.touched)}">
+            <input type="text" name="currencyRate" autocomplete="off"
+              [(ngModel)]="contraTransactionObj.transactionDetail.fromCurRate" #currencyRate="ngModel" id="currencyRate"
+              required (keypress)="utilityService.floatOnly($event)" [disabled]="'true'">
+          </div>
+
+          <div class="form-data">
+            <label>Convert Cur.</label>
+          </div>
+          <div class="form-data"
+            [ngClass]="{ 'error': convCurrencyType.invalid && (convCurrencyType.dirty || convCurrencyType.touched)}">
+            <kendo-combobox class="w-auto" [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+              valueField="value" name="convCurrencyType" [kendoDropDownFilter]="filterSettings"
+              [(ngModel)]="contraTransactionObj.transactionDetail.toCurrency" #convCurrencyType="ngModel"
+              (valueChange)="currencyChange()" [disabled]="disableToCurrType">
+            </kendo-combobox>
+          </div>
+
+          <div class="form-data">
+            <label>Convert Rate</label>
+          </div>
+          <div class="form-data">
+            <input type="text" name="convcurrencyRate" autocomplete="off"
+              [(ngModel)]="contraTransactionObj.transactionDetail.toCurRate" #convcurrencyRate="ngModel"
+              id="convcurrencyRate" (keypress)="utilityService.floatOnly($event)" (keyup)="calculateTotal();"
+              [disabled]=" false">
+          </div>
+          <div class="form-data" *ngIf="isContraDetail">
+            <label>B. Commi.</label>
+          </div>
+          <div class="form-data" *ngIf="isContraDetail">
+            <input type="text" name="commission" #commission="ngModel"
+              [(ngModel)]="contraTransactionObj.contraVoucherDetail.bankCommission"
+              (keypress)="utilityService.floatOnly($event);">
+          </div>
+          <div class="form-data" *ngIf="isContraDetail">
+            <label>B. Interest</label>
+          </div>
+          <div class="form-data" *ngIf="isContraDetail">
+            <input type="text" name="interest" #interest="ngModel"
+              [(ngModel)]="contraTransactionObj.contraVoucherDetail.bankInterest"
+              (keypress)="utilityService.floatOnly($event);">
+          </div>
+          <div class="form-data" *ngIf="isContraDetail">
+            <label>Tax</label>
+          </div>
+          <div class="form-data" *ngIf="isContraDetail">
+            <input type="text" name="tax" #tax="ngModel" [(ngModel)]="contraTransactionObj.contraVoucherDetail.tax"
+              (keypress)="utilityService.floatOnly($event);">
+          </div>
+        </div>
+
+        <h6 class="title"><i class="icon-currency"></i>Amount</h6>
+        <div class="ledger-amt mt-2">
+          <div class="form-data">
+            <label>Amount<span class="require">*</span></label>
+          </div>
+          <div class="form-data">
+            <input type="text" name="amount" #amount="ngModel" [(ngModel)]="contraTransactionObj.amount" required
+              autocomplete="off" (keypress)="utilityService.floatOnly($event)" (keyup)="calculateTotal();">
+          </div>
+          <div class="form-data">
+            <label>B. Charge</label>
+          </div>
+          <div class="form-data">
+            <input type="text" name="expence" #expence="ngModel"
+              [(ngModel)]="contraTransactionObj.paymentDetail.expence" autocomplete="off"
+              (keypress)="utilityService.floatOnly($event)" (keyup)="calculateTotal(true);">
+          </div>
+          <div class="form-data">
+            <label>Add Amt</label>
+          </div>
+          <div class="form-data" [ngClass]="{ 'error': !validAddAmtLimit }">
+            <input type="text" name="addAmt" #addAmt="ngModel" [(ngModel)]="contraTransactionObj.addAmount"
+              autocomplete="off" (keypress)="utilityService.discountfloat($event)"
+              (keyup)="calculateTotal(true);validAddAmtLimit = utilityService.validateAddAmountLimit(contraTransactionObj.addAmount, accountingConfigData.addAmountLimit);">
+            <span class="font-smaller s-error" *ngIf="!validAddAmtLimit">Amount exceed limit</span>
+          </div>
+          <div class="form-data">
+            <label>Net Amt</label>
+          </div>
+          <div class="form-data">
+            <input type="text" name="total" value="{{contraTransactionObj.netTotal}}" readonly disabled>
+          </div>
+          <div class="form-data">
+            <label>CC Amt</label>
+          </div>
+          <div class="form-data">
+            <input type="text" name="total" value="{{contraTransactionObj.ccAmount}}" readonly disabled>
+          </div>
+        </div>
+
+        <h6 class="title"><i class="icon-edit"></i>Remark</h6>
+        <div class="form-data">
+          <textarea cols="4" type="text" placeholder="Remark" name="remark" #remark="ngModel"
+            [(ngModel)]="contraTransactionObj.note" style="height: 60px;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" [disabled]="!(GenForm.valid && validAddAmtLimit)"
+          (click)="saveTransaction(true)">
+          <i class="icon-add"></i>New</button>
+        <button type="button" class="btn btn-primary" *ngIf="!isEdit" [disabled]="!(GenForm.valid && validAddAmtLimit)"
+          (click)="saveTransaction()">
+          <i class="icon-save"></i>Save</button>
+        <button type="button" class="btn btn-primary" *ngIf="isEdit" [disabled]="!(GenForm.valid && validAddAmtLimit)"
+          (click)="updateTransaction()">
+          <i class="icon-save"></i>Update</button>
+      </div>
+    </form>
+  </div>

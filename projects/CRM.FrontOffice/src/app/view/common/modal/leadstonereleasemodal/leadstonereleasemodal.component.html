@@ -1,0 +1,89 @@
+<!-- #region Release Modal -->
+<div class="modal c-modal addemp edinv rorgan" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+    <form name="releaseStoneForm" #releaseStoneForm="ngForm" novalidate>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="icon-request"></i>Stone Release Request</h5>
+                    <button type="button" class="close" (click)="closeStoneReleaseDialog()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body ps-2 pe-2">
+                    <div class="tag ci-top-left" *ngIf="sellerId">
+                        <ul>
+                            <li><span class="t-title">Requested By:</span>{{leadStoneReleaseRequestObj.identity.name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panelbar-wrapper ms-config">
+                        <div class="grid-wrap mt-2 grid-rejecetd">
+                            <kendo-grid class="stone-release-grid" [resizable]="true" [data]="gridViewInvItemList"
+                                [sortable]="true" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+                                (pageChange)="pageChange($event)" [sortable]="true" style="height:calc(100vh - 490px);"
+                                [groupable]="true" [group]="groups" (groupChange)="groupChange($event)"
+                                [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'stoneId'">
+                                <kendo-grid-checkbox-column *ngIf="sellerId" [showSelectAll]="isShowCheckBoxAll"
+                                    [width]="40">
+                                </kendo-grid-checkbox-column>
+                                <ng-container *ngIf="fields && fields.length > 0">
+                                    <ng-container *ngFor="let field of fields;let i= index">
+                                        <ng-container *ngIf="field.isSelected">
+                                            <kendo-grid-column [width]="field.width" [field]="field.propertyName"
+                                                [title]="field.title">
+                                                <ng-template *ngIf="!(sellerId)" kendoGridGroupHeaderTemplate
+                                                    let-dataItem let-value="value" let-aggregates="aggregates"
+                                                    let-field="field">
+                                                    <div
+                                                        class="w-100 align-items-center d-flex justify-content-between">
+                                                        <div>
+                                                            <span class="ps-1">Seller: </span>
+                                                            <label class="mb-0"> {{aggregates.sellerName.max}}</label>
+                                                        </div>
+                                                        <div>
+                                                            <span class="ps-1">Count: </span>
+                                                            <label class="mb-0">{{aggregates.sellerCount.count}}</label>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template *ngIf="(sellerId)" kendoGridGroupHeaderTemplate
+                                                    let-dataItem let-value="value" let-aggregates="aggregates"
+                                                    let-field="field">
+                                                    <div
+                                                        class="w-100 align-items-center d-flex justify-content-between">
+                                                        <div>
+                                                            <span class="ps-1">Lead No: </span>
+                                                            <label class="mb-0"> {{aggregates.leadNo.max}}</label>
+                                                        </div>
+                                                        <div>
+                                                            <span class="ps-1">Count: </span>
+                                                            <label class="mb-0">{{aggregates.leadCount.count}}</label>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                                    *ngIf="field.propertyName=='customer.name'">
+                                                    <b>{{dataItem.customer.companyName}}</b> -
+                                                    {{dataItem.customer.name}}
+                                                </ng-template>
+                                            </kendo-grid-column>
+
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-container>
+                            </kendo-grid>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" (click)="onSubmit(releaseStoneForm)"
+                        [disabled]="(!sellerId && !(releaseAllList.length > 0) ) || (sellerId && (!(mySelection.length > 0) || isDisabledSave))"><i
+                            class="icon-save"></i>Save</button>
+                </div>
+            </div>
+        </div>
+
+        <div (document:keydown.esc)="closeStoneReleaseDialog()"></div>
+    </form>
+</div>
+<!-- #endregion -->

@@ -1,0 +1,51 @@
+
+.attachment-dialog i {
+    background: #4d4d4d;
+    color: #fff;
+    padding: 5px;
+    margin-right: 6px;
+    display: block;
+    float: left;
+    border-radius: 4px;
+}
+
+.s-email .form-data textarea {
+    height: initial;
+    padding: 5px !important;
+}
+
+.s-email .form-data:nth-child(odd),
+.s-email .form-data:last-child {
+    margin-bottom: initial;
+}
+
+.s-email .form-data input {
+    background-color: transparent;
+    height: 30px;
+}
+
+.mail-grid {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+}
+
+.sr-wrap.transaction-panel {
+    position: absolute;
+    background: #fff;
+    box-shadow: -10px 0px 15px rgba(0, 0, 0, 10%);
+    border-radius: 5px;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 250px;
+    animation: slideRight 0.5s;
+    z-index: 10;
+    overflow-y: auto;
+    transform: translateX(375px);
+}
+
+.sr-wrap.transaction-panel.active {
+    transform: translateX(0);
+}

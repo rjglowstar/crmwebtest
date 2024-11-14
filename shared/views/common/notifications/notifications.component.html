@@ -1,0 +1,134 @@
+<title>Notifications</title>
+<section class="notificationList-wrap">
+  <div class="content_wrap">
+    <div class="e-left w-100">
+      <div class="breadcrumb bg">
+        <div class="breadcrumb-left">
+          <ul>
+            <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+            <li class="breadcrumb-item active" aria-current="page">Notifications</li>
+          </ul>
+        </div>
+        <div class="breadcrumb-right pe-0">
+          <kendo-buttongroup kendoTooltip position="bottom">
+            <button kendoButton title="Delete notification" [disabled]="mySelection.length == 0"
+              (click)="deleteNotificationReasonDialog()"><i class="icon-trash"></i></button>
+          </kendo-buttongroup>
+        </div>
+      </div>
+      <div class="content_box">
+        <div class="grid-wrap grid-summury">
+          <!-- Skeleton start -->
+          <ng-container *ngIf="!gridView">
+            <div class="k-grid" style="overflow:auto;">
+              <div class="k-grouping-header k-grouping-header-flex">
+                <div class="k-indicator-container">
+                  <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                  </kendo-skeleton>
+                </div>
+              </div>
+              <table *ngIf="fields && fields.length > 0" class="w-100">
+                <th *ngFor="let field of fields">{{field.propertyName}}</th>
+                <tr *ngFor="let field of skeletonArray">
+                  <td *ngFor="let field of fields">
+                    <kendo-skeleton shape="text" animation="wave" [width]="75" [height]="40">
+                    </kendo-skeleton>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </ng-container>
+          <!-- Skeleton end -->
+
+          <kendo-grid #notifictionGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+            [groupable]="true" [sortable]="true" (dblclick)="dblClickNotification()" [selectable]="selectableSettings"
+            (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+            [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)"
+            [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+            <ng-container *ngIf="fields && fields.length > 0">
+              <ng-container *ngFor="let field of fields">
+                <ng-container *ngIf="field.isSelected">
+                  <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                    <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'createdDate'">
+                      {{dataItem.createdDate | date: 'dd-MM-yyyy hh:mm:ss a'}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </kendo-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- <ng-container *ngIf="notificationActionMStoneFlag">
+        <app-manualstoneissue [notificationObj]="notificationObj" (toggle)="notificationActionMStoneFlag=$event">
+        </app-manualstoneissue>
+  </ng-container> -->
+
+<!-- #region Lead Modal -->
+<ng-container *ngIf="notificationActionFlag">
+  <app-leadmodal [leadId]="leadId" (toggle)="closeDialogLead($event)"></app-leadmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Memo Model-->
+<ng-container *ngIf="notificationMemoActionFlag">
+  <app-memo (toggle)="closeMemoDialog($event)" [memoRequest]="fetchMemoRequest"> </app-memo>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Ledger Dialog -->
+<ng-container *ngIf="isLedgerFlag">
+  <app-ledger-modal [showSearch]="true" [ledgerIdent]="ledgerIdent" [ledgerType]="ledgerType"
+    (successEvent)="updateLedgers($event)" (toggle)="isLedgerFlag=$event"></app-ledger-modal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Edit Request Customer Model-->
+<ng-container *ngIf="isEditableCustomer">
+  <app-leadcustomerrequestmodal [leadId]="leadId" [notificationId]="notificationObj.id"
+    (toggle)="isEditableCustomer=$event.isOpen">
+  </app-leadcustomerrequestmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Release stone Lead Modal Start -->
+<ng-container *ngIf="isStoneRelease">
+  <app-leadstonereleasemodal [requestId]="leadReleaseId" (toggle)="isStoneRelease=$event"
+    [notificationId]="notificationObj.id">
+  </app-leadstonereleasemodal>
+</ng-container>
+<!-- #endregion Release stone Lead Modal End -->
+
+<!-- #region Rejected Offer with Reason Model-->
+<ng-container *ngIf="isRejectedOffer">
+  <app-leadrejectedmodal [leadRejectedId]="leadRejectedId" (toggle)="closeRejectedDialog($event)">
+  </app-leadrejectedmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Sales Cancel stone Lead Modal Start -->
+<ng-container *ngIf="isSalesCancel">
+  <app-leadcancelmodal (toggle)="closeLeadCancel()" [notificationId]="notificationObj.id">
+  </app-leadcancelmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region QC request FO Detail -->
+<ng-container *ngIf="isQcShowDetails">
+  <app-qcrequestdetailmodal (toggle)="closeQcDetailsDialog()" [qcRequestId]="qcRequestId"></app-qcrequestdetailmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Qc Request BO Model-->
+<ng-container *ngIf="qcRequestDialog">
+  <app-qcrequest-modal (toggle)="closeQcRequestDialog()" [qcRequestBOId]="qcRequestBoId">
+  </app-qcrequest-modal>
+</ng-container>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

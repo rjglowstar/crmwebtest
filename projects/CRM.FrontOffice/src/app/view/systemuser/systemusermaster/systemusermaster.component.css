@@ -1,0 +1,9 @@
+.systemuser-modal.c-modal .modal-content {
+    height: 705px;
+}
+
+.signature-grid {
+    display: grid;
+    grid-template-columns: 102px 1fr 82px 1fr;
+    grid-column-gap: 10px;
+}

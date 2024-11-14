@@ -1,0 +1,663 @@
+<title>Lead</title>
+<section class="Lead-wrap">
+  <div class="content_wrap">
+    <div class="e-left w-100">
+      <div class="breadcrumb bg">
+        <div class="breadcrumb-left">
+          <ul>
+            <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+            <li class="breadcrumb-item active" aria-current="page">Lead</li>
+          </ul>
+        </div>
+        <div class="breadcrumb-right pe-0">
+          <div class="status_info">
+            <div class="st_box offline"></div>
+            <span>Offline</span>
+
+            <div class="st_box online"></div>
+            <span>Online</span>
+
+            <div class="st_box aiGenerated"></div>
+            <span>AI Generated</span>
+          </div>
+          <kendo-buttongroup kendoTooltip position="bottom">
+            <button kendoButton title="Filter" class="nf-click z-index-auto" (click)="openFilterDialog()"><i
+                class="icon-filter"></i></button>
+            <button kendoButton *ngIf="!isAdminRole" class="z-index-auto" title="Add Lead"
+              [disabled]="disabledFlag || !sellerObj" (click)="toggleAddLeadDialog()"><i class="icon-add"></i></button>
+            <input #file type="file" (click)="file.value=''" (change)="onSelectExcelFile($event)" hidden
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
+            <button kendoButton #anchor *ngIf="!isAdminRole" (click)="file.click();" title="Import Excel"
+              [disabled]="disabledFlag || !sellerObj"><i class="icon-excelnew "></i></button>
+          </kendo-buttongroup>
+        </div>
+      </div>
+      <div class="content_box">
+        <div class="kanban-content-top">
+          <div class="kanban-content">
+
+            <!-- Qualification - START -->
+            <div class="cus-wid-2" [ngClass]="{'active':collapeQualification}">
+              <div class="leadBlock_wrap">
+                <div class="c-head" (click)="visiableQualification()">
+                  <div>
+                    <span class="header-left">Qualification</span>
+                  </div>
+                  <div>
+                    <span class="current">{{tasksQualificationList.length}}</span>
+                    <i class="icon-left-new c-click"></i>
+                  </div>
+                </div>
+                <div [dragula]="dragBoard" [(dragulaModel)]="tasksQualificationList" class="kanban-content-child"
+                  id="qualification">
+                  <div class="board-content" [ngClass]="{'ecom-dash':item.platform=='online'}"
+                    *ngFor="let item of tasksQualificationList">
+                    <div class="board-tag-content">
+                      <div class="sta-top">
+                        <div class="align-items-center d-flex justify-content-between status-content">
+                          <div class="im-pro" (click)="editLead(item,true,'Qualification')">
+                            <img src="commonAssets/images/buyer.png">
+                            <span class="na-info">
+                              <p class="mb-0">
+                                <b>{{item.customer.companyName}}</b>
+                              </p>
+                              {{item.customer.name}}
+                            </span>
+                          </div>
+                          <span class="task-info">{{item.leadNo}}</span>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between sta-bottom mt-1 mt-1">
+                        <div class="board-timer">
+                          <!-- <span>{{item.daysLeft > 1 ?
+                              item.daysLeft + ' days Left'
+                              : item.daysLeft + ' day
+                              Left'}}</span> -->
+                        </div>
+                        <div class="align-items-center d-flex justify-content-between status-content">
+                          <img src="commonAssets/images/seller_avtar_new.png">
+                          <span class="na-info">{{item.seller.name}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="board-profile-content">
+                      <div class="align-content-center d-flex justify-content-between profile-left">
+                        <div class="align-items-center d-flex">
+                          <i class="icon-diamond"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalPcs}}</span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-weightscale"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalCarat?.toFixed(2)}}<span
+                              class="p-unit">CT</span></span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-pricing"></i>
+                          <span class="profile-left-content">{{(item?.leadSummary?.totalPayableAmount !=
+                            0) ?
+                            item?.leadSummary?.totalPayableAmount?.toFixed(2):item?.leadSummary?.totalAmount?.toFixed(2)}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- #end -->
+
+            <!-- Proposal - START -->
+            <div class="cus-wid-2">
+              <div class="leadBlock_wrap">
+                <div class="c-head">
+                  <div>
+                    <span class="header-left">Proposal</span>
+                  </div>
+                  <div>
+                    <span class="current">{{tasksProposalList.length}}</span>
+                  </div>
+                </div>
+                <div [dragula]="dragBoard" [(dragulaModel)]="tasksProposalList" class="kanban-content-child"
+                  id="proposal">
+                  <div class="board-content" [ngClass]="{'ecom-dash':item.platform=='online'}"
+                    *ngFor="let item of tasksProposalList">
+                    <div class="board-tag-content">
+                      <div class="sta-top">
+                        <div class="align-items-center d-flex justify-content-between status-content">
+
+                          <div class="im-pro" (click)="editLead(item,true,'Proposal')">
+                            <img src="commonAssets/images/buyer.png">
+                            <span class="na-info" [ngStyle]="{'color':item.isAILeadGenerated == true ?'#8a32f3':'black'}">
+                              <p class="mb-0">
+                                <b>{{item.customer.companyName}}</b>
+                              </p>
+                              {{item.customer.name}}
+                            </span>
+                          </div>
+                          <span class="task-info">{{item.leadNo}}</span>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between sta-bottom mt-1 mt-1">
+                        <div class="board-timer">
+                          <!-- <span>{{item.daysLeft > 1 ?
+                                item.daysLeft + ' days Left'
+                                item.daysLeft + ' day
+                                Left'}}</span> -->
+                        </div>
+                        <div class="align-items-center d-flex justify-content-between status-content">
+                          <img src="commonAssets/images/seller_avtar_new.png">
+                          <span class="na-info">{{item.seller.name}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="board-profile-content">
+                      <div class="align-content-center d-flex justify-content-between profile-left">
+                        <div class="align-items-center d-flex">
+                          <i class="icon-diamond"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalPcs}}</span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-weightscale"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalCarat?.toFixed(2)}}<span
+                              class="p-unit">CT</span></span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-pricing"></i>
+                          <span class="profile-left-content">{{(item?.leadSummary?.totalPayableAmount !=
+                            0) ?
+                            item?.leadSummary?.totalPayableAmount?.toFixed(2):item?.leadSummary?.totalAmount?.toFixed(2)}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- #end -->
+
+            <!-- Cart - START -->
+            <div class="cus-wid-2" [ngClass]="{'active':collapeCart}">
+              <div class="leadBlock_wrap">
+                <div [ngClass]="{'active': collapeCart}">
+                  <div class="c-head">
+                    <div *ngIf="!collapeCart">
+                      <span class="header-left">Cart</span>
+                    </div>
+                    <div>
+                      <span *ngIf="!collapeCart" class="current">{{tasksCartList.length}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="kanban-content-child" id="Cart">
+                  <div class="board-content ecom-dash" *ngFor="let item of tasksCartList">
+                    <div class="board-tag-content">
+                      <div class="sta-top">
+                        <div class="align-items-center d-flex justify-content-between status-content"
+                          (click)="viewCart(item)">
+                          <div class="im-pro">
+                            <img src="commonAssets/images/buyer.png">
+                            <span class="na-info">
+                              <p class="mb-0">
+                                <b>{{item.customer.companyName}}</b>
+                              </p>
+                              {{item.customer.name}}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between sta-bottom mt-1">
+                        <div class="board-timer">
+                        </div>
+                        <div class="align-items-center d-flex justify-content-between status-content">
+                          <img src="commonAssets/images/seller_avtar_new.png">
+                          <span class="na-info">{{item.seller.name}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="board-profile-content">
+                      <div class="align-content-center d-flex justify-content-between profile-left">
+                        <div class="align-items-center d-flex">
+                          <i class="icon-diamond"></i>
+                          <span class="profile-left-content">{{item.totalPcs}}</span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-weightscale"></i>
+                          <span class="profile-left-content">{{item.totalCarat}}<span class="p-unit">CT</span></span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-pricing"></i>
+                          <span class="profile-left-content">{{item.totalAmount}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- #end -->
+
+            <!-- Hold - START-->
+            <div class="cus-wid-2">
+              <div class="leadBlock_wrap">
+                <div class="c-head">
+                  <div>
+                    <span class="header-left">Hold</span>
+                  </div>
+                  <div>
+                    <span class="current">{{tasksHoldList.length}}</span>
+                  </div>
+                </div>
+                <div [dragula]="dragBoard" [(dragulaModel)]="tasksHoldList" class="kanban-content-child" id="hold">
+                  <div class="board-content" [ngClass]="{'ecom-dash':item.platform=='online'}"
+                    *ngFor="let item of tasksHoldList">
+                    <div class="board-tag-content">
+                      <div class="sta-top">
+                        <div class="align-items-center d-flex justify-content-between status-content">
+                          <div class="im-pro" (click)="editLead(item,true,'Hold',true)">
+                            <img src="commonAssets/images/buyer.png">
+                            <span class="na-info" [ngStyle]="{'color':item.isAILeadGenerated == true ?'#8a32f3':'black'}">
+                              <p class="mb-0">
+                                <b>{{item.customer.companyName}}</b>
+                              </p>
+                              {{item.customer.name}}
+                            </span>
+                          </div>
+                          <span class="task-info">{{item.leadNo}}</span>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between sta-bottom mt-1 mt-1">
+                        <div class="board-timer">
+                          <countdown *ngIf="item && item.platform=='offline' && item.config && item.orderExpiredDate"
+                            [config]="item.config" (event)="handleEvent($event,item)">
+                          </countdown>
+                          <span *ngIf="item && !item.orderExpiredDate && item.platform=='offline'">{{item.holdDate
+                            |dateAgo}}
+                          </span>
+                          <span *ngIf="item && item.platform=='online'">{{item.createdDate
+                            |dateAgo}}
+                          </span>
+                        </div>
+                        <div class="align-items-center d-flex justify-content-between status-content">
+                          <img src="commonAssets/images/seller_avtar_new.png">
+                          <span class="na-info">{{item.seller.name}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="board-profile-content">
+                      <div class="align-content-center d-flex justify-content-between profile-left">
+                        <div class="align-items-center d-flex">
+                          <i class="icon-diamond"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalPcs}}</span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-weightscale"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalCarat?.toFixed(2)}}<span
+                              class="p-unit">CT</span></span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-pricing"></i>
+                          <span class="profile-left-content">{{(item?.leadSummary?.totalPayableAmount !=
+                            0) ?
+                            item?.leadSummary?.totalPayableAmount?.toFixed(2):item?.leadSummary?.totalAmount?.toFixed(2)}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- #end -->
+
+            <!-- Order - START -->
+            <div class="cus-wid-2">
+              <div class="leadBlock_wrap">
+                <div class="c-head">
+                  <div>
+                    <span class="header-left">Order</span>
+                  </div>
+                  <div>
+                    <span class="current">{{tasksOrderList.length}}</span>
+                  </div>
+                </div>
+                <div [dragula]="dragBoard" [(dragulaModel)]="tasksOrderList" class="kanban-content-child" id="order">
+                  <div class="board-content" [ngClass]="{'ecom-dash':item.platform=='online'}"
+                    *ngFor="let item of tasksOrderList">
+                    <div class="board-tag-content">
+                      <div class="sta-top">
+                        <div class="align-items-center d-flex justify-content-between status-content">
+
+                          <div class="im-pro" (click)="editLead(item,true,'Order')">
+                            <img src="commonAssets/images/buyer.png">
+                            <span class="na-info" [ngStyle]="{'color':item.isAILeadGenerated == true ?'#8a32f3':'black'}">
+                              <p class="mb-0">
+                                <b>{{item.customer.companyName}}</b>
+                              </p>
+                              {{item.customer.name}}
+                            </span>
+                          </div>
+                          <span class="task-info">{{item.leadNo}}</span>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between sta-bottom mt-1 mt-1">
+                        <div class="board-timer">
+                          <!-- <span>{{item.daysLeft > 1 ?
+                                                                                            item.daysLeft + ' days Left'
+                                                                                            : item.daysLeft + ' day
+                                                                                            Left'}}</span> -->
+                        </div>
+                        <div class="align-items-center d-flex justify-content-between status-content">
+                          <img src="commonAssets/images/seller_avtar_new.png">
+                          <span class="na-info">{{item.seller.name}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="board-profile-content">
+                      <div class="align-content-center d-flex justify-content-between profile-left">
+                        <div class="align-items-center d-flex">
+                          <i class="icon-diamond"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalPcs}}</span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-weightscale"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalCarat?.toFixed(2)}}<span
+                              class="p-unit">CT</span></span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-pricing"></i>
+                          <span class="profile-left-content">{{(item?.leadSummary?.totalPayableAmount !=
+                            0) ?
+                            item?.leadSummary?.totalPayableAmount?.toFixed(2):item?.leadSummary?.totalAmount?.toFixed(2)}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- #end -->
+
+            <!-- Delivered - START -->
+            <div class="cus-wid-2" [ngClass]="{'active':collapeDelivered}">
+              <div class="leadBlock_wrap">
+                <div class="c-head reverse" (click)="visiableDelivered()">
+                  <div>
+                    <span class="header-left">Delivered</span>
+                  </div>
+                  <div>
+                    <span class="current">{{tasksDeliveredList.length}}</span>
+                    <i class="icon-right-new c-click"></i>
+                  </div>
+                </div>
+                <div class="kanban-content-child" id="delivered">
+                  <div class="board-content" [ngClass]="{'ecom-dash':item.platform=='online'}"
+                    *ngFor="let item of tasksDeliveredList">
+                    <div class="board-tag-content">
+                      <div class="sta-top">
+                        <div class="align-items-center d-flex justify-content-between status-content">
+
+                          <div class="im-pro" (click)="editLead(item,true,'Delivered')">
+                            <img src="commonAssets/images/buyer.png">
+                            <span class="na-info" [ngStyle]="{'color':item.isAILeadGenerated == true ?'#8a32f3':'black'}">
+                              <p class="mb-0">
+                                <b>{{item.customer.companyName}}</b>
+                              </p>
+                              {{item.customer.name}}
+                            </span>
+                          </div>
+                          <span class="task-info">{{item.leadNo}}</span>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between sta-bottom mt-1 mt-1">
+                        <div class="board-timer">
+                          <!-- <span>{{item.daysLeft > 1 ?
+                                                                                            item.daysLeft + ' days Left'
+                                                                                            : item.daysLeft + ' day
+                                                                                            Left'}}</span> -->
+                        </div>
+                        <div class="align-items-center d-flex justify-content-between status-content">
+                          <img src="commonAssets/images/seller_avtar_new.png">
+                          <span class="na-info">{{item.seller.name}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="board-profile-content">
+                      <div class="align-content-center d-flex justify-content-between profile-left">
+                        <div class="align-items-center d-flex">
+                          <i class="icon-diamond"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalPcs}}</span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-weightscale"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalCarat?.toFixed(2)}}<span
+                              class="p-unit">CT</span></span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-pricing"></i>
+                          <span class="profile-left-content">{{(item?.leadSummary?.totalPayableAmount !=
+                            0) ?
+                            item?.leadSummary?.totalPayableAmount?.toFixed(2):item?.leadSummary?.totalAmount?.toFixed(2)}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- #end -->
+
+            <!-- Rejected - START -->
+            <div class="cus-wid-2" [ngClass]="{'active':collapeRejected}">
+              <div class="leadBlock_wrap">
+                <div class="c-head reverse" (click)="visiableRejected()">
+                  <div>
+                    <span class="header-left">Rejected</span>
+                  </div>
+                  <div>
+                    <span class="current">{{tasksRejectedList.length}}</span>
+                    <i class="icon-right-new c-click"></i>
+                  </div>
+                </div>
+                <div [dragula]="dragBoard" [(dragulaModel)]="tasksRejectedList" class="kanban-content-child"
+                  id="rejected">
+                  <div class="board-content" [ngClass]="{'ecom-dash':item.platform=='online'}"
+                    *ngFor="let item of tasksRejectedList">
+                    <div class="board-tag-content">
+                      <div class="sta-top">
+                        <div class="align-items-center d-flex justify-content-between status-content">
+
+                          <div class="im-pro" (click)="editLead(item,true,'Rejected')">
+                            <img src="commonAssets/images/buyer.png">
+                            <span class="na-info" [ngStyle]="{'color':item.isAILeadGenerated == true ?'#8a32f3':'black'}">
+                              <p class="mb-0">
+                                <b>{{item.customer.companyName}}</b>
+                              </p>
+                              {{item.customer.name}}
+                            </span>
+                          </div>
+                          <span class="task-info">{{item.leadNo}}</span>
+                        </div>
+                      </div>
+                      <div class="align-content-center d-flex justify-content-end sta-bottom">
+                        <div class="align-items-center d-flex justify-content-between status-content">
+                          <img src="commonAssets/images/seller_avtar_new.png">
+                          <span class="na-info">{{item.seller.name}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="board-profile-content">
+                      <div class="align-content-center d-flex justify-content-between profile-left">
+                        <div class="align-items-center d-flex">
+                          <i class="icon-diamond"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalPcs}}</span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-weightscale"></i>
+                          <span class="profile-left-content">{{item?.leadSummary?.totalCarat?.toFixed(2)}}</span>
+                        </div>
+                        <div class="align-items-center d-flex">
+                          <i class="icon-pricing"></i>
+                          <span class="profile-left-content">{{(item?.leadSummary?.totalPayableAmount !=
+                            0) ?
+                            item?.leadSummary?.totalPayableAmount?.toFixed(2):item?.leadSummary?.totalAmount?.toFixed(2)}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- #end -->
+          </div>
+        </div>
+      </div>
+
+      <!-- #region Filter -->
+      <div class="leadfilter-panel" *ngIf="isFilter">
+        <div class="ps-2 pe-2">
+          <div class="sr">
+            <h6>Search By Filter<i class="icon-delete float-end mt-1 me-1" (click)="closeFilterDialog()"></i>
+            </h6>
+            <form name="form" #LeadSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="form-data">
+                  <label for="From Date">From Date</label>
+                  <kendo-datepicker calendarType="classic" name="fromDate" #fromDate="ngModel" format="dd/MM/yyyy"
+                    [(ngModel)]="leadSearchCriteria.fromDate"></kendo-datepicker>
+                </div>
+
+                <div class="form-data">
+                  <label for="To Date">To Date</label>
+                  <kendo-datepicker calendarType="classic" name="toDate" #toDate="ngModel" format="dd/MM/yyyy"
+                    [(ngModel)]="leadSearchCriteria.toDate"></kendo-datepicker>
+                </div>
+
+                <div class="form-data">
+                  <label for="f-name">Stone Id</label>
+                  <input type="text" name="filterStoneId" [(ngModel)]="stoneId" #filterStoneId="ngModel"
+                    id="filterStoneId" autocomplete="off">
+                </div>
+
+                <div class="form-data">
+                  <label for="Lead No">Certi No</label>
+                  <input type="text" name="certiNo" #certiNo="ngModel" [(ngModel)]="certificateNo" />
+                </div>
+
+                <div class="form-data">
+                  <label for="Lead No">Lead No</label>
+                  <input type="text" name="leadNoV" #leadNoV="ngModel"
+                    (keypress)="utilityService.numberWithSpaceOnly($event)" [(ngModel)]="leadNo" />
+                </div>
+
+                <div class="form-data">
+                  <label for="Party">Party</label>
+                  <kendo-autocomplete class="w-100" [data]="listCustomerItems" name="customer"
+                    [(ngModel)]="selectedCustomerItem" (valueChange)="customerChange($event)" #customer="ngModel"
+                    [filterable]="true" (filterChange)="handleCustomerFilter($event)"
+                    [kendoDropDownFilter]="filterSettings" [popupSettings]="{width: 'auto'}" valueField="value">
+                    <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                      <span><b>{{dataItem.companyName}}</b>-{{dataItem.text}}</span>
+                    </ng-template>
+                  </kendo-autocomplete>
+                </div>
+
+                <div class="form-data" *ngIf="isAdminRole">
+                  <label for="Party">Seller</label>
+                  <kendo-combobox [data]="listSellerDNormItems" name="seller" #seller="ngModel"
+                    [(ngModel)]="selectedSellerDNormItem" (valueChange)="onSellerDNormChange($event)"
+                    [kendoDropDownFilter]="filterSettings" textField="text" valueField="value" name="seller">
+                  </kendo-combobox>
+                </div>
+                <div class="form-data">
+                  <label for="Expomaster">Expo Master</label>
+                  <kendo-combobox [data]="listExpoMasterDNormItems" [kendoDropDownFilter]="filterSettings"
+                    [textField]="'text'" [valueField]="'value'" name="expoName" #expoName="ngModel"
+                    (valueChange)="onExpoMasterDNormChange($event)" [(ngModel)]="selectedExpoMasterDNormItem">
+                  </kendo-combobox>
+                </div>
+
+                <div class="form-data check-box">
+                  <input type="checkbox" name="isDoNotRejectedFlag" class="k-checkbox"
+                    [(ngModel)]="leadSearchCriteria.isDoNotRejected" id="a-isDoNotRejected"
+                    #isDoNotRejectedFlag="ngModel" />
+                  <label for="a-isDoNotRejected">Do not show Rejected Stone</label>
+                </div>
+
+                <div class="form-data check-box">
+                  <ng2-tri-state-checkbox name="leadPlatform" [(ngModel)]="leadSearchCriteria.leadPlatform"
+                    #leadPlatform="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label for="a-systemUser">Is Online/Offline </label>
+                </div>
+
+                <div class="form-data social">
+                  <button class="btn btn-action" [disabled]="!LeadSearchForm.form.valid" (click)="submitFilter()">
+                    <i class="icon-search"></i>Search</button>
+                  <button (click)="clearFilters()" class="btn btn-action"><i class="icon-clear"></i>Clear</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- #endregion Filter -->
+    </div>
+  </div>
+</section>
+
+<!-- #region Rejected Offer with Reason Model-->
+<ng-container *ngIf="isRejectedOffer">
+  <app-leadrejectedmodal [leadId]="leadRejectedObj.id" (toggle)="closeRejectedDialog($event)">
+  </app-leadrejectedmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Add Lead Modal Start -->
+<ng-container *ngIf="isAddLead">
+  <app-leadmodal [leadListInvInput]="leadListInvInput" [leadTitle]="leadTitle" [leadItem]="leadItem"
+    [isEditLead]="isEditLead" [isAddLead]="isAddLead" [seller]="sellerObj" [allLeads]="allLeads"
+    (toggle)="toggleAddLeadDialog($event)"></app-leadmodal>
+</ng-container>
+<!-- #endregion Add Lead Modal End -->
+
+<!-- #region Add Lead Modal Start -->
+<ng-container *ngIf="isViewCart">
+  <app-cartmodal [leadCartItem]="leadCartItem" (toggle)="isViewCart=$event"></app-cartmodal>
+</ng-container>
+<!-- #endregion Add Lead Modal End -->
+
+<!-- #region QC Reason Model-->
+<div class="modal c-modal addemp rorgan dialog-xs " tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isQcReason">
+  <form name="form">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-info"></i>Qc Criteria</h5>
+          <button type="button" class="close" (click)="toggleQcReasonDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-data mb-1">
+            <label>QC Reason<span class="require">*</span></label>
+          </div>
+          <div class="form-data mb-3" [ngClass]="{ 'error': qcReason.invalid && (qcReason.dirty || qcReason.touched)}">
+            <input autocomplete="off" type="text" name="qcReason" #qcReason="ngModel" [(ngModel)]="qcReasonModel"
+              class="c-wi" required>
+            <!-- <kendo-combobox [data]="listQCReasonItems" name="qcReason" #qcReason="ngModel"
+                            [valuePrimitive]="true" [(ngModel)]="qcReasonModel" required>
+                        </kendo-combobox> -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="!qcReasonModel" (click)="submitQCReason()">
+            <i class="icon-save"></i>Save</button>
+          <!--  -->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+
+<div kendoDialogContainer></div>

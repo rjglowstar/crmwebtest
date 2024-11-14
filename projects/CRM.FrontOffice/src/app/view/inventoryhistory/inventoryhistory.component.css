@@ -1,0 +1,19 @@
+.stoneHis .content_scroll {
+    height: calc(100vh - 140px) !important;
+}
+
+.stoneHis .breadcrumb~.content_box *> :is(.k-grid) {
+    height: calc((100vh / 2) - 143px) !important;
+    min-height: 100px !important;
+}
+
+.stoneHis .breadcrumb~.content_box *>.k-panelbar-header:first-child:not(.k-expanded)+.k-panelbar-header *> :is(.k-grid) {
+    height: calc(100vh - 29vh) !important;
+    min-height: 286px !important;
+}
+
+@media (max-width: 415px) {
+    .stoneHis .content_scroll {
+        height: auto !important;
+    }
+}

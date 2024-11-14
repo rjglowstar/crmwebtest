@@ -1,0 +1,15 @@
+.inv-summry-grid {
+    display: grid;
+    grid-template-columns: 25px 12% 78px 12% 94px 5% 122px 1fr 76px 5% 106px 1fr auto;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+    align-items: center;
+}
+
+.invsummary-grid {
+    height: calc(100vh - 485px) !important;
+}
+
+.labsummary-grid {
+    height: calc(100vh - 336px) !important;
+}

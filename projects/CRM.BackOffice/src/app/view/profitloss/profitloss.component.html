@@ -1,0 +1,396 @@
+<title>Profit & Loss</title>
+<section class="profitLoss_sec inclusionupload-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <!--#region Header -->
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Profit & Loss</li>
+            </ul>
+          </div>
+        </div>
+        <div class="summarybar bg">
+          <div class="summary-left">
+            <ul>
+              <li><span>January, 2022 - December, 2022</span></li>
+            </ul>
+          </div>
+          <div class="summary-right pe-0">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton (click)="filterSidebar()" class="c-searh-btn"><i class="icon-search"
+                  title="Search Stone"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <!--#endregion -->
+        <!--#region Grid -->
+        <div class="content_box">
+          <div class="pf-design border-0">
+            <table class="table table-bordered">
+              <tbody>
+                <tr class="td-title">
+                  <td>Sales</td>
+                  <td>Jan</td>
+                  <td>Feb</td>
+                  <td>Mar</td>
+                  <td>Apr</td>
+                  <td>May</td>
+                  <td>Jun</td>
+                  <td>Jul</td>
+                  <td>Aug</td>
+                  <td>Sep</td>
+                  <td>Oct</td>
+                  <td>Nov</td>
+                  <td>Dec</td>
+                  <td>Full Year</td>
+                </tr>
+
+                <!-- Income Start -->
+                <tr>
+                  <td><b>Income</b></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Revenue Stream 1</td>
+                  <td>587</td>
+                  <td>596</td>
+                  <td>605</td>
+                  <td>615</td>
+                  <td>625</td>
+                  <td>635</td>
+                  <td>645</td>
+                  <td>655</td>
+                  <td>665</td>
+                  <td>676</td>
+                  <td>698</td>
+                  <td>655</td>
+                  <td>7,692.0</td>
+                </tr>
+                <tr>
+                  <td>Revenue Stream 2</td>
+                  <td>145</td>
+                  <td>147</td>
+                  <td>150</td>
+                  <td>152</td>
+                  <td>155</td>
+                  <td>157</td>
+                  <td>160</td>
+                  <td>162</td>
+                  <td>165</td>
+                  <td>167</td>
+                  <td>170</td>
+                  <td>173</td>
+                  <td>1,907.0</td>
+
+                </tr>
+                <tr class="td-total">
+                  <td>Total Income</td>
+                  <td>711</td>
+                  <td>722</td>
+                  <td>734</td>
+                  <td>746</td>
+                  <td>757</td>
+                  <td>769</td>
+                  <td>782</td>
+                  <td>794</td>
+                  <td>807</td>
+                  <td>819</td>
+                  <td>832</td>
+                  <td>846</td>
+                  <td>9,325.0</td>
+                </tr>
+
+                <!-- Cost Of Goods Sold Start -->
+                <tr>
+                  <td><b>Cost Of Goods Sold</b></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Cost Of Goods Sold</td>
+                  <td>269</td>
+                  <td>273</td>
+                  <td>278</td>
+                  <td>282</td>
+                  <td>287</td>
+                  <td>291</td>
+                  <td>296</td>
+                  <td>301</td>
+                  <td>305</td>
+                  <td>310</td>
+                  <td>315</td>
+                  <td>320</td>
+                  <td>3,533.0</td>
+                </tr>
+                <tr class="td-total">
+                  <td>Total Cost Of Goods Sold</td>
+                  <td>442</td>
+                  <td>449</td>
+                  <td>456</td>
+                  <td>463</td>
+                  <td>470</td>
+                  <td>478</td>
+                  <td>485</td>
+                  <td>493</td>
+                  <td>501</td>
+                  <td>509</td>
+                  <td>517</td>
+                  <td>525</td>
+                  <td>5,791.0</td>
+                </tr>
+
+                <!-- Expenses Start -->
+                <tr>
+                  <td><b>Expenses</b></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Advertising & Promotion</td>
+                  <td>18.1</td>
+                  <td>19.1</td>
+                  <td>19.5</td>
+                  <td>19.8</td>
+                  <td>20.2</td>
+                  <td>20.6</td>
+                  <td>21.0</td>
+                  <td>21.5</td>
+                  <td>21.9</td>
+                  <td>22.3</td>
+                  <td>22.8</td>
+                  <td>23.2</td>
+                  <td>250.6</td>
+                </tr>
+                <tr>
+                  <td>Insurance</td>
+                  <td>1.1</td>
+                  <td>1.1</td>
+                  <td>1.1</td>
+                  <td>1.2</td>
+                  <td>1.2</td>
+                  <td>1.2</td>
+                  <td>1.2</td>
+                  <td>1.3</td>
+                  <td>1.3</td>
+                  <td>1.3</td>
+                  <td>1.3</td>
+                  <td>1.4</td>
+                  <td>14.7</td>
+                </tr>
+                <tr>
+                  <td>Salaries</td>
+                  <td>251</td>
+                  <td>256</td>
+                  <td>261</td>
+                  <td>266</td>
+                  <td>271</td>
+                  <td>277</td>
+                  <td>282</td>
+                  <td>288</td>
+                  <td>294</td>
+                  <td>299</td>
+                  <td>305</td>
+                  <td>311</td>
+                  <td>3,366.0</td>
+                </tr>
+                <tr>
+                  <td>Advertising & Promotion</td>
+                  <td>18.1</td>
+                  <td>19.1</td>
+                  <td>19.5</td>
+                  <td>19.8</td>
+                  <td>20.2</td>
+                  <td>20.6</td>
+                  <td>21.0</td>
+                  <td>21.5</td>
+                  <td>21.9</td>
+                  <td>22.3</td>
+                  <td>22.8</td>
+                  <td>23.2</td>
+                  <td>250.6</td>
+                </tr>
+                <tr>
+                  <td>Insurance</td>
+                  <td>1.1</td>
+                  <td>1.1</td>
+                  <td>1.1</td>
+                  <td>1.2</td>
+                  <td>1.2</td>
+                  <td>1.2</td>
+                  <td>1.2</td>
+                  <td>1.3</td>
+                  <td>1.3</td>
+                  <td>1.3</td>
+                  <td>1.3</td>
+                  <td>1.4</td>
+                  <td>14.7</td>
+                </tr>
+                <tr>
+                  <td>Salaries</td>
+                  <td>251</td>
+                  <td>256</td>
+                  <td>261</td>
+                  <td>266</td>
+                  <td>271</td>
+                  <td>277</td>
+                  <td>282</td>
+                  <td>288</td>
+                  <td>294</td>
+                  <td>299</td>
+                  <td>305</td>
+                  <td>311</td>
+                  <td>3,366.0</td>
+                </tr>
+                <tr>
+                  <td>Advertising & Promotion</td>
+                  <td>18.1</td>
+                  <td>19.1</td>
+                  <td>19.5</td>
+                  <td>19.8</td>
+                  <td>20.2</td>
+                  <td>20.6</td>
+                  <td>21.0</td>
+                  <td>21.5</td>
+                  <td>21.9</td>
+                  <td>22.3</td>
+                  <td>22.8</td>
+                  <td>23.2</td>
+                  <td>250.6</td>
+                </tr>
+                <tr>
+                  <td>Insurance</td>
+                  <td>1.1</td>
+                  <td>1.1</td>
+                  <td>1.1</td>
+                  <td>1.2</td>
+                  <td>1.2</td>
+                  <td>1.2</td>
+                  <td>1.2</td>
+                  <td>1.3</td>
+                  <td>1.3</td>
+                  <td>1.3</td>
+                  <td>1.3</td>
+                  <td>1.4</td>
+                  <td>14.7</td>
+                </tr>
+                <tr>
+                  <td>Salaries</td>
+                  <td>251</td>
+                  <td>256</td>
+                  <td>261</td>
+                  <td>266</td>
+                  <td>271</td>
+                  <td>277</td>
+                  <td>282</td>
+                  <td>288</td>
+                  <td>294</td>
+                  <td>299</td>
+                  <td>305</td>
+                  <td>311</td>
+                  <td>3,366.0</td>
+                </tr>
+                <tr class="td-total">
+                  <td>Total Expenses</td>
+                  <td>403.0</td>
+                  <td>411.0</td>
+                  <td>419.2</td>
+                  <td>427.5</td>
+                  <td>436.0</td>
+                  <td>444.7</td>
+                  <td>453.5</td>
+                  <td>462.5</td>
+                  <td>471.7</td>
+                  <td>481.1</td>
+                  <td>490.6</td>
+                  <td>500.4</td>
+                  <td>5,401.1</td>
+                </tr>
+
+                <!-- Net Amount -->
+                <tr class="td-total">
+                  <td>Net Profit/Loss</td>
+                  <td>25.5</td>
+                  <td>24.8</td>
+                  <td>24.1</td>
+                  <td>23.3</td>
+                  <td>22.5</td>
+                  <td>21.7</td>
+                  <td>20.8</td>
+                  <td>19.9</td>
+                  <td>19.0</td>
+                  <td>18.0</td>
+                  <td>16.9</td>
+                  <td>15.9</td>
+                  <td>252.4</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!--#endregion -->
+        <!-- #region Filter -->
+        <div class="sr-wrap inclusion-panel" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter <i class="icon-delete float-end mt-1 me-1" (click)="filterSidebar()"></i>
+            </h6>
+            <form name="form">
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="l-name">From Date</label>
+                    <kendo-datepicker calendarType="classic" format="dd/MM/yyyy"></kendo-datepicker>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="l-name">To Date</label>
+                    <kendo-datepicker calendarType="classic" format="dd/MM/yyyy"></kendo-datepicker>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" type="submit">
+                      <i class="icon-search"></i>Search</button>
+                    <button class="btn btn-action"><i class="icon-clear"></i>Clear</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- #endregion -->
+      </div>
+    </div>
+  </div>
+</section>

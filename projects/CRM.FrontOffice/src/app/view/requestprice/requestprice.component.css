@@ -1,0 +1,60 @@
+.his-grid {
+    grid-template-columns: 900px 450px;
+}
+
+.grid-wrap.pricing-grid .k-grid {
+    height: calc(100vh - 116px);
+}
+
+.his-grid .k-grid {
+    height: calc(46vh - 80px);
+}
+
+.i-form.bu-disc .grid {
+    grid-template-columns: auto 32px;
+}
+
+.form-data.pop input {
+    width: initial;
+    height: 30px;
+    line-height: 30px;
+}
+
+.main-disc {
+    margin: -8px;
+    width: auto;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+}
+
+.d-details .content.t-details span.l-head {
+    margin-right: 30px;
+}
+
+.t-details li .r-det {
+    white-space: normal;
+}
+
+.whole-cell {
+    display: block;
+    margin: -30px;
+    margin-top: -26px;
+    padding: 20px 30px;
+    width: auto;
+}
+
+.whole-cell i {
+    position: relative;
+    z-index: 10;
+}
+
+.whole-cell i:hover~.arrow-tooltip {
+    display: block;
+}
+
+.grid-wrap td.of-initial {
+    overflow: initial !important;
+}

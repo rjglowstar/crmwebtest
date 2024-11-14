@@ -1,0 +1,230 @@
+<div class="modal c-modal addemp dialog-sm-l rs-payment" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form class="modal-content" name="GenForm" #GenForm="ngForm" novalidate>
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="icon-transaction"></i>{{this.transactionObj.transactionType}}
+        </h5>
+        <button type="button" class="close" (click)="closeGeneralDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="title d-flex justify-content-between"><span><i class="icon-ledger"></i>Ledger
+            Information</span>
+          <div class="form-data d-flex align-items-center">
+            <div class="grid-3 d-flex align-items-center">
+              <div class="form-data me-2">
+                <label>Date<span class="require">*</span></label>
+              </div>
+              <div class="form-data me-2">
+                <kendo-datepicker calendarType="classic" name="eDate" #eDate="ngModel" format="dd/MM/yyyy"
+                  [(ngModel)]="generalTransactionObj.transactionDate" required></kendo-datepicker>
+              </div>
+            </div>
+            <span class="text-end">Print
+              <span class="ms-1">
+                <kendo-switch class="k-widget k-switch-off me-1" #canPrintInvoice="ngModel" name="canPrintInvoice"
+                  id="m-chk" [(ngModel)]="canPrint"></kendo-switch>
+              </span>
+            </span>
+          </div>
+        </h6>
+
+        <div class="general-input-grid">
+          <div class="grid-1">
+            <div class="d-flex">
+              <div class="form-data me-2">
+                <label>From Ledger<span class="require">*</span></label>
+              </div>
+              <div class="form-data basis-100" style="flex-basis: 75%;">
+                <kendo-autocomplete [disabled]="isEdit" class="w-100" [data]="listFromLedgerItems" [filterable]="true"
+                  (filterChange)="FromLedgerFilter($event)" [kendoDropDownFilter]="filterSettings" name="FromLedger"
+                  [(ngModel)]="selectedFromLedgerItem" (valueChange)="fromLedgerChange($event)"
+                  [popupSettings]="{width: 'auto'}" #FromLedger="ngModel" valueField="value" required>
+                  <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                    <span>{{dataItem.text}}-<b>{{dataItem.group}}</b></span>
+                  </ng-template>
+                </kendo-autocomplete>
+              </div>
+            </div>
+            <div class="e-details-n mt-2">
+              <div class="info-block we-3">
+                <li>
+                  <h6 class="c-name"><span>{{this.generalTransactionObj.fromLedger.group}}
+                      Name:</span>{{this.generalTransactionObj.fromLedger.name}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Contact Person:</span>{{this.generalTransactionObj.fromLedger.contactPerson}}
+                  </h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Email:</span>{{this.generalTransactionObj.fromLedger.email}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Mobile No:</span>{{this.generalTransactionObj.fromLedger.mobileNo}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Address:</span>
+                    {{this.generalTransactionObj.fromLedger.address.line1}}
+                    {{this.generalTransactionObj.fromLedger.address.line2}}
+                    {{this.generalTransactionObj.fromLedger.address.city}}
+                    {{this.generalTransactionObj.fromLedger.address.state}}
+                    {{this.generalTransactionObj.fromLedger.address.country}}
+                  </h6>
+                </li>
+              </div>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="d-flex">
+              <div class="form-data me-2">
+                <label>To Ledger<span class="require">*</span></label>
+              </div>
+              <div class="form-data basis-100" style="flex-basis: 75%;">
+                <kendo-autocomplete [disabled]="isEdit" class="w-100" [data]="listToLedgerItems" [filterable]="true"
+                  (filterChange)="ToLedgerFilter($event)" [kendoDropDownFilter]="filterSettings" name="ToLedger"
+                  [(ngModel)]="selectedToLedgerItem" (valueChange)="toLedgerChange($event)"
+                  [popupSettings]="{width: 'auto'}" #ToLedger="ngModel" valueField="value" required>
+                  <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                    <span>{{dataItem.text}}-<b>{{dataItem.group}}</b></span>
+                  </ng-template>
+                </kendo-autocomplete>
+              </div>
+            </div>
+            <div class="e-details-n mt-2">
+              <div class="info-block">
+                <li>
+                  <h6 class="c-name"><span>{{this.generalTransactionObj.toLedger.group}}
+                      Name:</span>{{this.generalTransactionObj.toLedger.name}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Contact Person:</span>{{this.generalTransactionObj.toLedger.contactPerson}}
+                  </h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Email:</span>{{this.generalTransactionObj.toLedger.email}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Mobile No:</span>{{this.generalTransactionObj.toLedger.mobileNo}}</h6>
+                </li>
+                <li>
+                  <h6 class="c-name"><span>Address:</span>
+                    {{this.generalTransactionObj.toLedger.address.line1}}
+                    {{this.generalTransactionObj.toLedger.address.line2}}
+                    {{this.generalTransactionObj.toLedger.address.city}}
+                    {{this.generalTransactionObj.toLedger.address.state}}
+                    {{this.generalTransactionObj.toLedger.address.country}}
+                  </h6>
+                </li>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <h6 class="title"><i class="icon-currency"></i>Currency</h6>
+        <div class="ledger-grid mt-2">
+          <div class="form-data">
+            <label>Currency<span class="require">*</span></label>
+          </div>
+          <div class="form-data"
+            [ngClass]="{ 'error': CurrencyType.invalid && (CurrencyType.dirty || CurrencyType.touched)}">
+            <kendo-combobox class="w-auto" [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+              valueField="value" name="CurrencyType" [kendoDropDownFilter]="filterSettings"
+              [(ngModel)]="generalTransactionObj.transactionDetail.fromCurrency" #CurrencyType="ngModel" required
+              (valueChange)="currencyChange()" [disabled]="disableFromCurrType">
+            </kendo-combobox>
+          </div>
+
+          <div class="form-data">
+            <label>Convert Cur.</label>
+          </div>
+          <div class="form-data"
+            [ngClass]="{ 'error': convCurrencyType.invalid && (convCurrencyType.dirty || convCurrencyType.touched)}">
+            <kendo-combobox class="w-auto" [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+              valueField="value" name="convCurrencyType" [kendoDropDownFilter]="filterSettings"
+              [(ngModel)]="generalTransactionObj.transactionDetail.toCurrency" #convCurrencyType="ngModel"
+              (valueChange)="currencyChange()" [disabled]="disableToCurrType">
+            </kendo-combobox>
+          </div>
+
+          <div class="form-data">
+            <label>Convert Rate</label>
+          </div>
+          <div class="form-data">
+            <input type="text" name="convcurrencyRate" autocomplete="off"
+              [(ngModel)]="generalTransactionObj.transactionDetail.toCurRate" #convcurrencyRate="ngModel"
+              id="convcurrencyRate" (keypress)="utilityService.floatOnly($event)" (keyup)="calculateTotal();">
+          </div>
+        </div>
+
+        <h6 class="title"><i class="icon-currency"></i>Amount</h6>
+        <div class="ledger-amt-gn mt-2">
+          <div class="form-data">
+            <label>Amt<span class="require">*</span></label>
+          </div>
+          <div class="form-data">
+            <input type="text" name="amount" #amount="ngModel" [(ngModel)]="generalTransactionObj.amount" required
+              autocomplete="off" (keypress)="utilityService.floatOnly($event)" (keyup)="calculateTotal();">
+          </div>
+          <div class="form-data">
+            <label>Add Amt</label>
+          </div>
+          <div class="form-data" [ngClass]="{ 'error': !validAddAmtLimit }">
+            <input type="text" name="addAmt" #addAmt="ngModel" [(ngModel)]="generalTransactionObj.addAmount"
+              autocomplete="off" (keypress)="utilityService.discountfloat($event)"
+              (keyup)="calculateTotal(true);validAddAmtLimit = utilityService.validateAddAmountLimit(generalTransactionObj.addAmount, accountingConfigData.addAmountLimit);">
+            <span class="font-smaller s-error" *ngIf="!validAddAmtLimit">Amount exceed limit</span>
+          </div>
+          <div class="form-data" *ngIf="transactionObj.transactionType != 'Receipt'">
+            <label>TDS Amt</label>
+          </div>
+          <div class="form-data" *ngIf="transactionObj.transactionType != 'Receipt'">
+            <input type="text" name="tdsAmt" value="{{generalTransactionObj.tdsAmount}}" [disabled]="true">
+          </div>
+          <div class="form-data" *ngIf="transactionObj.transactionType == 'Receipt'">
+            <label>TCS Amt</label>
+          </div>
+          <div class="form-data" *ngIf="transactionObj.transactionType == 'Receipt'">
+            <input type="text" name="tcs" #tcs="ngModel" [(ngModel)]="generalTransactionObj.tcsAmount"
+              (keyup)="calculateTotal(true);" autocomplete="off" (keypress)="utilityService.floatOnly($event)">
+          </div>
+          <div class="form-data">
+            <label>Net Amt</label>
+          </div>
+          <div class="form-data">
+            <input type="text" name="total" #total="ngModel" [(ngModel)]="generalTransactionObj.netTotal"
+              [disabled]="true">
+          </div>
+
+          <div class="form-data">
+            <label>CC Amt</label>
+          </div>
+          <div class="form-data">
+            <input type="text" name="total" value="{{generalTransactionObj.ccAmount}}" readonly disabled>
+          </div>
+        </div>
+
+        <h6 class="title"><i class="icon-edit"></i>Remark</h6>
+        <div class="form-data">
+          <textarea cols="4" type="text" placeholder="Remark" name="remark" #remark="ngModel"
+            [(ngModel)]="generalTransactionObj.note" style="height: 60px;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" *ngIf="isEdit" (click)="printGet()">
+          <i class="icon-save"></i>Print</button>
+        <button type="button" class="btn btn-primary" [disabled]="!(GenForm.valid && validAddAmtLimit)"
+          (click)="saveTransaction(true)">
+          <i class="icon-add"></i>New</button>
+        <button type="button" class="btn btn-primary" *ngIf="!isEdit" [disabled]="!(GenForm.valid && validAddAmtLimit)"
+          (click)="saveTransaction()">
+          <i class="icon-save"></i>Save</button>
+        <button type="button" class="btn btn-primary" *ngIf="isEdit" [disabled]="!(GenForm.valid && validAddAmtLimit)"
+          (click)="updateTransaction()">
+          <i class="icon-save"></i>Update</button>
+      </div>
+    </form>
+  </div>

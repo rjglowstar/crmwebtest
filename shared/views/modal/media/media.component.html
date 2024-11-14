@@ -1,0 +1,54 @@
+<div class="modal c-modal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered mediaView" role="document">
+    <div class="modal-content">
+      <div class="main-title pb-1">
+        <h5>{{mediaTitle}}</h5>
+        <span class="pull-right pe-3 cursor d-inline-flex align-items-center" (click)="copyDiamondVideoLink()">
+          <i class="icon-share me-1"></i>Share
+        </span>
+        <button type="button" class="close" (click)="closeMediaDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="mediaType == 'img'">
+          <div class="content">
+            <img
+              [src]="sanitizeURL((mediaSrc != null && mediaSrc.length > 0) ? mediaSrc : 'commonAssets/images/still.jpg')"
+              alt="diamond image" class="media_img"
+              style="width: 100%;height: auto;min-height: 470px;object-fit: contain;object-position: top;" />
+          </div>
+        </div>
+        <div *ngIf="mediaType == 'cert'">
+          <div class="content">
+            <iframe
+              [src]="sanitizeURL((mediaSrc != null && mediaSrc.length > 0) ? mediaSrc : 'commonAssets/images/image-not-found.jpg')"
+              width="100%" height="588px" style="border: 0;" allow='autoplay'></iframe>
+          </div>
+        </div>
+        <div *ngIf="mediaType == 'iframe'">
+          <span *ngIf="iFrameLoader"><img src="commonAssets/images/loader.gif" alt="loading"
+              class="m-auto d-block"></span>
+          <span *ngIf="!iFrameLoader">
+            <iframe
+              [src]="sanitizeURL((mediaSrc != null && mediaSrc.length > 0) ? mediaSrc : 'https://diamdna.azureedge.net/Vision360.html?d=fl-116&sr=-30&s=30')"
+              style="width: 100%;height: 530px;border:0;">
+            </iframe>
+          </span>
+        </div>
+        <div *ngIf="mediaType == 'download'">
+          <span [hidden]="!iFrameLoader"><img src="commonAssets/images/loader.gif" alt="loading"
+              class="m-auto d-block"></span>
+          <span [hidden]="iFrameLoader">
+            <iframe
+              [src]="sanitizeURL((mediaSrc != null && mediaSrc.length > 0) ? mediaSrc : 'https://diamdna.azureedge.net/imaged/aqx-303/video.mp4')"
+              style="width: 100%;height: 470px;border:0;">
+            </iframe>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div (document:keydown.esc)="closeMediaDialog()"></div>

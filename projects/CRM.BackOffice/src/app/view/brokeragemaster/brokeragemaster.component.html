@@ -1,0 +1,157 @@
+<title>Brokerage</title>
+<!-- #region Header section -->
+<section class="wbmaster-wrap">
+    <div class="content_wrap">
+        <div class="d-flex">
+            <div class="e-left">
+                <div class="breadcrumb bg">
+                    <div class="breadcrumb-left">
+                        <ul>
+                            <li class="breadcrumb-item"><a routerLink="/"><i class="icon-home"></i>Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Brokerage</li>
+                        </ul>
+                    </div>
+                    <div class="breadcrumb-right">
+                        <!-- #region Header Buttons -->
+                        <kendo-buttongroup kendoTooltip position="bottom">
+                            <button kendoButton title="General Expense" [disabled]="mySelection.length == 0"
+                                (click)="openGeneralDialog()">
+                                <i class="icon-transaction"></i>
+                            </button>
+                            <button kendoButton type="button" title="Export Excel" (click)="exportToExcel()"> <i
+                                    class="icon-excelnew"></i></button>
+                            <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                                    class="icon-gridconfig"></i></button>
+                        </kendo-buttongroup>
+                        <!-- #endregion -->
+                    </div>
+                </div>
+
+                <!-- #region Grid section -->
+                <div class="content_box">
+                    <div class="grid-wrap">
+                        <kendo-grid [data]="gridView" [groupable]="true" [resizable]="true" [sortable]="true"
+                            [sort]="sort" (sortChange)="sortChange($event)" [group]="groups"
+                            (groupChange)="groupChange($event)" (selectionChange)="selectedRowChange($event)"
+                            [(selectedKeys)]="mySelection" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+                            [selectable]="selectableSettings" [kendoGridSelectBy]="'id'"
+                            (pageChange)="pageChange($event)">
+                            <kendo-grid-checkbox-column [showSelectAll]="isShowCheckBoxAll" [width]="15">
+                            </kendo-grid-checkbox-column>
+                            <ng-container *ngIf="fields && fields.length > 0">
+                                <ng-container *ngFor="let field of fields">
+                                    <ng-container *ngIf="field.isSelected">
+                                        <kendo-grid-column [width]="field.width" [field]="field.propertyName"
+                                            [title]="field.title">
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.propertyName == 'transactionDate'">
+                                                {{dataItem.transactionDate | date: 'dd/MM/yyyy'}}
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.propertyName == 'receiptDate'">
+                                                {{dataItem.receiptDate | date: 'dd/MM/yyyy'}}
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.propertyName == 'paidDate'">
+                                                {{dataItem.paidDate | date: 'dd/MM/yyyy'}}
+                                            </ng-template>
+                                        </kendo-grid-column>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </kendo-grid>
+                    </div>
+                </div>
+                <!-- #endregion -->
+            </div>
+            <!-- #region Filter Section -->
+            <div class="e-right">
+                <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+                    <div class="sr">
+                        <h6>Search By Filter</h6>
+                        <form name="form" #wbSearchForm="ngForm" novalidate>
+                            <div class="i-form">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label class="lbl">From Date</label>
+                                        <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="fDate" #fDate="ngModel"
+                                            [(ngModel)]="brokerageSearchCriteria.fromDate">
+                                        </kendo-datepicker>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label class="lbl">To Date</label>
+                                        <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="tDate" #tDate="ngModel"
+                                            [(ngModel)]="brokerageSearchCriteria.toDate">
+                                        </kendo-datepicker>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label for="l-name">Broker</label>
+                                        <kendo-autocomplete class="w-100" [data]="listBrokerItems" [filterable]="true"
+                                            (filterChange)="handleBrokerFilter($event)"
+                                            [kendoDropDownFilter]="filterSettings" name="Broker"
+                                            [(ngModel)]="selectedBroker" (valueChange)="brokerChange($event)"
+                                            [popupSettings]="{width: 'auto'}" #Broker="ngModel" valueField="value">
+                                            <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                                                <span>{{dataItem.text}}</span>
+                                            </ng-template>
+                                        </kendo-autocomplete>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                                        <ng2-tri-state-checkbox id="a-showOnlyUnpaid" name="isshowOnlyUnpaid"
+                                            [(ngModel)]="brokerageSearchCriteria.showOnlyUnpaid"
+                                            #isshowOnlyUnpaid="ngModel">
+                                        </ng2-tri-state-checkbox>
+                                        <label for="a-showOnlyUnpaid"> Show Only Unpaid</label>
+                                    </div>
+
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                                        <button class="btn btn-action"
+                                            (click)="wbSearchForm.form.valid && onFilterSubmit()">
+                                            <i class="icon-search"></i>Search
+                                        </button>
+                                        <button class="btn btn-action" (click)="clearFilter()">
+                                            <i class="icon-clear"></i>Clear
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- #endregion -->
+        </div>
+        <!-- #region Mobile filter section -->
+        <div class="f-btn" [ngClass]="{'active': filterFlag}">
+            <ul>
+                <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+                <li><button (click)="wbSearchForm.form.valid && onFilterSubmit()">
+                        <i class="icon-search"></i></button></li>
+                <li><button (click)="clearFilter()">
+                        <i class="icon-clear"></i></button></li>
+            </ul>
+        </div>
+        <!-- #endregion -->
+    </div>
+</section>
+<!-- #endregion -->
+
+<!-- #region Grid Configuration -->
+<ng-container *ngIf="isGridConfig">
+    <app-gridconfiguration [fields]="fields" [pageName]="'Brokerage'" [gridName]="'BrokerageGrid'"
+        [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+        (ChildEvent)="setNewGridConfig($event)">
+    </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region General Dialog -->
+<ng-container *ngIf="isGeneralDialog">
+    <app-general (toggle)="closeGeneralDialog()" (toggleClose)="isGeneralDialog=$event"
+        [transactionObj]="transactionObj">
+    </app-general>
+</ng-container>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

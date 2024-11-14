@@ -1,0 +1,224 @@
+<div class="modal c-modal addemp la-mas logi-modal l-issue rorgan" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <form name="form" #LabIssue="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-labissue"></i>Lab Issue</h5>
+          <button type="button" class="close" (click)="closeLabIssueDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 rs-labissue">
+              <!-- #region LAB Issue CRUD -->
+              <div class="en-form f-12">
+                <h6 class="d-flex justify-content-between title">
+                  <span>
+                    <i class="icon-lab"></i>Lab Information <span class="ms-1">
+                    </span>
+                  </span>
+                  <span class="text-end">Download Excel <span class="ms-1">
+                      <kendo-switch class="k-widget k-switch-off me-1" #canDownload="ngModel" name="excelDownload"
+                        id="m-chk" [(ngModel)]="canDownloadIssueExcel"></kendo-switch>
+                    </span>
+                  </span>
+                </h6>
+                <div class="i-form co-inv-pa">
+                  <div class="grid">
+                    <div class="form-data">
+                      <label>Lab:<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" [ngClass]="{ 'error': Lab.invalid && (Lab.dirty || Lab.touched)}">
+                      <kendo-combobox [data]="listLabItems" textField="text" valueField="value" name="Lab"
+                        [kendoDropDownFilter]="filterSettings" [(ngModel)]="selectedLabItems" #Lab="ngModel"
+                        (valueChange)="LabChange()" required>
+                      </kendo-combobox>
+                    </div>
+                  </div>
+                </div>
+                <div class="e-details-n"
+                  *ngIf="selectedLabItems && selectedLabItems.value && selectedLabItems.value.length > 0">
+                  <div class="info-block we-3">
+                    <li>
+                      <h6 class="c-name"><span>Website:</span>{{labObj.website}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Email:</span>{{labObj.email}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Mobile No. :</span>{{labObj.mobileNo}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Phone No. :</span>{{labObj.phoneNo}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Fax No. :</span>{{labObj.faxNo}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Regi. No. :</span>{{labObj.registrationNo}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Inc. Tax No. :</span>{{labObj.incomeTaxNo}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Tax No. :</span>{{labObj.taxNo}}</h6>
+                    </li>
+                  </div>
+                </div>
+              </div>
+
+              <div class="en-form f-12">
+                <h6 class="title"><i class="icon-info"></i>Logistic Details</h6>
+                <div class="i-form co-inv-pa">
+                  <div class="grid">
+                    <div class="form-data">
+                      <label>Logistic:</label>
+                    </div>
+                    <div class="form-data">
+                      <kendo-combobox [data]="listlogisticItems" textField="text" valueField="value" name="Logistic"
+                        [kendoDropDownFilter]="filterSettings" [(ngModel)]="selectedlogisticItems" #Logistic="ngModel"
+                        (valueChange)="LogisticChange()">
+                      </kendo-combobox>
+                    </div>
+                  </div>
+                </div>
+                <div class="e-details-n"
+                  *ngIf="selectedlogisticItems && selectedlogisticItems.value && selectedlogisticItems.value.length > 0">
+                  <div class="info-block we-3">
+                    <li>
+                      <h6 class="c-name"><span>Website:</span>{{logisticObj.website}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Email:</span>{{logisticObj.email}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Mobile No. :</span>{{logisticObj.mobileNo}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Phone No. :</span>{{logisticObj.phoneNo}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Fax No. :</span>{{logisticObj.faxNo}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Regi. No. :</span>{{logisticObj.registrationNo}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Inc. Tax No. :</span>{{logisticObj.incomeTaxNo}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Tax No. :</span>{{logisticObj.taxNo}}</h6>
+                    </li>
+                  </div>
+                </div>
+              </div>
+
+              <div class="en-form f-12">
+                <h6 class="title"><i class="icon-addpacket"></i>Add Packets</h6>
+
+                <div class="i-form ma-issue-top">
+                  <div class="grid">
+
+                    <div class="form-data">
+                      <label for="">Stone ID</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" id="" name="barcode" [(ngModel)]="EnteredStoneID" #barcode="ngModel"
+                        #BarcodeInput name="barcode" class="c-wi">
+                    </div>
+
+                    <div class="form-data" *ngIf="labIssueObj.lab.execFormat=='GIA-India'|| labIssueObj.lab.execFormat == 'GIA-Surat'">
+                      <label for="">INR Rate <span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" *ngIf="labIssueObj.lab.execFormat=='GIA-India'|| labIssueObj.lab.execFormat == 'GIA-Surat'">
+                      <input type="text" id="dollarRate" #DollarRate="ngModel" required
+                        (keypress)="utilityService.floatOnly($event)" [(ngModel)]="labIssueObj.dollarRate"
+                        name="dollarRate" class="c-wi" [disabled]="false">
+                    </div>
+                  </div>
+                </div>
+                <div class="i-form lab-iss-mod m-0">
+                  <div class="grid">
+                    <div class="form-data">
+                      <span class="t-title">Packets :</span><span> {{cntMnuStones}}</span>
+                    </div>
+                    <div class="form-data">
+                      <span class="t-title">Weight :</span><span> {{sumMnuStonesWeight}}</span>
+                    </div>
+                    <div class="ci-top-right pe-0">
+                      <kendo-buttongroup kendoTooltip position="bottom">
+                        <button kendoButton class="mb-1"> <i class="icon-gridconfig pe-0"
+                            (click)="openGridConfigDialog()"></i></button>
+                      </kendo-buttongroup>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- #endregion -->
+              <!-- #region Grid -->
+              <div class="mod-wrap">
+                <div class="grid-wrap">
+                  <ng-container *ngIf="!gridViewLab">
+                    <div class="k-grouping-header k-grouping-header-flex">
+                      <div class="k-indicator-container">
+                        <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                        </kendo-skeleton>
+                      </div>
+                    </div>
+                    <table *ngIf="fields && fields.length > 0" class="w-100 table-responsive skeleton-tbl">
+                      <th *ngFor="let field of fields">{{field.propertyName}}</th>
+                      <tr *ngFor="let field of skeletonArray">
+                        <td *ngFor="let field of fields">
+                          <kendo-skeleton shape="text" animation="wave" [width]="75" [height]="40">
+                          </kendo-skeleton>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-container>
+                  <kendo-grid *ngIf="gridViewLab" [data]="gridViewLab" class="grid-ui upload-grid" [sortable]="true"
+                    [resizable]="true">
+                    <ng-container *ngIf="fields && fields.length > 0">
+                      <ng-container *ngFor="let field of fields">
+                        <ng-container *ngIf="field.isSelected">
+                          <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                            <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'Action'">
+                              <ng-container style="text-align: center">
+                                <i class="icon-delete p-0" (click)="deletePlan(dataItem.stoneId)"></i>
+                              </ng-container>
+                            </ng-template>
+                          </kendo-grid-column>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </kendo-grid>
+                </div>
+              </div>
+              <!-- #endregion -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="onSavePacket(LabIssue,true)"
+            [disabled]="!LabIssue.valid || selectedInventoryItems.length == 0">
+            <i class="icon-add"></i>New</button>
+          <button type="button" class="btn btn-primary" (click)="onSavePacket(LabIssue,true)"
+            [disabled]="!LabIssue.valid || selectedInventoryItems.length == 0">
+            <i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div (document:keydown.esc)="closeLabIssueDialog()"></div>
+
+<!-- #region Grid Config -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'LabIssue'" [gridName]="'LabIssueGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->

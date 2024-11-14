@@ -1,0 +1,274 @@
+.configWrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    background: transparent;
+    margin-top: 10px;
+}
+
+.configWrap .w_100 {
+    grid-column: 1/ span 4;
+}
+
+.configWrap .column12 {
+    grid-column: 1/ span 2;
+}
+
+.configWrap .column22 {
+    grid-column: 3/ span 2;
+}
+
+.config-main .chgtone_grid {
+    display: grid;
+    grid-template-columns: 110px 1fr 110px 1fr;
+    align-items: center;
+    gap: 10px;
+}
+
+.col-from-label {
+    font-size: 13px !important;
+}
+
+.configGrid_wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.configGrid_wrap .form-data label {
+    line-height: 1;
+    margin-bottom: 7px;
+    color: #212529;
+    font-size: 13px;
+}
+
+.configGrid_wrap .k-checkbox+.k-checkbox-label {
+    margin-left: 8px;
+    line-height: 1;
+}
+
+.currency-grid {
+    display: grid;
+    grid-template-columns: 44px 1fr 36px 1fr 20px 1fr 34px 1fr auto;
+    align-items: center;
+    grid-column-gap: 10px;
+}
+
+.currency-grid.default_sysGrid {
+    grid-template-columns: max-content minmax(auto, 1fr) max-content minmax(auto, 1fr);
+    gap: 10px;
+}
+
+.offer-list,
+.currency-list {
+    height: 125px;
+}
+
+.currency-list {
+    overflow-y: auto;
+    border-radius: 5px;
+}
+
+.currency-list button i {
+    font-size: 12px;
+}
+
+.offer-grid {
+    display: grid;
+    grid-template-columns: 44px 1fr 53px auto auto auto auto;
+    align-items: center;
+    grid-column-gap: 10px;
+}
+
+.offer-list {
+    overflow-y: auto;
+    border-radius: 5px;
+}
+
+.offer-list button i {
+    font-size: 12px;
+}
+
+.offer-list li>div:last-child {
+    min-width: 50px;
+}
+
+:is(.offer-grid, .currency-grid) :is(.form-data label) {
+    font-size: 13px !important;
+}
+
+.offer-list li span>div {
+    display: inline-block;
+    max-width: 25vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+    margin-right: 5px;
+    font-weight: 400;
+}
+
+.eventAno_wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 150px);
+    gap: 20px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.eventAno_wrap .c-upload {
+    width: 100%;
+    aspect-ratio: 1 / 1.4;
+    margin: 0;
+    cursor: pointer;
+}
+
+.eventAno_wrap .c-upload:hover {
+    border-color: #7A7A7A;
+}
+
+.eventAno_wrap .c-upload label {
+    pointer-events: none;
+}
+
+.eventAno_wrap .img_title {
+    color: #212529;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.eventAno_wrap .img_wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1.4;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.eventAno_wrap .img_wrap img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    object-fit: cover;
+    object-position: center center;
+}
+
+.eventAno_wrap .c-upload:hover .close_btn {
+    opacity: 1;
+}
+
+.eventImg {
+    position: relative;
+}
+
+.eventImg .close_btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: -13px;
+    top: -10px;
+    background: #4d4d4d;
+    border-radius: 100%;
+    box-shadow: 1px 0px 12px #d3d3d3;
+    width: 22px;
+    aspect-ratio: 1;
+    border: 2px solid #fff;
+    font-size: 10px;
+    padding: 0;
+    opacity: 0.8;
+}
+
+.eventImg .close_btn i {
+    color: #fff;
+    font-size: 8px;
+}
+
+.ms-config .o-edit {
+    display: flex;
+}
+
+.ms-config .o-edit i {
+    margin-right: initial;
+}
+
+.ms-config .in-block .o-edit {
+    padding: initial;
+    align-items: center;
+}
+
+.ms-config button.btn {
+    padding: 0 0 0 5px;
+    vertical-align: middle;
+}
+
+.ms-config .flex.in-block {
+    padding: 5px;
+    border: 0;
+    background-color: #dddddd;
+    height: 30px;
+    margin-bottom: initial;
+}
+
+.ms-config .o-title h6.title {
+    margin: initial;
+    border-bottom: 0;
+    font-size: 14px;
+}
+
+.lab-list {
+    margin: 10px 0;
+}
+
+.lab-list ul {
+    padding: 0 5px 0 25px;
+}
+
+.lab-list li {
+    font-size: 13px;
+    list-style: disc;
+    padding: 0 5px;
+}
+
+.lab-list li .btnGroup {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lab-list li i {
+    opacity: 0.5;
+}
+
+.lab-list li:hover {
+    background-color: #e3e3e3;
+}
+
+.lab-list li:hover i {
+    opacity: 1;
+}
+
+.lab-list a {
+    float: right;
+    padding-right: 5px;
+}
+
+@media (max-width: 1800px) {
+    .currency-grid.default_sysGrid {
+        grid-template-columns: max-content 1fr !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .currency-grid.default_sysGrid {
+        grid-template: none !important;
+        gap: 0 !important;
+    }
+
+    .currency-grid.default_sysGrid .form-data:nth-child(even):not(:last-child) {
+        margin-bottom: 10px !important;
+    }
+}

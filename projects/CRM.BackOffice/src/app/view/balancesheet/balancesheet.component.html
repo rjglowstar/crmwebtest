@@ -1,0 +1,119 @@
+<title>Balance Sheet</title>
+<div class="memomaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Balance Sheet</li>
+            </ul>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="balancesheet-grid">
+            <!-- Assets -->
+            <div class="grid-1 balsheet">
+              <div class="heading-sheet head">
+                <h5>Assets</h5>
+                <h5>Amount</h5>
+              </div>
+              <div class="sheet-scroll">
+                <ng-container *ngFor="let currency of getUniqueCurrencies()">
+                  <div class="listGroup">
+                    <h5 class="balTitle">{{ currency }}</h5>
+                    <ng-container *ngFor="let item of getGroupedByCurrency(currency,assetsData)">
+                      <ul>
+                        <ng-container *ngFor="let key of getObjectKeys(item) | slice:0:1">
+                          <li>{{ key.split('_')[0] }}</li>
+                          <li>{{ item[key].toFixed(2) }}</li>
+                        </ng-container>
+                      </ul>
+                    </ng-container>
+                    <div class="heading-sheet total_view">
+                      <h5>Total :</h5>
+                      <h5>{{getSumByCurrency(currency,"Assets").toFixed(0)}}</h5>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <!-- Liabilites -->
+            <div class="grid-1 balsheet">
+              <div class="heading-sheet head">
+                <h5>Liabilites</h5>
+                <h5>Amount</h5>
+              </div>
+              <div class="sheet-scroll">
+                <ng-container *ngFor="let currency of getUniqueCurrencies()">
+                  <div class="listGroup">
+                    <h5 class="balTitle">{{ currency }}</h5>
+                    <ng-container *ngFor="let item of getGroupedByCurrency(currency,liabilitiesData)">
+                      <ul>
+                        <ng-container *ngFor="let key of getObjectKeys(item) | slice:0:1">
+                          <li>{{ key.split('_')[0] }}</li>
+                          <li>{{ item[key].toFixed(2) }}</li>
+                        </ng-container>
+                      </ul>
+                    </ng-container>
+                    <div class="heading-sheet total_view">
+                      <h5>Total :</h5>
+                      <h5>{{getSumByCurrency(currency,"Liabilities").toFixed(2)}}</h5>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form">
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>From Date</label>
+                    <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="fDate" #fDate="ngModel"
+                      [(ngModel)]="balanceSheetSearchCriteria.fromDate">
+                    </kendo-datepicker>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label> To Date</label>
+                    <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="tDate" #tDate="ngModel"
+                      [(ngModel)]="balanceSheetSearchCriteria.toDate">
+                    </kendo-datepicker>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" (click)="flterBalanceSheet()"> <i class="icon-search"></i>Search
+                    </button>
+                    <button class="btn btn-action" (click)="clearFilter()">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Search End -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button>
+        </li>
+        <li><button (click)="flterBalanceSheet()"><i class="icon-search"></i></button>
+        </li>
+        <li><button (click)="clearFilter()"><i class="icon-clear"></i></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div kendoDialogContainer></div>

@@ -1,0 +1,1020 @@
+<!-- #region  Sales Modal -->
+<div class="modal c-modal addemp dialog-sm" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form class="modal-content" name="salesForm" #salesForm="ngForm">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="icon-graph"></i>{{salesTransactionObj.transactionType}}</h5>
+        <button type="button" class="close" (click)="closeSalesDialog(false)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-data position-relative print-key">
+          <span class="text-end position-absolute resRel">
+            <span *ngIf="salesTransactionObj.toLedger.isCertReminder" class="text-danger figure-caption blink">Reminder
+              to add
+              Certificate Number </span>
+            <label *ngIf="!transactionObj.id">Above & Below 0.50 CT Print</label>
+            <span class="ms-1" *ngIf="!transactionObj.id">
+              <kendo-switch class="k-widget k-switch-off me-1" [(ngModel)]="aboveFiveCentPrintFlag"
+                name="aboveFiveCentPrint"></kendo-switch>
+            </span>
+            <label *ngIf="!transactionObj.id">Print</label>
+            <span class="ms-1" *ngIf="!transactionObj.id">
+              <kendo-switch class="k-widget k-switch-off me-1" [(ngModel)]="printFlag" name="print"></kendo-switch>
+            </span>
+            <span *ngIf="salesTransactionObj.number" class="tr-no"><span><i class="icon-transactitem"></i>Transactions
+                No :
+                {{salesTransactionObj.number}}</span></span>
+            <span *ngIf="transactionObj.id && salesTransactionObj.refNumber" class="tr-no"><span><i
+                  class="icon-transactitem"></i>Invoice
+                No :
+                {{salesTransactionObj.refNumber}}</span></span>
+          </span>
+        </div>
+        <kendo-tabstrip class="sales-tab" [keepTabContent]="true">
+          <kendo-tabstrip-tab title="" [selected]="true">
+            <ng-template kendoTabTitle>
+              <i class="icon-graph"></i>&nbsp;{{salesTransactionObj.transactionType}} Details
+            </ng-template>
+            <ng-template kendoTabContent>
+              <div class="content">
+                <div class="purchase-grid">
+                  <div class="form-data">
+                    <label>Type<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': TransactionType.invalid && (TransactionType.dirty || TransactionType.touched)}">
+                    <kendo-combobox class="w-auto" [data]="transactionTypeItems" [valuePrimitive]="true"
+                      [kendoDropDownFilter]="filterSettings" name="TransactionType"
+                      [(ngModel)]="salesTransactionObj.transactionType" [disabled]="true" #TransactionType="ngModel"
+                      required>
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Sales</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" [(ngModel)]="salesTransactionObj.fromLedger.name"
+                      name="sales" disabled="true" />
+                  </div>
+
+                  <div class="form-data">
+                    <label>Party<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': Party.invalid && (Party.dirty || Party.touched)}">
+                    <kendo-autocomplete class="w-100" [data]="listPartyItems" [filterable]="true"
+                      (filterChange)="handlePartyFilter($event)" [kendoDropDownFilter]="filterSettings" name="Party"
+                      [(ngModel)]="selectedParty" (valueChange)="onPartyChange($event)"
+                      [popupSettings]="{width: 'auto'}" #Party="ngModel" valueField="value" required
+                      placeholder="Search party by name">
+                      <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                        <span>{{dataItem.text}}</span>
+                      </ng-template>
+                    </kendo-autocomplete>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Date<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-datepicker calendarType="classic" name="tDate" #tDate="ngModel" format="dd/MM/yyyy"
+                      [(ngModel)]="salesTransactionObj.transactionDate" required
+                      (valueChange)="addDays($event, true)"></kendo-datepicker>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Tax</label>
+                  </div>
+                  <div class="form-data mul-select">
+                    <kendo-multiselect name="tax" class="customselect" [data]="listTax" [(ngModel)]="taxTypesZ"
+                      [textField]="'name'" [valueField]="'name'" [valuePrimitive]="true"
+                      [popupSettings]="{width: 'auto'}" [autoClose]="false" [kendoMultiSelectSummaryTag]="0"
+                      [filterable]="true" (valueChange)="onMultiSelectChange(listTax,taxTypesZ)"
+                      (open)="filterTaxChk = onOpenDropdown(listTax,filterTaxChk, taxTypesZ)"
+                      (filterChange)="filterTax = handleFilter($event); listTax = filterDropdownSearch(allTheTax, $event, taxTypesZ)">
+
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom" [title]="getCommaSapratedString(taxTypesZ, true)">
+                          {{getCommaSapratedString(taxTypesZ)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Insur. Charge <span class="require">*</span> </label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': insurance.invalid && (insurance.dirty || insurance.touched)}">
+                    <input type="text" name="insurance" #insurance="ngModel"
+                      [(ngModel)]="salesTransactionObj.insuranceCharge" (keypress)="utilityService.floatOnly($event);"
+                      (keyup)="calculateTransactionItems()"
+                      [disabled]="!salesTransactionObj.transactionDetail.isOverseas" required>
+                  </div>
+                </div>
+                <div class="input-grid border-top pt-2 mt-2">
+                  <div class="form-data">
+                    <kendo-combobox [data]="listTransactItemItems" [kendoDropDownFilter]="filterSettings"
+                      placeholder="Select Item" [textField]="'text'" [valueField]="'value'" name="transactItem"
+                      #transactItem="ngModel" [valuePrimitive]="true" [(ngModel)]="selectedTransactItem"
+                      (valueChange)="onTransactItemChange()">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="quantity" #quantity="ngModel" [(ngModel)]="transactionItemObj.quantity"
+                      placeholder="Qty" (keypress)="utilityService.floatOnly($event);">
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="weight" #weight="ngModel" [(ngModel)]="transactionItemObj.weight"
+                      placeholder="Weight" (keypress)="utilityService.floatOnly($event);">
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="rate" #rate="ngModel" [(ngModel)]="transactionItemObj.rate"
+                      placeholder="Rate" (keypress)="utilityService.floatOnly($event);">
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="discPerc" #discPerc="ngModel" [(ngModel)]="transactionItemObj.discPerc"
+                      placeholder="Dis%" (keypress)="utilityService.floatOnly($event);">
+                  </div>
+                  <button kendoButton title="Add" [disabled]="salesTransactionObj.isLocked" kendoTooltip
+                    position="bottom" (click)="addTransactionItem()">
+                    <i class="icon-add p-0"></i>
+                  </button>
+                  <button kendoButton title="Delete" kendoTooltip position="bottom" (click)="openDeleteDialog()"
+                    [disabled]="mySelectionTrans.length == 0">
+                    <i class="icon-trash p-0"></i>
+                  </button>
+                  <button kendoTooltip position="bottom" kendoButton title="Add Packing List"
+                    (click)="togglePackinglistDialog()"><i class="icon-packinglist pe-0"></i></button>
+                </div>
+                <div class="grid-wrap mt-2">
+                  <kendo-grid [resizable]="true" [data]="salesTransactionObj.items" [selectable]="selectableSettings"
+                    [(selectedKeys)]="mySelectionTrans" [kendoGridSelectBy]="'index'" style="height:calc(100vh - 512px)"
+                    class="mb-grid">
+                    <kendo-grid-checkbox-column [width]="25">
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                        <input type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                          [kendoGridSelectionCheckbox]="rowIndex" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                    </kendo-grid-checkbox-column>
+                    <kendo-grid-column field="item.name" title="Name" [width]="100">
+                    </kendo-grid-column>
+                    <kendo-grid-column field="quantity" title="Qty" [width]="40"></kendo-grid-column>
+                    <kendo-grid-column field="weight" title="Weight" [width]="50"></kendo-grid-column>
+                    <kendo-grid-column field="rate" title="Rate" [width]="60"></kendo-grid-column>
+                    <kendo-grid-column field="amount" title="Amount" [width]="60"></kendo-grid-column>
+                    <kendo-grid-column field="discPerc" title="Dis(%)" [width]="50"></kendo-grid-column>
+                    <kendo-grid-column field="discount" title="Dis" [width]="50"></kendo-grid-column>
+                    <kendo-grid-column field="taxAmount" title="Tax" [width]="60"></kendo-grid-column>
+                    <kendo-grid-column field="total" title="Total" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="edit" title="Edit" [width]="32">
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                        <button kendoTooltip position="bottom" kendoButton title="Edit Item"
+                          [disabled]="(transactionObj.id != null || salesTransactionObj.isLocked)"
+                          (click)="editItem(dataItem, rowIndex)"><i class="icon-edit pe-0"></i></button>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </kendo-grid>
+                </div>
+                <div class="d-flex p-1 border">
+                  <ng-container *ngIf="advancePaymentReceiptTransaction.id">
+                    <div class="me-2">
+                      <input type="checkbox" class="k-checkbox" id="advance" name="advance"
+                        [(ngModel)]="advancePaymentFlag">
+                    </div>
+                    <div class="form-data me-5"><label for="advance">Advance Payment :- T.No :
+                        {{advancePaymentReceiptTransaction.number}} |
+                        NetAmt : {{advancePaymentReceiptTransaction.netTotal}}</label>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="creditNotePaymentTransaction.id">
+                    <div class="me-2">
+                      <input type="checkbox" class="k-checkbox" id="creditNote" name="creditNote"
+                        [(ngModel)]="creditNotePaymentFlag">
+                    </div>
+                    <div class="form-data"><label for="creditNote">CreditNote Payment :- T.No :
+                        {{creditNotePaymentTransaction.number}} |
+                        NetAmt : {{creditNotePaymentTransaction.netTotal}}</label>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="grid-total d-flex p-2 border">
+                  <div class="grid-left-total">
+                    <div class="form-data">
+                      <label>Amount</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" readonly disabled [value]="salesTransactionObj.amount">
+                    </div>
+                    <div class="form-data">
+                      <label>Discount</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" readonly disabled [value]="salesTransactionObj.discount">
+                    </div>
+                    <div class="form-data">
+                      <label>Tax</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" readonly disabled [value]="salesTransactionObj.taxAmount">
+                    </div>
+                    <div class="form-data">
+                      <label>Remark</label>
+                      <textarea cols="4" type="text" name="remark" #remark="ngModel"
+                        [(ngModel)]="salesTransactionObj.note" placeholder="Remark">
+                      </textarea>
+                    </div>
+                  </div>
+                  <div class="grid-right-total">
+                    <div class="form-data">
+                      <label>Total Amt</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" name="tamt" readonly disabled [value]="salesTotalAmount">
+                    </div>
+                    <div class=" form-data">
+                      <label>Net Amt</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" readonly disabled [value]="salesTransactionObj.netTotal">
+                    </div>
+                    <div class="form-data">
+                      <label>Add Amt</label>
+                    </div>
+                    <div class="form-data" [ngClass]="{ 'error': !validAddAmtLimit }">
+                      <input type="text" name="addamt" #addamt="ngModel" [(ngModel)]="salesTransactionObj.addAmount"
+                        [disabled]="salesTransactionObj.netTotal == salesTransactionObj.paidAmount ? true :false"
+                        (keypress)="utilityService.discountfloat($event);"
+                        (keyup)="calculateTransactionItems(true);validAddAmtLimit = utilityService.validateAddAmountLimit(salesTransactionObj.addAmount, accountConfig.addAmountLimit);">
+                      <span class="font-smaller s-error" *ngIf="!validAddAmtLimit">Amount exceed limit</span>
+                    </div>
+
+                    <!-- <div class="form-data">
+                      <label>Paid Amt</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" name="paidAmt" #paidAmt="ngModel" [(ngModel)]="salesTransactionObj.paidAmount"
+                        (keypress)="utilityService.discountfloat($event);" disabled
+                        (keyup)="calculateTransactionItems(true)">
+                    </div> -->
+                    <div class="form-data">
+                      <label>CC Amt {{salesTransactionObj.transactionDetail.toCurrency ? "("+
+                        salesTransactionObj.transactionDetail.toCurrency +")":"" }}</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" name="ccAmount" autocomplete="off" [(ngModel)]="salesTransactionObj.ccAmount"
+                        #ccAmount="ngModel" id="ccAmount" (keypress)="utilityService.floatOnly($event)" disabled>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+
+          <kendo-tabstrip-tab title="">
+            <ng-template kendoTabTitle>
+              <i class="icon-print"></i>&nbsp;InvoicePrint Details
+            </ng-template>
+            <ng-template kendoTabContent>
+              <div class="content">
+                <div class="invoiceprint-grid">
+                  <div class="form-data">
+                    <label>Terms</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listTermsItems" name="termType" [kendoDropDownFilter]="filterSettings"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.termType" #termType="ngModel"
+                      [valuePrimitive]="true" (valueChange)="termChange($event)" placeholder="Select Terms">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Days<span class="require"
+                        *ngIf="salesTransactionObj.transactionDetail.termType =='Due'">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': terms.invalid && (terms.dirty || terms.touched)}">
+                    <input type="text" class="form-control" name="terms" #terms="ngModel"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.terms" required (keyup)="addDays($event)"
+                      (keypress)="utilityService.numberOnly($event)" maxlength="8"
+                      [required]="salesTransactionObj.transactionDetail.termType =='Due'"
+                      [disabled]="salesTransactionObj.transactionDetail.termType !='Due'">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Due Date</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-datepicker calendarType="classic" name="eDate" #eDate="ngModel" format="dd/MM/yyyy"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.dueDate" [disabled]="isDisabled">
+                    </kendo-datepicker>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Expense</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="expense" #expense="ngModel"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.expense"
+                      (keypress)="utilityService.floatOnly($event)">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Shipping Charge</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" #shippingCharge="ngModel"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.shippingCharge" name="shippingCharge"
+                      (keypress)="utilityService.floatOnly($event)" (keyup)="calculateTransactionItems()" />
+                  </div>
+
+                  <div class="form-data">
+                    <label>Port Of Loading</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="portOfLoading" #portOfLoading="ngModel"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.portOfLoading">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Bank</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listBankItems" textField="text" valueField="value" name="Bank"
+                      [(ngModel)]="selectedBankItem" #Bank="ngModel" [valuePrimitive]="true"
+                      [kendoDropDownFilter]="filterSettings" (valueChange)="bankChange($event)"
+                      placeholder="Select Bank">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Intermediary Bank</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="intermediaryBank" #intermediaryBank="ngModel"
+                      [(ngModel)]="selectedBankIntermediaryBank" [disabled]="true">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Intermediary Shift</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="intermediaryBankShift"
+                      #intermediaryBankShift="ngModel" [(ngModel)]="selectedBankintermediaryBankShift"
+                      [disabled]="true">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Logistic</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listlogisticItems" textField="text" valueField="value" name="Logistic"
+                      [(ngModel)]="selectedlogisticItems" #Logistic="ngModel" [valuePrimitive]="true"
+                      (valueChange)="LogisticChange($event)" [kendoDropDownFilter]="filterSettings"
+                      placeholder="Select Logistic">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Docket No</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="docketNo" #docketNo="ngModel"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.docketNo">
+                  </div>
+
+                  <div class="form-data">
+                    <label>IRN No</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="irnNo" #irnNo="ngModel"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.irnNo">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Box Weight</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="boxWeight" #boxWeight="ngModel"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.boxWeight">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Consig Name</label>
+                  </div>
+
+                  <div class="form-data">
+                    <kendo-autocomplete class="w-100" [data]="listPartyItems" [filterable]="true"
+                      (filterChange)="handlePartyFilter($event)" [kendoDropDownFilter]="filterSettings" name="consign"
+                      [(ngModel)]="selectedConsign" (valueChange)="onConsignChange($event)"
+                      [popupSettings]="{width: 'auto'}" #consign="ngModel" valueField="value"
+                      placeholder="Search Consignee">
+                      <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                        <span>{{dataItem.text}}</span>
+                      </ng-template>
+                    </kendo-autocomplete>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Consig Address</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="consigneeAddress" #consigneeAddress="ngModel"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.consigneeAddress">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Add. Declaration</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="additionalDeclaration"
+                      #additionalDeclaration="ngModel"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.additionalDeclaration">
+                  </div>
+
+                  <div class="form-data">
+                    <label>PL Declaration</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="plDeclaration" #plDeclaration="ngModel"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.plDeclaration">
+                  </div>
+
+                  <div class="form-data">
+                    <label>CIF City Name</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="cifCityName" #cifCityName="ngModel"
+                      [(ngModel)]="salesTransactionObj.transactionDetail.cifCityName">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Export Type</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox class="w-auto" [data]="listExportType" [valuePrimitive]="true" textField="value"
+                      valueField="value" name="exportType" [kendoDropDownFilter]="filterSettings"
+                      placeholder="Select Export Type" [(ngModel)]="salesTransactionObj.transactionDetail.exportType"
+                      #exportType="ngModel">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Branch</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listBranchItems" textField="text" valueField="value" name="Branch"
+                      [(ngModel)]="selectedBranchItem" #Branch="ngModel" (valueChange)="branchChange($event)"
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label class="text-end">DDA
+                      <span class="ms-1">
+                        <kendo-switch class="k-widget k-switch-off me-1" #isDDA="ngModel" name="isDDA" id="m-isDDA"
+                          [(ngModel)]="salesTransactionObj.transactionDetail.isDDA"></kendo-switch>
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="form-data">
+                    <label class="text-end">WithCertiNo
+                      <span class="ms-1">
+                        <kendo-switch class="k-widget k-switch-off me-1" #isWithCertiNo="ngModel" name="isWithCertiNo"
+                          id="m-isWithCertiNo" [(ngModel)]="salesTransactionObj.transactionDetail.isWithCertiNo">
+                        </kendo-switch>
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="form-data">
+                    <label class="text-end">PackingList
+                      <span class="ms-1">
+                        <kendo-switch class="k-widget k-switch-off me-1" #isPackingList="ngModel" name="isPackingList"
+                          id="m-isPackingList" [(ngModel)]="salesTransactionObj.transactionDetail.isPackingList">
+                        </kendo-switch>
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="form-data">
+                    <label class="text-end">Overseas
+                      <span class="ms-1">
+                        <kendo-switch class="k-widget k-switch-off me-1" #isOverseas="ngModel" name="isOverseas"
+                          id="m-isOverseas" [(ngModel)]="salesTransactionObj.transactionDetail.isOverseas">
+                        </kendo-switch>
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="form-data" *ngIf="salesTransactionObj.transactionType == 'Sales'">
+                    <label class="text-end">Skip
+                      <span class="ms-1">
+                        <kendo-switch class="k-widget k-switch-off me-1" #isSkipInvEnum="ngModel" name="isSkipInvEnum"
+                          id="m-isSkipInvEnum" [(ngModel)]="salesTransactionObj.transactionDetail.isSkipInvEnum">
+                        </kendo-switch>
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="form-data" *ngIf="salesTransactionObj.transactionType == 'Sales'">
+                    <label class="text-end">isShowOrigin
+                      <span class="ms-1">
+                        <kendo-switch class="k-widget k-switch-off me-1" #isShowOrigin="ngModel" name="isShowOrigin"
+                          id="m-isShowOrigin" [(ngModel)]="salesTransactionObj.transactionDetail.isShowOrigin">
+                        </kendo-switch>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="memo-currency-grid mt-1">
+                  <h6 class="title"><i class="icon-currency"></i>Currency</h6>
+                  <div class="grid">
+
+                    <div class="form-data">
+                      <label>Currency.<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': CurrencyType.invalid && (CurrencyType.dirty || CurrencyType.touched)}">
+                      <kendo-combobox class="w-auto" [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+                        valueField="value" name="CurrencyType" [kendoDropDownFilter]="filterSettings"
+                        [(ngModel)]="salesTransactionObj.transactionDetail.fromCurrency" #CurrencyType="ngModel"
+                        required (valueChange)="currencyChange()">
+                      </kendo-combobox>
+                    </div>
+
+                    <div class="form-data">
+                      <label>Currency. Rate<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': currencyRate.invalid && (currencyRate.dirty || currencyRate.touched)}">
+                      <input type="text" name="currencyRate" autocomplete="off"
+                        [(ngModel)]="salesTransactionObj.transactionDetail.fromCurRate" #currencyRate="ngModel"
+                        id="currencyRate" required (keypress)="utilityService.floatOnly($event)" [disabled]="false">
+                    </div>
+
+                    <div class="form-data">
+                      <label>Convert Cur.<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': convCurrencyType.invalid && (convCurrencyType.dirty || convCurrencyType.touched)}">
+                      <kendo-combobox class="w-auto" [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+                        valueField="value" name="convCurrencyType" [kendoDropDownFilter]="filterSettings"
+                        [(ngModel)]="salesTransactionObj.transactionDetail.toCurrency" #convCurrencyType="ngModel"
+                        (valueChange)="currencyChange()">
+                      </kendo-combobox>
+                    </div>
+
+                    <div class="form-data">
+                      <label>Convert Cur. Rate</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" name="convcurrencyRate" autocomplete="off"
+                        [(ngModel)]="salesTransactionObj.transactionDetail.toCurRate" #convcurrencyRate="ngModel"
+                        id="convcurrencyRate" (keypress)="utilityService.floatOnly($event)" (keyup)="calculateCCAmt()"
+                        [disabled]="false">
+                    </div>
+
+                  </div>
+                </div>
+
+                <h6 class="title mt-2 d-flex justify-content-between">
+                  <span><i class="icon-mapmarker"></i>Address</span>
+                </h6>
+                <div class="row e-details-n ps-2 pe-2" *ngIf="selectedPartyLedger.id">
+                  <div class="col-xl-4 col-lg-4 col-sm-6 col-xs-12 mb-3 ps-2 pe-2">
+                    <div class="info-block border b-des bg-white">
+                      <div class="flex in-block">
+                        <div class="o-title">
+                          <h6 class="b-title">
+                            <kendo-label class="k-radio-label" for="Selected"></kendo-label>
+                            <input type="radio" name="address" value="{{selectedPartyLedger.address.id}}"
+                              class="ms-0 me-1" kendoRadioButton
+                              (click)="onAddressChange(selectedPartyLedger.address.id)"
+                              [checked]="(selectedPartyLedger.address.id == selectedAddressId)" />
+                            <span>Primary Address (Default)</span>
+                          </h6>
+                        </div>
+                      </div>
+                      <div class="li-wrap">
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>Address 1: </span>
+                            <i class="p-0">
+                              {{selectedPartyLedger.address.line1}}
+                            </i>
+                          </h6>
+                        </li>
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>Address 2: </span>
+                            <i class="p-0">
+                              {{selectedPartyLedger.address.line2}}
+                            </i>
+                          </h6>
+                        </li>
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>Country: </span>
+                            <i class="p-0">
+                              {{selectedPartyLedger.address.country}}
+                            </i>
+                          </h6>
+                        </li>
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>State: </span>
+                            <i class="p-0">
+                              {{selectedPartyLedger.address.state}}
+                            </i>
+                          </h6>
+                        </li>
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>City: </span>
+                            <i class="p-0">
+                              {{selectedPartyLedger.address.city}}
+                            </i>
+                          </h6>
+                        </li>
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>Pincode: </span>
+                            <i class="p-0">
+                              {{selectedPartyLedger.address.zipCode}}
+                            </i>
+                          </h6>
+                        </li>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-sm-6 col-xs-12 mb-3 ps-2 pe-2"
+                    *ngFor="let item of selectedPartyLedger.otherAddress">
+                    <div class="info-block border b-des bg-white">
+                      <div class="flex in-block">
+                        <div class="o-title">
+                          <h6 class="b-title">
+                            <kendo-label class="k-radio-label" for="Selected"></kendo-label>
+                            <input type="radio" name="address" value="{{item.id}}" class="ms-0 me-1" kendoRadioButton
+                              [checked]="(item.id == selectedAddressId)" (click)="onAddressChange(item.id)" />
+                            <span>{{item.type}}</span>
+                          </h6>
+                        </div>
+                      </div>
+                      <div class="li-wrap">
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>Address 1: </span>
+                            <i class="p-0">
+                              {{item.line1}}
+                            </i>
+                          </h6>
+                        </li>
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>Address 2: </span>
+                            <i class="p-0">
+                              {{item.line2}}
+                            </i>
+                          </h6>
+                        </li>
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>Country: </span>
+                            <i class="p-0">
+                              {{item.country}}
+                            </i>
+                          </h6>
+                        </li>
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>State: </span>
+                            <i class="p-0">
+                              {{item.state}}
+                            </i>
+                          </h6>
+                        </li>
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>City: </span>
+                            <i class="p-0">
+                              {{item.city}}
+                            </i>
+                          </h6>
+                        </li>
+                        <li class="w-100 mb-1">
+                          <h6 class="c-name"><span>Pincode: </span>
+                            <i class="p-0">
+                              {{item.zipCode}}
+                            </i>
+                          </h6>
+                        </li>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <h6 class="title mt-2 d-flex justify-content-between">
+                  <span><i class="icon-payment"></i>Advance Payment</span>
+                </h6>
+                <div class="adv-payment-grid"
+                  *ngIf="advancePaymentReceiptTransaction && advancePaymentReceiptTransaction.id && advancePaymentReceiptTransaction.id.length > 0">
+                  <div class="stone-card">
+                    <div class="d-flex justify-content-between align-items-center pb-1 border-bottom"><span>
+                        <i class="icon-transactitem"></i><b>{{advancePaymentReceiptTransaction.number}}</b></span>
+                      <div class="d-flex">
+                        <div class="ms-1">{{advancePaymentReceiptTransaction.transactionDate | date: 'dd/MM/yyyy'}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="stone-search-grid">
+                      <div class="form-data"><label>Currency
+                          :</label><span>{{advancePaymentReceiptTransaction.transactionDetail.fromCurrency}}</span>
+                      </div>
+                      <div class="form-data"><label>Remaining Amount
+                          :</label><span>{{advancePaymentReceiptTransaction.paidAmount}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+        </kendo-tabstrip>
+      </div>
+      <div kendoTooltip position="bottom" class="modal-footer">
+        <button type="button" *ngIf="transactionObj.id" #printAnchor (click)="onPrintToggle()" class="btn btn-primary">
+          <i class="icon-print"></i>Print</button>
+        <ng-container *ngIf="!isStockTallyEnable">
+          <button type="button" class="btn btn-primary" [disabled]="!(salesForm.valid && validAddAmtLimit)"
+            (click)="saveTransaction(true)">
+            <i class="icon-add"></i>New</button>
+          <button type="button" class="btn btn-primary" [disabled]="!(salesForm.valid && validAddAmtLimit)"
+            (click)="saveTransaction()">
+            <i class="icon-save"></i>Save</button>
+        </ng-container>
+      </div>
+      <kendo-popup [anchor]="$any(printAnchor)" #popup (anchorViewportLeave)="showPrintOption = false"
+        *ngIf="showPrintOption" [anchorAlign]="anchorPrintAlign" [popupAlign]="popupPrintAlign">
+        <div class="content p-2 pb-0">
+          <div class="mb-2">
+            <input type="radio" name="excelOption" value="printInvoice" #printInvoicePdf [(ngModel)]="printOption"
+              kendoRadioButton />
+            <label class="k-label" class="ms-2" [for]="printInvoicePdf">Print Invoice</label>
+          </div>
+          <div class="mb-2">
+            <input type="radio" name="excelOption" value="aboveFiveCentPrint" #aboveFiveCentCarat
+              [(ngModel)]="printOption" kendoRadioButton />
+            <label class="k-label" class="ms-2" [for]="aboveFiveCentCarat">Above & Below 0.50 CT Invoice</label>
+          </div>
+          <div class="col-md-12 px-1">
+            <div class="text-center pb-2">
+              <button class="btn btn-primary w-100" [disabled]="printOption == null" (click)="printInvoice()">
+                <i class="icon-print"></i> Print
+              </button>
+            </div>
+          </div>
+        </div>
+      </kendo-popup>
+    </form>
+  </div>
+</div>
+<!-- #endregion -->
+
+<!-- #region Packing List Dialog -->
+<div class="modal c-modal addemp dialog-sm-l" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  [hidden]="!isPackinglistDialog">
+  <form name="form">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="icon-addpacket"></i>Packing List
+          </h5>
+
+          <button type="button" class="close" (click)="togglePackinglistDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="en-form f-12" *ngIf="!salesTransactionObj.isLocked">
+                <h6 class="title"><i class="icon-addpacket"></i>Add Packets</h6>
+                <div class="ma-issue-top topres">
+                  <div class="grid">
+                    <div class="form-data">
+                      <label for="">Stone ID</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" id="barcode" [(ngModel)]="searchString" name="barcode" class="c-wi"
+                        autocomplete="off">
+                      <button kendoButton title="Add" kendoTooltip position="bottom" class="ms-2"
+                        [disabled]="salesTransactionObj.isLocked" (click)="onAddBarcode()">
+                        <i class="icon-add p-0"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="en-form f-12 mt-1">
+                <h6 class="title"><i class="icon-addpacket"></i>Update Stone Discount / Origin</h6>
+                <div class="ma-issue-top">
+                  <div class="grid input-package-grid">
+                    <div class="form-data">
+                      <input type="text" name="stoneId" autocomplete="off" id="stoneId" placeholder="StoneId"
+                        [(ngModel)]="filterStoneId" #stoneId="ngModel">
+                    </div>
+                    <div class="form-data mul-select">
+                      <kendo-multiselect name="shape" class="customselect" [data]="allTheShapes"
+                        [kendoDropDownFilter]="filterSettings" [(ngModel)]="filterShapes" [textField]="'name'"
+                        [valueField]="'name'" [valuePrimitive]="true" [popupSettings]="{width: 'auto'}"
+                        [autoClose]="false" [kendoMultiSelectSummaryTag]="0"
+                        (open)="filterShapeChk = utilityService.onOpenDropdown(allTheShapes,filterShapeChk, filterShapes)"
+                        placeholder="Select Shape" (valueChange)="onMultiSelectChange(allTheShapes, filterShapes)">
+                        <ng-template kendoComboBoxHeaderTemplate>
+                          <div class="dropdown-header single k-widget k-header">
+                            <span class="temp-single">Select Shape</span>
+                          </div>
+                          <div class="single k-widget k-header ps-2">
+                            <input type="checkbox" class="k-checkbox me-1" name="filterShapeChk" id="filterShapeChk"
+                              title="Select all" [(ngModel)]="filterShapeChk"
+                              (change)="filterShapes = utilityService.checkAllListItems(allTheShapes, filterShapeChk, filterShapes)">
+                            <label>Select all</label>
+                          </div>
+                        </ng-template>
+                        <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                          <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                          <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                        </ng-template>
+                        <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                          <span kendoTooltip position="bottom"
+                            [title]="utilityService.getCommaSapratedString(filterShapes, true)">
+                            {{utilityService.getCommaSapratedString(filterShapes)}}
+                          </span>
+                        </ng-template>
+                      </kendo-multiselect>
+                    </div>
+                    <div class="form-data mul-select">
+                      <kendo-multiselect name="color" class="customselect" [data]="allColors" [(ngModel)]="filterColors"
+                        [textField]="'name'" [valueField]="'name'" [valuePrimitive]="true"
+                        [kendoDropDownFilter]="filterSettings" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                        [kendoMultiSelectSummaryTag]="0"
+                        (open)="filterColorChk = utilityService.onOpenDropdown(allColors,filterColorChk, filterColors)"
+                        placeholder="Select Color" (valueChange)="onMultiSelectChange(allColors, filterColors)">
+                        <ng-template kendoComboBoxHeaderTemplate>
+                          <div class="dropdown-header single k-widget k-header">
+                            <span class="temp-single">Select Color</span>
+                          </div>
+                          <div class="single k-widget k-header ps-2">
+                            <input type="checkbox" class="k-checkbox me-1" name="filterColorChk" id="filterColorChk"
+                              title="Select all" [(ngModel)]="filterColorChk"
+                              (change)="filterColors = utilityService.checkAllListItems(allColors, filterColorChk, filterColors)">
+                            <label>Select all</label>
+                          </div>
+                        </ng-template>
+                        <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                          <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                          <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                        </ng-template>
+                        <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                          <span kendoTooltip position="bottom"
+                            [title]="utilityService.getCommaSapratedString(filterColors, true)">
+                            {{utilityService.getCommaSapratedString(filterColors)}}
+                          </span>
+                        </ng-template>
+                      </kendo-multiselect>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" name="weight" autocomplete="off" maxlength="10" id="weight"
+                        placeholder="From Weight" (keypress)="utilityService.floatOnly($event)"
+                        [(ngModel)]="filterFWeight" #weight="ngModel">
+                    </div>
+                    <div class="form-data">
+                      <input type="text" name="weight" autocomplete="off" maxlength="10" id="weight"
+                        placeholder="To Weight" (keypress)="utilityService.floatOnly($event)"
+                        [(ngModel)]="filterTWeight" #weight="ngModel">
+                    </div>
+                    <button kendoButton title="Filter" kendoTooltip position="bottom" (click)="filterPackageList()">
+                      <i class="icon-search p-0"></i>
+                    </button>
+                    <button kendoButton title="Clear" kendoTooltip position="bottom" (click)="clearPackageFilter()">
+                      <i class="icon-clear p-0"></i>
+                    </button>
+                    <div class="form-data">
+                      <input type="text" name="discount" autocomplete="off" maxlength="10" id="discount"
+                        (keypress)="utilityService.discountfloat($event)" [(ngModel)]="filterDiscount"
+                        #discount="ngModel" placeholder="Discount" [disabled]="salesTransactionObj.isLocked">
+                    </div>
+                    <div class="form-data">
+                      <input type="text" name="origin" autocomplete="off" maxlength="15" id="origin"
+                        [(ngModel)]="filterOrigin" #origin="ngModel" placeholder="Origin">
+                    </div>
+                    <button kendoTooltip position="bottom" kendoButton title="Update Discount"
+                      [disabled]="gridShowPackingList.length == 0" (click)="updateDiscount()"><i
+                        class="icon-save pe-0"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="en-form f-12 mt-1">
+                <h6 class="title"></h6>
+                <div class="ma-issue-top">
+                  <div class="packing-grid  d-flex justify-content-between align-items-end">
+                    <div class=" tag ci-top-left border-0 p-0">
+                      <ul>
+                        <li><span class="t-title">Total Psc :</span> {{salesTransactionObj.packingList.length}}</li>
+                        <li><span class="t-title">Total weight :</span> {{totalPacketWeight}}</li>
+                        <li><span class="t-title">Total Amount :</span> {{totalPacketAmount}}</li>
+                        <li><span class="t-title">Avg Dis(%):</span> {{avgDiscPer}}</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <kendo-buttongroup kendoTooltip position="bottom">
+                        <button kendoButton title="Export to excel" [disabled]="!salesTransactionObj.id" kendoTooltip
+                          position="bottom" #anchor (click)="onExcelToggle()">
+                          <i class="icon-excelnew p-0"></i>
+                        </button>
+                        <button kendoButton title="Delete" kendoTooltip position="bottom"
+                          [disabled]="mySelectionPackage.length == 0" (click)="openDeleteDialog()">
+                          <i class="icon-trash p-0"></i>
+                        </button>
+                        <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                            class="icon-gridconfig"></i></button>
+                      </kendo-buttongroup>
+                      <kendo-popup [anchor]="$any(anchor)" #popup (anchorViewportLeave)="showExcelOption = false"
+                        *ngIf="showExcelOption" [anchorAlign]="anchorAlign" [popupAlign]="popupAlign">
+                        <div class="content p-2 pb-0">
+                          <div class="mb-2">
+                            <input type="radio" name="excelOption" value="exportSheet" #exportSheet
+                              [(ngModel)]="excelOption" kendoRadioButton />
+                            <label class="k-label" class="ms-2" [for]="exportSheet">Export Sheet</label>
+                          </div>
+                          <div class="mb-2">
+                            <input type="radio" name="excelOption" value="aboveFiveCentCarat" #aboveFiveCentCarat
+                              [(ngModel)]="excelOption" kendoRadioButton />
+                            <label class="k-label" class="ms-2" [for]="aboveFiveCentCarat">Above & Below 0.50 CT Sheet
+                            </label>
+                          </div>
+                          <div class="col-md-12 px-1">
+                            <div class="text-center pb-2">
+                              <button class="btn btn-primary w-100" [disabled]="excelOption == null"
+                                (click)="exportToExcel()">
+                                <i class="icon-excelnew"></i> Export to Excel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </kendo-popup>
+                    </div>
+                  </div>
+
+                  <div class="grid-wrap mt-2">
+                    <kendo-grid [resizable]="true" [data]="gridViewPackageList" [sortable]="true" [pageSize]="pageSize"
+                      [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)" [sortable]="true"
+                      [selectable]="selectableSettings" [(selectedKeys)]="mySelectionPackage"
+                      [kendoGridSelectBy]="'stoneId'" style="height:calc(100vh - 490px);">
+                      <ng-container *ngIf="fields && fields.length > 0">
+                        <ng-container *ngFor="let field of fields">
+                          <ng-container *ngIf="field.isSelected">
+                            <kendo-grid-column [field]="field.propertyName" [width]="field.width" [title]="field.title">
+                              <ng-template *ngIf="field.title == 'Checkbox'" kendoGridHeaderTemplate>
+                                <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox"
+                                  (selectAllChange)="selectAllPackingList($event)" />
+                                <label class="k-checkbox-label" for="headerCheckbox"></label>
+                              </ng-template>
+                              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                *ngIf="field.title == 'Checkbox'">
+                                <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                                  id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                </label>
+                              </ng-template>
+                            </kendo-grid-column>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </kendo-grid>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="AddItemByPackageList()">
+            <i class="icon-save"></i>Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<!-- #region Grid config -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'SalesPL'" [gridName]="'SalesPLGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion Grid config -->

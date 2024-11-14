@@ -1,0 +1,248 @@
+<title>Business Configuration</title>
+<section class="ms-config-wrap bConfig_sec">
+  <div class="content_wrap">
+    <div class="breadcrumb">
+      <div class="breadcrumb-left">
+        <ul>
+          <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+          <li class="breadcrumb-item active" aria-current="page">Business Config</li>
+        </ul>
+      </div>
+    </div>
+    <form name="form" #iDForm="ngForm">
+      <!-- This same configbar as it's bottom for mobile view "priceMob_Config" -->
+      <div class="summarybar bg busiDesk_config">
+        <div class="summary-left">
+          <ul>
+            <li>Channel Partner Inventory Distribution</li>
+          </ul>
+        </div>
+        <div class="summary-right b_config pe-0">
+          <div class="inputWrap">
+            <div>
+              <span class="input_label">Customer</span>
+              <span class="d-inline-block">
+                <div [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                  <kendo-combobox [data]="listCustomer" textField="text" valueField="value" name="name"
+                    [(ngModel)]="selectedCustomer" #name="ngModel" required [disabled]="editIndex != null"
+                    [kendoDropDownFilter]="filterSettings" class="bHead_combobox">
+                  </kendo-combobox>
+                </div>
+              </span>
+            </div>
+            <div>
+              <span class="input_label">Priority</span>
+              <span class="d-inline-block">
+                <div [ngClass]="{ 'error': priority.invalid && (priority.errors?.required && priority.touched) }">
+                  <input type="text" name="priority" class="cus_input" #priority="ngModel"
+                    [(ngModel)]="invDistributionObj.priority" (keypress)="utilityService.numberOnly($event)" required
+                    autocomplete="off" style="width:150px;">
+                </div>
+              </span>
+            </div>
+            <div>
+              <span class="input_label me-2">Include In Business</span>
+              <span class="d-inline-block">
+                <kendo-switch class="k-widget k-switch-off me-2" #includeInBusiness="ngModel" name="includeInBusiness"
+                  id="m-chk" [(ngModel)]="invDistributionObj.includeInBusiness">
+                </kendo-switch>
+              </span>
+            </div>
+          </div>
+          <kendo-buttongroup kendoTooltip position="bottom">
+            <button kendoButton type="button" (click)="onDistributionSubmit(iDForm)" [disabled]="!iDForm.valid">
+              <i class="icon-add"></i>
+            </button>
+            <button class="btn btn-primary icon-delete" *ngIf="editIndex != null"
+              (click)="clearDistribution(iDForm)"></button>
+            <button kendoButton type="button"><i class="icon-excelnew" (click)="allExportToCsv()"></i></button>
+          </kendo-buttongroup>
+        </div>
+      </div>
+
+      <div class="content_box buConf_bg">
+        <div class="summary-left b_config pe-0 d-none busiMob_Config">
+          <div class="config_box mb-3 no_hover">
+            <h6 class="config_head btns">
+              <span class="config_title">Channel Partner Inventory Distribution</span>
+              <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap">
+                <button kendoButton type="button" (click)="onDistributionSubmit(iDForm)" [disabled]="!iDForm.valid">
+                  <i class="icon-add"></i>
+                </button>
+                <button class="btn btn-primary icon-delete" *ngIf="editIndex != null"
+                  (click)="clearDistribution(iDForm)"></button>
+                <button kendoButton type="button"><i class="icon-excelnew" (click)="allExportToCsv()"></i></button>
+              </kendo-buttongroup>
+            </h6>
+            <ul class="config_ul border-none column2">
+              <li class="align-items-center">
+                <span class="input_label">Customer</span>
+                <span class="d-inline-block w-100" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                  <kendo-combobox [data]="listCustomer" textField="text" valueField="value" name="name"
+                    [(ngModel)]="selectedCustomer" #name="ngModel" required [disabled]="editIndex != null"
+                    [kendoDropDownFilter]="filterSettings" class="bHead_combobox">
+                  </kendo-combobox>
+                </span>
+              </li>
+              <li class="align-items-center">
+                <span class="input_label">Priority</span>
+                <span class="inputWrap d-inline-block w-100"
+                  [ngClass]="{ 'error': priority.invalid && (priority.errors?.required && priority.touched) }">
+                  <input type="text" name="priority" class="cus_input" #priority="ngModel"
+                    [(ngModel)]="invDistributionObj.priority" (keypress)="utilityService.numberOnly($event)" required
+                    autocomplete="off" style="width:150px;">
+                </span>
+              </li>
+              <li class="align-items-center">
+                <span class="input_label me-2">Include In Business</span>
+                <span class="d-inline-block">
+                  <kendo-switch class="k-widget k-switch-off me-2" #includeInBusiness="ngModel" name="includeInBusiness"
+                    id="m-chk" [(ngModel)]="invDistributionObj.includeInBusiness">
+                  </kendo-switch>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+
+        <div class="ms-config">
+          <div class="row">
+            <!-- #region Qc Reasons -->
+            <div class="col-xl-12 mt-2" hidden>
+              <div class="ac-config-title">
+                <h6>Qc Reasons</h6>
+                <form name="form" #QcForm="ngForm">
+                  <div class="d-prop-wrap m-2">
+                    <div class="flex in-block">
+                      <div class="o-title" style="flex-basis: 100%;">
+                        <div class="align-items-center h-reason">
+                          <div class="f-group me-1"
+                            [ngClass]="{ 'error': qcReason.invalid && (qcReason.dirty || qcReason.touched)}">
+                            <input type="text" [(ngModel)]="qcReasonModel" name="qcReason" #qcReason="ngModel" id=""
+                              required>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="o-edit">
+                        <button class="btn" *ngIf="!editQcReason" (click)="onReasonNameSubmit(QcForm,'qcreason')"
+                          [disabled]="!QcForm.valid" title="Add Qc Reason"><i class="icon-add"></i></button>
+                      </div>
+                      <div class="o-edit">
+                        <button class="btn" *ngIf="editQcReason" (click)="onReasonNameSubmit(QcForm,'qcreason')"
+                          [disabled]="!QcForm.valid" title="Update Qc Reason"><i class="icon-edit"></i></button>
+                      </div>
+                      <div class="o-edit">
+                        <button class="btn" *ngIf="editQcReason" (click)="clearReasonName('qcreason')"><i
+                            class="icon-delete" title="Clear"></i></button>
+                      </div>
+                    </div>
+                    <div class="d-prop">
+                      <ul *ngIf="businessConfig && businessConfig?.qcReasons">
+                        <li *ngFor="let item of businessConfig.qcReasons;let index = index">
+                          <div class="flex">
+                            <div class="o-title" style="flex: 0 96%;">
+                              <span class="title">{{item}}</span>
+                            </div>
+                            <div class="o-edit text-end" style="flex: 0 6%;">
+                              <button class="btn" (click)="editReasonNameDialog(item,index,'qcreason')"><i
+                                  class="icon-edit" title="Edit"></i></button>
+                              <button class="btn" (click)="deleteReasonNameDialog(item,index,'qcreason')"><i
+                                  class="icon-trash" title="Delete"></i></button>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="text-center m-2"
+                        *ngIf="!businessConfig?.qcReasons || businessConfig?.qcReasons?.length == 0">
+                        <p>No Data Found</p>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- #endregion -->
+            <!-- #region Stone Remove reason -->
+            <div class="col-xl-12 mt-2" hidden>
+              <div class="ac-config-title">
+                <h6>Remove-Stone Reasons</h6>
+                <form name="form" #RsForm="ngForm">
+                  <div class="d-prop-wrap m-2">
+                    <div class="flex in-block">
+                      <div class="o-title" style="flex-basis: 100%;">
+                        <div class="align-items-center h-reason">
+                          <div class="f-group me-1"
+                            [ngClass]="{ 'error': stoneRemoveReason.invalid && (stoneRemoveReason.dirty || stoneRemoveReason.touched)}">
+                            <input type="text" [(ngModel)]="removeStoneReasonModel" name="stoneRemoveReason"
+                              #stoneRemoveReason="ngModel" id="" required>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="o-edit">
+                        <button class="btn" *ngIf="!editRSReason" (click)="onReasonNameSubmit(RsForm,'rsreason')"
+                          [disabled]="!RsForm.valid" title="Add RS Reason"><i class="icon-add"></i></button>
+                      </div>
+                      <div class="o-edit">
+                        <button class="btn" *ngIf="editRSReason" (click)="onReasonNameSubmit(RsForm,'rsreason')"
+                          [disabled]="!RsForm.valid" title="Update RS Reason"><i class="icon-edit"></i></button>
+                      </div>
+                      <div class="o-edit">
+                        <button class="btn" *ngIf="editRSReason" (click)="clearReasonName('rsreason')"><i
+                            class="icon-delete" title="Clear"></i></button>
+                      </div>
+                    </div>
+                    <div class="d-prop">
+                      <ul *ngIf="businessConfig && businessConfig?.removeStoneReasons">
+                        <li *ngFor="let item of businessConfig.removeStoneReasons;let index = index">
+                          <div class="flex">
+                            <div class="o-title" style="flex: 0 96%;">
+                              <span class="title">{{item}}</span>
+                            </div>
+                            <div class="o-edit text-end" style="flex: 0 6%;">
+                              <button class="btn" (click)="editReasonNameDialog(item,index,'rsreason')"><i
+                                  class="icon-edit" title="Edit"></i></button>
+                              <button class="btn" (click)="deleteReasonNameDialog(item,index,'rsreason')"><i
+                                  class="icon-trash" title="Delete"></i></button>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="text-center m-2"
+                        *ngIf="!businessConfig?.removeStoneReasons || businessConfig?.removeStoneReasons?.length == 0">
+                        <p>No Data Found</p>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- #endregion -->
+          </div>
+          <!-- #region Inventory Distribution -->
+          <div class="buConfig_wrap">
+            <ul class="config_ul" *ngIf="invDistributions && invDistributions.length > 0">
+              <li *ngFor="let item of invDistributions;let i = index">
+                <div class="c_label">
+                  <span>Customer&nbsp;:&nbsp;<b>{{item.customer.companyName}}</b></span>
+                  <span>Priority&nbsp;:&nbsp;<b>{{item.priority}}</b></span>
+                  <span>Include In Business&nbsp;:&nbsp;<b>{{item.includeInBusiness}}</b></span>
+                </div>
+                <div class="btnGroup ms-auto">
+                  <button class="btn"><i class="icon-excelnew" (click)="exportCsv(item)"></i></button>
+                  <button class="btn"><i title="Edit" class="icon-edit" (click)="editDistributionType(i);"></i></button>
+                  <button class="btn"><i title="Delete" class="icon-trash"
+                      (click)="deleteDistributionType(i);"></i></button>
+                </div>
+              </li>
+            </ul>
+            <div class="not_found" *ngIf="invDistributions && invDistributions.length == 0">No Distribution Found </div>
+          </div>
+          <!-- #endregion -->
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<div kendoDialogContainer></div>

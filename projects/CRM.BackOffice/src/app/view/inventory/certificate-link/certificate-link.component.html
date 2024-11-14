@@ -1,0 +1,28 @@
+<title>Inventory</title>
+<section>
+    <div class="content_wrap">
+        <div class="d-flex">
+            <div class="e-left w-100">
+                <div class="breadcrumb">
+                    <div class="breadcrumb-left">
+                        <ul>
+                            <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                            <li class="breadcrumb-item active" aria-current="page">Inventory</li>
+                            <li class="breadcrumb-item active" aria-current="page">Certificate Link</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content_box content_scroll">
+                    <ul class="certiLink_ul">
+                      <li *ngFor="let item of finalItems" [attr.id]="item.id" class="stone-line">
+                        <span [innerHTML]="item.stoneLine"></span>
+                        <button *ngIf="item.button" class="k-button" (click)="getSiblingText(item.id)">
+                          <i class="icon-copy"></i>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+            </div>
+        </div>
+    </div>
+</section>

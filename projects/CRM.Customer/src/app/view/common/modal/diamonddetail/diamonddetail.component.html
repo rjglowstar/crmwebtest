@@ -1,0 +1,259 @@
+<div class="sideDetails stonedetail" [ngClass]="{'active': diamonddetailFlag}">
+    <div class="sideDet_head">
+        <h6>Stone Detail</h6>
+        <div class="btntop_group">
+            <button kendoButton kendoTooltip position="top" title="Watchlist" *ngIf="!(isWatchList || bidingFlag)"
+                (click)="addToWatchList()">
+                <i class="icon-watchlist_new_btn"></i>Watchlist
+            </button>
+            <button kendoButton kendoTooltip position="top" title="Cart" *ngIf="!bidingFlag" (click)="addToCart()">
+                <i class="icon-cart_btn"></i>Cart
+            </button>
+            <button kendoButton kendoTooltip position="top" title="Order" *ngIf="!bidingFlag"
+                (click)="openCheckoutDialog()">
+                <i class="icon-orderNew_btn"></i>Order
+            </button>
+            <button kendoButton kendoTooltip position="top" title="Close" class="active"
+                (click)="closeDiamonddetailSidebar()">
+                <i class="icon-menu_close"></i>
+            </button>
+        </div>
+    </div>
+    <div class="sideDet_body">
+        <ul class="side_summary">
+            <li>{{"BasicText.Stone Id"| translate}}<span>{{invItemObj.stoneId}}</span></li>
+            <li *ngIf="!bidingFlag">{{"BasicText.Status" | translate}}
+                <span class="avai" *ngIf="invItemObj.isHold == false">
+                    {{"BasicText.Available" | translate}}</span>
+                <span class="hold" *ngIf="invItemObj.isHold == true">{{"BasicText.Hold" | translate}}</span>
+            </li>
+        </ul>
+        <div class="dd_grid">
+            <div class="dd_leftsidebar">
+                <kendo-buttongroup class="dd_icon">
+                    <button kendoButton kendoTooltip position="top" title="View Image"
+                        [disabled]="!invItemObj.media.isPrimaryImage" (click)="viewImage(ViewActionImageType.Primary)">
+                        <i class="icon-sCamera"></i>
+                    </button>
+                    <button kendoButton kendoTooltip position="top" title="View Video"
+                        [disabled]="!invItemObj.media.isHtmlVideo" (click)="viewVideo()">
+                        <i class="icon-sVideo"></i>
+                    </button>
+                    <button kendoButton kendoTooltip position="top" title="View Heart Image"
+                        [disabled]="!invItemObj.media.isHeartBlack" (click)="viewImage(ViewActionImageType.Heart)">
+                        <i class="icon-sHeartblack"></i>
+                    </button>
+                    <button kendoButton kendoTooltip position="top" title="Download Video"
+                        [disabled]="!invItemObj.media.isDownloadableVideo" (click)="DownloadVideo()">
+                        <i class="icon-sDownload"></i>
+                    </button>
+                    <!-- <button kendoButton kendoTooltip position="top" title="View Arrow Image"
+                        [disabled]="!invItemObj.media.isArrowBlack" (click)="viewImage(ViewActionImageType.Arrow)">
+                        <i class="icon-dd-arrow"></i>
+                    </button> -->
+                    <button kendoButton kendoTooltip position="top" title="View Certificate"
+                        [disabled]="!invItemObj.media.isCertificate" (click)="viewCertificate()">
+                        <i class="icon-sCertified"></i>
+                    </button>
+                    <button kendoButton kendoTooltip position="top" title="Share link"
+                        (click)="openDiamondDetails(invItemObj);$event.stopPropagation()">
+                        <i class="icon-sShare"></i>
+                    </button>
+                </kendo-buttongroup>
+                <div class="tabBody">
+                    <iframe *ngIf="showVideo" class="frameStone videoFrame" [src]="invItemObj.videoURL" height="395px"
+                        style="width: 100%;    max-height: calc(400px + 10px);"></iframe>
+                    <img *ngIf="showImage" class="img-fluid frameStone w-100" [src]="invItemObj.imageURL"
+                        alt="diamond image" />
+                    <iframe *ngIf="showCertificate" class="frameStone" [src]="invItemObj.certiURL" allow='autoplay'
+                        height="420px" style="width: 100%;"></iframe>
+                </div>
+            </div>
+            <div class="dd_rightsidebar">
+                <div class="subtitle">{{"BasicText.Details" | translate}}</div>
+                <ul class="dtl_grid">
+                    <li>{{'BasicText.Lab'| translate}}<span>{{invItemObj.lab}}</span></li>
+                    <li>{{'BasicText.Shape'| translate}}<span>{{invItemObj.shape}}</span></li>
+                    <li>{{'BasicText.Size'|translate}}<span>{{invItemObj.weight}}</span></li>
+                    <li>{{'BasicText.Color'|translate}}<span>{{invItemObj.color}}</span></li>
+                    <li>{{'BasicText.Clarity'| translate}}<span>{{invItemObj.clarity}}</span></li>
+                    <li>{{'BasicText.Cut'| translate}}<span>{{invItemObj.cut}}</span></li>
+                    <li>{{'BasicText.Polish'|translate}}<span>{{invItemObj.polish}}</span></li>
+                    <li>{{'BasicText.Symmetry'| translate}}<span>{{invItemObj.symmetry}}</span></li>
+                    <li>{{'BasicText.Fluorescence'| translate}}<span>{{invItemObj.fluorescence}}</span></li>
+                    <li>{{'BasicText.Certificate No'| translate}}<span>{{invItemObj.certificateNo}}</span></li>
+                    <li>{{'BasicText.Location'| translate}}<span>{{invItemObj.location}}</span></li>
+                </ul>
+                <div class="subtitle">{{"BasicText.Measurement" | translate}}</div>
+                <ul class="dtl_grid pb-0">
+                    <li>{{"BasicText.Length" | translate}}<span>{{invItemObj.measurement.length}}</span></li>
+                    <li>{{"BasicText.Width" | translate}}<span>{{invItemObj.measurement.width}}</span></li>
+                    <li>{{"BasicText.Depth" | translate}}<span>{{invItemObj.measurement.depth}}</span></li>
+                    <li>{{"BasicText.Total Depth %" | translate}}<span>{{invItemObj.measurement.height}}</span></li>
+                    <li>{{"BasicText.Table %" | translate}}<span>{{invItemObj.measurement.table}}</span></li>
+                    <li>{{"BasicText.Crown Height" | translate}}<span>{{invItemObj.measurement.crownHeight}}</span></li>
+                    <li>{{"BasicText.Crown Angle" | translate}}<span>{{invItemObj.measurement.crownAngle}}</span></li>
+                    <li>{{"BasicText.Pavilion Depth" | translate}}<span>{{invItemObj.measurement.pavilionDepth}}</span>
+                    </li>
+                    <li>{{"BasicText.Pavilion Angle" | translate}}<span>{{invItemObj.measurement.pavilionAngle}}</span>
+                    </li>
+                    <li>{{"BasicText.Girdle %" | translate}}<span>{{invItemObj.measurement.girdlePer}}</span></li>
+                    <li>{{"BasicText.Girdle" | translate}}<span>{{invItemObj.measurement.minGirdle}} -
+                            {{invItemObj.measurement.maxGirdle}}</span></li>
+                    <li>{{"BasicText.Ratio" | translate}}<span>{{invItemObj.measurement.ratio}}</span></li>
+                </ul>
+            </div>
+            <div class="column2">
+                <div class="subtitle">{{"BasicText.INCLUSION" | translate}}</div>
+                <ul class="dtl_grid column3">
+                    <li>{{"BasicText.Brown" | translate}}<span>{{invItemObj.inclusion.brown}}</span></li>
+                    <li>{{"BasicText.Green" | translate}}<span>{{invItemObj.inclusion.green}}</span></li>
+                    <li>{{"BasicText.Milky" | translate}}<span>{{invItemObj.inclusion.milky}}</span></li>
+                    <li>{{"BasicText.Shade" | translate}}<span>{{invItemObj.inclusion.shade}}</span></li>
+                    <li>{{"BasicText.Black Table" | translate}}<span>{{invItemObj.inclusion.centerBlack}}</span></li>
+                    <li>{{"BasicText.Black Crown" | translate}}<span>{{invItemObj.inclusion.sideBlack}}</span></li>
+                    <li>{{"BasicText.White Table" | translate}}<span>{{invItemObj.inclusion.sideWhite}}</span></li>
+                    <li>{{"BasicText.White Crown" | translate}}<span>{{invItemObj.inclusion.centerWhite}}</span></li>
+                    <li>{{"BasicText.Open Crown" | translate}}<span>{{invItemObj.inclusion.openCrown}}</span></li>
+                    <li>{{"BasicText.Open Girdle" | translate}}<span>{{invItemObj.inclusion.openGirdle}}</span></li>
+                    <li>{{"BasicText.Open Pavilion" | translate}}<span>{{invItemObj.inclusion.openPavilion}}</span></li>
+                    <li>{{"BasicText.Open Table" | translate}}<span>{{invItemObj.inclusion.openTable}}</span></li>
+                    <li>EFOC<span>{{invItemObj.inclusion.efoc}}</span></li>
+                    <li>EFOP<span>{{invItemObj.inclusion.efop}}</span></li>
+                    <li>{{"BasicText.Girdle Condition" |
+                        translate}}<span>{{invItemObj.inclusion.girdleCondition}}</span></li>
+                    <li>{{"BasicText.Culet" | translate}}<span>{{invItemObj.inclusion.culet}}</span></li>
+                    <li>{{"BasicText.NaturalOnPavilion" |
+                        translate}}<span>{{invItemObj.inclusion.naturalOnPavillion}}</span></li>
+                    <li>{{"BasicText.NaturalOnCrown" | translate}}<span>{{invItemObj.inclusion.naturalOnCrown}}</span>
+                    </li>
+                    <li>{{"BasicText.NaturalOnGirdle" | translate}}<span>{{invItemObj.inclusion.naturalOnGirdle}}</span>
+                    </li>
+                    <li>HNA<span>{{invItemObj.inclusion.hna}}</span></li>
+                    <li>{{"BasicText.Eye Clean" | translate}}<span>{{invItemObj.inclusion.eyeClean}}</span></li>
+                    <li class="w_100">{{"BasicText.Key To Symbol" |
+                        translate}}<span>{{invItemObj.inclusion.ktoS}}</span></li>
+                </ul>
+                <div class="subtitle" *ngIf="!bidingFlag">{{'BasicText.Price'| translate}}($)</div>
+                <ul class="dtl_grid column4 pe_grid" *ngIf="!bidingFlag">
+                    <li>Rapaport (US$) <span>{{invItemObj.price.rap}}</span></li>
+                    <li>{{"BasicText.Discount" | translate}}%<span>{{invItemObj.price.discount}}</span></li>
+                    <li>{{"BasicText.$/Ct($)" | translate}}<span>{{invItemObj.price.perCarat}}</span></li>
+                    <li>{{"BasicText.Amount($)" | translate}}<span>{{invItemObj.price.netAmount}}</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal dialog-xsm-search search-calc dialog-ui" data-keyboard="false" data-backdrop="static"
+    *ngIf="isCalcDialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="icon-diamond"></i> Your Diamond</h5>
+                <button type="button" class="close" (click)="closeCalcDialog()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="dialog-body">
+                    <div class="gridsearch-content">
+                        <div class="form-data">
+                            <label>Size</label>
+                            <input type="text" name="subject" class="k-input"
+                                (keypress)="utilityService.floatOnly($event);" #weight="ngModel"
+                                [(ngModel)]="calInvItemObj.weight" (change)="onDataChanges()" autocomplete="off">
+                        </div>
+                        <div class="form-data">
+                            <label>Shape</label>
+                            <kendo-dropdownlist [data]="allTheShapes" [valuePrimitive]="true"
+                                [textField]="'displayName'" [valueField]="'displayName'" name="shape"
+                                [kendoDropDownFilter]="filterSettings" (valueChange)="onDataChanges()"
+                                [popupSettings]="{width: 'auto'}" [(ngModel)]="calInvItemObj.shape" #shape="ngModel"
+                                required>
+                            </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data">
+                            <label>Color</label>
+                            <kendo-dropdownlist [data]="allTheColor" [valuePrimitive]="true" [textField]="'name'"
+                                [valueField]="'name'" name="color" [kendoDropDownFilter]="filterSettings"
+                                (valueChange)="onDataChanges()" [popupSettings]="{width: 'auto'}"
+                                [(ngModel)]="calInvItemObj.color" #color="ngModel" required>
+                            </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data">
+                            <label>Clarity</label>
+                            <kendo-dropdownlist [data]="allTheClarity" [valuePrimitive]="true" [textField]="'name'"
+                                [valueField]="'name'" name="clarities" [kendoDropDownFilter]="filterSettings"
+                                (valueChange)="onDataChanges()" [popupSettings]="{width: 'auto'}"
+                                [(ngModel)]="calInvItemObj.clarity" #clarities="ngModel" required>
+                            </kendo-dropdownlist>
+                        </div>
+                    </div>
+                    <div class="gridsearch-price">
+                        <div class="gridsearch-price-1">
+                            <div class="gridsearch-price24">
+                                <h5>List Price</h5>
+                            </div>
+                            <div class="gridsearch-price25">
+                                <div class="gridsearch-price25">
+                                    <div class="form-data">
+                                        <label>$/CT</label>
+                                        <p>
+                                            <span>$ {{calInvItemObj.price.rap}}</span>
+                                        </p>
+                                    </div>
+                                    <div class="form-data">
+                                        <label>$TOTAL</label>
+                                        <p>
+                                            <span>$ {{totalRap}}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gridsearch-price-2">
+                            <div class="gridsearch-price24">
+                                <h5>Your Price</h5>
+                            </div>
+                            <div class="gridsearch-price21">
+                                <div class="form-data">
+                                    <label>$/CT</label>
+                                    <input type="text" name="subject" class="k-input" disabled readonly
+                                        value="{{calInvItemObj.price.perCarat}}">
+                                </div>
+                                <div class="form-data">
+                                    <label>$TOTAL</label>
+                                    <input type="text" name="subject" class="k-input" disabled readonly
+                                        value="{{calInvItemObj.price.netAmount}}">
+                                </div>
+                            </div>
+                            <div class="gridsearch-price23">
+                                <label>RAP%</label>
+                                <div class="price-button">
+                                    <button class="grid-btn" (click)="discountChanges('plus')"><i
+                                            class="icon-plus"></i></button>
+                                    <input type="text" name="subject" class="k-input" #disc="ngModel" autocomplete="off"
+                                        [(ngModel)]="calInvItemObj.price.discount"
+                                        (keypress)="utilityService.discountfloat($event);"
+                                        (keyup)="calculatePricingData()">
+                                    <button class="grid-btn" (click)="discountChanges('minus')"><i
+                                            class="icon-minus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- #region Checkout -->
+<ng-container *ngIf="isCheckout">
+    <app-ordersummary (toggle)="isCheckout=$event" [totalAmount]="totalAmount" [invIds]="invIds" [pageFrom]="pageFrom"
+        (childEvent)="parentMethodCall()">
+    </app-ordersummary>
+</ng-container>
+<!-- #endregion-->

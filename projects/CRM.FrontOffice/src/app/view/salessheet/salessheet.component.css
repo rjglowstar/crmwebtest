@@ -1,0 +1,50 @@
+.sales-sheet-wrap .sales-sheet-cell i {
+    position: relative;
+    z-index: 10;
+}
+
+.sales-sheet-wrap .sales-sheet-cell i:hover~.arrow-tooltip {
+    display: block;
+}
+
+.sales-sheet-wrap .k-touch-action-auto {
+    position: relative;
+}
+
+.sales-sheet-wrap .arrow-tooltip {
+    width: 260px;
+}
+
+.sales-sheet-wrap .arrow-tooltip td {
+    border-left-width: 1px;
+}
+
+.sales-sheet-wrap .arrow-tooltip.top-tooltip {
+    top: initial;
+    bottom: 100%;
+}
+
+.sales-sheet-wrap .grid-wrap .k-grid {
+    height: calc(100vh - 110px);
+}
+
+.sales-sheet-wrap .whole-cell {
+    display: block;
+    margin: -30px;
+    margin-top: -26px;
+    padding: 20px 30px;
+    width: auto;
+}
+
+.sales-sheet-wrap .whole-cell i {
+    position: relative;
+    z-index: 10;
+}
+
+.sales-sheet-wrap .whole-cell i:hover~.arrow-tooltip {
+    display: block;
+}
+
+.sales-sheet-wrap .grid-wrap td.of-initial {
+    overflow: initial !important;
+}

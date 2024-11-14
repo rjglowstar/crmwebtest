@@ -1,0 +1,266 @@
+.form-control {
+    height: calc(1.5em + 0.75rem + 2px);
+}
+
+input:focus,
+.k-dropdown .k-dropdown-wrap:focus,
+textarea:focus {
+    outline: 0;
+    border: 1px solid #3d3d3d !important;
+}
+
+select:focus {
+    outline: 0;
+}
+
+/* ===== Link active end ===== */
+
+.k-dateinput-wrap input,
+.k-dropzone input {
+    border: initial !important;
+}
+
+.k-picker-wrap .k-dateinput .k-dateinput-wrap input:focus {
+    border: initial;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+a,
+button:focus-visible,
+span:focus-visible {
+    outline: none;
+}
+
+.form-data input,
+.f-group input,
+input,
+textarea {
+    padding: 0 5px !important;
+    font-size: 13px;
+}
+
+.k-datepicker .k-dateinput-wrap .form-data input {
+    width: 100% !important;
+}
+
+textarea {
+    resize: none;
+}
+
+.form-control:focus {
+    border-color: #3d3d3d !important;
+}
+
+.k-picker-wrap .k-dateinput .k-dateinput-wrap input {
+    border: initial;
+}
+
+/* ===== Bootstrap Modal Overwrite Start ===== */
+.c-modal .item-right input {
+    font-weight: 400;
+    font-size: 14px;
+    max-width: 55px;
+    width: 100%;
+    background: #ffffff 0% 0% no-repeat padding-box;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    margin-right: 15px;
+    text-align: center;
+}
+
+/* ===== Bootstrap Modal Overwrite End ===== */
+
+/* ===== Login css input start ===== */
+.form-data input {
+    width: 100%;
+    background: #fff;
+    font-weight: 400;
+    font-size: 13px;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    opacity: 1;
+    height: 30px;
+    line-height: 1;
+}
+
+.form-data input:not([type='radio'], [type='checkbox']):-webkit-autofill,
+.form-data input:not([type='radio'], [type='checkbox']):-webkit-autofill:hover,
+.form-data input:not([type='radio'], [type='checkbox']):-webkit-autofill:focus,
+.form-data input:not([type='radio'], [type='checkbox']):-webkit-autofill:active {
+    -webkit-transition: background-color 9999s ease-in-out 0s;
+    transition: background-color 9999s ease-in-out 0s;
+    -webkit-text-fill-color: #000 !important;
+    -webkit-text-font-size: 13px !important;
+}
+
+.form-data input:not([type='radio'], [type='checkbox']):-webkit-autofill::selection {
+    background: #4d4d4d !important;
+    -webkit-text-fill-color: #fff !important;
+}
+
+.form-data input::placeholder {
+    font-weight: 500;
+    color: #a8a8a8;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.check-box input[type="checkbox"]:checked,
+.treeview_parent input[type="checkbox"]:checked,
+.pre-stone .k-checkbox:checked {
+    background-color: #3d3d3d !important;
+    color: #ffffff;
+    border-color: #3d3d3d !important;
+}
+
+.form-data.error>input,
+.f-group.error>input,
+.form-data.error .k-combobox,
+.form-data kendo-multiselect.k-input-solid.error,
+.form-data kendo-datepicker.k-input-solid.error,
+.form-data kendo-dateinput.k-input-solid.error,
+.form-data.error ngx-intl-tel-input input,
+.k-picker-solid.k-invalid,
+.k-picker-solid.ng-invalid.ng-touched,
+.k-picker-solid.ng-invalid.ng-dirty,
+.form-data.error textarea {
+    border: 1px solid #ff0000 !important;
+}
+
+.form-data>input[disabled],
+.form-data input[type='password'][disabled],
+.form-data textarea[disabled] {
+    background-color: #f4f4f4 !important;
+    cursor: not-allowed;
+    color: #495057;
+    opacity: 1;
+}
+
+/* ===== Login css input end ===== */
+
+/* ===== Register css input start ===== */
+.form-data.social input {
+    padding-left: 42px !important;
+}
+
+.form-data.social input::placeholder {
+    font-size: 11px;
+}
+
+/* ===== Password page input css end ===== */
+
+/* ===== Company & Department page input css start ===== */
+.company input {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 20px;
+    color: #a8a8a8;
+    padding: 5px;
+    border: 1px solid #d3d3d3;
+}
+
+.f-group input,
+.f-group textarea {
+    width: 100%;
+    border-radius: 3px;
+    background-color: #eeeeee8c;
+    border: 1px solid #d3d3d3;
+    height: 32px;
+    line-height: 1;
+    padding: 0px 15px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* ===== Company & Department page input css end ===== */
+
+/* ===== Employee page input css start ===== */
+.sr .form-data input,
+.sr .form-data .k-dropdownlist,
+.c-modal .form-data .k-dropdownlist {
+    background: #ffffff;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+.addemp.c-modal .form-data input {
+    background-color: #fff;
+}
+
+.addemp.c-modal .form-data input[type="file"] {
+    line-height: 30px;
+}
+
+.addemp.c-modal .form-data textarea {
+    width: 100%;
+    border-color: #d3d3d3;
+    border-radius: 3px;
+    padding: 5px 15px;
+}
+
+.sr .k-picker-wrap .k-dateinput .k-dateinput-wrap input {
+    background-color: #fff;
+}
+
+/* ===== Employee page input css end ===== */
+
+/* ===== organization page input css start ===== */
+.rorgan.addemp.c-modal .form-data textarea,
+.k-combobox {
+    width: 100% !important;
+}
+
+.c-modal .form-data.social input {
+    padding-left: 32px;
+    max-width: 100% !important;
+}
+
+/* ===== Register organization page input css end ===== */
+
+/* ===== Organization details page input css start ===== */
+.o-details .form-data input {
+    height: 28px;
+    width: calc(100% - 115px);
+    background-color: transparent;
+}
+
+/* ===== Organization details page input css end ===== */
+
+/* ===== Employee details page input css start ===== */
+.e-details .form-data .k-dropdown .k-dropdown-wrap input,
+.e-details .k-picker-wrap .k-dateinput .k-dateinput-wrap input {
+    background: #ffffff8c 0% 0% no-repeat padding-box;
+    width: 100%;
+}
+
+/* ===== Employee details page input css end ===== */
+
+/* ===== Customer Profile input css start ===== */
+.ex-search input {
+    background: #ffffff;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    padding: 6px 10px 4px 25px !important;
+    font-size: 13px;
+    color: #979797;
+}
+
+.ex-right-data .form-data input,
+.edittable .form-data input {
+    background: #ffffff;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    margin: 2px;
+}
+
+.ex-setting.o-details .table-data input {
+    width: 277px;
+}
+
+.form-control.error {
+    border: 1px solid #ff0000 !important;
+}
+
+/* ===== Customer Profile input css end ===== */

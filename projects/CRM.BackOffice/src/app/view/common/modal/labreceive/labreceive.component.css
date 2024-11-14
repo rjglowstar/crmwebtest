@@ -1,0 +1,70 @@
+.i-form.lb-rcv-top .grid {
+    grid-template-columns: 80px 1fr 80px 1fr;
+}
+
+.lab-receive-grid {
+    display: grid;
+    grid-template-columns: 58px 1fr 46px 1fr;
+    grid-column-gap: 10px;
+}
+
+.ma-pac-midd .form-data {
+    font-size: 13px;
+}
+
+.ma-pac-midd span.t-title {
+    padding-right: 4px;
+    font-size: 13px !important;
+}
+
+.i-form.ma-pac-midd .grid {
+    grid-template-columns: 80px auto auto;
+}
+
+.i-form.ma-pac-midd label {
+    padding-right: 5px;
+    vertical-align: middle;
+}
+
+.i-form.ma-pac-midd label.last {
+    vertical-align: baseline;
+    padding-left: 5px;
+    font-size: 14px;
+}
+
+.i-form.ma-pac-midd span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.logi-modal .i-form.l-con .grid {
+    grid-template-columns: 78px 1fr 80px 1fr;
+}
+
+.logi-modal .i-form.l-master .grid {
+    grid-template-columns: 68px 1fr 90px 1fr 72px 1fr;
+}
+
+.logi-modal .i-form.l-con .grid .form-data.t-ap {
+    grid-column: 2 / 7;
+}
+
+.logi-modal .grid.bot.mt-1 {
+    margin-top: 5px;
+}
+
+@media (max-width:767px) {
+    .logi-modal .i-form.l-master .grid {
+        grid-template-columns: 68px 1fr 90px 1fr;
+    }
+}
+
+@media (max-width:480px) {
+    .logi-modal .i-form.l-master .grid {
+        grid-template-columns: 90px 1fr;
+    }
+
+    .logi-modal .i-form.l-con .grid {
+        grid-template-columns: 78px 1fr;
+    }
+}

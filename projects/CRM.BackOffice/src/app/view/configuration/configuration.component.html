@@ -1,0 +1,65 @@
+<title>Origin Configuration</title>
+<section class="congiguration-wrap">
+    <div class="content_wrap">
+        <div class="breadcrumb">
+            <div class="breadcrumb-left">
+                <ul>
+                    <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                    <li class="breadcrumb-item active" aria-current="page">OriginConfiguration</li>
+                </ul>
+            </div>
+        </div>
+        <div class="oriConfig_wrap content_scroll">
+            <div class="oriCon_block lft_b">
+                <div>
+                    <h6 class="p_title">Role Wise Configuration</h6>
+                    <ul class="role_list">
+                        <ng-container *ngFor="let item of originItems; let i=index">
+                            <li>
+                                {{item}}
+                                <i class="icon-setting ms-auto" (click)="rolePermissionDialog(item)"
+                                    title="Role Permission"></i>
+                            </li>
+                        </ng-container>
+                    </ul>
+                </div>
+                <div>
+                    <h6 class="p_title">Change Stock</h6>
+                    <div class="chgStock_grid">
+                        <div class="form-data">
+                            <label for="lname">Stone Change</label>
+                        </div>
+                        <div class="form-data">
+                            <input #file1 type="file" (click)="file1.value=''"
+                                (change)="onSelectChangeStone(file1.files)" hidden />
+                            <button kendoButton title="Upload File" (click)="file1.click()">
+                                <i class="icon-excelnew p-0"></i>
+                            </button>
+                        </div>
+
+                        <div class="form-data">
+                            <label for="lname">Kapan Change</label>
+                        </div>
+                        <div class="form-data">
+                            <input #file type="file" (click)="file.value=''" (change)="onSelectChangeKapan(file.files)"
+                                hidden />
+                            <button kendoButton title="Upload File" (click)="file.click()">
+                                <i class="icon-excelnew p-0"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="oriCon_block">
+                <app-gridmasterconfiguration></app-gridmasterconfiguration>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div kendoDialogContainer></div>
+
+<ng-container *ngIf="isPermission">
+    <app-userpermission [title]="selectedOrigin" [selectedOrigin]="selectedOrigin"
+        [pageComeFromPermission]="pageComeFromPermission" (toggle)="isPermission=$event"></app-userpermission>
+</ng-container>

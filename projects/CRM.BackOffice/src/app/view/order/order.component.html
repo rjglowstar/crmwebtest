@@ -1,0 +1,401 @@
+<title>Order</title>
+<section class="wrap-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Order</li>
+            </ul>
+          </div>
+        </div>
+        <div class="summarybar bg">
+          <div class="summary-left">
+            <ul>
+              <li>Selected Stone(s) : <span>{{mySelection.length}}</span></li>
+              <li>Weight : <span>{{sumWeight}}</span></li>
+              <li>Order Amt($) : <span>{{sumValue}}</span></li>
+            </ul>
+          </div>
+          <div class="summary-right">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton (click)="toggleSalesDialog()" [disabled]="mySelection.length == 0"
+                title="Sales Invoice"><i class="icon-graph"></i>
+              </button>
+              <button kendoButton (click)="toggleSalesDialog(false)" [disabled]="mySelection.length == 0"
+                title="Proforma Invoice"><i class="icon-invoice-new"></i>
+              </button>
+              <button kendoButton (click)="toggleDeliveryDialog()" [disabled]="mySelection.length == 0"
+                title="Delivered Order" *ngIf="isCanDelivered"><i class="icon-delivery"></i>
+              </button>
+              <button kendoButton (click)="toggleColorDialog()" [disabled]="mySelection.length == 0"
+                title="Color Mark"><i class="icon-Manual_Issue_Packet"></i>
+              </button>
+              <button type="button" kendoButton title="Copy CertificateNo" [disabled]="mySelection.length == 0"
+                (click)="copyToCertificateClipboard()"><i class="icon-copy pe-0"></i></button>
+              <button type="button" kendoButton title="Copy StoneId" [disabled]="mySelection.length == 0"
+                (click)="copyToStoneIdsClipboard()"><i class="icon-copy pe-0"></i></button>
+              <button kendoButton [disabled]="mySelection.length == 0" (click)="exportToExcel()"
+                title="Export Order Excel"><i class="icon-excelnew "></i></button>
+              <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                  class="icon-gridconfig"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap grid-summury">
+            <kendo-grid *ngIf="gridView" [data]="gridView" [groupable]="true" [resizable]="true" [sortable]="true"
+              [sort]="sort" (sortChange)="sortChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+              (selectionChange)="selectedRowChange($event)" [(selectedKeys)]="mySelection" [pageSize]="pageSize"
+              [skip]="skip" [pageable]="true" [selectable]="selectableSettings" [kendoGridSelectBy]="'id'"
+              (pageChange)="pageChange($event)" [rowClass]="isNotValid">
+              <kendo-grid-checkbox-column [showSelectAll]="isShowCheckBoxAll" [width]="35">
+              </kendo-grid-checkbox-column>
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.propertyName == 'isDelivered'">
+                        <input type="checkbox" class="k-checkbox" id="checkbox-isDelivered-{{rowIndex}}"
+                          [checked]="dataItem.isDelivered" [disabled]="true" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='takenBy'">
+                        <a style="color: blue" href="javascript:void(0)"
+                          (click)="showTakenBy(dataItem.takenBy)">{{dataItem.takenBy}}
+                        </a>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'StoneId'">
+                        <!-- [ngClass]="{'table-bg-red':!(dataItem.invItem.invId)}" -->
+                        <div class="position-relative">
+                          {{dataItem.invItem.stoneId }}</div>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'createdDate'">
+                        {{dataItem.createdDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'transactionDate'">
+                        {{dataItem.transactionDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'deliveredDate'">
+                        {{dataItem.deliveredDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.title == 'Memo'">
+                        <input type="checkbox" class="k-checkbox" id="checkbox-invItem-isMemo-{{rowIndex}}"
+                          [checked]="dataItem.invItem.isMemo" [disabled]="true" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <!--#region Filter -->
+      <form class="e-right" name="filterForm" #orderSearchForm="ngForm" novalidate>
+        <div class="sr-wrap active" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <div class="i-form">
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Stone Id</label>
+                  <input type="text" name="filterStoneId" [(ngModel)]="stoneId" #filterStoneId="ngModel"
+                    id="filterStoneId" autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="filterCertificateNo">Certificate No</label>
+                  <input type="text" name="filterCertificateNo" [(ngModel)]="certificateNo"
+                    #filterCertificateNo="ngModel" id="filterCertificateNo" autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Lead No</label>
+                  <input type="text" name="filterLeadNo" [(ngModel)]="leadNo" #filterStoneId="ngModel" id="filterLeadNo"
+                    autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Broker Name</label>
+                  <kendo-autocomplete class="w-100" [data]="listBrokerItems" [filterable]="true"
+                    (filterChange)="handleBrokerFilter($event)" [kendoDropDownFilter]="filterSettings" name="Broker"
+                    [(ngModel)]="selectedBroker" (valueChange)="brokerChange($event)" [popupSettings]="{width: 'auto'}"
+                    #Broker="ngModel" valueField="value">
+                    <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                      <span>{{dataItem.text}}</span>
+                    </ng-template>
+                  </kendo-autocomplete>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="filterPartyCode">Party Code</label>
+                  <input type="text" name="filterPartyCode" [(ngModel)]="partyCode" #filterPartyCode="ngModel"
+                    id="filterPartyCode" autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Party Name</label>
+                  <kendo-autocomplete class="w-100" [data]="listPartyItems" [filterable]="true"
+                    (filterChange)="handlePartyFilter($event)" [kendoDropDownFilter]="filterSettings" name="Party"
+                    [(ngModel)]="selectedParty" (valueChange)="partyChange($event)" [popupSettings]="{width: 'auto'}"
+                    #Party="ngModel" valueField="value">
+                    <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                      <span>{{dataItem.text}}</span>
+                    </ng-template>
+                  </kendo-autocomplete>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Seller Name</label>
+                  <kendo-autocomplete class="w-100" [data]="listSellerItems" [filterable]="true"
+                    (filterChange)="handleSellerFilter($event)" [kendoDropDownFilter]="filterSettings" name="Seller"
+                    [(ngModel)]="selectedSeller" (valueChange)="sellerChange($event)" [popupSettings]="{width: 'auto'}"
+                    #Seller="ngModel" valueField="value">
+                    <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                      <span>{{dataItem.text}}</span>
+                    </ng-template>
+                  </kendo-autocomplete>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">Order From Date</label>
+                  <kendo-datepicker calendarType="classic" name="fDate" #fDate="ngModel" format="dd/MM/yyyy"
+                    [(ngModel)]="orderSearchCriteria.fromDate"></kendo-datepicker>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">Order To Date</label>
+                  <kendo-datepicker calendarType="classic" name="tDate" #tDate="ngModel" format="dd/MM/yyyy"
+                    [(ngModel)]="orderSearchCriteria.toDate"></kendo-datepicker>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">Transaction From Date</label>
+                  <kendo-datepicker calendarType="classic" name="TfDate" #TfDate="ngModel" format="dd/MM/yyyy"
+                    [(ngModel)]="orderSearchCriteria.tFromDate"></kendo-datepicker>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">Transaction To Date</label>
+                  <kendo-datepicker calendarType="classic" name="TtDate" #TtDate="ngModel" format="dd/MM/yyyy"
+                    [(ngModel)]="orderSearchCriteria.tToDate"></kendo-datepicker>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label>Party Country</label>
+                  <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                    [valueField]="'name'" name="country" #country="ngModel" (valueChange)="onCountryChange($event)"
+                    [valuePrimitive]="true" [(ngModel)]="orderSearchCriteria.country">
+                  </kendo-combobox>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                  <ng2-tri-state-checkbox id="a-invoice" name="isTransactionFlag"
+                    [(ngModel)]="orderSearchCriteria.isTransaction" #isTransactionFlag="ngModel"
+                    (change)="orderSearchCriteria.isDelivered?orderSearchCriteria.isDelivered=false:''">
+                  </ng2-tri-state-checkbox>
+                  <label for="a-invoice">Show Invoice Orders</label>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                  <input type="checkbox" name="isDeliveredFlag" class="k-checkbox"
+                    [(ngModel)]="orderSearchCriteria.isDelivered" id="a-delivered"
+                    (change)="orderSearchCriteria.isDelivered?orderSearchCriteria.isTransaction=true:orderSearchCriteria.isTransaction=false"
+                    #isDeliveredFlag="ngModel" />
+                  <label for="a-delivered">Show Delivered Orders</label>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                  <ng2-tri-state-checkbox id="a-ColorFlag" name="isColorFlag"
+                    [(ngModel)]="orderSearchCriteria.isColorFlag" #isColorFlag="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label for="a-ColorFlag">Show New Orders<i class="ms-2 icon-status-rd me-1"
+                      style="border: 1px solid #000;color: #e9ffe9;vertical-align: middle;"></i></label>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                  <ng2-tri-state-checkbox id="a-isNotStock" name="isNotStock"
+                    [(ngModel)]="orderSearchCriteria.isNotStock" #isNotStock="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label for="a-NotStock">Show in Stock<i class="ms-2 icon-status-rd me-1"
+                      style="border: 1px solid #000;color: #ffdddd;vertical-align: middle;"></i></label>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                  <ng2-tri-state-checkbox id="a-isTransit" name="isTransit" [(ngModel)]="orderSearchCriteria.isTransit"
+                    #isTransit="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label for="a-isTransit">Show in Transit<i class="ms-2 icon-status-rd me-1"
+                      style="border: 1px solid #000;color: #d5ebff;vertical-align: middle;"></i></label>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                  <ng2-tri-state-checkbox id="a-isMemo" name="isMemo" [(ngModel)]="orderSearchCriteria.isMemo"
+                    #isMemo="ngModel">
+                  </ng2-tri-state-checkbox>
+                  <label for="a-isMemo">Show in Memo</label>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                  <button class="btn btn-action"
+                    (click)="orderSearchForm.form.valid && onFilterSubmit(orderSearchForm)">
+                    <i class="icon-search"></i>Search
+                  </button>
+                  <button (click)="clearFilter(orderSearchForm);" class="btn btn-action">
+                    <i class="icon-clear"></i>Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!--#endregion -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button>
+        </li>
+        <li><button (click)="onFilterSubmit(orderSearchForm)"><i class="icon-search"></i></button>
+        </li>
+        <li><button (click)="clearFilter(orderSearchForm)"><i class="icon-clear"></i></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- #region Grid Configuration -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'Order'" [gridName]="'OrderGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Sales Dialog -->
+<ng-container *ngIf="isSales">
+  <app-sales [orderItems]="selectedOrderItems" [transactionObj]="transactionObj" [salesParty]="selectedSalesParty"
+    (toggle)="closeSalesDialog($event)"></app-sales>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Ledger Dialog -->
+<ng-container *ngIf="isLedgerFlag">
+  <app-ledger-modal [showSearch]="true" [ledgerIdent]="ledgerIdent" [ledgerType]="ledgerType"
+    (successEvent)="updateOrderParties($event)" (toggle)="isLedgerFlag=$event;"></app-ledger-modal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region takenBy Add -->
+<div class="modal c-modal addemp" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isAddTakenByPopup">
+  <form name="form" #TakenBy="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-memoissue"></i>TakenBy</h5>
+          <button type="button" class="close" (click)="toggleTakenByDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 sr">
+              <div class="takenby-main">
+                <div class="searchcomp">
+                  <div class="m-1">
+                    <input type="text" name="searchPacket" placeholder="Search Taken By" class="form-control"
+                      autocomplete="off" (keyup)="handleTakenbyFilter($event)">
+                  </div>
+                  <div class="search-stone">
+                    <div *ngFor="let item of listTakenByItems" (click)="takenByChange(item.text)">
+                      <span kendoTooltip position="bottom" title="{{item.text}}">{{item.text}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="takenby-grid mb-2">
+                  <div class="form-data">
+                    <label>Full Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': takenBy.invalid && (takenBy.dirty || takenBy.touched)}">
+                    <input type="text" name="takenBy" autocomplete="off" [(ngModel)]="takenByObj.name"
+                      #takenBy="ngModel" id="takenBy" required>
+                  </div>
+                  <div class="form-data">
+                    <label>Contact No</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': contactNo.invalid && (contactNo.dirty || contactNo.touched)}">
+                    <input type="text" name="contactNo" autocomplete="off" maxlength="15"
+                      (keypress)="utilityService.numberOnly($event)" [(ngModel)]="takenByObj.contactNo"
+                      #contactNo="ngModel" id="contactNo">
+                  </div>
+                  <div class="form-data">
+                    <label>ID Card No</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': cardIdNo.invalid && (cardIdNo.dirty || cardIdNo.touched)}">
+                    <input type="text" name="cardIdNo" autocomplete="off" [(ngModel)]="takenByObj.cardIdNo"
+                      #cardIdNo="ngModel" id="cardIdNo">
+                  </div>
+                </div>
+                <div class="form-data text-center img-animated pe-2 mt-2" *ngIf="!showWebCam">
+                  <label class="d-block text-start">Photo Identity Proof</label>
+                  <div *ngIf="!isImgselectedPhotoIdent && imageList.length==0" class="c-upload">
+                    <label for="file-input">
+                      <span><i class="icon-upload"></i></span>
+                      <span>Select or Drop <br /> Image Only</span>
+                    </label>
+                    <input #photoIdentityFileupload type="file" (change)="uploadFiles($event)"
+                      accept="image/jpeg,image/png" id="file-input" type="file" name="photoIdentity"
+                      style="height: 144px !important;" />
+                    <input type="hidden" name="fileHidden">
+                  </div>
+                  <img *ngIf="isImgselectedPhotoIdent" alt="Uploaded Photo Identity File" src="{{imagePreviewphoto}}"
+                    class="d-block" width="100%" height="144">
+                  <img *ngIf="imageList.length>0" alt="Uploaded Photo Identity File"
+                    [src]="sanitizeURL(imageList[0].filePath)" class="d-block" width="100%" height="144">
+                  <div class="msg-box" [ngStyle]="{'border-bottom-color': '#028e02'  }" *ngIf="photoIdentityModel">
+                    <div class="success">File successfully attached
+                    </div>
+                    <button type="button" (click)="clearPreviewFile()" class="btn"><i class="icon-delete"></i></button>
+                  </div>
+                  <div class="form-data mt-2" kendoTooltip position="bottom" *ngIf="!alreadyAddTakenByFlag">
+                    <button kendoButton type="button" title="Open Camera" (click)="showWebCam=true" class="btn"><i
+                        class="icon-camera pe-0"></i></button>
+                  </div>
+                  <div class="form-data mt-2" kendoTooltip position="bottom" *ngIf="alreadyAddTakenByFlag">
+                    <button kendoButton type="button" title="Clear Taken By" (click)="resetTakenBy()" class="btn"><i
+                        class="icon-clear pe-0"></i></button>
+                  </div>
+                </div>
+                <div class="form-data text-center img-animated pe-2 mt-2" *ngIf="showWebCam">
+                  <div class="c-upload">
+                    <webcam [height]="144" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"></webcam>
+                  </div>
+                  <div class="form-data mt-2">
+                    <kendo-buttongroup kendoTooltip position="bottom">
+                      <button kendoButton type="button" title="Capture" (click)="triggerSnapshot()" class="btn"><i
+                          class="icon-cameralens pe-0"></i></button>
+                      <button kendoButton type="button" title="Cancel" (click)="showWebCam=false" class="btn"><i
+                          class="icon-delete pe-0"></i></button>
+                    </kendo-buttongroup>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <ng-container *ngIf="!isStockTallyEnable">
+            <button type="button" class="btn btn-primary" [disabled]="!TakenBy.valid" (click)="onSaveTaken(TakenBy)"
+              *ngIf="showLabelTakenBy">
+              <i class="icon-save"></i>Save</button>
+          </ng-container>
+          
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

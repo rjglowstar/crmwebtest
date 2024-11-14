@@ -1,0 +1,268 @@
+<title>Lead Details</title>
+<!-- #region Header section -->
+<section class="wbmaster-wrap">
+    <div class="content_wrap">
+        <div class="d-flex">
+            <div class="e-left">
+                <div class="breadcrumb">
+                    <div class="breadcrumb-left">
+                        <ul>
+                            <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                            <li class="breadcrumb-item active" aria-current="page">Lead Details</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="summarybar bg">
+                    <div class="summary-left">
+                        <ul>
+                            <li>Stone Count : <span>{{leadDetailSummary.totalPcs}}</span></li>
+                            <li>Weight : <span>{{leadDetailSummary.totalWeight}}</span></li>
+                            <li>Value : <span>{{leadDetailSummary.totalAmt}}</span></li>
+                        </ul>
+                    </div>
+                    <div class="summary-right">
+                        <!-- #region Header Buttons -->
+                        <kendo-buttongroup kendoTooltip position="bottom">
+                            <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                                    class="icon-gridconfig"></i></button>
+                            <button kendoButton #anchorExcel (click)="exportToExcel()" title="Export Excel"><i
+                                    class="icon-excelnew "></i>
+                            </button>
+                        </kendo-buttongroup>
+                        <!-- #endregion -->
+                    </div>
+                </div>
+                <!-- #region Grid section -->
+                <div class="content_box">
+                    <div class="grid-wrap">
+                        <kendo-grid [data]="gridView" [groupable]="true" [resizable]="true" [sortable]="true"
+                            [sort]="sort" (sortChange)="sortChange($event)" [group]="groups"
+                            (groupChange)="groupChange($event)" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+                            (pageChange)="pageChange($event)">
+                            <ng-container *ngIf="fields && fields.length > 0">
+                                <ng-container *ngFor="let field of fields">
+                                    <ng-container *ngIf="field.isSelected">
+                                        <kendo-grid-column [width]="field.width" [field]="field.propertyName"
+                                            [title]="field.title">
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.title=='Party'">
+                                                <span><b>{{dataItem.customer.companyName}}</b>-{{dataItem.customer.name}}</span>
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.propertyName=='createdDate'">
+                                                <span> {{dataItem.createdDate | date: 'dd/MM/yyyy hh:mm
+                                                    a'}}</span>
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.propertyName=='orderDate'">
+                                                <span> {{dataItem.orderDate | date: 'dd/MM/yyyy hh:mm
+                                                    a'}}</span>
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.propertyName=='processDate'">
+                                                <span> {{dataItem.processDate | date: 'dd/MM/yyyy hh:mm
+                                                    a'}}</span>
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="field.propertyName=='holdDate'">
+                                                <span> {{dataItem.holdDate | date: 'dd/MM/yyyy hh:mm a'}}</span>
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                                *ngIf="field.title == 'Rejected'">
+                                                <input type="checkbox" class="k-checkbox"
+                                                    id="checkbox-isRejected-{{rowIndex}}"
+                                                    [checked]="dataItem.leadInventoryItems.isRejected"
+                                                    [disabled]="true" />
+                                                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                                </label>
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                                *ngIf="field.title == 'Hold'">
+                                                <input type="checkbox" class="k-checkbox"
+                                                    id="checkbox-isHold-{{rowIndex}}"
+                                                    [checked]="dataItem.leadInventoryItems.isHold" [disabled]="true" />
+                                                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                                </label>
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                                *ngIf="field.title == 'Delivered'">
+                                                <input type="checkbox" class="k-checkbox"
+                                                    id="checkbox-isDelivered-{{rowIndex}}"
+                                                    [checked]="dataItem.leadInventoryItems.isDelivered"
+                                                    [disabled]="true" />
+                                                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                                </label>
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                                *ngIf="field.title == 'Memo'">
+                                                <input type="checkbox" class="k-checkbox"
+                                                    id="checkbox-isMemo-{{rowIndex}}"
+                                                    [checked]="dataItem.leadInventoryItems.isMemo" [disabled]="true" />
+                                                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                                </label>
+                                            </ng-template>
+                                        </kendo-grid-column>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </kendo-grid>
+                    </div>
+                </div>
+                <!-- #endregion -->
+            </div>
+            <!-- #region Filter Section -->
+            <div class="e-right">
+                <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+                    <div class="sr">
+                        <h6>Search By Filter</h6>
+                        <form name="form" #ldSearchForm="ngForm" novalidate>
+                            <div class="i-form">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label class="lbl">From Date</label>
+                                        <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="fDate" #fDate="ngModel"
+                                            [(ngModel)]="leadDetailSearchCriteria.fromDate">
+                                        </kendo-datepicker>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label class="lbl">To Date</label>
+                                        <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="tDate" #tDate="ngModel"
+                                            [(ngModel)]="leadDetailSearchCriteria.toDate">
+                                        </kendo-datepicker>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label for="f-name">Stone Id</label>
+                                        <input type="text" name="filterStoneId" [(ngModel)]="stoneId"
+                                            #filterStoneId="ngModel" id="filterStoneId" autocomplete="off">
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label for="Lead No">Certi No</label>
+                                        <input type="text" name="certiNo" #certiNo="ngModel"
+                                            [(ngModel)]="certificateNo" />
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label for="Lead No">Lead No</label>
+                                        <input type="text" name="leadNoV" #leadNoV="ngModel"
+                                            (keypress)="utilityService.numberWithSpaceOnly($event)"
+                                            [(ngModel)]="leadNo" />
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label for="Party">Party</label>
+                                        <kendo-autocomplete class="w-100" [data]="listCustomerItems" name="customer"
+                                            [(ngModel)]="selectedCustomerItem" (valueChange)="customerChange($event)"
+                                            #customer="ngModel" [filterable]="true"
+                                            (filterChange)="handleCustomerFilter($event)"
+                                            [kendoDropDownFilter]="filterSettings" [popupSettings]="{width: 'auto'}"
+                                            valueField="value">
+                                            <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                                                <span><b>{{dataItem.companyName}}</b>-{{dataItem.text}}</span>
+                                            </ng-template>
+                                        </kendo-autocomplete>
+                                    </div>
+
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                                        <label>Lead Status</label>
+                                        <kendo-multiselect name="status" class="customselect" [data]="leadStatusList"
+                                            [(ngModel)]="leadDetailSearchCriteria.leadStatus" [textField]="'name'"
+                                            [valueField]="'name'" [valuePrimitive]="true"
+                                            [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                                            [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                                            (valueChange)="utilityService.onMultiSelectChange(leadStatusList, leadDetailSearchCriteria.leadStatus)">
+                                            <ng-template kendoComboBoxHeaderTemplate>
+                                                <div class="dropdown-header single k-widget k-header">
+                                                    <span class="temp-single">Select Type</span>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                                                <input type="checkbox" class="k-checkbox"
+                                                    [checked]="dataItem.isChecked">
+                                                <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                                            </ng-template>
+                                            <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                                                <span kendoTooltip position="bottom"
+                                                    [title]="utilityService.getCommaSapratedString(leadDetailSearchCriteria.leadStatus, true)">
+                                                    {{utilityService.getCommaSapratedString(leadDetailSearchCriteria.leadStatus)}}
+                                                </span>
+                                            </ng-template>
+                                        </kendo-multiselect>
+                                    </div>
+
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data" *ngIf="isAdminRole">
+                                        <label for="Party">Seller</label>
+                                        <kendo-combobox [data]="listSellerDNormItems" name="seller" #seller="ngModel"
+                                            [(ngModel)]="selectedSellerDNormItem"
+                                            (valueChange)="onSellerDNormChange($event)"
+                                            [kendoDropDownFilter]="filterSettings" textField="text" valueField="value"
+                                            name="seller">
+                                        </kendo-combobox>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                                        <label for="Expomaster">Expo Master</label>
+                                        <kendo-combobox [data]="listExpoMasterDNormItems"
+                                            [kendoDropDownFilter]="filterSettings" [textField]="'text'"
+                                            [valueField]="'value'" name="expoName" #expoName="ngModel"
+                                            (valueChange)="onExpoMasterDNormChange($event)"
+                                            [(ngModel)]="selectedExpoMasterDNormItem">
+                                        </kendo-combobox>
+                                    </div>
+
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                                        <input type="checkbox" name="isDoNotRejectedFlag" class="k-checkbox"
+                                            [(ngModel)]="leadDetailSearchCriteria.isDoNotRejected"
+                                            id="a-isDoNotRejected" #isDoNotRejectedFlag="ngModel" />
+                                        <label for="a-isDoNotRejected">Do not show Rejected Stone</label>
+                                    </div>
+
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                                        <ng2-tri-state-checkbox id="a-isOnlineOrOffline" name="isOnlineOrOffline"
+                                            [(ngModel)]="leadDetailSearchCriteria.isOnline"
+                                            #isOnlineOrOffline="ngModel">
+                                        </ng2-tri-state-checkbox>
+                                        <label for="a-isOnlineOrOffline">Online / Offline</label>
+                                    </div>
+
+                                    <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                                        <button class="btn btn-action"
+                                            (click)="ldSearchForm.form.valid && onFilterSubmit()">
+                                            <i class="icon-search"></i>Search
+                                        </button>
+                                        <button class="btn btn-action" (click)="clearFilter()">
+                                            <i class="icon-clear"></i>Clear
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- #endregion -->
+            <!-- #region Mobile filter section -->
+            <div class="f-btn" [ngClass]="{'active': filterFlag}">
+                <ul>
+                    <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button>
+                    </li>
+                    <li><button (click)="ldSearchForm.form.valid && onFilterSubmit()">
+                            <i class="icon-search"></i></button></li>
+                    <li><button (click)="clearFilter()">
+                            <i class="icon-clear"></i></button></li>
+                </ul>
+            </div>
+            <!-- #endregion -->
+        </div>
+    </div>
+    <!-- #endregion -->
+</section>
+
+
+<!-- #region Grid Configuration -->
+<ng-container *ngIf="isGridConfig">
+    <app-gridconfiguration [fields]="fields" [pageName]="'LeadDetail'" [gridName]="'LeadDetailGrid'"
+        [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+        (ChildEvent)="setNewGridConfig($event)">
+    </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

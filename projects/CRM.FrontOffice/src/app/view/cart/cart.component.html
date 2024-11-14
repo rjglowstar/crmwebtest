@@ -1,0 +1,395 @@
+<title>Cart</title>
+<section class="cart-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <!--#region Header -->
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item">
+                <a href="#"></a><i class="icon-home"></i> Home
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Cart</li>
+            </ul>
+          </div>
+        </div>
+        <div class="summarybar bg">
+          <div class="summary-left">
+            <ul>
+              <li>Total Pcs : <span>{{totalPcs}}</span></li>
+              <li>Total Ct : <span>{{totalCt.toFixed(2)}}</span></li>
+              <li>Total Amt : <span>{{totalAmt.toFixed(2)}}</span></li>
+              <li>Selected Pcs : <span>{{selectedPcs}}</span></li>
+              <li>Selected Ct : <span>{{selectedCt.toFixed(2)}}</span></li>
+              <li>Selected Amt : <span>{{selectedAmt.toFixed(2)}}</span></li>
+            </ul>
+          </div>
+          <div class="summary-right">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton title="Remove Cart Item" [disabled]="selectedCartItems.length == 0"><i
+                  class="icon-trash" (click)="removeCart()"></i></button>
+              <button kendoButton title="Grid Configuration" (click)="openGridConfigDialog()">
+                <i class="icon-gridconfig"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <!--#endregion -->
+        <!--#region Grid -->
+        <div class="content_box">
+          <div class="grid-wrap grid-summury">
+            <kendo-grid [kendoGridBinding]="cartData" class="grid-ui upload-grid rs-grid groupNewUi" [reorderable]="true"
+              [resizable]="true" [navigable]="true" [groupable]="true" [sortable]="true" [pageable]="true"
+              [sort]="state.sort!" [group]="state.group!" [pageSize]="state.take!" [skip]="state.skip!"
+              [selectable]="selectableSettings" [kendoGridSelectBy]="'id'" (dataStateChange)="dataStateChange($event)"
+              (selectionChange)="onSelectCart($event)" #gridContext [(selectedKeys)]="mySelection">
+              <kendo-grid-checkbox-column [showSelectAll]="true" [width]="18"> </kendo-grid-checkbox-column>
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridGroupHeaderTemplate let-dataItem let-value="value"
+                        let-aggregates="aggregates" let-field="field">
+                        <div class="grid-summary-dtl">                          
+                          <label>{{aggregates.customerName.max}}</label>
+                          <span class="ps-1">Count: </span>
+                          <label>{{aggregates.companyName.count}}</label>
+                          <span class="ps-1">Amount : </span>
+                          <label>{{aggregates.netAmount.sum.toFixed(2)}}</label>
+                          <span class="ps-1">Weight : </span>
+                          <label>{{aggregates.totalWeight.sum.toFixed(2)}}</label>
+                        </div>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+        <!--#endregion -->
+      </div>
+      <!--#region Filter -->
+      <form class="e-right" name="form" #cartSearchForm="ngForm" novalidate>
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <div class="i-form">
+              <div class="row">
+                <!-- #region Filter form -->
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+
+                  <div class="form-data">
+                    <label for="f-name">Stone Id</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="filterStoneId" class="input-sm form-control text-start"
+                      [(ngModel)]="stoneId" #filterStoneId="ngModel" id="filterStoneId" autocomplete="off">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="f-name">Certificate No</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="filtercertificateNo" class="input-sm form-control text-start"
+                      [(ngModel)]="certificateNo" #filtercertificateNo="ngModel" id="filtercertificateNo"
+                      autocomplete="off">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Customer</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-autocomplete class="w-100" [data]="listCustomerItems" name="customer"
+                      [(ngModel)]="selectedCustomerItem" #customer="ngModel"
+                      (valueChange)="selectedAssetFromCustomer($event)" [filterable]="true"
+                      (filterChange)="handleCustomerFilter($event)" [kendoDropDownFilter]="filterSettings"
+                      [popupSettings]="{width: 'auto'}" valueField="value">
+                      <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                        {{dataItem.companyName}}
+                      </ng-template>
+                    </kendo-autocomplete>
+                  </div>
+
+                  <div *ngIf="!isSeller">
+                    <div class="form-data">
+                      <label>Seller</label>
+                    </div>
+                    <div class="form-data">
+                      <kendo-combobox [data]="listSellerItems" textField="text" valueField="value" name="seller"
+                        [kendoDropDownFilter]="filterSettings" [(ngModel)]="selectedSellereId" #seller="ngModel"
+                        [valuePrimitive]="true">
+                      </kendo-combobox>
+                    </div>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Size</label>
+                  </div>
+                  <div class="form-data">
+                    <div class="d-flex">
+                      <input type="text" class="me-2" name="minSize" placeholder="Min" required #minSize="ngModel"
+                        id="minSize" [(ngModel)]="cartSearchCriteria.minSize"
+                        (keypress)="utilityService.floatOnly($event);" />
+                      <input type="text" placeholder="Max" required name="maxSize" #maxSize="ngModel" id="maxSize"
+                        [(ngModel)]="cartSearchCriteria.maxSize" (keypress)="utilityService.floatOnly($event);" />
+                    </div>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Lab</label>
+                  </div>
+                  <div class="form-data mul-select">
+                    <kendo-multiselect name="labs" class="customselect" [data]="listLabs"
+                      [(ngModel)]="cartSearchCriteria.labs" [textField]="'name'" [valueField]="'name'"
+                      [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                      [kendoMultiSelectSummaryTag]="0" #labs="ngModel"
+                      (valueChange)="onMultiSelectChange(listLabs, cartSearchCriteria.labs)">
+                      <ng-template kendoComboBoxHeaderTemplate>
+                        <div class="dropdown-header single k-widget k-header">
+                          <span class="temp-single">Select Labs</span>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom"
+                          [title]="getCommaSapratedString(cartSearchCriteria.labs, true)">
+                          {{getCommaSapratedString(cartSearchCriteria.labs)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+
+
+                  <div class="form-data">
+                    <label>Shapes</label>
+                  </div>
+                  <div class="form-data mul-select">
+                    <kendo-multiselect name="shapes" class="customselect" [data]="listShape"
+                      [(ngModel)]="cartSearchCriteria.shapes" [textField]="'name'" [valueField]="'name'"
+                      [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                      [kendoMultiSelectSummaryTag]="0" #shapes="ngModel"
+                      (valueChange)="onMultiSelectChange(listShape, cartSearchCriteria.shapes)">
+                      <ng-template kendoComboBoxHeaderTemplate>
+                        <div class="dropdown-header single k-widget k-header">
+                          <span class="temp-single">Select shapes</span>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom"
+                          [title]="getCommaSapratedString(cartSearchCriteria.shapes, true)">
+                          {{getCommaSapratedString(cartSearchCriteria.shapes)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Color</label>
+                  </div>
+                  <div class="form-data mul-select">
+                    <kendo-multiselect name="color" class="customselect" [data]="listColor"
+                      [(ngModel)]="cartSearchCriteria.colors" [textField]="'name'" [valueField]="'name'"
+                      [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                      [kendoMultiSelectSummaryTag]="0" #color="ngModel"
+                      (valueChange)="onMultiSelectChange(listColor, cartSearchCriteria.colors)">
+                      <ng-template kendoComboBoxHeaderTemplate>
+                        <div class="dropdown-header single k-widget k-header">
+                          <span class="temp-single">Select Color</span>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom"
+                          [title]="getCommaSapratedString(cartSearchCriteria.colors, true)">
+                          {{getCommaSapratedString(cartSearchCriteria.colors)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+                  <div class="form-data">
+                    <label>Clarities</label>
+                  </div>
+                  <div class="form-data mul-select">
+                    <kendo-multiselect name="clarity" class="customselect" [data]="listClarity"
+                      [(ngModel)]="cartSearchCriteria.clarities" [textField]="'name'" [valueField]="'name'"
+                      [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                      [kendoMultiSelectSummaryTag]="0" #clarity="ngModel"
+                      (valueChange)="onMultiSelectChange(listClarity, cartSearchCriteria.clarities)">
+                      <ng-template kendoComboBoxHeaderTemplate>
+                        <div class="dropdown-header single k-widget k-header">
+                          <span class="temp-single">Select Clarity</span>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom"
+                          [title]="getCommaSapratedString(cartSearchCriteria.clarities, true)">
+                          {{getCommaSapratedString(cartSearchCriteria.clarities)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Cuts</label>
+                  </div>
+                  <div class="form-data mul-select">
+                    <kendo-multiselect name="cuts" class="customselect" [data]="listCuts"
+                      [(ngModel)]="cartSearchCriteria.cuts" [textField]="'name'" [valueField]="'name'"
+                      [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                      [kendoMultiSelectSummaryTag]="0" #cuts="ngModel"
+                      (valueChange)="onMultiSelectChange(listCuts, cartSearchCriteria.cuts)">
+                      <ng-template kendoComboBoxHeaderTemplate>
+                        <div class="dropdown-header single k-widget k-header">
+                          <span class="temp-single">Select Cuts</span>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom"
+                          [title]="getCommaSapratedString(cartSearchCriteria.cuts, true)">
+                          {{getCommaSapratedString(cartSearchCriteria.cuts)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+                  <div class="form-data">
+                    <label>Polish</label>
+                  </div>
+                  <div class="form-data mul-select">
+                    <kendo-multiselect name="polishes" class="customselect" [data]="listPolish"
+                      [(ngModel)]="cartSearchCriteria.polishes" [textField]="'name'" [valueField]="'name'"
+                      [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                      [kendoMultiSelectSummaryTag]="0" #polishes="ngModel"
+                      (valueChange)="onMultiSelectChange(listPolish, cartSearchCriteria.polishes)">
+                      <ng-template kendoComboBoxHeaderTemplate>
+                        <div class="dropdown-header single k-widget k-header">
+                          <span class="temp-single">Select Polishes</span>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom"
+                          [title]="getCommaSapratedString(cartSearchCriteria.polishes, true)">
+                          {{getCommaSapratedString(cartSearchCriteria.polishes)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Symmetry</label>
+                  </div>
+                  <div class="form-data mul-select">
+                    <kendo-multiselect name="symmetries" class="customselect" [data]="listSymm"
+                      [(ngModel)]="cartSearchCriteria.symmetries" [textField]="'name'" [valueField]="'name'"
+                      [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                      [kendoMultiSelectSummaryTag]="0" #symmetries="ngModel"
+                      (valueChange)="onMultiSelectChange(listSymm, cartSearchCriteria.symmetries)">
+                      <ng-template kendoComboBoxHeaderTemplate>
+                        <div class="dropdown-header single k-widget k-header">
+                          <span class="temp-single">Select symmetries</span>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom"
+                          [title]="getCommaSapratedString(cartSearchCriteria.symmetries, true)">
+                          {{getCommaSapratedString(cartSearchCriteria.symmetries)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Fluorescence</label>
+                  </div>
+                  <div class="form-data mul-select">
+                    <kendo-multiselect name="fluorescences" class="customselect" [data]="listFlour"
+                      [(ngModel)]="cartSearchCriteria.fluorescences" [textField]="'name'" [valueField]="'name'"
+                      [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                      [kendoMultiSelectSummaryTag]="0" #fluorescences="ngModel"
+                      (valueChange)="onMultiSelectChange(listFlour, cartSearchCriteria.fluorescences)">
+                      <ng-template kendoComboBoxHeaderTemplate>
+                        <div class="dropdown-header single k-widget k-header">
+                          <span class="temp-single">Select Fluorescences</span>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom"
+                          [title]="getCommaSapratedString(cartSearchCriteria.fluorescences, true)">
+                          {{getCommaSapratedString(cartSearchCriteria.fluorescences)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+                </div>
+                <!-- #endregion -->
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                  <button class="btn btn-action" (click)="onFilterSubmit(cartSearchForm)">
+                    <i class="icon-search"></i>Search
+                  </button>
+                  <button (click)="clearFilter(cartSearchForm)" class="btn btn-action">
+                    <i class="icon-clear"></i>Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!--#endregion -->
+    </div>
+    <!--#region responsive filter button -->
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="onFilterSubmit(cartSearchForm)"><i class="icon-search"></i></button>
+        </li>
+        <li><button (click)="clearFilter(cartSearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+    <!--#endregion -->
+  </div>
+</section>
+<!-- #endregion -->
+
+<!-- #region Grid Modal -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'Cart'" [gridName]="'CartGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!--#endregion -->
+
+<!-- <div (document:keydown.esc)="closeEditInventoryDialog()"></div> -->
+<div kendoDialogContainer></div>

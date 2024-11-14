@@ -1,0 +1,103 @@
+<title>Biding Results</title>
+<section class="stockmain-wrap">
+    <div class="content_wrap">
+        <div class="e-left w-100">
+            <div class="breadcrumb">
+                <div class="breadcrumb-left">
+                    <ul>
+                        <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                        <li class="breadcrumb-item active" aria-current="page">Biding Results</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="summarybar bg">
+                <div class="summary-left">
+                    <ul>
+                        <li>BID Start : <span>{{ bidStartDate }}</span></li>
+                        <li>BID End : <span>{{ bidEndDate }}</span></li>
+                    </ul>
+                </div>
+                <div class="summary-right pe-0">
+                    <div class="d-flex align-items-center">
+                        <span class="input_label">BID NO: </span>
+                        <kendo-dropdownlist [data]="bidingResultDropDownData" [textField]="'bidNumber'"
+                            style="width: 200px;" [valueField]="'bidNumber'" [valuePrimitive]="true"
+                            [(ngModel)]="bidSearchFilter.bidNumber" [kendoDropDownFilter]="filterSettings"
+                            name="bidNumber" (valueChange)="initBidInventoryData()">
+                            <ng-template kendoComboBoxItemTemplate let-dataItem>
+                                <span class="k-state-default temp temp-child">
+                                    {{dataItem.bidNumber}} ({{dataItem.startDate| date: 'dd-MM-yy'}} To
+                                    {{dataItem.endDate| date:
+                                    'dd-MM-yy'}})
+                                </span>
+                            </ng-template>
+                        </kendo-dropdownlist>
+                    </div>
+                    <div>
+                        <span class="input_label">Only Place BID: </span>
+                        <input type="checkbox" #unchecked kendoCheckBox [(ngModel)]="isFilterBidingResult"
+                            #filterVerify="ngModel" title="Filter Only Place BID Data" (click)="initBidInventoryData()">
+                    </div>
+                    <kendo-buttongroup kendotooltip="" position="bottom" ng-reflect-position="bottom" role="group"
+                        dir="ltr" tabindex="0" class="k-button-group">
+                        <button kendoButton title="Send Bid Approval Mail" (click)="sendBidApprovalMail()"
+                            [disabled]="!isActiveBid">
+                            <i class="icon-icon_email"></i>
+                        </button>
+                        <button kendoButton title="Grid Config" (click)="openGridConfigDialog()"><i
+                                class="icon-gridconfig"></i>
+                        </button>
+                    </kendo-buttongroup>
+                </div>
+            </div>
+            <div class="content_box">
+                <div class="grid-wrap">
+                    <kendo-grid [resizable]="true" #bidResultGrid [data]="gridView!" [reorderable]="true"
+                        [resizable]="true" [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+                        [group]="groups" (groupChange)="groupChange($event)" [pageSize]="pageSize" [skip]="skip"
+                        [pageable]="true" (pageChange)="pageChange($event)" [(selectedKeys)]="mySelection"
+                        [kendoGridSelectBy]="'stoneId'">
+                        <ng-container *ngIf="fields && fields.length > 0">
+                            <ng-container *ngFor="let field of fields">
+                                <ng-container *ngIf="field.isSelected">
+                                    <kendo-grid-column [width]="field.width" [editor]="field.editor!"
+                                        [field]="field.propertyName" [title]="field.title">
+                                        <ng-template kendoGridCellTemplate let-dataItem
+                                            *ngIf="field.propertyName == 'isKeepUnsold'">
+                                            <button kendoButton
+                                                [ngClass]="{ 'sold-button': dataItem.isKeepUnsold, 'keepUnsold-button': !dataItem.isKeepUnsold }"
+                                                (click)="onKeepUnsoldStone(dataItem.stoneId, dataItem.isKeepUnsold)"
+                                                [disabled]="!isActiveBid">{{dataItem.isKeepUnsold
+                                                ? 'Keep Sold' : 'Keep Unsold'}}</button>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                        <ng-template kendoGridDetailTemplate let-dataItem>
+                            <app-bidingdetails [bidNumber]="bidSearchFilter.bidNumber" [stoneId]="dataItem.stoneId"
+                                [mainDiscount]="dataItem.curBidDisc" [isKeepUnsold]="dataItem.isKeepUnsold"
+                                [bidEndDate]="bidingSummary.bidTimer.bidEnd"></app-bidingdetails>
+                            <ng-template kendoGridNoRecordsTemplate>
+                                <span style="text-align: center;display: block">No Records Found</span>
+                            </ng-template>
+                        </ng-template>
+                    </kendo-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #endregion-->
+
+    <!-- #region Grid Config Modal -->
+    <ng-container *ngIf="isGridConfig">
+        <app-gridconfiguration [fields]="fields" [pageName]="'BidingUpload'" [gridName]="'BidingUploadGrid'"
+            [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+            (ChildEvent)="setNewGridConfig($event)">
+        </app-gridconfiguration>
+    </ng-container>
+    <!-- #endregion -->
+</section>
+
+<div kendoDialogContainer></div>

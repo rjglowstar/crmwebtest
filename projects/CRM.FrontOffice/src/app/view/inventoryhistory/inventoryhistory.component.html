@@ -1,0 +1,109 @@
+<title>Inventory History</title>
+<section id="wrapper">
+  <div class="content_wrap stoneHis">
+    <!-- #region Header -->
+    <div class="breadcrumb">
+      <div class="breadcrumb-left">
+        <ul>
+          <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+          <li class="breadcrumb-item active" aria-current="page">Inventory History</li>
+        </ul>
+      </div>
+    </div>
+    <div class="summarybar bg">
+      <div class="summary-left">
+        <ul>
+          <li>Hold : <span>{{stoneHoldCount}}</span></li>
+          <li>Rapnet Hold : <span>{{stoneRapnetHoldCount}}</span></li>
+          <li>Rap Changed : <span>{{stoneRapChangedCount}}</span></li>
+        </ul>
+      </div>
+      <div class="summary-right pe-0">
+        <form name="form" #invhistorySearchForm="ngForm" novalidate>
+          <div class="inputWrap" style="gap:10px;">
+            <div>
+              <span class="input_label">Stone Id</span>
+              <input type="text" class="cus_input" name="stoneIdv" #stoneIdv="ngModel" (keyup.enter)="FilterChanges()"
+                [(ngModel)]="stoneId" />
+            </div>
+            <div>
+              <kendo-buttongroup kendoTooltip position="bottom">
+                <button kendoTooltip position="bottom" title="Search" kendoButton class="k-button" [disabled]="!stoneId"
+                  (click)="invhistorySearchForm.form.valid && FilterChanges()"><i class="icon-search"></i></button>
+                <button [disabled]="!stoneId" kendoButton title="Clear" (click)="resetFilter()" kendoTooltip
+                  position="bottom"><i class="icon-clear"></i></button>
+              </kendo-buttongroup>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- #endregion -->
+    <div class="content_box content_scroll">
+      <div class="config-main" *ngIf="isPanel">
+        <div class="panelbar-wrapper">
+          <kendo-panelbar>
+            <kendo-panelbar-item title="Inventory & Lead History"
+              [expanded]="invHistoryItems.length>0 || leadHistoriesItem.length>0?true:false">
+              <ng-template kendoPanelBarContent>
+                <div class="grid-wrap">
+                  <kendo-grid [data]="gridViewInvAndLead" [resizable]="true" [pageable]="false" [sort]="invSort"
+                    [reorderable]="true" (sortChange)="invSortChange($event)" [sortable]="true" [groupable]="true"
+                    [group]="invGroups" (groupChange)="invGroupChange($event)">
+                    <kendo-grid-column title="StoneId" [width]="120">
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        {{ dataItem?.stoneId || dataItem?.stoneIds}}
+                      </ng-template>
+                    </kendo-grid-column>
+                    <kendo-grid-column field="historyType" title="History Type" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="action" title="Action" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="description" title="Description" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="createdBy" title="Created By" [width]="120"></kendo-grid-column>
+                    <kendo-grid-column field="createdDate" title="Created At" [width]="120">
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        {{dataItem.createdDate | date: 'dd/MM/yyyy hh:mm a'}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </kendo-grid>
+                </div>
+              </ng-template>
+            </kendo-panelbar-item>
+            <kendo-panelbar-item title="Price History" [expanded]="pricingHistoriesItem.length>0?true:false">
+              <ng-template kendoPanelBarContent>
+                <div class="grid-wrap">
+                  <kendo-grid [data]="gridViewPriceing" [resizable]="true" [pageable]="false" [sort]="pricingSort"
+                    [reorderable]="true" (sortChange)="pricingSortChange($event)" [sortable]="true" [groupable]="true"
+                    [group]="pricingGroups" (groupChange)="pricingGroupChange($event)" class="rs-grid">
+                    <kendo-grid-column field="stoneId" title="StoneId"> </kendo-grid-column>
+                    <kendo-grid-column field="action" title="action" [width]="150"> </kendo-grid-column>
+                    <kendo-grid-column field="shape" title="shape"> </kendo-grid-column>
+                    <kendo-grid-column field="color" title="Color"> </kendo-grid-column>
+                    <kendo-grid-column field="clarity" title="Clarity"></kendo-grid-column>
+                    <kendo-grid-column field="cut" title="Cut"></kendo-grid-column>
+                    <kendo-grid-column field="polish" title="Polish"> </kendo-grid-column>
+                    <kendo-grid-column field="symmetry" title="Symmetry"></kendo-grid-column>
+                    <kendo-grid-column field="fluorescence" title="Fluorescence"></kendo-grid-column>
+                    <kendo-grid-column field="weight" title="Weight"></kendo-grid-column>
+                    <kendo-grid-column field="basePrice.rap" title="Base Rap" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="basePrice.netAmount" title="Base NetAmount"></kendo-grid-column>
+                    <kendo-grid-column field="price.rap" title="Rap"></kendo-grid-column>
+                    <kendo-grid-column field="price.discount" title="Discount" [width]="70"></kendo-grid-column>
+                    <kendo-grid-column field="price.netAmount" title="NetAmount"></kendo-grid-column>
+                    <kendo-grid-column field="supplier.name" title="Supplier" [width]="130"></kendo-grid-column>
+                    <kendo-grid-column field="identity.name" title="identity Name" [width]="120"></kendo-grid-column>
+                    <kendo-grid-column field="createdDate" title="CreatedDate" [width]="120">
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        {{dataItem.createdDate | date: 'dd/MM/yyyy hh:mm a'}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </kendo-grid>
+                </div>
+              </ng-template>
+            </kendo-panelbar-item>
+          </kendo-panelbar>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div kendoDialogContainer></div>

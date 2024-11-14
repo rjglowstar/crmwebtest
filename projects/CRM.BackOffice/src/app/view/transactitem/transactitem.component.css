@@ -1,0 +1,18 @@
+.transact-grid {
+    display: grid;
+    grid-template-columns: 72px 1fr 62px 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+}
+
+.transact-grid .form-data:nth-child(2) {
+    grid-column: 3 span / 5;
+}
+
+.transact-grid .form-data:last-child {
+    grid-column: 3 span / 5;
+}
+
+.transact-grid .form-data textarea {
+    height: 100px;
+}

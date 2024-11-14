@@ -1,0 +1,34 @@
+<!-- Landing page header start -->
+<app-customer-header-landing *ngIf="!isLoginCheck" (isLogincheck)="isLogincheck($event)"></app-customer-header-landing>
+<!-- Landing page header end -->
+
+<!-- Dashboard login header start -->
+<app-customer-header *ngIf="isLoginCheck" (isLogincheck)="isLogincheck($event)"></app-customer-header>
+<!-- Dashboard login header end -->
+
+<!-- Sidebar Start -->
+<!-- <app-customer-side-menu></app-customer-side-menu> -->
+<!-- Sidebar End -->
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff"
+    template="<img src='commonAssets/images/gl.gif' style='width:80px;' />" [fullScreen]="true">
+    <!-- <p style="color: white"> Loading... </p> -->
+</ngx-spinner>
+
+<!-- Page main content -->
+<router-outlet (activate)="onActivate($event, outlet)" #outlet></router-outlet>
+<!-- Page main content -->
+
+<!-- Before login footer start -->
+<app-footer-landing *ngIf="!isLoginCheck" class="d-flex justify-content-center fo_landing mt-auto"></app-footer-landing>
+<!-- Before login footer end -->
+
+<!-- After login footer start -->
+<!-- <app-footer *ngIf="isLoginCheck" class="d-flex justify-content-center mt-auto"></app-footer> -->
+<!-- After login footer end -->
+
+<!-- Common Suggestion Dialog -->
+<ng-container *ngIf="isSuggestion">
+    <app-suggestion></app-suggestion>
+</ng-container>
+<!-- Common Suggestion Dialog -->

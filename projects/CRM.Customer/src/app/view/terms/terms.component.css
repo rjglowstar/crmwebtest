@@ -1,0 +1,218 @@
+.terms_sec.bg_theme {
+    background-color: transparent;
+}
+
+.default .terms_sec {
+    padding: 4.44% 0 6.27% 0;
+}
+
+
+.default .terms_sec .cus_container {
+    max-width: 1230px;
+}
+
+.default .terms_sec .sec_title {
+    justify-content: start;
+    margin: 0 0 2.5% 0 !important;
+}
+
+.default .terms_sec .bloc_title {
+    margin-bottom: 2.5%;
+}
+
+.default .terms_sec :is(.sec_title, .bloc_title) :is(i, img) {
+    display: none;
+}
+
+.default .terms_sec .sec_title span,
+.default .terms_sec .bloc_title {
+    color: #242628;
+    font-family: "Rollgates Luxury";
+    font-size: calc(25px + (60 - 25) * ((100vw - 320px) / (1920 - 320)));
+    font-style: normal;
+    font-weight: 400;
+    line-height: 60px;
+    filter: none;
+}
+
+.default .terms_sec .sec_title span {
+    font-size: calc(32px + (60 - 32) * ((100vw - 320px) / (1920 - 320)));
+    line-height: 1;
+}
+
+.default .terms_sec .bg_content {
+    padding-left: 20px;
+}
+
+.default .terms_sec .bg_content li {
+    color: #242628;
+    font-size: 18px;
+    font-size: calc(16px + (18 - 16) * ((100vw - 320px) / (1920 - 320)));
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.7;
+    margin-bottom: 15px;
+    list-style: disc;
+    padding-left: 3px;
+}
+
+.default .terms_sec .bg_content li::marker {
+    font-size: 14px;
+}
+
+.default .terms_sec .content_wrap:not(:last-child) {
+    margin-bottom: 9.76%;
+}
+
+.cLogIn .terms_sec {
+    padding-bottom: 50px;
+}
+
+.cLogIn .bg_theme .bg_content {
+    padding: 30px 30px;
+}
+
+.cLogIn .terms_sec .content_wrap:not(:last-child) {
+    margin-bottom: 30px;
+}
+
+.cLogIn .terms_sec .bg_content li {
+    position: relative;
+    color: rgba(33, 37, 41, 0.95);
+    font-size: 15px;
+    padding-left: 25px;
+    margin-bottom: 20px;
+    line-height: 1.8;
+    overflow: hidden;
+}
+
+.cLogIn .terms_sec .bg_content li:last-child {
+    margin-bottom: 0 !important;
+}
+
+.cLogIn .terms_sec li:before {
+    position: absolute;
+    content: "\e178b";
+    font-family: icomoon;
+    top: 2px;
+    left: 0;
+    font-size: 12px;
+    color: rgba(33, 37, 41, 0.90);
+}
+
+.cLogIn .terms_sec .bloc_title :is(svg, i, img) {
+    margin-right: 5px;
+}
+
+.cLogIn .terms_sec .bloc_title {
+    font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1920 - 320))) !important;
+    color: #212529 !important;
+    text-transform: capitalize;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.cLogIn .terms_sec .bloc_title i {
+    font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1920 - 320))) !important;
+    color: #212529 !important;
+    margin-right: 5px;
+}
+
+.cLogIn .terms_sec .bloc_title img {
+    width: 22px;
+    -webkit-filter: invert(1);
+    filter: invert(1);
+}
+
+@media(max-width:1199px) {
+    .cLogIn .sec_title {
+        margin: 40px 0 !important;
+    }
+
+    .default .terms_sec {
+        padding: 75px 0;
+    }
+
+    .default .terms_sec .sec_title span,
+    .default .terms_sec .bloc_title {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    .default .terms_sec .bg_content li {
+        line-height: 1.6;
+    }
+}
+
+@media(max-width:1024px) {
+    .cLogIn .sec_title {
+        margin: 25px 0 !important;
+    }
+
+    .cLogIn .terms_sec {
+        padding-bottom: 30px !important;
+    }
+
+    .cLogIn .terms_sec .bg_content {
+        padding: 15px !important;
+    }
+
+    .cLogIn :is(.terms_sec .bg_content li:not(:last-child),
+        .terms_sec .bloc_title) {
+        margin-bottom: 15px !important;
+    }
+
+    .cLogIn :is(.terms_sec .content_wrap:not(:last-child)) {
+        margin-bottom: 40px !important;
+    }
+}
+
+@media(max-width:991px) {
+    .cLogIn .sec_title {
+        margin: 30px 0 !important;
+    }
+}
+
+@media(max-width:767px) {
+    .cLogIn .sec_title {
+        margin: 25px 0 !important;
+    }
+
+    .cLogIn :is(.terms_sec .content_wrap:not(:last-child)) {
+        margin-bottom: 30px !important;
+    }
+
+    .default .terms_sec {
+        padding: 60px 0;
+    }
+
+    .default .terms_sec .sec_title span,
+    .default .terms_sec .bloc_title {
+        font-weight: 500;
+    }
+
+    .default .terms_sec .sec_title {
+        margin: 0 0 30px 0 !important;
+    }
+
+}
+
+@media(max-width:575px) {
+    .default .terms_sec {
+        padding: 45px 0;
+    }
+
+    .cLogIn .sec_title {
+        margin: 15px 0 !important;
+    }
+
+    .cLogIn .terms_sec .bg_content li {
+        font-size: 14px !important;
+        line-height: 1.6 !important;
+    }
+
+    .default .terms_sec .bg_content li {
+        line-height: 1.5 ;
+    }
+}

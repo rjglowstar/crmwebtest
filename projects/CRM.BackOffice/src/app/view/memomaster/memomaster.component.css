@@ -1,0 +1,47 @@
+/* Backgound Blinking Css */
+.table-bg-red {
+    background-color: #ffdddd;
+    display: block;
+    margin: -26px -30px -30px;
+    padding: 20px 30px;
+    width: auto;
+}
+
+.table-blink-bg:before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    animation: blinkingBackground 2s infinite;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+@keyframes blinkingBackground {
+    0% {
+        background-color: #ff89b72b;
+    }
+
+    25% {
+        background-color: #ff29292b;
+    }
+
+    50% {
+        background-color: #f800002b;
+    }
+
+    75% {
+        background-color: #ff8d8d2b;
+    }
+
+    100% {
+        background-color: #ff00002b;
+    }
+}
+
+.table-blink-bg {
+    display: block;
+    margin: -26px -30px -30px;
+    padding: 20px 30px;
+    width: auto;
+}

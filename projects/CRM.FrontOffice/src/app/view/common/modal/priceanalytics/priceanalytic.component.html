@@ -1,0 +1,146 @@
+<!-- #region Analytics Modal -->
+<div class="modal c-modal dialog-lg addemp" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <form>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="icon-analytics"></i>
+            Price Analytics
+          </h5>
+          <button type="button" class="close" (click)="closeAnalyticsDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body search-filter">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="pr-analytics">
+                <div class="summary-shadow mb-2" kendoTooltip position="bottom">
+                  <span><b>Total Stone :</b> {{totalStone}}</span>
+                  <span><b>Avg Days :</b> {{avgDays}}</span>
+                  <span><b>Available :</b> {{available}}</span>
+                  <span><b>In Process :</b> {{inProcess}}</span>
+                  <span><b>Memo :</b> {{memo}}</span>
+                  <span><b>Lead :</b> {{lead}}</span>
+                  <span><b>Hold :</b> {{hold}}</span>
+                  <button kendoButton title="Grid Configuration" (click)="openSAGridConfigDialog()" class="float-end ms-auto">
+                    <i class="icon-gridconfig pe-0"></i>
+                  </button>
+                </div>
+                <div class="pr-t-bottom">
+                  <div class="pr-b-con">
+                    <h6 class="title"><i class="icon-diamond"></i> Selected Stone</h6>
+                    <div class="grid-wrap">
+                      <kendo-grid [data]="priceAnalyticsSelected" [resizable]="true" style="height: auto;">
+                        <ng-container *ngIf="stoneAnalysisfields.length > 0">
+                          <ng-container *ngFor="let field of stoneAnalysisfields">
+                            <ng-container
+                              *ngIf="field.isSelected && field.propertyName != 'fDiscount' && field.propertyName != 'orderDate'">
+                              <kendo-grid-column [width]="field.width" [editor]="field.editor!"
+                                [field]="field.propertyName" [title]="field.title">
+                                <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'days'">
+                                  {{dataItem.holdDays + dataItem.availableDays}}
+                                </ng-template>
+                                <!-- <ng-template kendoGridCellTemplate let-dataItem
+                                  *ngIf="field.propertyName == 'availableDays'">
+                                  {{utilityService.calculateAvailableDateDiff(dataItem.marketSheetDate, dataItem.holdDays, dataItem.isHold == true ? dataItem.holdDate : null)}}
+                                </ng-template> -->
+                                <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Diameter'">
+                                  <span>{{dataItem.measurement.length}} - {{dataItem.measurement.width}} x
+                                    {{dataItem.measurement.height}}</span>
+                                </ng-template>
+                              </kendo-grid-column>
+                            </ng-container>
+                          </ng-container>
+                        </ng-container>
+                      </kendo-grid>
+                    </div>
+                  </div>
+                  <div class="pr-b-con mt-2">
+                    <h6 class="title"><i class="icon-diamond"></i> Available Stone</h6>
+                    <div class="grid-wrap">
+                      <kendo-grid [data]="priceAnalyticsAvailable" [resizable]="true">
+                        <ng-container *ngIf="stoneAnalysisfields.length > 0">
+                          <ng-container *ngFor="let field of stoneAnalysisfields">
+                            <ng-container
+                              *ngIf="field.isSelected && field.propertyName != 'fDiscount' && field.propertyName != 'orderDate'">
+                              <kendo-grid-column [width]="field.width" [editor]="field.editor!"
+                                [field]="field.propertyName" [title]="field.title">
+                                <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'days'">
+                                  {{dataItem.holdDays + dataItem.availableDays}}
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Diameter'">
+                                  <span>{{dataItem.measurement.length}} - {{dataItem.measurement.width}} x
+                                    {{dataItem.measurement.height}}</span>
+                                </ng-template>
+                                <!-- <ng-template kendoGridCellTemplate let-dataItem
+                                  *ngIf="field.propertyName == 'availableDays'">
+                                  {{utilityService.calculateAvailableDateDiff(dataItem.marketSheetDate, dataItem.holdDays, dataItem.isHold == true ? dataItem.holdDate : null)}}
+                                </ng-template> -->
+                              </kendo-grid-column>
+                            </ng-container>
+                          </ng-container>
+                        </ng-container>
+                      </kendo-grid>
+                    </div>
+                  </div>
+                  <div class="pr-b-con mt-2">
+                    <h6 class="title"><i class="icon-diamond"></i> Sold Stone</h6>
+                    <div class="grid-wrap">
+                      <kendo-grid [data]="priceAnalyticsSold" [resizable]="true">
+                        <ng-container *ngIf="stoneAnalysisfields.length > 0">
+                          <ng-container *ngFor="let field of stoneAnalysisfields">
+                            <ng-container *ngIf="field.isSelected">
+                              <kendo-grid-column [width]="field.width" [editor]="field.editor!"
+                                [field]="field.propertyName" [title]="field.title">
+                                <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'days'">
+                                  {{dataItem.holdDays + dataItem.availableDays}}
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem
+                                  *ngIf="field.propertyName == 'fDiscount'">
+                                  {{getSalesFDisc(dataItem.id)}}
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem
+                                  *ngIf="field.propertyName == 'orderDate'">
+                                  {{getSalesOrderDate(dataItem.id) | date: 'dd/MM/yyyy'}}
+                                </ng-template>
+                                <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Diameter'">
+                                  <span>{{dataItem.measurement.length}} - {{dataItem.measurement.width}} x
+                                    {{dataItem.measurement.height}}</span>
+                                </ng-template>
+                                <!-- <ng-template kendoGridCellTemplate let-dataItem
+                                  *ngIf="field.propertyName == 'availableDays'">
+                                  {{utilityService.calculateAvailableDateDiff(dataItem.marketSheetDate, dataItem.holdDays, dataItem.isHold == true ? dataItem.holdDate : null)}}
+                                </ng-template> -->
+                              </kendo-grid-column>
+                            </ng-container>
+                          </ng-container>
+                        </ng-container>
+                      </kendo-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="closeAnalyticsDialog()"><i class="icon-close"></i>Close</button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div (document:keydown.esc)="closeAnalyticsDialog()"></div>
+</div>
+<!-- #endregion -->
+
+
+<!-- #region GridConfig For Stone Analysis Modal -->
+<ng-container *ngIf="isSAGridConfig">
+  <app-gridconfiguration [fields]="stoneAnalysisfields" [pageName]="'StoneAnalysis'" [gridName]="'StoneAnalysisGrid'"
+    [gridConfigId]="stoneAnalysisGridConfig ? stoneAnalysisGridConfig.id : undefined" (toggle)="isSAGridConfig=$event"
+    (ChildEvent)="setNewSAGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->

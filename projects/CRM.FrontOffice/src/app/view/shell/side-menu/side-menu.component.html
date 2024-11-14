@@ -1,0 +1,51 @@
+<div class="left-sidebar">
+  <div class="sidebar_toggle d-none">
+    <i class="icon-leftall ms-auto"></i>
+  </div>
+  <div class="profile_block">
+    <div class="proImg_wrap" kendoTooltip position="right" title="{{fxCredentials.fullName}}">
+      <img [src]="Profilephoto && Profilephoto != '' ? Profilephoto : 'commonAssets/images/profile.png'"
+        alt="profile-photo">
+    </div>
+    <div>
+      <span class="sup_name">{{fxCredentials.fullName}}</span><br>
+      <span class="sub_name">{{fxCredentials.origin}}</span>
+    </div>
+  </div>
+  <div class="menu">
+    <!-- [routerLinkActiveOptions]="{exact: true}" -->
+    <ul class="sidebar-menu">
+      <ng-container *ngFor="let item of menuItems;let i= index">
+        <li *ngIf="item.isAdmin">
+          <a *ngIf="item.subMenu.length==0 " [routerLink]="item.menuUrl" (contextmenu)="onRightClick(item)"
+            routerLinkActive="active">
+            <div class="menuIcon_wrap">
+              <i [class]="'menu_icon icon-'+item.menuImage"></i>
+            </div>
+            <span>{{item.menuName}}</span>
+          </a>
+          <a *ngIf="item.subMenu.length > 0" (click)="toggleClass(i)" (contextmenu)="toggleClass(i)" class="menu-toggle"
+            [ngClass]="{'active-arrow': item.expand,'active': item.expand}">
+            <div class="menuIcon_wrap">
+              <i [class]="'menu_icon icon-'+item.menuImage"></i>
+            </div>
+            <span>{{item.menuName}}</span>
+            <span class="drop-arrow"><i class="icon-plus"></i></span>
+          </a>
+          <div *ngIf="item.subMenu.length > 0" class="submenu-wrap" [ngStyle]="{'display': item.expand?'block':'none'}">
+            <ul class="submenu">
+              <ng-container *ngFor="let subItem of item.subMenu">
+                <li *ngIf="subItem.isAdmin">
+                  <a [routerLink]="subItem.subMenuUrl" (contextmenu)="onSubRightClick(subItem)"
+                    routerLinkActive="active">
+                    <span>{{subItem.subMenuName}}</span>
+                  </a>
+                </li>
+              </ng-container>
+            </ul>
+          </div>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>

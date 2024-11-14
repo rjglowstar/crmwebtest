@@ -1,0 +1,92 @@
+<!-- #region My Appoint -->
+<div class="sideDetails appointment_sec" [ngClass]="{'active': isComponentActive }">
+	<form name="form" #AppointmentForm="ngForm" *ngIf="isComponentActive">
+		<div class="sideDet_head">
+			<h6>{{'BasicText.My Appointment'| translate}}</h6>
+			<div class="btntop_group">
+				<button kendoButton (click)="onSubmit(AppointmentForm,true)" [disabled]="!AppointmentForm.valid">
+					<i class="icon-save"></i>{{'BasicText.Save'| translate}}
+				</button>
+				<button kendoButton class="active" (click)="closeMyAppointDialog()">
+					<i class="icon-menu_close"></i>
+				</button>
+			</div>
+		</div>
+		<div class="sideDet_body">
+			<div class="i-form">
+				<div class="appointment_grid">
+					<div class="form-data">
+						<input type="text" placeholder="{{'BasicText.First Name'| translate}}*" class="k-input"
+							name="name" #name="ngModel" [(ngModel)]="appointmentObj.customer.name" [disabled]="true">
+					</div>
+					<div class="form-data">
+						<input type="text" placeholder="Last Name*" class="k-input" name="name" #name="ngModel"
+							[(ngModel)]="appointmentObj.customer.name" [disabled]="true">
+					</div>
+					<div class="form-data">
+						<input type="text" placeholder="{{'BasicText.Email Address'| translate}}*" class="k-input"
+							name="email" #email="ngModel" [(ngModel)]="appointmentObj.customer.email" [disabled]="true">
+					</div>
+					<div class="form-data">
+						<input type="text" placeholder="{{'BasicText.Company Name'| translate}}*" class="k-input"
+							name="companyName" #companyName="ngModel" [(ngModel)]="appointmentObj.customer.companyName"
+							[disabled]="true">
+					</div>
+					<div class="form-data">
+						<input type="text" placeholder="{{'BasicText.Mobile No'| translate}}" class="k-input"
+							name="mobile" #mobile="ngModel" [(ngModel)]="appointmentObj.customer.mobile"
+							[disabled]="true">
+					</div>
+					<div class="form-data">
+						<input type="text" placeholder="{{'BasicText.Address'| translate}}" name="sendTo"
+							class="k-input" name="city" #city="ngModel" [(ngModel)]="appointmentObj.customer.city"
+							[disabled]="true">
+					</div>
+					<div class="form-data">
+						<kendo-datepicker placeholder="{{'BasicText.Date'| translate}}*" calendarType="classic"
+							name="appointmentDate" #appointmentDate="ngModel" format="dd/MM/yyyy"
+							[(ngModel)]="appointmentObj.appointmentDate" required></kendo-datepicker>
+					</div>
+					<div class="form-data">
+						<kendo-timepicker placeholder="{{'BasicText.Select Time'| translate}}*" name="appointmentTime"
+							#appointmentTime="ngModel" [(ngModel)]="appointmentObj.appointmentTime" required>
+						</kendo-timepicker>
+					</div>
+					<div class="form-data">
+						<textarea name="cc" placeholder="{{'BasicText.Purpose'| translate}}*"
+							class="k-textarea w-100 h-auto" cols="4" rows="5" style="height: 40px;" name="purpose"
+							#purpose="ngModel" [(ngModel)]="appointmentObj.purpose" required></textarea>
+					</div>
+				</div>
+			</div>
+			<!-- #region Grid Stone-->
+			<div class="gridtbl_wrap grid-setting">
+				<kendo-grid *ngIf="gridViewStone" [data]="gridViewStone" class="grid-ui" [sortable]="true"
+					[resizable]="true" [groupable]="false">
+					<ng-container *ngIf="fieldsStone && fieldsStone.length > 0">
+						<ng-container *ngFor="let field of fieldsStone">
+							<ng-container *ngIf="field.isSelected">
+								<kendo-grid-column [width]="field.width" [field]="field.propertyName"
+									[title]="field.title"
+									[headerStyle]="field.propertyName === 'Action' ? { 'justify-content': 'center' } : {}">
+									<ng-template kendoGridCellTemplate let-dataItem
+										*ngIf="field.propertyName == 'stoneId'">
+										{{dataItem}}
+									</ng-template>
+									<ng-template kendoGridCellTemplate let-dataItem
+										*ngIf="field.propertyName == 'Action'">
+										<div style="text-align: center;">
+											<i class="icon-delete_new" style="font-size: 20px;"
+												(click)="deletestone(dataItem)"></i>
+										</div>
+									</ng-template>
+								</kendo-grid-column>
+							</ng-container>
+						</ng-container>
+					</ng-container>
+				</kendo-grid>
+			</div>
+		</div>
+	</form>
+</div>
+<!-- #endregion My Appointment-->

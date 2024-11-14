@@ -1,0 +1,176 @@
+.edinv .modal-body {
+    padding: 7px 0;
+}
+
+.c-modal.edinv .account-content {
+    margin: initial;
+    border: initial;
+    padding: 0 15px;
+    height: auto;
+}
+
+.edinv h5.modal-title i {
+    padding-right: 8px;
+}
+
+.edinv.c-modal .form-data textarea {
+    width: 100%;
+    height: 30px;
+}
+
+.edinv h6.title {
+    margin: initial;
+    padding: initial;
+    border: indigo;
+}
+
+.edinv .i-edit button.active {
+    transform: rotate(90deg);
+}
+
+.edinv .i-edit button {
+    border: initial;
+    background-color: transparent;
+    transform: rotate(-90deg);
+    padding: initial;
+}
+
+.edinv i {
+    font-size: 12px;
+}
+
+.edinv .modal-title i,
+.edinv .i-title i {
+    font-size: 16px;
+}
+
+.searhis_wrap {
+    display: grid;
+    grid-gap: 10px;
+}
+
+.searhis_scroll {
+    height: calc(100vh - 161px) !important;
+    overflow-y: auto;
+}
+
+.searhis_wrap .seaHis_box {
+    background: #F9F9F9;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #d3d3d3;
+    line-height: 1;
+}
+
+.searhis_wrap .seahis_head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.seahis_title {
+    color: #4d4d4d;
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.seahis_date {
+    font-size: 12px;
+    color: #89899B;
+}
+
+.searchBtn {
+    background-color: #EBEBEB;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin-left: auto;
+}
+
+.seahis_count span {
+    font-weight: 600;
+}
+
+.searchBtn .seahis_btn {
+    display: inline-block;
+    margin-left: 10px;
+    color: #212529;
+}
+
+.searchBtn .seahis_btn i {
+    font-size: 14px;
+}
+
+.searhis_tag {
+    font-size: 12px;
+    font-weight: 400;
+    margin-top: 10px;
+    max-height: 187px;
+    overflow-y: auto;
+}
+
+.searhis_tag::-webkit-scrollbar {
+    width: 4px !important;
+}
+
+.searhis_tag ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.searhis_tag li {
+    background-color: #fff;
+    border: 1px solid #E6E6E6;
+    color: #212529;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.searhis_tag span:nth-child(1) {
+    font-weight: 600;
+}
+
+.seaHis_box:hover {
+    border-color: #787878;
+    background-color: #d3d3d350;
+}
+
+.seaHis_box:hover .searchBtn {
+    background-color: #787878;
+    color: #fff;
+}
+
+.seaHis_box:hover .searchBtn i {
+    color: #fff;
+}
+
+.seaHis_box:hover .searchBtn .count-div {
+    font-size: 12px;
+    background: #cccccc;
+    padding: 3px 5px;
+    border-radius: 5px;
+}
+
+.seacHis_footer {
+    border-top: 1px solid #F6F6F6;
+    min-height: 44px;
+    padding-top: 10px;
+}
+
+.seacHis_footer .lodMore_btn:hover {
+    background-color: #787878 !important;
+}
+
+.seacHis_footer .totalHis_items {
+    font-size: 14px;
+    color: #4d4d4d;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+}

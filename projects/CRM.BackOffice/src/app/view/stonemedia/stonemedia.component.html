@@ -1,0 +1,384 @@
+<title>Stone Media</title>
+<section class="sto-media-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Stone Media</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton title="Update Media" [disabled]="mySelection.length == 0"
+                (click)="updateMediaStatus()">
+                <i class="icon-clear"></i>
+              </button>
+              <button kendoButton title="Grid Configuration" (click)="openGridConfigDialog()">
+                <i class="icon-gridconfig"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <ng-container *ngIf="!gridView">
+              <div class="k-grouping-header k-grouping-header-flex">
+                <div class="k-indicator-container">
+                  <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                  </kendo-skeleton>
+                </div>
+              </div>
+              <table *ngIf="fields && fields.length > 0" class="w-100">
+                <th *ngFor="let field of fields">{{field.propertyName}}</th>
+                <tr *ngFor="let field of skeletonArray">
+                  <td *ngFor="let field of fields">
+                    <kendo-skeleton shape="text" animation="wave" [width]="75" [height]="40">
+                    </kendo-skeleton>
+                  </td>
+                </tr>
+              </table>
+            </ng-container>
+
+            <!-- #region Grid-->
+            <kendo-grid [data]="gridView" class="grid-ui upload-grid" [sortable]="true"
+              (selectionChange)="selectedRowChange($event)" [selectable]="selectableSettings" [resizable]="true"
+              [kendoGridSelectBy]="'stoneId'" [(selectedKeys)]="mySelection" [reorderable]="true" [pageSize]="pageSize"
+              [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)" [kendoGridSelectBy]="'stoneId'">
+
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngIf="fields && fields.length > 0">
+                  <ng-container *ngFor="let field of fields">
+                    <ng-container *ngIf="field.isSelected">
+                      <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+
+                        <ng-template *ngIf="isShowCheckBoxAll && field.title == 'Checkbox'" kendoGridHeaderTemplate>
+                          <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox"
+                            (selectAllChange)="selectAllInventories($event)" />
+                          <label class="k-checkbox-label" for="headerCheckbox"></label>
+                        </ng-template>
+                        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                          *ngIf="field.title == 'Checkbox'">
+                          <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                            id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                          <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                          </label>
+                        </ng-template>
+
+                        <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title =='Certificate'">
+                          <a href="{{dataItem.certificateUrl}}" target="_blank"><img
+                              src="commonAssets/images/pdf_doc.png" alt="diamond image"
+                              class="img-thumbnail d-block m-auto stone-certi"></a>
+                        </ng-template>
+
+                        <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title =='ImageGroup'">
+                          <div class="sm-sli">
+                            <div class="del-product" (click)="openStoneGalleryDailog(dataItem)">
+                              <i class="icon-view"></i>
+                            </div>
+                            <splide>
+                              <splide-slide>
+                                <a><img src="{{dataItem.imageUrl}}" alt="Image" class="img-thumbnail"
+                                    (click)="openStoneGalleryDailog(dataItem)"></a>
+                              </splide-slide>
+                              <splide-slide>
+                                <a><img src="{{dataItem.arrowBlackImageUrl}}" alt="Arrow Black BG" class="img-thumbnail"
+                                    (click)="openStoneGalleryDailog(dataItem)"></a>
+                              </splide-slide>
+                              <splide-slide>
+                                <a><img src="{{dataItem.heartBlackImageUrl}}" alt="Heart Black BG" class="img-thumbnail"
+                                    (click)="openStoneGalleryDailog(dataItem)"></a>
+                              </splide-slide>
+                              <splide-slide>
+                                <a><img src="{{dataItem.asetWhiteImageUrl}}" alt="Aset White BG" class="img-thumbnail"
+                                    (click)="openStoneGalleryDailog(dataItem)"></a>
+                              </splide-slide>
+                              <splide-slide>
+                                <a><img src="{{dataItem.idealWhiteImageUrl}}" alt="Ideal White BG" class="img-thumbnail"
+                                    (click)="openStoneGalleryDailog(dataItem)"></a>
+                              </splide-slide>
+                              <splide-slide>
+                                <a><img src="{{dataItem.officeLightBlackImageUrl}}" alt="Office Light Black BG"
+                                    class="img-thumbnail" (click)="openStoneGalleryDailog(dataItem)"></a>
+                              </splide-slide>
+                            </splide>
+                          </div>
+                        </ng-template>
+
+                        <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title =='Image'">
+                          <a href="{{dataItem.imageUrl}}" target="_blank">
+                            <img src="{{dataItem.imageUrl}}" alt="Image" class="img-thumbnail"></a>
+                        </ng-template>
+
+                        <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title =='Video'">
+                          <a href="{{dataItem.videoUrl}}" target="_blank">
+                            <video class="video-fluid z-depth-1" height="90px" width="120px" autoplay loop muted>
+                              <source src="{{dataItem.videoUrl}}" type="video/mp4" />
+                            </video></a>
+                        </ng-template>
+
+                        <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title =='Arrow Black'">
+                          <a href="{{dataItem.arrowBlackImageUrl}}" target="_blank"><img
+                              src="{{dataItem.arrowBlackImageUrl}}" alt="Arrow Black BG" class="img-thumbnail"></a>
+                        </ng-template>
+
+                        <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title =='Heart Black'">
+                          <a href="{{dataItem.heartBlackImageUrl}}" target="_blank"><img
+                              src="{{dataItem.heartBlackImageUrl}}" alt="Heart Black BG" class="img-thumbnail"></a>
+                        </ng-template>
+
+                        <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title =='Aset White'">
+                          <a href="{{dataItem.asetWhiteImageUrl}}" target="_blank"><img
+                              src="{{dataItem.asetWhiteImageUrl}}" alt="Aset White BG" class="img-thumbnail"></a>
+                        </ng-template>
+
+                        <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title =='Ideal White'">
+                          <a href="{{dataItem.idealWhiteImageUrl}}" target="_blank"><img
+                              src="{{dataItem.idealWhiteImageUrl}}" alt="Ideal White BG" class="img-thumbnail"></a>
+                        </ng-template>
+
+                        <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title =='Office Light Black'">
+                          <a href="{{dataItem.officeLightBlackImageUrl}}" target="_blank"><img
+                              src="{{dataItem.officeLightBlackImageUrl}}" alt="Office Light Black BG"
+                              class="img-thumbnail"></a>
+                        </ng-template>
+
+                      </kendo-grid-column>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+            <!-- #endregion -->
+          </div>
+        </div>
+      </div>
+      <!-- #region Filter-->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #StockSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="dpicker">From</label>
+                    <kendo-datepicker calendarType="classic" name="from" id="from" format="dd/MM/yyyy"
+                      [(ngModel)]="inventorySearchCriteriaObj.fromDate" #from="ngModel">
+                    </kendo-datepicker>
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="dpicker">To</label>
+                    <kendo-datepicker calendarType="classic" name="to" id="to" format="dd/MM/yyyy"
+                      [(ngModel)]="inventorySearchCriteriaObj.toDate" #to="ngModel">
+                    </kendo-datepicker>
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="f-name">Stone Id</label>
+                    <input type="text" name="filterStoneId" [(ngModel)]="stoneId" #filterStoneId="ngModel"
+                      id="filterStoneId" autocomplete="off">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="f-name">Certificate No</label>
+                    <input type="text" name="filtercertificateNo" [(ngModel)]="certificateNo"
+                      #filtercertificateNo="ngModel" id="filtercertificateNo" autocomplete="off">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                    <label>Kapan</label>
+                    <kendo-multiselect name="kapan" class="customselect" [data]="listKapan"
+                      [(ngModel)]="inventorySearchCriteriaObj.kapan" [textField]="'name'" [valueField]="'name'"
+                      [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                      [kendoMultiSelectSummaryTag]="0" [filterable]="true"
+                      (valueChange)="onMultiSelectChange(listKapan, inventorySearchCriteriaObj.kapan)"
+                      (open)="filterKapanChk = onOpenDropdown(listKapan,filterKapanChk, inventorySearchCriteriaObj.kapan)"
+                      (filterChange)="filterKapan = handleFilter($event);listKapan = filterKapanDropdownSearch(allKapan, $event, inventorySearchCriteriaObj.kapan)">
+                      <ng-template kendoComboBoxHeaderTemplate>
+                        <div class="single k-widget k-header form-data mb-0 p-2 position-relative c-fil">
+                          <input type="text" name="filterKapan" id="filterKapan" [(ngModel)]="filterKapan"
+                            placeholder="Search Kapan">
+                          <span class="k-icon k-i-search"></span>
+                        </div>
+                        <div class="single k-widget k-header ps-2">
+                          <input type="checkbox" class="k-checkbox me-1" name="filterKapanChk" id="filterKapanChk"
+                            title="Select All" [(ngModel)]="filterKapanChk"
+                            (change)="inventorySearchCriteriaObj.kapan = checkAllListItems(listKapan,filterKapanChk, inventorySearchCriteriaObj.kapan)">
+                          <label>Select All</label>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom"
+                          [title]="getCommaSapratedString(inventorySearchCriteriaObj.kapan, true)">
+                          {{getCommaSapratedString(inventorySearchCriteriaObj.kapan)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                    <label>Status</label>
+                    <div class="form-data mul-select">
+                      <kendo-multiselect name="status" class="customselect" [data]="listStatus"
+                        [(ngModel)]="inventorySearchCriteriaObj.status" [textField]="'name'" [valueField]="'name'"
+                        [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                        [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                        (valueChange)="utilityService.onMultiSelectChange(listStatus, inventorySearchCriteriaObj.status)">
+                        <ng-template kendoComboBoxHeaderTemplate>
+                          <div class="dropdown-header single k-widget k-header">
+                            <span class="temp-single">Select Status</span>
+                          </div>
+                        </ng-template>
+                        <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                          <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                          <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                        </ng-template>
+                        <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                          <span kendoTooltip position="bottom"
+                            [title]="utilityService.getCommaSapratedString(inventorySearchCriteriaObj.status, true)">
+                            {{utilityService.getCommaSapratedString(inventorySearchCriteriaObj.status)}}
+                          </span>
+                        </ng-template>
+                      </kendo-multiselect>
+                    </div>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Weight</label>
+                    <div class="size grid">
+                      <div class="mn-size">
+                        <input type="text" name="filterMinSize" [(ngModel)]="firstCaratFrom" placeholder="Min Weight"
+                          #filterMinSize="ngModel" id="filterMinSize" (keypress)="utilityService.floatOnly($event)">
+                      </div>
+                      <div class="mx-size">
+                        <input type="text" name="filterMaxSize" [(ngModel)]="firstCaratTo" placeholder="Max Weight"
+                          #filterMaxSize="ngModel" id="filterMaxSize" (keypress)="utilityService.floatOnly($event)">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                    <ng2-tri-state-checkbox name="filterIsLabNC" [(ngModel)]="inventorySearchCriteriaObj.isLabNC"
+                      #filterIsLabNC="ngModel">
+                    </ng2-tri-state-checkbox>
+                    <label for="a-employee" class="me-3">Is Lab NC</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                    <ng2-tri-state-checkbox name="filterIsCertificate"
+                      [(ngModel)]="inventorySearchCriteriaObj.isCertificateMediaExists" #filterIsCerti="ngModel">
+                    </ng2-tri-state-checkbox>
+                    <label for="a-employee" class="me-3">Certificate Media Exists</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                    <ng2-tri-state-checkbox name="filterIsImage"
+                      [(ngModel)]="inventorySearchCriteriaObj.isImageMediaExists" #filterIsImg="ngModel">
+                    </ng2-tri-state-checkbox>
+                    <label for="a-employee" class="me-3">Image Media Exists</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action"
+                      (click)="StockSearchForm.form.valid && onFilterSubmit(StockSearchForm)">
+                      <i class="icon-search"></i>Search</button>
+                    <button class="btn btn-action" (click)="copyToClipboard()"><i class="icon-search"></i>
+                      Copy To Clipboard</button>
+                    <button (click)="clearFilter(StockSearchForm)" class="btn btn-action"><i
+                        class="icon-clear"></i>Clear</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- #endregion -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="StockSearchForm.form.valid && onFilterSubmit(StockSearchForm)"><i
+              class="icon-search"></i></button></li>
+
+        <li><button (click)="clearFilter(StockSearchForm);"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- #region Dailog -->
+<div class="modal c-modal diam-details st-gallery" role="dialog" data-keyboard="false" *ngIf="isStoneGallery">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-diamond"></i>Stone Id : {{StoneNo}}</h5>
+        <button type="button" class="close" (click)="closeStoneGalleryDailog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="d-content">
+          <div class="slider">
+            <div class="wibox-wrap">
+              <div class="splide">
+                <splide>
+                  <splide-slide>
+                    <a href="{{selectedStoneMedia.certificateUrl}}" target="_blank"><img
+                        src="commonAssets/images/gia.png" alt="diamond images" class="img-thumbnail"></a>
+                  </splide-slide>
+                  <splide-slide>
+                    <a href="{{selectedStoneMedia.imageUrl}}" target="_blank"><img src="{{selectedStoneMedia.imageUrl}}"
+                        alt="Image" class="img-thumbnail"></a>
+                  </splide-slide>
+                  <splide-slide>
+                    <a href="{{selectedStoneMedia.arrowBlackImageUrl}}" target="_blank"><img
+                        src="{{selectedStoneMedia.arrowBlackImageUrl}}" alt="Arrow Black BG" class="img-thumbnail"></a>
+                  </splide-slide>
+                  <splide-slide>
+                    <a href="{{selectedStoneMedia.heartBlackImageUrl}}" target="_blank"><img
+                        src="{{selectedStoneMedia.heartBlackImageUrl}}" alt="Heart Black BG" class="img-thumbnail"></a>
+                  </splide-slide>
+                  <splide-slide>
+                    <a href="{{selectedStoneMedia.asetWhiteImageUrl}}" target="_blank"><img
+                        src="{{selectedStoneMedia.asetWhiteImageUrl}}" alt="Aset White BG" class="img-thumbnail"></a>
+                  </splide-slide>
+                  <splide-slide>
+                    <a href="{{selectedStoneMedia.idealWhiteImageUrl}}" target="_blank"><img
+                        src="{{selectedStoneMedia.idealWhiteImageUrl}}" alt="Ideal White BG" class="img-thumbnail"></a>
+                  </splide-slide>
+                  <splide-slide>
+                    <a href="{{selectedStoneMedia.officeLightBlackImageUrl}}" target="_blank"><img
+                        src="{{selectedStoneMedia.officeLightBlackImageUrl}}" alt="Office Light Black BG"
+                        class="img-thumbnail"></a>
+                  </splide-slide>
+                </splide>
+              </div>
+              <div class="wi-info">
+                <h6 class="wi-title">{{selectedStoneMedia.stoneId}}</h6>
+                <ul>
+                  {{StoneDescription}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- #endregion -->
+
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'StoneMedia'" [gridName]="'StoneMediaGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+
+<div (document:keydown.esc)="closeStoneGalleryDailog()"></div>
+<div kendoDialogContainer></div>

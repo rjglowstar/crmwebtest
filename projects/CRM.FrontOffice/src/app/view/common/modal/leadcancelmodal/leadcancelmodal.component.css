@@ -1,0 +1,80 @@
+.whole-cell {
+    display: block;
+    margin: -30px;
+    margin-top: -26px;
+    padding: 20px 30px;
+    width: auto;
+}
+
+.whole-cell i {
+    position: relative;
+    z-index: 10;
+}
+
+.whole-cell i:hover~.arrow-tooltip {
+    display: block;
+}
+
+.rejected-offer-grid .k-numerictextbox .k-select {
+    display: none;
+}
+
+.cancel-grids {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+    background: #f4f4f4;
+    border: 1px dashed;
+    padding: 0 8px;
+}
+
+.cancel-grids span {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+}
+
+.cart-info tr td:nth-child(1) {
+    font-size: 11px;
+}
+
+.cart-info tr td {
+    padding: 0px;
+}
+
+.ms-config .o-edit {
+    display: flex;
+}
+
+.ms-config .o-edit i {
+    margin-right: initial;
+}
+
+.ms-config .in-block .o-edit {
+    padding: initial;
+    align-items: center;
+}
+
+.ms-config button.btn {
+    padding: 0 0 0 5px;
+    vertical-align: middle;
+}
+
+.ms-config .flex.in-block {
+    padding: 5px;
+    border: 0;
+    background-color: #dddddd;
+    height: 30px;
+    margin-bottom: initial;
+}
+
+.ms-config .o-title h6.title{
+    margin: initial;
+    border-bottom: 0;
+    font-size: 14px;
+}
+
+@media (max-width:650px) {
+    .cancel-grids {
+        grid-template-columns: 1fr;
+    }
+}

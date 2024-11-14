@@ -1,0 +1,47 @@
+/* 404 css start */
+.pnot-wrap {
+    position  : absolute;
+    top       : 50%;
+    left      : 50%;
+    transform : translate(-50%, -50%);
+    text-align: center;
+}
+
+.pnot-wrap button.c-btn {
+    max-width: 180px;
+}
+
+.pnot-text {
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+    position       : relative;
+}
+
+.pnot-text h1 {    
+    font-weight: 600;
+    font-size  : 160px;
+    padding    : 0 10px;
+}
+
+h1.fadeInLeft {
+    animation: fadeInLeft 3s both;
+}
+
+h1.fadeInTop {
+    animation: fadeInTop 1s both;
+}
+
+h1.fadeInRight {
+    animation: fadeInRight 3s both;
+}
+
+button.fadeInBottom {
+    animation: fadeInBottom 1s both;
+}
+
+.pnot-wrap img {
+    animation: spin 1s infinite;
+}
+
+/* 404 css end */

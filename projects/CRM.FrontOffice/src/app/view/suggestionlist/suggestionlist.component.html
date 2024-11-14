@@ -1,0 +1,40 @@
+<title>Suggestions</title>
+<section class="omaster-wrap">
+    <div class="content_wrap">
+        <div class="e-left w-100">
+            <div class="breadcrumb">
+                <div class="breadcrumb-left">
+                    <ul>
+                        <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                        <li class="breadcrumb-item active" aria-current="page">Suggestion</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="content_box">
+                <div class="grid-wrap">
+                    <!--  Kendo Grid Start-->
+                    <kendo-grid #orgGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+                        [groupable]="true" [sortable]="true" [pageSize]="pageSize" [skip]="skip"
+                        [selectable]="selectableSettings" [group]="groups" [pageable]="true"
+                        [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'" (pageChange)="pageChange($event)"
+                        (groupChange)="groupChange($event)">
+                        <ng-container *ngIf="fields && fields.length > 0">
+                            <ng-container *ngFor="let field of fields">
+                                <ng-container *ngIf="field.isSelected">
+                                    <kendo-grid-column [width]="field.width" [field]="field.propertyName"
+                                        [title]="field.title">
+                                        <ng-template kendoGridCellTemplate let-dataItem
+                                            *ngIf="field.propertyName=='createdDate'">
+                                            <span>{{dataItem.createdDate | date: 'dd-MM-yyyy'}}</span>
+                                        </ng-template>
+                                    </kendo-grid-column>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </kendo-grid>
+                    <!--  Kendo Grid End-->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,20 @@
+{
+  "apiIdentityUrl": "http://localhost:4592/api/",
+  "apiBackOfficeFileUploadUrl": "http://localhost:26962/api/",
+  "apiFrontOfficeFileUploadUrl": "http://localhost:26962/api/",
+  "apiPricingUrl": "https://pricingapi.diamanto.co/api/",
+  "notificationSocketUrl": "ws://localhost:65246/",
+  "notificationBaseUrl": "http://localhost:65246/",
+  "backOffliceBaseUrl": "http://localhost:25264/api/",
+  "frontOfficeBaseUrl": "http://localhost:42483/api/",
+  "imageURL": "https://diamdna.azureedge.net/imaged/{stoneId}/still.jpg",
+  "videoURL": "https://diamdna.azureedge.net/Vision360.html?d={stoneId}&sr=-30&s=30",
+  "certiURL": "https://diamdna.azureedge.net/reports/{certiNo}.pdf#zoom=150",
+  "otherImageBaseURL": "https://diamdna.azureedge.net/imaged/{stoneId}",
+  "proposalUrl": "http://localhost:9200/",
+  "invStoneArrowBlackImageUrl": "/Arrow_Black_BG.jpg",
+  "invStoneHeartBlackImageUrl": "/Heart_Black_BG.jpg",
+  "invStoneAsetWhiteImageUrl": "/Aset_white_bg.jpg",
+  "invStoneIdealWhiteImageUrl": "/ideal_white_bg.jpg",
+  "invStoneOfficeLightBlackImageUrl": "/office_light_black_bg.jpg"
+}

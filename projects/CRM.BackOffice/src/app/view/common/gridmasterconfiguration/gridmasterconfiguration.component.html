@@ -1,0 +1,33 @@
+<div class="c-modal a-config">
+    <h6 class="p_title pb_5">
+        <span>Grid Configuration</span>
+        <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons" class="btnGroup_gap">
+            <button kendoButton title="Save Setting" (click)="savePageGridSettings()">
+                <i class="icon-save pe-0"></i>
+            </button>
+        </kendo-buttongroup>
+    </h6>
+    <div class="gridConf_grid">
+        <div class="left">
+            <h6>Manage Pages</h6>
+            <div class="company-list">
+                <ul class="s-company">
+                    <li *ngFor="let item of gridConfigPageList;let i=index" (click)="activePageClick(item,i)">
+                        <a href="javascript:void(0)" [ngClass]="{ 'active': item.isActive}">{{item.pageName}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="right p-2" dragula="GridMasterConfiguration" [(dragulaModel)]="gridFields">
+            <div *ngFor="let field of gridFields" class="list-item">
+                <label for="">{{field.title}}</label>
+                <div class="item-right">
+                    <input type="text" #cWidth="ngModel" name="cWidth" id="cWidth" [(ngModel)]="field.width"
+                        (keypress)="utilityService.numberOnly($event)">
+                    <kendo-switch class="k-widget k-switch-off" #isSelected="ngModel" name="isSelected" id="g-chk"
+                        [(ngModel)]="field.isSelected"></kendo-switch>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

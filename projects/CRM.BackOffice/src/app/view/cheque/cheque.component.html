@@ -1,0 +1,174 @@
+<title>Cheque Data</title>
+<section class="logistics-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Cheque Data</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton (click)="updateCleared()" title="Cleared"><i class="icon-check"></i>
+              </button>
+              <button kendoButton (click)="updateReturn()" title="Return"><i class="icon-delete"></i>
+              </button>
+              <button kendoButton (click)="updateReset()" title="Reset"><i class="icon-clear"></i>
+              </button>
+              <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                  class="icon-gridconfig"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <ng-container *ngIf="!gridView">
+              <div class="k-grouping-header k-grouping-header-flex">
+                <div class="k-indicator-container">
+                  <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                  </kendo-skeleton>
+                </div>
+              </div>
+              <table *ngIf="fields && fields.length > 0" class="w-100 skeleton-tbl">
+                <ng-container *ngFor="let field of fields">
+                  <th *ngIf="field.isSelected">
+                    {{field.title}}
+                  </th>
+                </ng-container>
+                <tr *ngFor="let field of skeletonArray">
+                  <ng-container *ngFor="let fieldItem of fields">
+                    <td *ngIf="fieldItem.isSelected">
+                      <kendo-skeleton shape="text" animation="wave" [width]="94" [height]="40">
+                      </kendo-skeleton>
+                    </td>
+                  </ng-container>
+                </tr>
+              </table>
+            </ng-container>
+
+            <kendo-grid #companyGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings" [group]="groups"
+              (groupChange)="groupChange($event)" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+              (pageChange)="pageChange($event)" [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.propertyName == 'checkbox'">
+                        <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                          id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'returnDate'">
+                        {{dataItem.returnDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'clearedDate'">
+                        {{dataItem.clearedDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'chequeDate'">
+                        {{dataItem.chequeDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.propertyName == 'isReturn'">
+                        <input type="checkbox" class="k-checkbox" id="checkbox-isReturn-{{rowIndex}}"
+                          [checked]="dataItem.isReturn" [disabled]="true" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.propertyName == 'isCleared'">
+                        <input type="checkbox" class="k-checkbox" id="checkbox-isCleared-{{rowIndex}}"
+                          [checked]="dataItem.isCleared" [disabled]="true" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #SearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">From Ledger</label>
+                    <kendo-combobox [data]="listPartyItems" [kendoDropDownFilter]="filterSettings" [textField]="'text'"
+                      [valueField]="'value'" name="party" #party="ngModel" [valuePrimitive]="true"
+                      [(ngModel)]="searchCriteria.fromLedgerId">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">To Ledger</label>
+                    <kendo-combobox [data]="listPartyItems" [kendoDropDownFilter]="filterSettings" [textField]="'text'"
+                      [valueField]="'value'" name="party" #party="ngModel" [valuePrimitive]="true"
+                      [(ngModel)]="searchCriteria.toLedgerId">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Cheque No</label>
+                    <input type="text" id="" name="name" [(ngModel)]="searchCriteria.chequeNo" #name="ngModel">
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Transaction No</label>
+                    <input type="text" id="" name="name" [(ngModel)]="searchCriteria.transactionNo" #name="ngModel">
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label class="lbl">Cheque From Date</label>
+                    <kendo-datepicker calendarType="classic" name="fDate" #fDate="ngModel" format="dd/MM/yyyy"
+                      [(ngModel)]="searchCriteria.chequeFromDate" required></kendo-datepicker>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label class="lbl">Cheque To Date</label>
+                    <kendo-datepicker calendarType="classic" name="tDate" #tDate="ngModel" format="dd/MM/yyyy"
+                      [(ngModel)]="searchCriteria.chequeToDate" required></kendo-datepicker>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" title="search" (click)="onFilterSubmit(SearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button class="btn btn-action" title="clear" (click)="clearFilter(SearchForm)">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- #region Mobile filter section -->
+      <div class="f-btn" [ngClass]="{'active': filterFlag}">
+        <ul>
+          <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+          <li><button (click)="onFilterSubmit(SearchForm)">
+              <i class="icon-search"></i></button></li>
+          <li><button (click)="clearFilter(SearchForm)">
+              <i class="icon-clear"></i></button></li>
+        </ul>
+      </div>
+      <!-- #endregion -->
+    </div>
+  </div>
+</section>
+
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'ChequeReconciliation'" [gridName]="'ChequeReconciliationGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+
+<div kendoDialogContainer></div>

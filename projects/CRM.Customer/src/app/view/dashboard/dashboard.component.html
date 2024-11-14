@@ -1,0 +1,789 @@
+<section class="dash_wrap">
+    <div class="box_bg w_100 counter_grid">
+        <div class="count_box" routerLink="/searchresult">
+            <div class="icon_wrap">
+                <img src="../assets/images/svg/search_Diamond.svg" class="img-fluid">
+            </div>
+            <div>
+                <p>{{"BasicText.Search Diamond"| translate}}</p>
+                <h2>{{this.custDashObj.searchDiamondCount}}</h2>
+            </div>
+        </div>
+        <div class="count_box" (click)="goToAiRecommendedDiamond()">
+            <div class="icon_wrap">
+                <img src="../assets/images/svg/ic_Recommended.svg" class="img-fluid">
+            </div>
+            <div>
+                <p>AI Recommendations</p>
+                <h2>{{this.custDashObj.aiRecommendedCount}}</h2>
+            </div>
+        </div>
+        <div class="count_box" (click)="goToSearchResultNewDiamond()">
+            <div class="icon_wrap">
+                <img src="../assets/images/svg/new_Arrival.svg" class="img-fluid">
+            </div>
+            <div>
+                <p>{{"BasicText.New Arrival"| translate}}</p>
+                <h2>{{this.custDashObj.newArrivalCount}}</h2>
+            </div>
+        </div>
+        <div class="count_box" routerLink="/myorder">
+            <div class="icon_wrap">
+                <img src="../assets/images/svg/ic_Order.svg" class="img-fluid">
+            </div>
+            <div>
+                <p>{{"BasicText.Order"| translate}}</p>
+                <h2>{{this.custDashObj.orderCount}}</h2>
+            </div>
+        </div>
+        <div class="count_box" routerLink="/watchlist">
+            <div class="icon_wrap">
+                <img src="../assets/images/svg/ic_Watchlist.svg" class="img-fluid">
+            </div>
+            <div>
+                <p>{{"BasicText.Watchlist Item"| translate}}</p>
+                <h2>{{this.watchlistItemCount}}</h2>
+            </div>
+        </div>
+        <!-- <div class="count_box" routerLink="/event"> -->
+        <div class="count_box">
+            <div class="icon_wrap">
+                <img src="../assets/images/svg/active_Event.svg" class="img-fluid">
+            </div>
+            <div>
+                <p>{{"BasicText.Active Event"| translate}}</p>
+                <h2>{{this.activeEventCount}}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="column_wrapper splr" [ngClass]="bidActive ? 'bidShow' : ''">
+        <div class="box_bg sale_res">
+            <div class="box_head">
+                <h6 class="b_title">Sales Representative</h6>
+            </div>
+            <div class="content_wrap">
+                <div class="salesWrap">
+                    <div class="saller_img">
+                        <!-- <img src="../../../assets/images/Saller_dummy_Img.png" class="img-fluid"> -->
+                        <img alt="img" src="commonAssets/images/userprofile.png" class="img-fluid"
+                            *ngIf="!Profilephoto" />
+                        <img alt="img"
+                            [src]="Profilephoto && Profilephoto != '' ? Profilephoto : 'commonAssets/images/userprofile.png'"
+                            class="img-fluid" />
+                    </div>
+                    <div>
+                        <p class="sel_name">{{this.customerObj.seller.name}}</p>
+                        <p class="sel_des">{{'BasicText.Relationship Manager (RM) Details'| translate}}</p>
+
+                        <ul class="sel_contact">
+                            <li>
+                                <a [href]="'tel:' + this.customerObj.seller.mobile">
+                                    <i class="icon-cell_phone"></i>
+                                    {{this.customerObj.seller.mobile}}
+                                </a>
+                            </li>
+                            <li>
+                                <a [href]="'tel:' + this.customerObj.seller.mobile">
+                                    <i class="icon-telephone"></i>
+                                    {{this.companyMobileNumber}}
+                                </a>
+                            </li>
+                            <li>
+                                <a [href]="'mailto:' + this.customerObj.seller.email">
+                                    <i class="icon-email"></i>
+                                    {{this.customerObj.seller.email}}
+                                </a>
+                            </li>
+                        </ul>
+
+                        <ul class="soc_media">
+                            <ng-container *ngFor="let field of this.custDashObj.sellerSocialMedias">
+                                <li
+                                    *ngIf="field.provider.providerName !== undefined && field.provider.providerName =='WhatsApp' ">
+                                    <a href="https://wa.me/{{field.mobileNumber}}" target="_blank">
+                                        <i class="icon-whatsapp"></i>
+                                    </a>
+                                </li>
+                                <li
+                                    *ngIf="field.provider.providerName !== undefined && field.provider.providerName =='WeChat' ">
+                                    <a href="weixin://dl/chat?{{field.profileName}}" target="_blank">
+                                        <i class="icon-wechat"></i>
+                                    </a>
+                                </li>
+                                <li
+                                    *ngIf="field.provider.providerName !== undefined && field.provider.providerName =='Skype'">
+                                    <a href="skype:{{field.profileName}}?chat" target="_blank">
+                                        <i class="icon-skype"></i>
+                                    </a>
+                                </li>
+                                <li
+                                    *ngIf="field.provider.providerName !== undefined && field.provider.providerName =='Telegram'">
+                                    <a href="https://t.me/{{field.profileName}}" target="_blank">
+                                        <i class="icon-telegramIcon"></i>
+                                    </a>
+                                </li>
+                            </ng-container>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box_bg bid_sec p-0" *ngIf="bidActive">
+            <div class="content_wrap">
+                <div class="bid_details">
+                    <h2>E - BID is {{!isBidEnded ? 'Live' : 'Ended'}}</h2>
+                    <h3>{{stoneTotalCount}} Stones</h3>
+                    <h4>Ends in</h4>
+                    <div class="count_down">
+                        <div class="count"><span>{{ bidTimer.days }}</span>DAYS</div>
+                        <div class="count"><span>{{ bidTimer.hours }}</span>HOURS</div>
+                        <div class="count"><span>{{ bidTimer.minutes }}</span>MINUTES</div>
+                        <div class="count"><span>{{ bidTimer.seconds }}</span>SECONDS</div>
+                    </div>
+                    <a class="checkNow_btn" routerLink="/ebiding">Check Now</a>
+                </div>
+                <div class="img_wrap">
+                    <picture>
+                        <!-- <source srcset="../assets/images/bigBg.png" media="(max-width: 575px)"> -->
+                        <!-- <source srcset="../assets/images/bigBg.png" media="(max-width: 600px)"> -->
+                        <source srcset="../assets/images/bigBg-mob.png" media="(max-width: 991px)">
+                        <img src="../assets/images/bigBg.png" class="img-fluid">
+                    </picture>
+                </div>
+            </div>
+        </div>
+        <div class="box_bg bgCorner vowChart">
+            <div class="box_head">
+                <h6 class="b_title">{{'BasicText.VOW (Volume Of Week)'| translate}}</h6>
+                <div class="d-flex align-items-center">
+                    <i class="icon-info_new" (click)="openWvdBannerDialog(true)"></i>
+                    <div class="cornerTop tab_btns">
+                        <span>
+                            {{'BasicText.Complete'| translate}} {{100 - vowPercentage}}%
+                            {{'BasicText.for reach'| translate}} {{'BasicText.Level'| translate}} {{vowLevel +1}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="content_wrap">
+                <div class="vow_wrap">
+                    <div class="chart_grid">
+                        <div>
+                            <div class="vw_grid d-flex align-items-start w-100">
+                                <div class="vw_label">{{'BasicText.Total Purchased 7 days'| translate}} :
+                                    <span>${{vowTotalAmount}}</span>
+                                </div>
+                                <div class="vw_label">{{'BasicText.Eligible VOW'| translate}} :
+                                    <span>{{eligibleWVD}}%</span>
+                                </div>
+                            </div>
+                            <ul class="vowProgress_bar"
+                                [style.grid-template-columns]="'repeat(auto-fill, minmax(119px, calc(100% / ' + this.schemeDetails.length + ')))'">
+                                <li [ngClass]="vowLevel==i+1  ?  'active' : ''"
+                                    *ngFor="let item of schemeDetails; index as i">
+                                    ${{item.from}} <br> To <br> ${{item.to}}
+                                    <span>{{item.discount}}%</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="circleChart_wrap">
+                            <div class="gauge-container">
+                                <kendo-arcgauge [value]="vowPercentage" [transitions]="true" class="w-100"
+                                    [colors]="[{ from: 0, to: 100, color: '#0c4875' }]">
+                                    <kendo-arcgauge-scale [reverse]="false" [startAngle]="0" [endAngle]="180"
+                                        rangePlaceholderColor="#cbe9f5" [rangeSize]="32" rangeLineCap="butt">
+                                    </kendo-arcgauge-scale>
+                                </kendo-arcgauge>
+                                <div class="gauge-center-text">
+                                    {{ vowPercentage }}%
+                                </div>
+                            </div>
+                            <div class="count_down grey">
+                                <div class="count"><span>{{ vowDayTimer.days }}</span>DAYS</div>
+                                <div class="count"><span>{{ vowDayTimer.hours }}</span>HOURS</div>
+                                <div class="count"><span>{{ vowDayTimer.minutes }}</span>MINUTES</div>
+                                <div class="count"><span>{{ vowDayTimer.seconds }}</span>SECONDS</div>
+                            </div>
+                        </div>
+                        <div class="info_label">
+                            <i class="icon-info_new"></i>Spend ${{ ((toLeastAmount - vowTotalAmount) + 1) | number:
+                            '1.2-2' }} within next
+                            {{vowDaysLeft}} days to get {{nextEligibleWVD}}% Volume discount
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box_bg featureStone bgCorner">
+            <div class="box_head">
+                <h6 class="b_title">Featured Stone</h6>
+                <div class="tab_btns cornerTop">
+                    <span (click)="featuredSelectTab(1)" [class.active]="featureTab === 1">{{"BasicText.New Arrival"|
+                        translate}}</span>
+                    <span (click)="featuredSelectTab(2)" [class.active]="featureTab === 2">AI Recommendations</span>
+                </div>
+            </div>
+            <div class="content_wrap h_sm">
+                <ng-container *ngIf="featureTab === 1">
+                    <swiper [config]="feaStoneSlider" class="feaStone_slider">
+                        <ng-template swiperSlide *ngFor="let item of this.newDiamonds">
+                            <div class="featureStone_grid" (click)="openDiamonddetailSidebar(item)">
+                                <div class="stone_img">
+                                    <img [src]="item.imageURL" alt="New Arrival stone">
+                                </div>
+                                <div class="stone_details">
+                                    <p class="stone_id">{{item.stoneId}}</p>
+                                    <ul class="stone_para">
+                                        <li><span>Shape</span>{{item.shape}}</li>
+                                        <li><span>Weight</span>{{item.weight}}</li>
+                                        <li><span>Color</span>{{item.color}}</li>
+                                        <li><span>Clarity</span>{{item.clarity}}</li>
+                                        <li><span>Cut</span>{{item.cut}}</li>
+                                        <li><span>Polish</span>{{item.polish}}</li>
+                                        <li><span>Symmetry</span>{{item.symmetry}}</li>
+                                        <li><span>Fl.</span>{{item.fluorescence}}</li>
+                                        <li><span>Lab</span>{{item.lab}}</li>
+                                        <li><span>P.Disc</span> {{(item.price.discount??0).toFixed(2)}}</li>
+                                        <li><span>P.NetA.</span>{{item.price.netAmount}}</li>
+                                        <li><span>P.Rap</span>{{item.price.rap}}</li>
+                                    </ul>
+                                    <h3 class="stone_price">Amount($) <span>{{item.price.netAmount}}</span></h3>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </swiper>
+                </ng-container>
+                <ng-container *ngIf="featureTab === 2">
+                    <swiper [config]="feaStoneSlider" class="feaStone_slider">
+                        <ng-template swiperSlide *ngFor="let item of this.aiRecommDiamonds">
+                            <div class="featureStone_grid tabStrip" (click)="openDiamonddetailSidebar(item)">
+                                <div class="stone_img">
+                                    <img [src]="getSanitizeImage(item)" alt="wishlist_product">
+                                </div>
+                                <div class="stone_details">
+                                    <p class="stone_id">{{item.stoneId}}</p>
+                                    <ul class="stone_para">
+                                        <li><span>Shape</span>{{item.shape}}</li>
+                                        <li><span>Weight</span>{{item.weight}}</li>
+                                        <li><span>Color</span>{{item.color}}</li>
+                                        <li><span>Clarity</span>{{item.clarity}}</li>
+                                        <li><span>Cut</span>{{item.cut}}</li>
+                                        <li><span>Polish</span>{{item.polish}}</li>
+                                        <li><span>Symmetry</span>{{item.symmetry}}</li>
+                                        <li><span>Fl.</span>{{item.fluorescence}}</li>
+                                        <li><span>Lab</span>{{item.lab}}</li>
+                                        <li><span>P.Disc</span> {{(item.price.discount??0).toFixed(2)}}</li>
+                                        <li><span>P.NetA.</span>{{item.price.netAmount}}</li>
+                                        <li><span>P.Rap</span>{{item.price.rap}}</li>
+                                    </ul>
+                                    <h3 class="stone_price">Amount($) <span>{{item.price.netAmount}}</span></h3>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </swiper>
+                </ng-container>
+            </div>
+        </div>
+        <div class="box_bg saveInfo bgCorner fullScroll">
+            <div class="box_head">
+                <h6 class="b_title">{{"BasicText.Saved Info"| translate}}</h6>
+                <div class="tab_btns cornerTop">
+                    <span (click)="saveInfoSelectTab(1)" [class.active]="saveInfoTab === 1">
+                        {{"BasicText.Saved Searches"| translate}}</span>
+                    <span (click)="saveInfoSelectTab(2)" [class.active]="saveInfoTab === 2">
+                        {{'BasicText.Search History'| translate}}</span>
+                </div>
+            </div>
+            <div class="content_wrap h_sm">
+                <ng-container *ngIf="saveInfoTab === 1">
+                    <div class="saveInfo_grid tabOver_wrap">
+                        <div class="saved_data" *ngFor="let item of saveSearchData;let i = index;">
+                            <div>
+                                <p class="save_title">{{item.name}}</p>
+                                <div class="dtl_sp" (click)="goToSearchResultSaveSearch(item.name)">
+                                    <span
+                                        *ngIf="item.query.weightRanges !== undefined && item.query.weightRanges.length > 0">
+                                        {{item.query.weightRanges[0].minWeight + " - " +
+                                        item.query.weightRanges[0].maxWeight}}
+                                        {{item.query.weightRanges.length > 1 ?
+                                        item.query.weightRanges[1].minWeight + " - " +
+                                        item.query.weightRanges[1].maxWeight : ''}}
+                                        {{item.query.weightRanges.length > 2 ?
+                                        item.query.weightRanges[2].minWeight + " - " +
+                                        item.query.weightRanges[2].maxWeight : ''}}
+                                        {{item.query.weightRanges.length > 3 ?
+                                        item.query.weightRanges[3].minWeight + " - " +
+                                        item.query.weightRanges[3].maxWeight : ''}},
+                                    </span>
+                                    <span *ngIf="item.query.shape !== undefined && item.query.shape.length > 0">
+                                        {{item.query.shape.join(', ')}}, </span>
+                                    <span *ngIf="item.query.color !== undefined && item.query.color.length > 0">
+                                        {{item.query.color.join(', ')}}, </span>
+                                    <span *ngIf="item.query.clarity !== undefined && item.query.clarity.length > 0">
+                                        {{item.query.clarity.join(', ')}}, </span>
+                                    <span *ngIf="item.query.cut !== undefined && item.query.cut.length > 0">
+                                        {{item.query.cut.join(', ')}}, </span>
+                                    <span *ngIf="item.query.polish !== undefined && item.query.polish.length > 0">
+                                        {{item.query.polish.join(', ')}}, </span>
+                                    <span *ngIf="item.query.symm !== undefined && item.query.symm.length > 0">
+                                        {{item.query.symm.join(', ')}}, </span>
+                                    <span *ngIf="item.query.flour !== undefined && item.query.flour.length > 0">
+                                        {{item.query.flour.join(', ')}}, </span>
+                                    <span *ngIf="item.query.amount !== undefined && item.query.amount != 0">
+                                        {{item.query.amount}},
+                                    </span>
+                                    <span *ngIf="item.query.lab !== undefined && item.query.lab.length > 0">
+                                        {{item.query.lab.join(', ')}}, </span>
+                                    <span *ngIf="item.query.brown !== undefined && item.query.brown.length > 0">
+                                        {{item.query.brown.join(', ')}}, </span>
+                                    <span *ngIf="item.query.milky !== undefined && item.query.milky.length > 0">
+                                        {{item.query.milky.join(', ')}}, </span>
+                                    <span *ngIf="item.query.green !== undefined && item.query.green.length > 0">
+                                        {{item.query.green.join(', ')}}, </span>
+                                    <span *ngIf="item.query && item.query.location && item.query.location.length > 0">
+                                        {{item.query.location.join(', ')}}, </span>
+                                    <span *ngIf="item.query.sideBlack !== undefined && item.query.sideBlack.length > 0">
+                                        {{item.query.sideBlack.join(', ')}}, </span>
+                                    <span
+                                        *ngIf="item.query.centerBlack !== undefined && item.query.centerBlack.length > 0">
+                                        {{item.query.centerBlack.join(', ')}},
+                                    </span>
+                                    <span *ngIf="item.query.hNA !== undefined && item.query.hNA.length > 0">
+                                        {{item.query.hNA.join(', ')}},
+                                    </span>
+                                    <span *ngIf="item.query.eyeClean !== undefined && item.query.eyeClean.length > 0">
+                                        {{item.query.eyeClean.join(', ')}},
+                                    </span>
+                                    <span *ngIf="item.query.kToS !== undefined && item.query.kToS.length > 0">
+                                        {{item.query.kToS.join(', ')}},
+                                    </span>
+                                    <span *ngIf="item.query.bowtie !== undefined && item.query.bowtie.length > 0">
+                                        {{item.query.bowtie.join(', ')}},
+                                    </span>
+                                    <span
+                                        *ngIf="item.query.fromRatio !== undefined || item.query.toRatio !== undefined">
+                                        {{item.query.fromRatio}} - {{item.query.toRatio}},
+                                    </span>
+                                    <span
+                                        *ngIf="item.query.fromDepth !== undefined || item.query.toDepth !== undefined">
+                                        {{item.query.fromDepth}} - {{item.query.toDepth}}, </span>
+                                    <span
+                                        *ngIf="item.query.fromTable !== undefined || item.query.toTable !== undefined">{{item.query.fromTable}}
+                                        - {{item.query.toTable}}, </span>
+                                    <span
+                                        *ngIf="item.query.fromLength !== undefined || item.query.toLength !== undefined">{{item.query.fromLength}}
+                                        - {{item.query.toLength}}, </span>
+                                    <span
+                                        *ngIf="item.query.fromWidth !== undefined || item.query.toWidth !== undefined">{{item.query.fromWidth}}
+                                        - {{item.query.toWidth}}, </span>
+                                    <span
+                                        *ngIf="item.query.fromHeight !== undefined || item.query.toHeight !== undefined">{{item.query.fromHeight}}
+                                        - {{item.query.toHeight}}, </span>
+                                </div>
+                            </div>
+                            <div class="icon_wrap">
+                                <i class="icon-edit_new" (click)="editSaveSearchInfo(item.name)"></i>
+                                <i class="icon-delete_new" (click)="removeSaveSearch(item.name)"></i>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="saveInfoTab === 2">
+                    <div class="saveInfo_grid searchHis" *ngIf="parseCustomerSearchHistory.length > 0">
+                        <div class="saved_data" *ngFor="let item of parseCustomerSearchHistory;let i = index;">
+                            <div>
+                                <p class="save_title">
+                                    {{item.createdDate | date: 'dd/MM/yyyy | hh:mm a'}}
+                                </p>
+                                <div class="dtl_sp">
+                                    <span *ngIf="item.searchQuery.StoneIds?.length > 0">
+                                        {{item.searchQuery.StoneIds?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.CertificateNos?.length > 0">
+                                        {{item.searchQuery.CertificateNos?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.WeightRanges?.length > 0"><label
+                                            *ngFor="let w of item.searchQuery.WeightRanges; let i = index">{{w.MinWeight}}
+                                            to
+                                            {{w.MaxWeight}}{{item.searchQuery.WeightRanges?.length == (i+1) ? "" :
+                                            "&nbsp;|&nbsp;"}}</label>
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Shape?.length > 0">
+                                        {{item.searchQuery.Shape?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Carat?.length > 0">
+                                        {{item.searchQuery.Carat}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Clarity?.length > 0">
+                                        {{item.searchQuery.Clarity?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Color?.length > 0">
+                                        {{item.searchQuery.Color?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Flour?.length > 0">
+                                        {{item.searchQuery.Flour?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Cut?.length > 0">
+                                        {{item.searchQuery.Cut?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Polish?.length > 0">
+                                        {{item.searchQuery.Polish?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Symm?.length > 0">
+                                        {{item.searchQuery.Symm?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Lab?.length > 0">
+                                        {{item.searchQuery.Lab?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Brown?.length > 0">
+                                        {{item.searchQuery.Brown?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Milky?.length > 0">
+                                        {{item.searchQuery.Milky?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Green?.length > 0">
+                                        {{item.searchQuery.Green?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Location?.length > 0">
+                                        {{item.searchQuery.Location?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.SideBlack?.length > 0">
+                                        {{item.searchQuery.SideBlack?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.CenterBlack?.length > 0">
+                                        {{item.searchQuery.CenterBlack?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.HNA?.length > 0">
+                                        {{item.searchQuery.HNA?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.EyeClean?.length > 0">
+                                        {{item.searchQuery.EyeClean?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.NaturalOnPavillion?.length > 0">
+                                        {{item.searchQuery.NaturalOnPavillion?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.NaturalOnGirdle?.length > 0">
+                                        {{item.searchQuery.NaturalOnGirdle?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.NaturalOnTable?.length > 0">
+                                        {{item.searchQuery.NaturalOnTable?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.OpenCrown?.length > 0">
+                                        {{item.searchQuery.OpenCrown?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.OpenGirdle?.length > 0">
+                                        {{item.searchQuery.OpenGirdle?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.OpenPavilion?.length > 0">
+                                        {{item.searchQuery.OpenPavilion?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.OpenTable?.length > 0">
+                                        {{item.searchQuery.OpenTable?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.SideBlack?.length > 0">
+                                        {{item.searchQuery.SideBlack?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.SideWhite?.length > 0">
+                                        {{item.searchQuery.SideWhite?.join(', ')}}
+                                    </span>
+                                    <span *ngIf="item.searchQuery.Bowtie?.length > 0">
+                                        {{item.searchQuery.Bowtie?.join(', ')}}
+                                    </span>
+                                    <span
+                                        *ngIf="item.searchQuery.FromCrownAngle != null || item.searchQuery.ToCrownAngle != null">
+                                        {{item.searchQuery.FromCrownAngle}} - {{item.searchQuery.ToCrownAngle}}
+                                    </span>
+                                    <span
+                                        *ngIf="item.searchQuery.FromCrownHeight != null || item.searchQuery.ToCrownHeight != null">
+                                        {{item.searchQuery.FromCrownHeight}} - {{item.searchQuery.ToCrownHeight}}
+                                    </span>
+                                    <span
+                                        *ngIf="item.searchQuery.FromPavilionAngle != null || item.searchQuery.ToPavilionAngle != null">
+                                        {{item.searchQuery.FromPavilionAngle}} -
+                                        {{item.searchQuery.ToPavilionAngle}}
+                                    </span>
+                                    <span
+                                        *ngIf="item.searchQuery.FromPavilionDepth != null || item.searchQuery.ToPavilionDepth != null">
+                                        {{item.searchQuery.FromPavilionDepth}} -
+                                        {{item.searchQuery.ToPavilionDepth}}
+                                    </span>
+                                    <span
+                                        *ngIf="item.searchQuery.FromRatio != null || item.searchQuery.ToRatio != null">
+                                        {{item.searchQuery.FromRatio}} - {{item.searchQuery.ToRatio}}
+                                    </span>
+                                    <span
+                                        *ngIf="item.searchQuery.FromDepth != null || item.searchQuery.ToDepth != null">
+                                        {{item.searchQuery.FromDepth}} - {{item.searchQuery.ToDepth}}
+                                    </span>
+                                    <span
+                                        *ngIf="item.searchQuery.FromTable != null || item.searchQuery.ToTable != null">
+                                        {{item.searchQuery.FromTable}} - {{item.searchQuery.ToTable}}
+                                    </span>
+                                    <span
+                                        *ngIf="item.searchQuery.FromLength != null || item.searchQuery.ToLength != null">
+                                        {{item.searchQuery.FromLength}} - {{item.searchQuery.ToLength}}
+                                    </span>
+                                    <span
+                                        *ngIf="item.searchQuery.FromWidth != null || item.searchQuery.ToWidth != null">
+                                        {{item.searchQuery.FromWidth}} - {{item.searchQuery.ToWidth}}
+                                    </span>
+                                    <span
+                                        *ngIf="item.searchQuery.FromHeight != null || item.searchQuery.ToHeight != null">
+                                        {{item.searchQuery.FromHeight}} - {{item.searchQuery.ToHeight}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="icon_wrap">
+                                <i class="icon-searchNew" (click)="goToSearchResultHistory(item.id)"></i>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="box_bg watchList fullScroll">
+            <div class="box_head">
+                <h6 class="b_title">{{"BasicText.Watchlist Item"| translate}}</h6>
+            </div>
+            <div class="content_wrap h_sm">
+                <div class="watchList_grid new" *ngFor="let item of listWatchListResponse" routerLink="/watchlist">
+                    <div>
+                        <div class="stone_icon" [ngClass]="getClassObject(item.inventoryDetail.shape)">
+                        </div>
+                        <p class="stone_id">{{item.inventoryDetail.stoneId}}</p>
+                    </div>
+                    <div class="grid_sp">
+                        <div class="subDet_grid">
+                            <div class="flex_box gridview">
+                                <span>{{item.inventoryDetail.weight}}</span>
+                                <span>{{item.inventoryDetail.color}}</span>
+                                <span>{{item.inventoryDetail.clarity}}</span>
+                                <span>{{item.inventoryDetail.cut}}-{{item.inventoryDetail.polish}}-{{item.inventoryDetail.symmetry}}</span>
+                            </div>
+                            <div class="flex_box">
+                                <span>{{item.inventoryDetail.fluorescence}}</span>
+                                <span class="loc" kendoTooltip position="left"
+                                    [title]="item.inventoryDetail.location">{{item.inventoryDetail.location}}</span>
+                            </div>
+                        </div>
+                        <div class="subDet_grid">
+                            <div class="flex_box">
+                                <span>{{item.inventoryDetail.lab}}</span>
+                                <span>{{item.inventoryDetail.measurement.length}} *
+                                    {{item.inventoryDetail.measurement.width}} *
+                                    {{item.inventoryDetail.measurement.height}}</span>
+                            </div>
+                            <div class="flex_box">
+                                <span>Disc%</span>
+                                <span>{{item.inventoryDetail.price.discount}}</span>
+                            </div>
+                            <div class="flex_box">
+                                <span>T:{{item.inventoryDetail.measurement.table}}</span>
+                                <span>D:{{item.inventoryDetail.measurement.depth}}</span>
+                                <span>Rap:{{item.inventoryDetail.price.rap}}</span>
+                            </div>
+                            <div class="flex_box">
+                                <span>$/Ct</span>
+                                <span>{{item.inventoryDetail.price.perCarat}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box_bg allShape_grid">
+        <swiper [config]="allShapeSlider" class="allShape_slider">
+            <ng-template swiperSlide>
+                <div class="dia_box" (click)="navigateToSearchResult('RBC')">
+                    <div class="icon_wrap"><img src="../assets/images/svg/roundDiamond.svg" class="img-fluid"></div>
+                    <div>
+                        <p>Timeless Brilliance</p>
+                        <h2>Round</h2>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template swiperSlide>
+                <div class="dia_box" (click)="navigateToSearchResult('CMB')">
+                    <div class="icon_wrap"><img src="../assets/images/svg/cushionDiamond.svg" class="img-fluid"></div>
+                    <div>
+                        <p>Vintage Charm</p>
+                        <h2>Cushion</h2>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template swiperSlide>
+                <div class="dia_box" (click)="navigateToSearchResult('EM')">
+                    <div class="icon_wrap"><img src="../assets/images/svg/emeraldDiamond.svg" class="img-fluid"></div>
+                    <div>
+                        <p>Rectangular Allure</p>
+                        <h2>Emerald</h2>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template swiperSlide>
+                <div class="dia_box" (click)="navigateToSearchResult('SMB')">
+                    <div class="icon_wrap"><img src="../assets/images/svg/pricessDiamond.svg" class="img-fluid"></div>
+                    <div>
+                        <p>Square Elegance</p>
+                        <h2>Princess</h2>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template swiperSlide>
+                <div class="dia_box" (click)="navigateToSearchResult('PB')">
+                    <div class="icon_wrap"><img src="../assets/images/svg/pearDiamond.svg" class="img-fluid"></div>
+                    <div>
+                        <p>Teardrop Perfection</p>
+                        <h2>Pear</h2>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template swiperSlide>
+                <div class="dia_box" (click)="navigateToSearchResult('MB')">
+                    <div class="icon_wrap"><img src="../assets/images/svg/marquiseDiamond.svg" class="img-fluid"></div>
+                    <div>
+                        <p>Sleek Sophistication</p>
+                        <h2>Marquise</h2>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template swiperSlide>
+                <div class="dia_box" (click)="navigateToSearchResult('OB')">
+                    <div class="icon_wrap"><img src="../assets/images/svg/ovalDiamond.svg" class="img-fluid"></div>
+                    <div>
+                        <p>Elongated Glamour</p>
+                        <h2>Oval</h2>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template swiperSlide>
+                <div class="dia_box" (click)="navigateToSearchResult('HB')">
+                    <div class="icon_wrap"><img src="../assets/images/svg/heartDiamond.svg" class="img-fluid"></div>
+                    <div>
+                        <p>Heartfelt Romance</p>
+                        <h2>Heart</h2>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template swiperSlide>
+                <div class="dia_box" (click)="navigateToSearchResult('CCRMB')">
+                    <div class="icon_wrap"><img src="../assets/images/svg/radiantDiamond.svg" class="img-fluid"></div>
+                    <div>
+                        <p>Radiant Luxury</p>
+                        <h2>Radiant</h2>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template swiperSlide>
+                <div class="dia_box" (click)="navigateToSearchResult('MTRIB')">
+                    <div class="icon_wrap"><img src="../assets/images/svg/triangleDiamond.svg" class="img-fluid"></div>
+                    <div>
+                        <p>Modern Marvel</p>
+                        <h2>Triangle</h2>
+                    </div>
+                </div>
+            </ng-template>
+        </swiper>
+    </div>
+
+    <div class="column_wrapper splr column3" [ngClass]="bidActive ? 'bidCls' : ''">
+        <div class="aboutUs box_bg bgCorner">
+            <div class="box_head">
+                <h6 class="b_title">About {{companyName}}</h6>
+                <ng-container *ngIf="companyName == 'Glowstar'">
+                    <a href="/aboutus" target="_blank" class="cornerTop tab_btns"><span>Know More</span></a>
+                </ng-container>
+            </div>
+            <div class="content_wrap">
+                <div class="about_wrap">
+                    <div class="about_img">
+                        <img [imgLazyLoad]="aboutusPath" />
+                    </div>
+                    <div class="about_des">
+                        <p>
+                            At {{companyName}}, we're revolutionizing the diamond industry by ensuring every facet of
+                            your
+                            diamond's journey is transparent. From its origin deep within the Earth to adorning your
+                            most cherished moments, our commitment to traceability means each {{companyName}} diamond is
+                            not
+                            just a symbol of elegance, but also of ethical sourcing and trust. Embrace your sparkle
+                            knowing it's conflict-free and rooted in integrity. Glow with {{companyName}} - where every
+                            shine
+                            tells a story of transparency and trust.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="csrActivity box_bg bgCorner" *ngIf="companyName == 'Glowstar'">
+            <div class="box_head">
+                <h6 class="b_title">CSR Activity</h6>
+                <ng-container *ngIf="companyName == 'Glowstar'">
+                    <a href="/csr" target="_blank" class="cornerTop tab_btns"><span>Know More</span></a>
+                </ng-container>
+            </div>
+            <div class="content_wrap">
+                <div class="img_wrap">
+                    <img src="../assets/images/csrActi_img.jpg" class="img-fluid">
+                </div>
+            </div>
+        </div>
+        <div class="upComEvent box_bg bgCorner">
+            <div class="box_head">
+                <h6 class="b_title">Upcoming Events</h6>
+                <ng-container *ngIf="companyName == 'Glowstar'">
+                    <a href="/eventnew" target="_blank" class="cornerTop tab_btns"><span>Know More</span></a>
+                </ng-container>
+            </div>
+            <div class="content_wrap">
+                <swiper [config]="upComingEvent" class="upComing_slider">
+                    <ng-template swiperSlide *ngFor="let item of eventObj">
+                        <div class="img_wrap">
+                            <img src="{{item.eventLogo}}" class="img-fluid">
+                        </div>
+                        <div class="event_venue">{{item.eventName}}</div>
+                        <div class="eventGrid_wrap">
+                            <div class="e_date txt">
+                                <span>Date</span>{{ getFormattedDateRange(item.startDate, item.endDate) }}
+                            </div>
+                            <div class="e_booth txt">
+                                <span>Booth No.</span>{{item.boothNo}}
+                            </div>
+                        </div>
+                    </ng-template>
+                </swiper>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<div class="modal dialog-wvd" data-keyboard="false" data-backdrop="static" *ngIf="isWvdDialog" data-lenis-prevent>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{'BasicText.VOW (Volume Of Week)'| translate}}</h5>
+                <button type="button" class="close" (click)="closeWvdBannerDialog()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="dialog-body vow-modal">
+                    <img alt="banner" class="img-responsive img-fluid" src="../assets/images/VOWEN_NEW.jpg"
+                        *ngIf="language != 'ch'" />
+                    <img alt="banner" class="img-responsive img-fluid" src="../assets/images/VOWCH.png"
+                        *ngIf="language == 'ch'" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- #region Diamond Deatils Sidebar -->
+<ng-container *ngIf="showDiamonddetailModal">
+    <app-diamonddetail [diamonddetailFlag]="showDiamonddetailModal" [stoneId]="invItemObj.stoneId"
+        (closeDialog)="showDiamonddetailModal=$event" [isWatchList]="true"></app-diamonddetail>
+</ng-container>
+<!-- #endregion -->

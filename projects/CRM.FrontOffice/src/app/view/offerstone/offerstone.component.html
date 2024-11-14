@@ -1,0 +1,409 @@
+<title>Offer Stone</title>
+<section class="stockmain-wrap">
+
+  <div class="content_wrap">
+    <div class="e-left w-100">
+      <div class="breadcrumb bg">
+        <div class="breadcrumb-left">
+          <ul>
+            <li class="breadcrumb-item">
+              <a href="#"></a><i class="icon-home"></i>Home
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Offer Stone</li>
+          </ul>
+        </div>
+        <div class="breadcrumb-right pe-0">
+          <kendo-buttongroup kendotooltip="" position="bottom" ng-reflect-position="bottom" role="group" dir="ltr"
+            tabindex="0" class="k-button-group">
+            <button kendoButton title="Search" (click)="openSearchDialog()">
+              <i class="icon-search"></i>
+            </button>
+            <button kendoButton title="Grid Config" (click)="openGridConfigDialog()"><i class="icon-gridconfig"></i>
+            </button>
+          </kendo-buttongroup>
+        </div>
+      </div>
+      <div class="content_box">
+        <div class="grid-wrap">
+          <kendo-grid [resizable]="true" [sortable]="true" #invGrid [data]="gridView!" [groupable]="true"
+            [sortable]="true" [sort]="sort" (sortChange)="sortChange($event)" [selectable]="selectableSettings"
+            [group]="groups" (groupChange)="groupChange($event)" [pageable]="true" [kendoGridSelectBy]="'id'"
+            class="rs-grid" [pageSize]="pageSize" [skip]="skip" (pageChange)="pageChange($event)">
+            <ng-container *ngIf="fields && fields.length > 0">
+              <ng-container *ngFor="let field of fields">
+                <ng-container *ngIf="field.isSelected">
+                  <kendo-grid-column [width]="field.width" [editor]="field.editor!" [field]="field.propertyName"
+                    [title]="field.title">
+                    <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'offerDate'">
+                      <span>{{dataItem.offerDate | date: 'dd/MM/yyyy'}}</span>
+                    </ng-template>
+                  </kendo-grid-column>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+            <ng-template kendoGridDetailTemplate let-dataItem>
+              <app-searchdetail [invItemsSearchResult]="dataItem"></app-searchdetail>
+              <ng-template kendoGridNoRecordsTemplate>
+                <span style="text-align: center;display: block">No Records Found</span>
+              </ng-template>
+            </ng-template>
+          </kendo-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- #region Search Filter -->
+  <div class="modal c-modal dialog-lg rorgan addemp" tabindex="-1" role="dialog" data-keyboard="false"
+    data-backdrop="static" *ngIf="isSearchFilter">
+    <form name="form" #filterForm="ngForm" novalidate>
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="main-title">
+            <h5>Search Filter</h5>
+            <button type="button" class="close" (click)="closeSearchDialog()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body search-filter">
+            <!-- Input -->
+            <div class="input-search">
+              <div class="form-data">
+                <label>Ref.No</label>
+              </div>
+              <div class="form-data">
+                <input type="text" class="input-sm form-control text-start" name="stoneId" [(ngModel)]="stoneId"
+                  autocomplete="off" />
+              </div>
+              <div class="form-data">
+                <label>Certi.No.</label>
+              </div>
+              <div class="form-data">
+                <input type="text" class="input-sm form-control text-start" name="certificateNo"
+                  [(ngModel)]="certificateNo" autocomplete="off" />
+              </div>
+
+              <!-- Party -->
+              <div class="form-data">
+                <label>Party</label>
+              </div>
+              <div class="form-data mul-select">
+                <kendo-multiselect name="party" class="customselect" [data]="listCustomer"
+                  [(ngModel)]="offerStoneSearchCriteria.parties" [textField]="'name'" [valueField]="'name'"
+                  [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                  [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                  (valueChange)="utilityService.onMultiSelectChange(listCustomer, offerStoneSearchCriteria.parties)">
+                  <ng-template kendoComboBoxHeaderTemplate>
+                    <div class="dropdown-header single k-widget k-header">
+                      <span class="temp-single">Select Party</span>
+                    </div>
+                  </ng-template>
+                  <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                    <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                    <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                  </ng-template>
+                  <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                    <span kendoTooltip position="bottom"
+                      [title]="utilityService.getCommaSapratedString(offerStoneSearchCriteria.parties, true)">
+                      {{utilityService.getCommaSapratedString(offerStoneSearchCriteria.parties)}}
+                    </span>
+                  </ng-template>
+                </kendo-multiselect>
+              </div>
+
+              <!-- sale By -->
+              <div class="form-data">
+                <label>Sale By</label>
+              </div>
+              <div class="form-data mul-select">
+                <kendo-multiselect name="seller BY" class="customselect" [data]="listSeller"
+                  [(ngModel)]="offerStoneSearchCriteria.sellers" [textField]="'fullName'" [valueField]="'name'"
+                  [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                  [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                  (valueChange)="utilityService.onMultiSelectChange(listSeller, offerStoneSearchCriteria.sellers)">
+                  <ng-template kendoComboBoxHeaderTemplate>
+                    <div class="dropdown-header single k-widget k-header">
+                      <span class="temp-single">Select Status</span>
+                    </div>
+                  </ng-template>
+                  <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                    <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                    <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                  </ng-template>
+                  <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                    <span kendoTooltip position="bottom"
+                      [title]="utilityService.getCommaSapratedString(offerStoneSearchCriteria.sellers, true)">
+                      {{utilityService.getCommaSapratedString(offerStoneSearchCriteria.sellers)}}
+                    </span>
+                  </ng-template>
+                </kendo-multiselect>
+              </div>
+
+              <!-- offer Date -->
+              <div class="form-data">
+                <label>Offer Date</label>
+              </div>
+              <kendo-daterange class="d-flex">
+                <div class="form-data me-2 w-100">
+                  <kendo-datepicker calendarType="classic" format="dd/MM/yyyy"
+                    [(value)]="offerStoneSearchCriteria.fromOfferDate!"
+                    (valueChange)="offerStoneSearchCriteria.fromOfferDate = $event">
+                  </kendo-datepicker>
+                </div>
+                <div class="form-data w-100">
+                  <kendo-datepicker calendarType="classic" format="dd/MM/yyyy"
+                    [(value)]="offerStoneSearchCriteria.toOfferDate!"
+                    (valueChange)="offerStoneSearchCriteria.toOfferDate = $event">
+                  </kendo-datepicker>
+                </div>
+                <kendo-daterange-popup [animate]="false" #popup></kendo-daterange-popup>
+              </kendo-daterange>
+            </div>
+
+            <!-- Shape -->
+            <div class="search-ul mt-2">
+              <div class="grid-1 d-flex align-items-center">
+                <label class="col-form-label"><strong>Shape</strong></label>
+              </div>
+              <div class="grid-1 d-flex flex-wrap" style="grid-column-gap: 8px;">
+                <label class="shape-txt p-0 d-flex justify-content-center align-items-center" for="all"
+                  [ngClass]="{'select': offerStoneSearchCriteria.shapes.length === 0 }"
+                  (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.shapes, 'All')">
+                  <span>All</span>
+                </label>
+                <label *ngFor="let item of allTheShapes" class="shape-txt {{item.displayName.toUpperCase()}}"
+                  for="{{item.name.toUpperCase()}}"
+                  [ngClass]="{'select': offerStoneSearchCriteria.shapes.indexOf(item.name)>-1 }"
+                  (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.shapes, item.name)">
+                  {{item.name}}
+                </label>
+              </div>
+            </div>
+
+            <!-- Weight -->
+            <div class="search-ul  mt-2">
+              <div class="grid-1 d-flex align-items-center">
+                <label class="col-form-label"><strong>Size</strong></label>
+              </div>
+              <div class="grid-1 d-flex justify-content-center">
+                <input class="me-1 input-sm form-control" placeholder="Min Size" [(ngModel)]="FromWeight"
+                  PosDecimal="true" name="minSize1">
+                <input type="text" class="me-2 input-sm form-control" placeholder="Max Size" [(ngModel)]="ToWeight"
+                  PosDecimal="true" name="maxSize1">
+              </div>
+            </div>
+
+            <div class="inv-cps-grid mt-2">
+              <div class="grid-1">
+                <!-- Color -->
+                <div class="search-ul mt-2">
+                  <div class="grid-1 d-flex align-items-center">
+                    <label class="col-form-label"><strong>Color</strong></label>
+                  </div>
+                  <div class="grid-1 d-flex">
+                    <button kendoButton class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.colors.length === 0 }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.colors, 'All')">
+                      <span>All</span>
+                    </button>
+                    <button kendoButton *ngFor="let item of allColors" class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.colors.indexOf(item.name)>-1 }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.colors, item.name)">
+                      {{item.name}}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Clarity -->
+                <div class="search-ul mt-2">
+                  <div class="grid-1 d-flex align-items-center">
+                    <label class="col-form-label"><strong>Clarity</strong></label>
+                  </div>
+                  <div class="grid-1 d-flex">
+                    <button kendoButton class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.clarities.length === 0 }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.clarities  , 'All')">
+                      <span>All</span>
+                    </button>
+                    <button kendoButton *ngFor="let item of allClarities" class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.clarities.indexOf(item.name)>-1 }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.clarities, item.name)">
+                      {{item.name}}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Flour -->
+                <div class="search-ul mt-2">
+                  <div class="grid-1 d-flex align-items-center">
+                    <label class="col-form-label"><strong>Flour</strong></label>
+                  </div>
+                  <div class="grid-1 d-flex">
+                    <button kendoButton class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.flours.length === 0 }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.flours, 'All')">
+                      <span>All</span>
+                    </button>
+                    <button kendoButton *ngFor="let item of allTheFluorescences" class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.flours.indexOf(item.name)>-1 }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.flours, item.name)">
+                      {{item.name}}
+                    </button>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="grid-1">
+                <div class="cps-btn">
+                  <button kendoButton class="pkg-btn" [ngClass]="{'select': selectedCPS === '3EX' }"
+                    (click)="changeCPSData('3EX')">3EX</button>
+                  <button kendoButton class="pkg-btn" [ngClass]="{'select': selectedCPS === '2EX' }"
+                    (click)="changeCPSData('2EX')">2EX</button>
+                  <button kendoButton class="pkg-btn" [ngClass]="{'select': selectedCPS === '3VG' }"
+                    (click)="changeCPSData('3VG')">3VG+</button>
+                  <button kendoButton class="pkg-btn" (click)="changeCPSData('Clear')"><i
+                      class="icon-clear pe-0"></i></button>
+                </div>
+                <!-- Cut -->
+                <div class="search-ul mt-2">
+                  <div class="grid-1 d-flex align-items-center">
+                    <label class="col-form-label"><strong>Cut</strong></label>
+                  </div>
+                  <div class="grid-1 d-flex">
+                    <button kendoButton class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.cuts.length === 0 }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.cuts, 'All');checkCPS();">
+                      <span>All</span>
+                    </button>
+                    <button kendoButton *ngFor="let item of allTheCPS" class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.cuts.indexOf(item.name)>-1 }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.cuts, item.name);checkCPS();">
+                      {{item.name}}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Polish -->
+                <div class="search-ul mt-2">
+                  <div class="grid-1 d-flex align-items-center">
+                    <label class="col-form-label"><strong>Polish</strong></label>
+                  </div>
+                  <div class="grid-1 d-flex">
+                    <button kendoButton class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.polishes.length === 0 }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.polishes, 'All');checkCPS();">
+                      <span>All</span>
+                    </button>
+                    <button kendoButton *ngFor="let item of allTheCPS" class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.polishes.indexOf(item.name)>-1 }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.polishes, item.name);checkCPS();">
+                      {{item.name}}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Symmetry -->
+                <div class="search-ul mt-2">
+                  <div class="grid-1 d-flex align-items-center">
+                    <label class="col-form-label"><strong>Symm</strong></label>
+                  </div>
+                  <div class="grid-1 d-flex">
+                    <button kendoButton class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.symmentries.length === 0 && selectedCPS != '2EX' }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.symmentries, 'All');checkCPS();">
+                      <span>All</span>
+                    </button>
+                    <button kendoButton *ngFor="let item of allTheCPS" class="pkg-btn"
+                      [ngClass]="{'select': offerStoneSearchCriteria.symmentries.indexOf(item.name)>-1 }"
+                      (click)="utilityService.addRemoveStringInArrayFilter(offerStoneSearchCriteria.symmentries, item.name);checkCPS();">
+                      {{item.name}}
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!-- BGM -->
+            <div class="search-ul offerdiv-grid mt-2">
+              <div class="grid-1 d-flex align-items-center">
+                <label class="col-form-label"><strong>BGM</strong></label>
+              </div>
+              <div class="grid-1 d-flex flex-wrap" style="display:flex !important;">
+                <button kendoButton class="pkg-btn k-button " [ngClass]="{'select': selectedBGM === 'BM' }"
+                  (click)="changeBGMData('BM')"> Brown Milky </button>
+                <button kendoButton class="pkg-btn k-button" [ngClass]="{'select': selectedBGM === 'LBNM' }"
+                  (click)="changeBGMData('LBNM')"> Light Brown No Milky</button>
+                <button kendoButton class="pkg-btn k-button" [ngClass]="{'select': selectedBGM === 'BNM' }"
+                  (click)="changeBGMData('BNM')"> Brown No Milky </button>
+                <button kendoButton class="pkg-btn k-button" [ngClass]="{'select': selectedBGM === 'NBLM' }"
+                  (click)="changeBGMData('NBLM')"> No Brown Light Milky </button>
+                <button kendoButton class="pkg-btn k-button" [ngClass]="{'select': selectedBGM === 'NBM' }"
+                  (click)="changeBGMData('NBM')"> No Brown Milky </button>
+                <button kendoButton class="pkg-btn k-button" [ngClass]="{'select': selectedBGM === 'NBNM' }"
+                  (click)="changeBGMData('NBNM')"> No Brown No Milky </button>
+                <button kendoButton class="pkg-btn" [ngClass]="{'select': selectedBGM === 'NBGM' }"
+                  (click)="changeBGMData('NBGM')">NO
+                  BGM</button>
+              </div>
+            </div>
+            <!-- Sold/Unsold -->
+            <div class="offerdiv-grid mt-2">
+              <div class="grid-1 d-flex align-items-center">
+                <label class="col-form-label"><strong>Sold/Unsold</strong></label>
+              </div>
+              <div class="grid-1 d-flex flex-wrap">
+                <button kendoButton class="pkg-btn k-button" [ngClass]="{'select': selectedIsold === 'Sold' }"
+                  (click)="changeIsSoldData('Sold')"> Sold </button>
+                <button kendoButton class="pkg-btn k-button" [ngClass]="{'select': selectedIsold === 'Unsold' }"
+                  (click)="changeIsSoldData('Unsold')"> Unsold </button>
+              </div>
+            </div>
+            <!-- Offer Revise -->
+            <!-- <div class="offerdiv-grid mt-2">
+              <div class="grid-1 d-flex align-items-center">
+                <label class="col-form-label"><strong>Offer Revise</strong></label>
+              </div>
+              <div class="grid-1 d-flex flex-wrap">
+                <button kendoButton class="pkg-btn k-button " (click)="changeORevData('yes')"> Yes </button>
+                <button kendoButton class="pkg-btn k-button " (click)="changeORevData('no')"> No </button>
+              </div>
+            </div> -->
+            <!-- Allow/Deny -->
+            <!-- <div class="offerdiv-grid mt-2 mb-2">
+              <div class="grid-1 d-flex align-items-center">
+                <label class="col-form-label"><strong>Allow/Deny</strong></label>
+              </div>
+              <div class="grid-1 d-flex flex-wrap">
+                <button kendoButton class="pkg-btn k-button " (click)="changeADNData('Alllow')"> Allow </button>
+                <button kendoButton class="pkg-btn k-button " (click)="changeADNData('Deny')"> Deny </button>
+                <button kendoButton class="pkg-btn k-button " (click)="changeADNData('NOT')"> None Of These </button>
+              </div>
+            </div> -->
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" (click)="filterBySearch()"><i class="icon-search"></i>Search</button>
+            <button class="btn btn-primary"><i class="icon-search"></i>Copy To
+              Clipboard</button>
+            <button class="btn btn-primary" (click)="clearSearchCriteria(filterForm)"><i
+                class="icon-clear"></i>Reset</button>
+          </div>
+        </div>
+
+        <div (document:keydown.esc)="closeSearchDialog()"></div>
+      </div>
+    </form>
+  </div>
+  <!-- #endregion-->
+
+  <!-- #region Grid Config Modal -->
+  <ng-container *ngIf="isGridConfig">
+    <app-gridconfiguration [fields]="fields" [pageName]="'OfferStone'" [gridName]="'OfferStoneGrid'"
+      [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+      (ChildEvent)="setNewGridConfig($event)">
+    </app-gridconfiguration>
+  </ng-container>
+  <!-- #endregion -->
+</section>
+
+<div kendoDialogContainer></div>

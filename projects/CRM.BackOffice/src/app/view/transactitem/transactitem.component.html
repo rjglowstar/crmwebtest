@@ -1,0 +1,232 @@
+<title>{{pageName}}</title>
+<section>
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">{{pageName}}</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton title="Add {{pageName}}" (click)="addNewTransactItem();"><i
+                  class="icon-add"></i></button>
+              <button kendoButton title="Edit {{pageName}}" [disabled]="!isEditMode"
+                (click)="openTransationItmeEditMode(true);">
+                <i class="icon-edit"></i></button>
+              <button kendoButton title="Delete {{pageName}}" [disabled]="!isEditMode"
+                (click)="deleteTransactItem();"><i class="icon-trash"></i></button>
+              <button kendoButton title="Grid Configuration" (click)="openGridConfigDialog()"><i
+                  class="icon-gridconfig"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <!-- Skeleton start -->
+            <ng-container *ngIf="!gridView">
+              <div class="k-grouping-header k-grouping-header-flex">
+                <div class="k-indicator-container">
+                  <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                  </kendo-skeleton>
+                </div>
+              </div>
+              <table *ngIf="fields && fields.length > 0" class="w-100 skeleton-tbl">
+                <ng-container *ngFor="let field of fields">
+                  <th *ngIf="field.isSelected">
+                    {{field.title}}
+                  </th>
+                </ng-container>
+                <tr *ngFor="let field of skeletonArray">
+                  <ng-container *ngFor="let fieldItem of fields">
+                    <td *ngIf="fieldItem.isSelected">
+                      <kendo-skeleton shape="text" animation="wave" [width]="94" [height]="40">
+                      </kendo-skeleton>
+                    </td>
+                  </ng-container>
+                </tr>
+              </table>
+            </ng-container>
+            <!-- Skeleton End -->
+
+            <!-- Transact Item Grid Start -->
+            <kendo-grid #transactItemGrid *ngIf="gridView" [data]="gridView.data" [reorderable]="true"
+              [resizable]="true" [groupable]="true" [sortable]="true" [group]="groups" [(selectedKeys)]="mySelection"
+              [pageSize]="pageSize" [skip]="skip" [pageable]="true" [kendoGridSelectBy]="'id'"
+              (selectionChange)="selectedRowChange($event)">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.title == 'Tax'">
+                        <span *ngFor="let item of dataItem.taxes;let i = index">
+                          {{item.name}}
+                          <span *ngIf="(dataItem.taxes.length - 1) > i">,</span>
+                        </span>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+            <!-- Transact Item Grid END -->
+          </div>
+        </div>
+      </div>
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #transactItemSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Name</label>
+                    <kendo-combobox [data]="listTransactName" [valuePrimitive]="true" name="name"
+                      [(ngModel)]="transactItemSearchCriteria.name" #name="ngModel"
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Transact Group</label>
+                    <kendo-combobox [data]="listTransactItems" name="group" textField="name" valueField="id"
+                      #group="ngModel" [(ngModel)]="transactItemSearchCriteria.group"
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action"
+                      (click)="transactItemSearchForm.form.valid && onFilterSubmit(transactItemSearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button (click)="clearFilter(transactItemSearchForm)" class="btn btn-action">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Search End -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button>
+        </li>
+        <li><button (click)="transactItemSearchForm.form.valid && onFilterSubmit(transactItemSearchForm)"><i
+              class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(transactItemSearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- Tansact Item  Modal Start -->
+<div class="modal c-modal addemp" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isTransctItemMaster">
+  <form name="form" #transactItemForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-transactitem"></i>{{pageName}}
+          </h5>
+          <button type="button" class="close" (click)="closeTransactItemMaster(transactItemForm)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="transact-grid">
+                <div class="form-data">
+                  <label for="lname">Name<span class="require">*</span></label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                  <input type="text" id="" name="name" #name="ngModel" [(ngModel)]="transactItemObj.name" required>
+                </div>
+                <div class="form-data">
+                  <label for="group">Group<span class="require">*</span></label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': Group.invalid && (Group.dirty || Group.touched)}">
+                  <kendo-combobox [data]="listTransactItems" name="Group" textField="name" valueField="id"
+                    #Group="ngModel" [(ngModel)]="transactItemObj.group" required
+                    [kendoDropDownFilter]="filterSettings">
+                  </kendo-combobox>
+                </div>
+                <div class="form-data">
+                  <label for="lname">Unit<span class="require">*</span></label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': unit.invalid && (unit.dirty || unit.touched)}">
+                  <input type="text" id="" name="unit" #unit="ngModel" [(ngModel)]="transactItemObj.unit" required>
+                </div>
+                <div class="form-data">
+                  <label for="tax">Tax</label>
+                </div>
+                <div class="form-data mul-select">
+                  <kendo-multiselect name="tax" class="customselect" [data]="listTaxTypes" [(ngModel)]="seletedTaxTypes"
+                    [textField]="'id'" [valueField]="'name'" [valuePrimitive]="true" [popupSettings]="{width: 'auto'}"
+                    [autoClose]="false" [kendoMultiSelectSummaryTag]="0" [filterable]="true" #Tax="ngModel"
+                    (valueChange)="onMultiSelectChange(listTaxTypes, seletedTaxTypes)"
+                    (open)="filterTaxChk = onOpenDropdown(listTaxTypes, filterTaxChk, seletedTaxTypes)">
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom" [title]="getCommaSapratedString(seletedTaxTypes, true)">
+                        {{getCommaSapratedString(seletedTaxTypes)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="form-data">
+                  <label for="lname">Tax Code</label>
+                </div>
+                <div class="form-data">
+                  <input type="text" id="" name="taxCode" #taxCode="ngModel" [(ngModel)]="transactItemObj.taxCode">
+                </div>
+                <div class="form-data">
+                  <label>Description</label>
+                </div>
+                <div class="form-data">
+                  <textarea cols="4" rows="15" type="text" id="" name="description" #line1="ngModel"
+                    [(ngModel)]="transactItemObj.description">
+                                    </textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" (click)="submitTransactItem(transactItemForm, true)" *ngIf="!isEditMode"
+            [disabled]="!transactItemForm.valid" class="btn btn-primary"><i class="icon-add"></i>New</button>
+          <button type="button" (click)="submitTransactItem(transactItemForm, false)"
+            [disabled]="!transactItemForm.valid" class="btn btn-primary"><i class="icon-save"></i>Save</button>
+        </div>
+
+      </div>
+    </div>
+    <div (document:keydown.esc)="closeTransactItemMaster(transactItemForm)"></div>
+  </form>
+</div>
+<!-- Tansact Item Modal End -->
+
+
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'TransactItem'" [gridName]="'TransactItemGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+
+
+<div kendoDialogContainer></div>

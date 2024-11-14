@@ -1,0 +1,144 @@
+<title>Vow Statistic</title>
+<section class="omaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Vow Statistic</li>
+            </ul>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <!-- Skeleton start -->
+            <ng-container *ngIf="!gridView">
+              <div class="k-grouping-header k-grouping-header-flex">
+                <div class="k-indicator-container">
+                  <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                  </kendo-skeleton>
+                </div>
+              </div>
+              <table *ngIf="fields && fields.length > 0" class="w-100 table-responsive skeleton-tbl">
+                <ng-container *ngFor="let field of fields">
+                  <th *ngIf="field.isSelected">
+                    {{field.title}}
+                  </th>
+                </ng-container>
+                <tr *ngFor="let field of skeletonArray">
+                  <ng-container *ngFor="let fieldItem of fields">
+                    <td *ngIf="fieldItem.isSelected">
+                      <kendo-skeleton shape="text" animation="wave" [width]="80" [height]="40">
+                      </kendo-skeleton>
+                    </td>
+                  </ng-container>
+                </tr>
+              </table>
+            </ng-container>
+            <!-- Skeleton end -->
+            <kendo-grid #orgGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+              (pageChange)="pageChange($event)">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'lastPurchaseDate'">
+                        {{dataItem.lastPurchaseDate | date: 'dd/MM/yyyy - hh:mm:ss a'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'lastBeforeDays'">
+                        {{calculateDayDiff(dataItem.lastPurchaseDate)}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #vowStatisticSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                    <ng-container *ngIf="isCheckAdmin">
+                      <label for="">Seller</label>
+                      <kendo-multiselect name="shape" class="customselect" [data]="listSellerItems"
+                        [(ngModel)]="vowStatisticSearchCriteria.sellerIds" [textField]="'name'" [valueField]="'value'"
+                        [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                        [kendoMultiSelectSummaryTag]="0" #shape="ngModel" [filterable]="true"
+                        (valueChange)="onMultiSelectChange(listSellerItems, vowStatisticSearchCriteria.sellerIds)"
+                        (open)="filterSellerChk = onOpenDropdown(listSellerItems, filterSellerChk, vowStatisticSearchCriteria.sellerIds)"
+                        (filterChange)="selectedSellereId = handleFilter($event);listSellerItems = filterDropdownSearch(systemUsers, $event, vowStatisticSearchCriteria.sellerIds)">
+                        <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                          <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                          <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                        </ng-template>
+                        <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                          <span kendoTooltip position="bottom"
+                            [title]="getCommaSapratedString(vowStatisticSearchCriteria.sellerIds, true)">
+                            {{getCommaSapratedString(vowStatisticSearchCriteria.sellerIds)}}
+                          </span>
+                        </ng-template>
+                      </kendo-multiselect>
+                    </ng-container>
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                    <label for="">Customer</label>
+                    <kendo-multiselect name="customer" class="customselect" [data]="listCustomerItems"
+                      [(ngModel)]="vowStatisticSearchCriteria.customerIds" [textField]="'name'" [valueField]="'value'"
+                      [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                      [kendoMultiSelectSummaryTag]="0" #customer="ngModel" [filterable]="true"
+                      (valueChange)="handleCustomerFilter(listCustomerItems, vowStatisticSearchCriteria.customerIds)"
+                      (open)="filterCustomerChk = onOpenDropdownCustomer(listCustomerItems, filterCustomerChk, vowStatisticSearchCriteria.customerIds)"
+                      (filterChange)="selectedCustomerId = handleFilterCustomer($event);listCustomerItems = filterCustomerDropdownSearch(customerlist, $event, vowStatisticSearchCriteria.customerIds)">
+                      <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                        <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                        <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                      </ng-template>
+                      <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                        <span kendoTooltip position="bottom"
+                          [title]="getCusCommaSapratedString(vowStatisticSearchCriteria.customerIds, true)">
+                          {{getCusCommaSapratedString(vowStatisticSearchCriteria.customerIds)}}
+                        </span>
+                      </ng-template>
+                    </kendo-multiselect>
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action"
+                      (click)="vowStatisticSearchForm.form.valid && onFilterSubmit(vowStatisticSearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button (click)="clearFilter(vowStatisticSearchForm)" class="btn btn-action">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Search End -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="vowStatisticSearchForm.form.valid && onFilterSubmit(vowStatisticSearchForm)"><i
+              class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(vowStatisticSearchForm)"><i class="icon-clear"></i></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+<div kendoDialogContainer></div>

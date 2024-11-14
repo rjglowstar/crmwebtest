@@ -1,0 +1,315 @@
+<title>Dashboard</title>
+<section class="d_wrap">
+  <div class="content_wrap">
+    <div class="breadcrumb bg">
+      <div class="breadcrumb-left">
+        <ul>
+          <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+          <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+        </ul>
+      </div>
+      <div class="breadcrumb-right pe-0">
+        <kendo-buttongroup kendoTooltip position="bottom">
+          <button kendoButton title="Refresh" (click)="refreshData()"><i class="icon-clear"></i></button>
+        </kendo-buttongroup>
+      </div>
+    </div>
+    <div class="dash_infoBox">
+      <div class="orderdash-gridbox">
+        <div class="dash_highBox d-shadow flexbox">
+          <div class="dash-subgrid">
+            <h5>Today Orders</h5>
+            <span class="total_sp">{{dayWiseSummary.todayOrderCount}}</span>
+          </div>
+          <div class="icon_box">
+            <i class="icon-ordernew"></i>
+          </div>
+        </div>
+        <div class="dash_highBox d-shadow flexbox">
+          <div class="dash-subgrid">
+            <h5>This Week</h5>
+            <span class="total_sp">{{dayWiseSummary.weekOrderCount}}</span>
+          </div>
+          <div class="icon_box">
+            <i class="icon-ordernew"></i>
+          </div>
+        </div>
+        <div class="dash_highBox d-shadow flexbox">
+          <div class="dash-subgrid">
+            <h5>This Month</h5>
+            <span class="total_sp">{{dayWiseSummary.monthOrderCount}}</span>
+          </div>
+          <div class="icon_box">
+            <i class="icon-ordernew"></i>
+          </div>
+        </div>
+        <div class="dash_highBox d-shadow flexbox {{totalAvgLength > 7 ? 'lenCheck' : ''}}">
+          <div class="dash-subgrid">
+            <h5>Total AvG. sale</h5>
+            <span class="total_sp">${{total_AvgSales|number:'1.2-2'}}</span>
+          </div>
+          <div class="icon_box">
+            <i class="icon-payment" style="font-size: 30px;"></i>
+          </div>
+        </div>
+        <div class="dash_highBox d-shadow">
+          <h5>Total Orders <span> +{{dayWiseSummary.weekOrderPer | number:'1.2-2'}}%</span></h5>
+          <div class="flexbox">
+            <div class="dash-subgrid lg">
+              <span class="total_sp">{{dayWiseSummary.totalOrdersCount}}</span>
+              <a href="/order">View all orders</a>
+            </div>
+            <div class="icon_box">
+              <i class="icon-order"></i>
+            </div>
+          </div>
+        </div>
+        <div class="dash_highBox d-shadow">
+          <h5>Customers <span>+{{dayWiseSummary.customerOrderPer| number:'1.2-2'}} %</span></h5>
+          <div class="flexbox">
+            <div class="dash-subgrid lg">
+              <span class="total_sp">{{dayWiseSummary.totalCustomersCount}}</span>
+              <a href="/customer">View all customers</a>
+            </div>
+            <div class="icon_box">
+              <i class="icon-customer"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="block_bg fsSec d-shadow" [ngClass]="{'fS_toggle': secFullScreen==7}">
+        <h3 class="block_title">AI Recommendations
+          <button kendoButton class="fscreen_btn" title="Section Full Screen" (click)="toggleClass(7)">
+            <img src="../../../assets/images/fullScreen_icon.svg" class="img-fluid" />
+          </button>
+        </h3>
+
+        <div class="grid-wrap">
+          <kendo-grid class="dash-grid" #grid [kendoGridGroupBinding]="gridData" [selectable]="selectableSettings"
+            [reorderable]="true" [resizable]="true" [sortable]="true" [sort]="sort" [groupable]="true" [(group)]="group"
+            [pageSize]="50" scrollable="virtual" [rowHeight]="36" [height]="275" [(selectedKeys)]="mySelection"
+            [kendoGridSelectBy]="'stoneId'" (groupExpand)="onGroupChange($event)"
+            (groupCollapse)="onGroupChange($event)" (dataStateChange)="onDataStateChange()">
+
+            <kendo-grid-checkbox-column [showSelectAll]="true" [width]="40"></kendo-grid-checkbox-column>
+            <kendo-grid-column field="fullName" title="Party Name" [width]="100">
+              <ng-template kendoGridGroupHeaderTemplate let-group let-field="field" let-value="value" let-index="index">
+                <div class="aiSub_grid">
+                  <div>Party Name : <span>{{value}}</span></div>
+                  <div>Count : <span>{{getStoneCount(group) }}</span></div>
+                  <div>
+                    <button kendoButton title="Generate Lead" (click)="openLeadDialog(value)">
+                      <i class="icon-generate"></i>
+                    </button>
+                    <button kendoButton class="ms-2" title="Send Proposal" (click)="exportToExcel('proposal',value)">
+                      <i class="icon-icon_email"></i>
+                    </button>
+                    <button type="button" class="ms-2" kendoButton title="Copy StoneIds"
+                      (click)="copyToClipboard(value)">
+                      <i class="icon-copy pe-0"></i>
+                    </button>
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="stoneId" title="Stone ID" [width]="100"></kendo-grid-column>
+            <kendo-grid-column field="shape" title="Shape" [width]="80"></kendo-grid-column>
+            <kendo-grid-column field="weight" title="Weight" [width]="60"></kendo-grid-column>
+            <kendo-grid-column field="color" title="Color" [width]="60"></kendo-grid-column>
+            <kendo-grid-column field="clarity" title="Clarity" [width]="60"></kendo-grid-column>
+            <kendo-grid-column field="cut" title="Cut" [width]="60"></kendo-grid-column>
+          </kendo-grid>
+        </div>
+      </div>
+      <!-- Praposal success -->
+      <div class="modal c-modal praposal-sucModal rorgan" tabindex="-1" role="dialog" data-keyboard="false"
+        data-backdrop="static" *ngIf="isProposalSuccess">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Proposal Mail</h5>
+              <button type="button" class="close" (click)="closeProposalSuccess()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <div class="row">
+                <div class="col-12 text-center">
+                  <img src="../../../assets/images/proposal_success.png" alt="success icon" width="50"
+                    class="img-fluid my-3">
+                  <h6 class="mb-4">Mail sent successfully!</h6>
+                  <div class="my-3" *ngIf="proposalSuccMsg !=''">
+                    <a href="{{proposalSuccMsg}}" class="btn btn-primary me-2" target="_blank">Open link</a>
+                    <a (click)="copyText()" class="btn btn-primary" value="click to copy">Copy link</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Praposal success -->
+      <!-- #region Add Lead Modal Start -->
+      <ng-container *ngIf="isLeadModal">
+        <app-leadmodal [leadListInvInput]="leadListInvInput" [seller]="sellerObj" [customer]="customerId"
+          (toggle)="closeLeadDialog($event)">
+        </app-leadmodal>
+      </ng-container>
+      <!-- #endregion Add Lead Modal End -->
+      <div class="block_bg fsSec d-shadow sales_chart" [ngClass]="{'fS_toggle': secFullScreen==1}">
+        <h3 class="block_title">
+          Sales Statistics
+          <div>
+            <kendo-dropdownlist [data]="buyerPurchase" [(ngModel)]="selectedValue" textField="text" valueField="value"
+              (valueChange)="addSellerPurchasePeriod(selectedValue)"></kendo-dropdownlist>
+            <button kendoButton title="Section Full Screen" class="ms-3 fscreen_btn" (click)="toggleClass(1)">
+              <img src="../../../assets/images/fullScreen_icon.svg" class="img-fluid" />
+            </button>
+          </div>
+
+        </h3>
+        <div class="chart_wrapper">
+          <kendo-chart>
+            <kendo-chart-series>
+              <kendo-chart-series-item type="column" [data]="chartSeries" field="value" categoryField="category"
+                color="#606060">
+              </kendo-chart-series-item>
+            </kendo-chart-series>
+          </kendo-chart>
+        </div>
+      </div>
+      <div class="block_bg fsSec d-shadow party_chart" [ngClass]="{'fS_toggle': secFullScreen==2}">
+        <h3 class="block_title">Party Wise
+          <button kendoButton class="fscreen_btn" title="Section Full Screen" (click)="toggleClass(2)">
+            <img src="../../../assets/images/fullScreen_icon.svg" class="img-fluid" />
+          </button>
+        </h3>
+        <div class="chart_wrapper">
+          <kendo-chart [seriesColors]="pieColor" *ngIf="buyerpieData && buyerpieData.length>0">
+            <kendo-chart-tooltip>
+              <ng-template kendoChartSeriesTooltipTemplate let-value="value" let-category="category">
+                <div class="chart-tooltip"> {{category}} : ${{value}}</div>
+              </ng-template>
+            </kendo-chart-tooltip>
+            <kendo-chart-legend position="bottom" [visible]="false"></kendo-chart-legend>
+            <kendo-chart-series>
+              <kendo-chart-series-item type="pie" [padding]="10" [data]="buyerpieData" field="value"
+                categoryField="category">
+              </kendo-chart-series-item>
+            </kendo-chart-series>
+          </kendo-chart>
+        </div>
+      </div>
+      <div class="block_bg fsSec d-shadow" [ngClass]="{'fS_toggle': secFullScreen==4}">
+        <h3 class="block_title">Hold
+          <button kendoButton class="fscreen_btn" title="Section Full Screen" (click)="toggleClass(4)">
+            <img src="../../../assets/images/fullScreen_icon.svg" class="img-fluid" />
+          </button>
+        </h3>
+
+        <div class="grid-wrap">
+          <kendo-grid scrollable="virtual" [data]="holdData" [rowHeight]="20" [height]="250" [pageable]="true"
+            [resizable]="true" [navigable]="true" [pageSize]="20" class="dash-grid">
+            <kendo-grid-column field="leadNo" title="Lead No" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="customer.name" title="Customer" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="customer.code" title="Cust Code" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="broker.name" title="Broker" [width]="40"></kendo-grid-column>
+            <kendo-grid-column field="seller.name" title="Seller" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="holdDate" tititle="Hold Date" [width]="50">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.holdDate |date: 'dd/MM/yyyy hh:mm a'}}
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid>
+        </div>
+      </div>
+      <div class="block_bg fsSec d-shadow" [ngClass]="{'fS_toggle': secFullScreen==3}">
+        <h3 class="block_title">Order
+          <button kendoButton class="fscreen_btn" title="Section Full Screen" (click)="toggleClass(3)">
+            <img src="../../../assets/images/fullScreen_icon.svg" class="img-fluid" />
+          </button>
+        </h3>
+        <div class="grid-wrap">
+          <kendo-grid scrollable="virtual" [data]="orderData" [rowHeight]="20" [height]="250" [pageable]="true"
+            [resizable]="true" [navigable]="true" [pageSize]="20" class="dash-grid">
+            <kendo-grid-column field="leadNo" title="Lead No" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="customer.name" title="Customer" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="customer.code" title="Cust Code" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="broker.name" title="Broker" [width]="40"></kendo-grid-column>
+            <kendo-grid-column field="seller.name" title="Seller" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="orderDate" title="Order Date" [width]="50">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.orderDate |date: 'dd/MM/yyyy hh:mm a'}}
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid>
+        </div>
+      </div>
+
+    </div>
+    <div class="grid_wrapper">
+
+
+      <div class="block_bg fsSec d-shadow" [ngClass]="{'fS_toggle': secFullScreen==5}">
+        <h3 class="block_title"> Customer Search History
+          <button kendoButton class="fscreen_btn" title="Section Full Screen" (click)="toggleClass(5)">
+            <img src="../../../assets/images/fullScreen_icon.svg" class="img-fluid" />
+          </button>
+        </h3>
+        <div class="grid-wrap">
+          <kendo-grid scrollable="virtual" [data]="customerGridView" [pageSize]="pageSize" [skip]="skip"
+            [rowHeight]="20" [pageable]="true" [resizable]="true" [navigable]="true" [pageSize]="20" class="dash-grid">
+            <kendo-grid-column title="Name" field="fullName" [width]="50"></kendo-grid-column>
+            <kendo-grid-column title="Company Name" field="companyName" [width]="50"></kendo-grid-column>
+            <kendo-grid-column title="seller" field="seller.name" [width]="50"></kendo-grid-column>
+            <kendo-grid-column title="City" field="city" [width]="50"></kendo-grid-column>
+            <kendo-grid-column title="Login Time" field="createDate" [width]="50">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.createDate |date: 'dd/MM/yyyy hh:mm a'}}
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid>
+        </div>
+      </div>
+      <div class="block_bg fsSec d-shadow" [ngClass]="{'fS_toggle': secFullScreen==6}">
+        <h3 class="block_title">
+          Appointments
+          <div class="d-flex align-items-center">
+            <div class="dash-switch">
+              <span class="switch-lable me-1">Pending </span>
+              <kendo-switch class="dashbord-switch" [(ngModel)]="today" class="me-0" (click)="getAppointment()">
+              </kendo-switch>
+              <span class="switch-lable ms-1">Today</span>
+            </div>
+            <button kendoButton class="fscreen_btn ms-3" title="Section Full Screen">
+              <img src="../../../assets/images/fullScreen_icon.svg" class="img-fluid" (click)="toggleClass(6)" />
+            </button>
+          </div>
+        </h3>
+        <div class="grid-wrap">
+          <kendo-grid [kendoGridBinding]="appointmentList" scrollable="virtual" [rowHeight]="20" [pageable]="true"
+            [resizable]="true" [navigable]="true" [pageSize]="20" class="dash-grid">
+            <kendo-grid-column field="name" title="Name" [width]="50">
+            </kendo-grid-column>
+            <kendo-grid-column field="email" title="Email Id" [width]="50">
+            </kendo-grid-column>
+            <kendo-grid-column field="companyName" title="Company" [width]="50">
+            </kendo-grid-column>
+            <kendo-grid-column field="mobile" title="Conatct No" [width]="40">
+            </kendo-grid-column>
+            <kendo-grid-column field="purpose" title="Purpose" [width]="50">
+            </kendo-grid-column>
+            <kendo-grid-column field="appointmentDate" title="Date & Time" [width]="50">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.appointmentDate | date:"dd-MM-yyyy hh:mm a"}}
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div kendoDialogContainer></div>

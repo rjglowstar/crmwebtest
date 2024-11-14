@@ -1,0 +1,817 @@
+<title>Pricing Request</title>
+<!-- #region Pricing Request -->
+<section class="pricing-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <!--#region Header -->
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Price Request</li>
+            </ul>
+          </div>
+        </div>
+        <div class="summarybar bg">
+          <div class="summary-left">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isAllSelected || mySelection.length > 0">
+              <button kendoButton title="Select All Stone(s)" class="me-1 pt-0 pb-0" style="line-height: 1.8;"
+                *ngIf="isAllSelected" (click)="selectAllPricing('checked', true)">
+                Select All
+              </button>
+              <button kendoButton title="DeSelect Stone(s)" class="me-1 pt-0 pb-0" style="line-height: 1.8;"
+                *ngIf="mySelection.length > 0" (click)="selectAllPricing('uncheckedAll', true)">
+                DeSelect All
+              </button>
+            </kendo-buttongroup>
+            <ul>
+              <li>Total Stone(s) : <span>{{priceReqResponse.total}}</span></li>
+              <li>Selected Stone(s) : <span>{{mySelection.length}}</span></li>
+            </ul>
+          </div>
+          <div class="summary-right pe-0">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton title="Filter Stone" (click)="openSlotFilterDialog()">
+                <i class="icon-search"></i>
+              </button>
+              <button kendoButton #anchorSpecialStones title="Sync Special Stones" (click)="syncPricingReqSpecialStones()">
+                <i class="icon-clear"></i>
+              </button>
+              <button kendoButton #anchorSummary title="Summry" (click)="openSummary()">
+                <i class="icon-summary"></i>
+              </button>
+              <button kendoButton #anchorExcel (click)="onExcelToggle()" title="Export Excel"><i
+                  class="icon-excelnew "></i>
+              </button>
+              <button kendoButton [disabled]="mySelection.length == 0" (click)="copyToClipboard()"
+                title="Copy To Clipboard"><i class="icon-copy"></i>
+              </button>
+              <button kendoButton title="Color Mark" [disabled]="mySelection.length == 0"
+                (click)="openColorMarkDialog()"><i class="icon-appearance"></i></button>
+              <button kendoButton title="Add Bulk Discount" #anchor (click)="onBulkToggle()"
+                [disabled]="mySelection.length == 0"><i class="icon-edit"></i></button>
+              <button kendoButton title="Base Discount" [disabled]="mySelection.length == 0"
+                (click)="updateBulkDiscountConfirm('Base')"><i class="icon-basediscount"></i></button>
+              <button kendoButton title="Marketsheet Discount" [disabled]="mySelection.length == 0"
+                (click)="updateBulkDiscountConfirm('Marketsheet')"><i class="icon-marketsheet-discount"></i></button>
+              <button kendoButton title="Apply" [disabled]="mySelection.length == 0" (click)="onApplyChanges()">
+                <i class="icon-check"></i>
+              </button>
+              <button kendoButton title="Grid Configuration" (click)="openGridConfigDialog()">
+                <i class="icon-gridconfig"></i>
+              </button>
+            </kendo-buttongroup>
+            <kendo-popup [anchor]="$any(anchor)" #popup *ngIf="showBulk">
+              <div class="content">
+                <div class="pt-2 ps-2 pe-2">
+                  <div class="mb-2">
+                    <label class="k-label"><strong>Bulk T. Discount</strong></label>
+                  </div>
+                  <div class="form-data pop">
+                    <input type="text" class="w-100" name="bulkDisc" [(ngModel)]="bulkDisc"
+                      (keypress)="utilityService.discountfloat($event)" />
+                  </div>
+                </div>
+                <div class="pt-2 ps-2 pe-2">
+                  <div class="mb-2">
+                    <input type="radio" name="discOption" value="plus" #plus [(ngModel)]="discOption" kendoRadioButton
+                      id="plus" />
+                    <label class="k-label" class="ms-2 cursor" for="plus">Plus</label>
+                  </div>
+                  <div class="mb-3">
+                    <input type="radio" name="discOption" value="equal" #equal [(ngModel)]="discOption" kendoRadioButton
+                      id="equal" />
+                    <label class="k-label" class="ms-2 cursor" for="equal">Equal</label>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="text-center pb-2 mt-2">
+                    <button class="btn btn-primary" [disabled]="bulkDisc == null"
+                      (click)="updateBulkDiscountManual(false)">Apply Base Disc.</button>
+                    <button class="btn btn-primary mt-1" [disabled]="bulkDisc == null"
+                      (click)="updateBulkDiscountManual(true)">Apply Price Disc.</button>
+                  </div>
+                </div>
+              </div>
+            </kendo-popup>
+            <kendo-popup [anchor]="$any(anchorExcel)" #popupExcel (anchorViewportLeave)="showExcelOption = false"
+              *ngIf="showExcelOption">
+              <div class="content p-2 pb-0">
+                <div class="mb-2">
+                  <input type="radio" name="excelOption" value="searched" #searched [(ngModel)]="excelOption"
+                    kendoRadioButton id="searched" />
+                  <label class="k-label" class="ms-2 cursor" for="searched">Searched Stone</label>
+                </div>
+                <div class="mb-2">
+                  <input type="radio" name="excelOption" value="selected" #selected [(ngModel)]="excelOption"
+                    kendoRadioButton id="selected" />
+                  <label class="k-label" class="ms-2 cursor" for="selected">Selected Stone</label>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="text-center px-2 pb-2">
+                    <button class="btn btn-primary w-100" [disabled]="excelOption == null"
+                      (click)="exportToExcel('export')">
+                      <i class="icon-excelnew"></i> Export to Excel
+                    </button>
+                    <!-- <button class="btn btn-primary w-100 mt-1" [disabled]="excelOption == null"
+                            (click)="exportToExcel('mail')">
+                            <i class="icon-icon_email"></i> Send Mail
+                          </button> -->
+                  </div>
+                </div>
+
+              </div>
+            </kendo-popup>
+          </div>
+        </div>
+
+        <!--#endregion -->
+        <!--#region Grid -->
+        <div class="content_box">
+          <div class="grid-wrap pricing-grid">
+            <kendo-grid #priceGrid class="price-grid" [data]="gridView!" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+              (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+              [pageSize]="pageSize" [skip]="skip" (cellClick)="cellClickHandler($event)"
+              (cellClose)="cellCloseHandler($event)" [pageable]="true" (pageChange)="pageChange($event)"
+              [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'stoneId'"
+              (detailExpand)="expandPricingHistory($event)" (detailCollapse)="clearPricingHistory($event)">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [editor]="field.editor!" [field]="field.propertyName"
+                      [title]="field.title"
+                      class="{{field.title=='Weight' || field.title=='Color' || field.title=='Clarity' || field.title=='Cut' || field.title=='Polish' || field.title=='Symmetry' || field.title=='Fluorescence' ? 'of-initial' : ''}}">
+                      <ng-template *ngIf="isShowCheckBoxAll && field.title == 'Checkbox'" kendoGridHeaderTemplate>
+                        <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox"
+                          (selectAllChange)="selectAllPricing($event, false)" />
+                        <label class="k-checkbox-label" for="headerCheckbox"></label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.title == 'Checkbox'">
+                        <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                          id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Analytic'">
+                        <span class="gr-icon" (click)="openAnalyticsDialog(dataItem)">
+                          <i class="icon-analytics"></i>
+                          <!-- <i class="icon-diamond"></i> -->
+                        </span>
+                      </ng-template>
+                      <ng-template kendoGridColumnMenuItemContentTemplate let-dataItem></ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Media'">
+                        <div>
+                          <span class="gr-icon"
+                            (click)="openMediaDialog('360 Vision View', dataItem.stoneId, 'iframe')">
+                            <i class="icon-diamond"></i>
+                          </span>
+                          <span class="gr-icon" (click)="openMediaDialog('Image View', dataItem.stoneId, 'img')">
+                            <i class="icon-camera"></i>
+                          </span>
+                          <span class="gr-icon" *ngIf="dataItem.media.isCertificate"
+                            (click)="openMediaDialog('Certificate View', dataItem.certificateNo, 'cert')">
+                            <i class="icon-cerificate"></i>
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'StoneId'">
+                        <div class="whole-cell" [ngClass]="{ 'grid-highlight': dataItem.isHighLight }">
+                          {{dataItem.stoneId}}
+                        </div>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Base Disc'">
+                        <div class="whole-cell"
+                          [ngStyle]="{'background-color': getColorMarkRGB(dataItem.discColorMark, true)}">
+                          {{dataItem.basePrice.discount}}
+                        </div>
+                      </ng-template>
+                      <!-- <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Main Disc'">
+                          <span class="whole-cell"
+                            [ngStyle]="{'background-color': getColorMarkRGB(dataItem.discColorMark, true)}">{{dataItem.price.discount}}</span>
+                        </ng-template> -->
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'T. Base Disc'">
+                        <b>{{dataItem.tempBasePrice.discount}}</b>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'T. Main Disc'">
+                        <b [ngClass]="(dataItem.isValid != null && dataItem.isValid == false) ? 'text-danger' : ''">
+                          {{dataItem.tempPrice.discount}}
+                        </b>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Main Disc'">
+                        <div class="main-disc">{{dataItem.price.discount}}</div>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Diameter'">
+                        <span>{{dataItem.measurement.length}} - {{dataItem.measurement.width}} x
+                          {{dataItem.measurement.height}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Natts'">
+                        <span>{{dataItem.inclusion.sideBlack}} - {{dataItem.inclusion.centerBlack}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Girdle'">
+                        <span>{{dataItem.measurement.minGirdle}} - {{dataItem.measurement.maxGirdle}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Pricing Date'">
+                        <span>{{dataItem.createdDate | date: 'dd/MM/yyyy'}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Expiry Date'">
+                        <span>{{dataItem.expiryDate | date: 'dd/MM/yyyy hh:mm:ss'}}</span>
+                      </ng-template>
+                      <!-- <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'availableDays'">
+                          {{utilityService.calculateAvailableDateDiff(dataItem.marketSheetDate, dataItem.holdDays, dataItem.isHold == true ? dataItem.holdDate : null)}}
+                        </ng-template> -->
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Shape'">
+                        <span class="whole-cell">
+                          {{dataItem.shape}}
+                          <i *ngIf="dataItem.status == 'Lab'"
+                            [ngClass]="getCompareRequestWithInvData(dataItem.stoneId, 'SHAPE','Class')"></i>
+                          <div class="arrow-tooltip" *ngIf="dataItem.status == 'Lab'">
+                            {{getCompareRequestWithInvData(dataItem.stoneId, 'SHAPE','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Weight'">
+                        <span class="whole-cell">
+                          {{dataItem.weight}}
+                          <i *ngIf="dataItem.status == 'Lab'"
+                            [ngClass]="getCompareRequestWithInvData(dataItem.stoneId, 'WEIGHT','Class')"></i>
+                          <div class="arrow-tooltip" *ngIf="dataItem.status == 'Lab'">
+                            {{getCompareRequestWithInvData(dataItem.stoneId, 'WEIGHT','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Color'">
+                        <span class="whole-cell">
+                          {{dataItem.color}}
+                          <i *ngIf="dataItem.status == 'Lab'"
+                            [ngClass]="getCompareRequestWithInvData(dataItem.stoneId, 'COLOR','Class')"></i>
+                          <div class="arrow-tooltip" *ngIf="dataItem.status == 'Lab'">
+                            {{getCompareRequestWithInvData(dataItem.stoneId, 'COLOR','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Clarity'">
+                        <span class="whole-cell">
+                          {{dataItem.clarity}}
+                          <i *ngIf="dataItem.status == 'Lab'"
+                            [ngClass]="getCompareRequestWithInvData(dataItem.stoneId, 'CLARITY','Class')"></i>
+                          <div class="arrow-tooltip" *ngIf="dataItem.status == 'Lab'">
+                            {{getCompareRequestWithInvData(dataItem.stoneId, 'CLARITY','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Cut'">
+                        <span class="whole-cell">
+                          {{dataItem.cut}}
+                          <i *ngIf="dataItem.status == 'Lab'"
+                            [ngClass]="getCompareRequestWithInvData(dataItem.stoneId, 'CUT','Class')"></i>
+                          <div class="arrow-tooltip" *ngIf="dataItem.status == 'Lab'">
+                            {{getCompareRequestWithInvData(dataItem.stoneId, 'CUT','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Polish'">
+                        <span class="whole-cell">
+                          {{dataItem.polish}}
+                          <i *ngIf="dataItem.status == 'Lab'"
+                            [ngClass]="getCompareRequestWithInvData(dataItem.stoneId, 'POLISH','Class')"></i>
+                          <div class="arrow-tooltip" *ngIf="dataItem.status == 'Lab'">
+                            {{getCompareRequestWithInvData(dataItem.stoneId, 'POLISH','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Symmetry'">
+                        <span class="whole-cell">
+                          {{dataItem.symmetry}}
+                          <i *ngIf="dataItem.status == 'Lab'"
+                            [ngClass]="getCompareRequestWithInvData(dataItem.stoneId, 'SYMMETRY','Class')"></i>
+                          <div class="arrow-tooltip" *ngIf="dataItem.status == 'Lab'">
+                            {{getCompareRequestWithInvData(dataItem.stoneId, 'SYMMETRY','ToolTip')}}</div>
+                        </span>
+                      </ng-template>
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Fluorescence'">
+                        <span class="whole-cell">
+                          {{dataItem.fluorescence}}
+                          <i *ngIf="dataItem.status == 'Lab'"
+                            [ngClass]="getCompareRequestWithInvData(dataItem.stoneId, 'FLUORESCENCE','Class')"></i>
+                          <div class="arrow-tooltip" *ngIf="dataItem.status == 'Lab'">
+                            {{getCompareRequestWithInvData(dataItem.stoneId, 'FLUORESCENCE','ToolTip')}}
+                          </div>
+                        </span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'inclusion.brown'">
+                        <div [ngClass]="{'font600': dataItem.inclusion.brown?.toLowerCase() != 'no'}">
+                          {{dataItem.inclusion.brown}}
+                        </div>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'inclusion.green'">
+                        <div [ngClass]="{'font600': dataItem.inclusion.green?.toLowerCase() != 'no'}">
+                          {{dataItem.inclusion.green}}
+                        </div>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'inclusion.milky'">
+                        <div [ngClass]="{'font600': dataItem.inclusion.milky?.toLowerCase() != 'no'}">
+                          {{dataItem.inclusion.milky}}
+                        </div>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'inclusion.shade'">
+                        <div [ngClass]="{'font600': dataItem.inclusion.shade?.toLowerCase() != 'no'}">
+                          {{dataItem.inclusion.shade}}
+                        </div>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.propertyName == 'isDOrder'">
+                        <input type="checkbox" class="k-checkbox" id="checkbox-isDOrder-{{rowIndex}}"
+                          [checked]="dataItem.isDOrder" [disabled]="true" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+              <ng-template kendoGridDetailTemplate let-dataItem let-rowIndex="rowIndex">
+                <div class="his-grid row d-media-wrap ">
+                  <div class="d-media d-details">
+                    <kendo-tabstrip>
+                      <kendo-tabstrip-tab title="Disc. History" [selected]="true">
+                        <ng-template kendoTabContent>
+                          <kendo-grid [data]="getlistPricingHistory(dataItem.stoneId)" [resizable]="true"
+                            [height]="329">
+                            <kendo-grid-column [width]="20" title="Before">
+                              <ng-template kendoGridCellTemplate let-dataItem>
+                                {{calculateDateDiff(dataItem.createdDate)}}
+                              </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column [width]="40" title="Date">
+                              <ng-template kendoGridCellTemplate let-dataItem>
+                                {{dataItem.createdDate | date: 'dd-MM-yyyy hh:mm:ss a'}}
+                              </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column [width]="25" field="price.rap" title="Rap">
+                            </kendo-grid-column>
+                            <kendo-grid-column [width]="20" field="price.discount" title="Discount">
+                            </kendo-grid-column>
+                            <kendo-grid-column [width]="25" field="price.perCarat" title="$/CT">
+                            </kendo-grid-column>
+                            <kendo-grid-column [width]="25" field="price.netAmount" title="Net Amount">
+                            </kendo-grid-column>
+                            <kendo-grid-column [width]="25" field="identity.name" title="User">
+                            </kendo-grid-column>
+                          </kendo-grid>
+                        </ng-template>
+                      </kendo-tabstrip-tab>
+                      <kendo-tabstrip-tab title="Inclusion">
+                        <ng-template kendoTabContent *ngFor="let item of getInvInclusionItem(dataItem.stoneId)">
+                          <div class="content t-details">
+                            <ul>
+                              <li *ngIf="inclusionConfig.shade && (inclusionData  | typefilter:'shade').length > 0">
+                                <span class="l-head">Shade</span>
+                                <span class="r-det">: {{item.shade}}</span>
+                              </li>
+                              <li *ngIf="inclusionConfig.brown && (inclusionData  | typefilter:'brown').length > 0">
+                                <span class="l-head">Brown</span>
+                                <span class="r-det">: {{item.brown}}</span>
+                              </li>
+                              <li *ngIf="inclusionConfig.green && (inclusionData  | typefilter:'green').length > 0">
+                                <span class="l-head">Green</span>
+                                <span class="r-det">: {{item.green}}</span>
+                              </li>
+                              <li *ngIf="inclusionConfig.milky && (inclusionData  | typefilter:'milky').length > 0">
+                                <span class="l-head">Milky</span>
+                                <span class="r-det">: {{item.milky}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.sideBlack && (inclusionData  | typefilter:'sideBlack').length > 0">
+                                <span class="l-head">Side Black</span>
+                                <span class="r-det">: {{item.sideBlack}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.centerBlack && (inclusionData  | typefilter:'centerSideBlack').length > 0">
+                                <span class="l-head">Center Side Black</span>
+                                <span class="r-det">: {{item.centerSideBlack}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.centerBlack && (inclusionData  | typefilter:'centerBlack').length > 0">
+                                <span class="l-head">Center Black</span>
+                                <span class="r-det">: {{item.centerBlack}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.sideWhite && (inclusionData  | typefilter:'sideWhite').length > 0">
+                                <span class="l-head">Side White</span>
+                                <span class="r-det">: {{item.sideWhite}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.centerSideWhite && (inclusionData  | typefilter:'centerSideWhite').length > 0">
+                                <span class="l-head">Center Side White</span>
+                                <span class="r-det">: {{item.centerSideWhite}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.centerWhite && (inclusionData  | typefilter:'centerWhite').length > 0">
+                                <span class="l-head">Center White</span>
+                                <span class="r-det">: {{item.centerWhite}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.openCrown && (inclusionData  | typefilter:'openCrown').length > 0">
+                                <span class="l-head">Open Crown</span>
+                                <span class="r-det">: {{item.openCrown}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.openTable && (inclusionData  | typefilter:'openTable').length > 0">
+                                <span class="l-head">Open Table</span>
+                                <span class="r-det">: {{item.openTable}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.openPavilion && (inclusionData  | typefilter:'openPavilion').length > 0">
+                                <span class="l-head">Open Pavalion</span>
+                                <span class="r-det">: {{item.openPavilion}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.openGirdle && (inclusionData  | typefilter:'openGirdle').length > 0">
+                                <span class="l-head">Open Girdle</span>
+                                <span class="r-det">: {{item.openGirdle}}</span>
+                              </li>
+                              <li *ngIf="inclusionConfig.efoc && (inclusionData  | typefilter:'efoc').length > 0">
+                                <span class="l-head">EFOC</span>
+                                <span class="r-det">: {{item.efoc}}</span>
+                              </li>
+                              <li *ngIf="inclusionConfig.efot && (inclusionData  | typefilter:'efot').length > 0">
+                                <span class="l-head">EFOT</span>
+                                <span class="r-det">: {{item.efot}}</span>
+                              </li>
+                              <li *ngIf="inclusionConfig.efog && (inclusionData  | typefilter:'efog').length > 0">
+                                <span class="l-head">EFOG</span>
+                                <span class="r-det">: {{item.efog}}</span>
+                              </li>
+                              <li *ngIf="inclusionConfig.efop && (inclusionData  | typefilter:'efop').length > 0">
+                                <span class="l-head">EFOP</span>
+                                <span class="r-det">: {{item.efop}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.naturalOnTable && (inclusionData  | typefilter:'naturalOnTable').length > 0">
+                                <span class="l-head">NOT</span>
+                                <span class="r-det">: {{item.naturalOnTable}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.naturalOnGirdle && (inclusionData  | typefilter:'naturalOnGirdle').length > 0">
+                                <span class="l-head">NOG</span>
+                                <span class="r-det">: {{item.naturalOnGirdle}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.naturalOnCrown && (inclusionData  | typefilter:'naturalOnCrown').length > 0">
+                                <span class="l-head">NOC</span>
+                                <span class="r-det">: {{item.naturalOnCrown}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.naturalOnPavilion && (inclusionData  | typefilter:'naturalOnPavillion').length > 0">
+                                <span class="l-head">NOP</span>
+                                <span class="r-det">: {{item.naturalOnPavillion}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.girdleCondition && (inclusionData  | typefilter:'girdleCondition').length > 0">
+                                <span class="l-head">Grid. Con.</span>
+                                <span class="r-det">: {{item.girdleCondition}}</span>
+                              </li>
+                              <li *ngIf="inclusionConfig.culet && (inclusionData  | typefilter:'culet').length > 0">
+                                <span class="l-head">Culet</span>
+                                <span class="r-det">: {{item.culet}}</span>
+                              </li>
+                              <li *ngIf="inclusionConfig.hna && (inclusionData  | typefilter:'hna').length > 0">
+                                <span class="l-head">HNA</span>
+                                <span class="r-det">: {{item.hna}}</span>
+                              </li>
+                              <li
+                                *ngIf="inclusionConfig.eyeClean && (inclusionData  | typefilter:'eyeClean').length > 0">
+                                <span class="l-head">Eye Clean</span>
+                                <span class="r-det">: {{item.eyeClean}}</span>
+                              </li>
+                              <li *ngIf="inclusionConfig.ktoS && (inclusionData  | typefilter:'ktoS').length > 0">
+                                <span class="l-head">Key To Symbol</span>
+                                <span class="r-det">: {{item.ktoS}}</span>
+                              </li>
+                              <li *ngIf="inclusionConfig.bowtie && (inclusionData  | typefilter:'bowtie').length > 0">
+                                <span class="l-head">Bowtie</span>
+                                <span class="r-det">: {{item.bowtie}}</span>
+                              </li>
+                              <li>
+                                <span class="l-head">IGrade</span>
+                                <span class="r-det">: {{item.iGrade}}</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </ng-template>
+                      </kendo-tabstrip-tab>
+                      <kendo-tabstrip-tab title="Measurement">
+                        <ng-template kendoTabContent *ngFor="let item of getInvMeasurementItem(dataItem.stoneId)">
+                          <div class="content t-details">
+                            <ul>
+                              <li *ngIf="measurementConfig.length">
+                                <span class="l-head">Length</span>
+                                <span class="r-det">: {{item.length}}</span>
+                              </li>
+                              <li *ngIf="measurementConfig.width">
+                                <span class="l-head">Width</span>
+                                <span class="r-det">: {{item.width}}</span>
+                              </li>
+                              <li *ngIf="measurementConfig.height">
+                                <span class="l-head">Height</span>
+                                <span class="r-det">: {{item.height}}</span>
+                              </li>
+                              <li *ngIf="measurementConfig.depth">
+                                <span class="l-head">Depth</span>
+                                <span class="r-det">: {{item.depth}}</span>
+                              </li>
+                              <li *ngIf="measurementConfig.table">
+                                <span class="l-head">Table</span>
+                                <span class="r-det">: {{item.table}}</span>
+                              </li>
+                              <li *ngIf="measurementConfig.crownHeight">
+                                <span class="l-head">Crown Height</span>
+                                <span class="r-det">: {{item.crownHeight}}</span>
+                              </li>
+                              <li *ngIf="measurementConfig.crownAngle">
+                                <span class="l-head">Crown Angle</span>
+                                <span class="r-det">: {{item.crownAngle}}</span>
+                              </li>
+                              <li *ngIf="measurementConfig.pavillionAngle">
+                                <span class="l-head">Pavilion Angle</span>
+                                <span class="r-det">: {{item.pavilionAngle}}</span>
+                              </li>
+                              <li *ngIf="measurementConfig.pavillionDepth">
+                                <span class="l-head">Pavilion Depth</span>
+                                <span class="r-det">: {{item.pavilionDepth}}</span>
+                              </li>
+                              <li *ngIf="measurementConfig.girdlePer">
+                                <span class="l-head">Girdle%</span>
+                                <span class="r-det">: {{item.girdlePer}}</span>
+                              </li>
+                              <li
+                                *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                                <span class="l-head">Min Girdle</span>
+                                <span class="r-det">: {{item.minGirdle}}</span>
+                              </li>
+                              <li
+                                *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                                <span class="l-head">Max Girdle</span>
+                                <span class="r-det">: {{item.maxGirdle}}</span>
+                              </li>
+                              <li *ngIf="measurementConfig.ratio">
+                                <span class="l-head">Ratio</span>
+                                <span class="r-det">: {{item.ratio}}</span>
+                              </li>
+                              <li>
+                                <span class="l-head">MGrade</span>
+                                <span class="r-det">: {{item.mGrade}}</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </ng-template>
+                      </kendo-tabstrip-tab>
+                    </kendo-tabstrip>
+                  </div>
+                  <div class="p-r-7">
+                    <div class="d-media">
+                      <h6 class="title">Diamond Media</h6>
+                      <kendo-tabstrip>
+                        <kendo-tabstrip-tab [selected]="true">
+                          <ng-template kendoTabTitle>
+                            <i class="icon-camera"></i>&nbsp;Image
+                          </ng-template>
+                          <ng-template kendoTabContent *ngIf="dataItem.media">
+                            <div class="content" *ngIf="dataItem.media.isPrimaryImage">
+                              <img [src]="setupURL(dataItem.stoneId,'image')" alt="diamond image"
+                                class="m-auto d-block">
+                            </div>
+                            <div class="content" *ngIf="!dataItem.media.isPrimaryImage">
+                              <img src="commonAssets/images/image-not-found.jpg" alt="diamond image"
+                                class="m-auto d-block">
+                            </div>
+                          </ng-template>
+                        </kendo-tabstrip-tab>
+                        <kendo-tabstrip-tab>
+                          <ng-template kendoTabTitle>
+                            <i class="icon-diamond"></i>&nbsp;360 View
+                          </ng-template>
+                          <ng-template kendoTabContent *ngIf="dataItem.media">
+                            <div class="content" *ngIf="dataItem.media.isHtmlVideo">
+                              <iframe [src]="setupURL(dataItem.stoneId,'video')" width="100%" height="288px"
+                                style="border: 0;" allow='autoplay'></iframe>
+                            </div>
+                            <div class="content" *ngIf="!dataItem.media.isHtmlVideo">
+                              <img src="commonAssets/images/video-not-found.png" alt="diamond Video"
+                                class="m-auto d-block">
+                            </div>
+                          </ng-template>
+                        </kendo-tabstrip-tab>
+                        <kendo-tabstrip-tab>
+                          <ng-template kendoTabTitle>
+                            <i class="icon-cerificate"></i>&nbsp;Cerificate
+                          </ng-template>
+                          <ng-template kendoTabContent *ngIf="dataItem.media">
+                            <div class="content" *ngIf="dataItem.media.isCertificate">
+                              <iframe [src]="setupURL(dataItem.certificateNo,'certificate')" width="100%" height="288px"
+                                style="border: 0;" allow='autoplay'></iframe>
+                            </div>
+                            <div class="content" *ngIf="!dataItem.media.isCertificate">
+                              <img src="commonAssets/images/certi-not-found.png" alt="Diamond Certificate"
+                                class="m-auto d-block">
+                            </div>
+                          </ng-template>
+                        </kendo-tabstrip-tab>
+                      </kendo-tabstrip>
+                    </div>
+                  </div>
+                </div>
+                <ng-template kendoGridNoRecordsTemplate>
+                  <span style="text-align: center;display: block">No Records Found</span>
+                </ng-template>
+              </ng-template>
+            </kendo-grid>
+          </div>
+        </div>
+        <!--#endregion -->
+      </div>
+      <!-- #region summry -->
+      <div class="summary-panel" *ngIf="isSummary">
+        <div class="marketsheet-status ps-2 pe-2">
+          <div class="sr" *ngIf="!isSummaryLoading">
+            <h6>Summary <i class="icon-delete float-end mt-1 me-1" (click)="closeSummary()"></i>
+            </h6>
+
+            <div class="summary-panel-grid">
+              <div class="grid-1">
+                <button type="button" class="btn t-record">{{priceReqResponse.total}}</button>
+                <span>Total Records</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn t-weight">{{summaryData.totalWeight}}</button>
+                <span>Total Weight</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn avg-dis">{{summaryData.avgDiscount}}</button>
+                <span>Avg Dis</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn avg-ct">{{summaryData.avgPerCarat}}</button>
+                <span>Avg $/CT</span>
+              </div>
+              <div class="grid-1" [ngClass]="{'is-active-summary':filterReq.invFilter.isRapnetHold}"
+                (click)="filterRapnetHoldChange()">
+                <button type="button" class="btn rp-block">{{summaryData.totalRapnetHold}}</button>
+                <span>On Rapnet Hold</span>
+              </div>
+              <div class="grid-1" [ngClass]="{'is-active-summary':filterReq.invFilter.isHold}"
+                (click)="filterChange('Hold')">
+                <button type="button" class="btn onhold">{{summaryData.totalHold}}</button>
+                <span>On Hold</span>
+              </div>
+              <div class="grid-1" [ngClass]="{'is-active-summary':filterReq.invFilter.isMemo}"
+                (click)="filterChange('Memo')">
+                <button type="button" class="btn onhold">{{summaryData.totalMemo}}</button>
+                <span>On Memo</span>
+              </div>
+              <div class="grid-1" [ngClass]="{'is-active-summary':filterReq.invFilter.isLead}"
+                (click)="filterChange('Lead')">
+                <button type="button" class="btn onhold">{{summaryData.totalLead}}</button>
+                <span>On Lead</span>
+              </div>
+              <div class="grid-1" *ngFor="let item of summaryData.locationTotals"
+                [ngClass]="{'is-active-summary': filterReq.invFilter.location.indexOf(item.location)>-1 }"
+                (click)="filterLocationChange(item.location)">
+                <button type="button" class="btn onmemo">{{item.totalCount}}</button>
+                <span>{{item.location}}</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn onhold">{{summaryData.avgDay}}</button>
+                <span>Avg Day</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn onhold">{{summaryData.avgAvailableDay}}</button>
+                <span>Avg Available Day</span>
+              </div>
+              <div class="grid-1">
+                <button type="button" class="btn onhold">{{summaryData.iAvgDay}}</button>
+                <span>iAvg Day</span>
+              </div>
+            </div>
+
+          </div>
+          <div class="text-center" *ngIf="isSummaryLoading">
+            <img src="commonAssets/images/dialoading.gif" width="80px" alt="loading" />
+          </div>
+        </div>
+      </div>
+      <!-- #endregion summry -->
+    </div>
+  </div>
+</section>
+<!-- #endregion -->
+
+<!-- #region Bulk Discount Edit Modal -->
+<!-- <div class="modal c-modal addemp" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+    *ngIf="isBulkDisc">
+    <form>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="icon-inventroy"></i>
+                        Bulk Discount
+                    </h5>
+                    <button type="button" class="close" (click)="closeBulkDiscDialog()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+                            <div class="i-form bu-disc">
+                                <div class="grid">
+                                    <div class="form-data">
+                                        <input type="text" id="lname">
+                                    </div>
+                                    <div class="form-data">
+                                        <button class="btn btn-primary"><i class="icon-add p-0"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary"><i class="icon-add"></i>New</button>
+                    <button class="btn btn-primary"><i class="icon-save"></i>Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div> -->
+<!-- #endregion -->
+
+<!-- #region Analytics Modal -->
+<ng-container *ngIf="isAnalytics">
+  <app-priceanalytic [selectedPriceReq]="selectedPriceReq" (closeDialog)="isAnalytics=$event"></app-priceanalytic>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Color Mark Modal -->
+<div class="modal c-modal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static" *ngIf="iscolorMark">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="icon-appearance"></i>
+          Color Mark
+        </h5>
+        <button type="button" class="close" (click)="closeColorMarkDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-4 text-center">
+          <span class="ms-2" *ngFor="let item of listColorMarkItems">
+            <button kendoButton class="mb-2" (click)="markColor(item)"
+              [ngStyle]="{'background-color': (selectedColorMark == item) ? getColorMarkRGB(item) : null}">
+              {{item}}
+            </button>
+          </span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" [disabled]="selectedColorMark.length == 0" (click)="saveColorMark()">
+          <i class="icon-save"></i>Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- #endregion -->
+
+<!-- #region Search Filter Modal -->
+<ng-container *ngIf="isSlotFilter">
+  <app-filter [skip]="0" [pageSize]="pageSize" [groups]="groups" [selectedSlots]="selectedSlots" [isPricing]="true"
+    [inventorySearchCriteriaObj]="inventorySearchCriteriaObj" [selectedTypeDNormItems]="selectedBranchDNormItems"
+    (ChildEvent)="onFilterChange($event)" (toggle)="isSlotFilter=$event"></app-filter>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Media Modal-->
+<ng-container *ngIf="isShowMedia">
+  <app-media [mediaTitle]="mediaTitle" [mediaSrc]="mediaSrc" [mediaType]="mediaType"
+    (closeDialog)="closeMediaDialog($event)"></app-media>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region GridConfig Modal -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'PriceRequest'" [gridName]="'PriceRequestGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

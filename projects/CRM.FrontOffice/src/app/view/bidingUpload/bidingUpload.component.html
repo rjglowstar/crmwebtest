@@ -1,0 +1,161 @@
+<title>Biding Upload</title>
+<section class="stockmain-wrap">
+    <div class="content_wrap">
+        <div class="e-left w-100">
+            <div class="breadcrumb">
+                <div class="breadcrumb-left">
+                    <ul>
+                        <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+                        <li class="breadcrumb-item active" aria-current="page">Biding Upload</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="summarybar bg">
+                <div class="summary-left">
+                    <ul>
+                        <li *ngIf="isActiveBid">BID Number : <span> {{ bidingSummary.bidNumber }}</span></li>
+                        <li *ngIf="remainingBidEndTime !== 'Bid Ended'">BID Time (sec) : <span>{{ remainingBidEndTime
+                                }}</span></li>
+                        <li *ngIf="isActiveBid">BID Start : <span>{{ bidStartDate }}</span></li>
+                        <li *ngIf="isActiveBid">BID End : <span>{{ bidEndDate }}</span></li>
+                        <li *ngIf="isActiveBid">IsGreater : <span>{{ isGreater }}</span></li>
+                    </ul>
+                </div>
+                <div class="summary-right pe-0">
+                    <kendo-buttongroup kendotooltip="" position="bottom" ng-reflect-position="bottom" role="group"
+                        dir="ltr" tabindex="0" class="k-button-group">
+                        <button kendoButton title="Upload Biding" (click)="openBidUploadDialog()"
+                            [disabled]="isCurrentDateWithinRange()">
+                            <i class="icon-plus"></i>
+                        </button>
+                        <button kendoButton title="Upload Biding" (click)="openBidEditDialog()"
+                            [disabled]="isCurrentDateWithinRange()">
+                            <i class="icon-edit"></i>
+                        </button>
+                        <button kendoButton title="Grid Config" (click)="openGridConfigDialog()"><i
+                                class="icon-gridconfig"></i>
+                        </button>
+                    </kendo-buttongroup>
+                </div>
+            </div>
+            <div class="content_box">
+                <div class="grid-wrap">
+                    <kendo-grid [resizable]="true" [sortable]="true" #invGrid [data]="gridView!" [groupable]="true"
+                        [sortable]="true" [sort]="sort" (sortChange)="sortChange($event)"
+                        [selectable]="selectableSettings" [group]="groups" (groupChange)="groupChange($event)"
+                        [pageable]="true" [kendoGridSelectBy]="'stoneId'" class="rs-grid" [pageSize]="pageSize" [skip]="skip"
+                        (pageChange)="pageChange($event)">
+                        <ng-container *ngIf="fields && fields.length > 0">
+                            <ng-container *ngFor="let field of fields">
+                                <ng-container *ngIf="field.isSelected">
+                                    <kendo-grid-column [width]="field.width" [editor]="field.editor!"
+                                        [field]="field.propertyName" [title]="field.title">
+                                    </kendo-grid-column>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                        <!-- <ng-template kendoGridDetailTemplate let-dataItem>
+                            <app-searchdetail [invItemsSearchResult]="dataItem"></app-searchdetail>
+                            <ng-template kendoGridNoRecordsTemplate>
+                                <span style="text-align: center;display: block">No Records Found</span>
+                            </ng-template>
+                        </ng-template> -->
+                    </kendo-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #endregion-->
+
+    <!-- #region Grid Config Modal -->
+    <ng-container *ngIf="isGridConfig">
+        <app-gridconfiguration [fields]="fields" [pageName]="'BidingUpload'" [gridName]="'BidingUploadGrid'"
+            [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+            (ChildEvent)="setNewGridConfig($event)">
+        </app-gridconfiguration>
+    </ng-container>
+    <!-- #endregion -->
+</section>
+
+<!-- #region Bid Upload dialog start -->
+<div class="modal c-modal addemp" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+    *ngIf="isBidUploadDialog">
+    <form name="form" #bidForm="ngForm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-bid"></i>{{isBidEditDialog ?
+                        "Update Bid" : "Add Bid"}}
+                    </h5>
+                    <button type="button" class="close" (click)="closeBidUploadDialog(bidForm)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- #region Bid Timer Form -->
+                    <h6 class="title justify-content-between mb-0"><span><i class="icon-info"></i>Bid Timer</span></h6>
+                    <div class="bid-input-grid mt-2">
+                        <div class="form-data">
+                            <label for="">Offer Time<span class="require">*</span></label>
+                        </div>
+                        <div class="form-data">
+                            <input type="text" name="offerTime" id="offerTime" #offerTime="ngModel"
+                                [(ngModel)]="bidingObj.bidTimer.offerTime" disabled required>
+                        </div>
+                        <div class="form-data">
+                            <label class="col-form-label">Start Date <span class="require">*</span></label>
+                        </div>
+                        <div class="form-data">
+                            <kendo-datetimepicker calendarType="classic" name="bidStart" id="bidStart"
+                                #bidStart="ngModel" [(ngModel)]="bidingObj.bidTimer.bidStart" [disabledDates]="disabledDates"
+                                (valueChange)="validateStartEndDate(bidForm)" required></kendo-datetimepicker>
+                        </div>
+                        <div class="form-data">
+                            <label class="col-form-label">End Date <span class="require">*</span></label>
+                        </div>
+                        <div class="form-data">
+                            <kendo-datetimepicker calendarType="classic" name="bidEnd" id="bidEnd" #bidStart="ngModel"
+                                [(ngModel)]="bidingObj.bidTimer.bidEnd" [disabledDates]="disabledDates"
+                                (valueChange)="validateStartEndDate(bidForm)" required></kendo-datetimepicker>
+                        </div>
+                        <div class="form-data">
+                            <label class="col-form-label">IsGreater</label>
+                        </div>
+                        <div class="form-data">
+                            <kendo-switch class="k-widget k-switch-off" name="isGreater"
+                                [(ngModel)]="bidingObj.isGreater" #isGreater="ngModel" id=""></kendo-switch>
+                        </div>
+                    </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Bid Timer Form -->
+                    <h6 class="title justify-content-between mb-0 mt-3"><span><span
+                                class="count_num">{{bidingObj.invDetailItems.length}}</span>Inventory
+                            Upload</span></h6>
+                    <div class="mt-3">
+                        <label class="bid_fileUp_label" for="fileUpload" [ngClass]="isFileSelect ? 'bid_file_suc' : ''">
+                            <input #file id="fileUpload" type="file"
+                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                                (click)="file.value=''" (change)="onSelectExcelFile($event)" hidden />
+                            <i class="icon-upload bid_upl_icon"></i>
+                            <span><span *ngIf="!isFileSelect">File upload</span> <span *ngIf="isFileSelect">{{
+                                    ftpUpfileName }}</span></span>
+                        </label>
+                    </div>
+                    <!-- #endregion -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button"
+                        [disabled]="!(bidForm.valid && bidingObj.invDetailItems && bidingObj.invDetailItems.length)"
+                        (click)="isBidEditDialog ? updateBidingData(bidForm) : saveBidingData(bidForm)">
+                        <i class="icon-save"></i> Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

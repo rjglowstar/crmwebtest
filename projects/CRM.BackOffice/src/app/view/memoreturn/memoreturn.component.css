@@ -1,0 +1,14 @@
+.memoreturns-grid {
+    display: grid;
+    grid-template-columns: 104px 1fr 48px 1fr 38px 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+}
+
+.memoreturns-grid .form-data:nth-child(10) {
+    grid-column: 3 span / 7;
+}
+
+.memoreturns-grid .form-data:last-child {
+    grid-column: 5 span / 7;
+}

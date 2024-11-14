@@ -1,0 +1,98 @@
+<div class="modal c-modal addemp rorgan dialog-sm" tabindex="-1" role="dialog" data-keyboard="false"
+    data-backdrop="static">
+    <form name="form">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id=""><i class="icon-qcrequest"></i>Qc Request</h5>
+                    <button type="button" class="close" (click)="closeDetailsDialog()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="detail-submodal qc-grid mb-2">
+                        <li class="w-100">
+                            <h6 class="c-name"><span>Party Name
+                                    :</span><b>{{qcRequestObj.party.name}}</b>
+                            </h6>
+                        </li>
+                        <li>
+                            <h6 class="c-name">
+                                <span>lead No :</span>{{qcRequestObj.leadNo}}
+                            </h6>
+                        </li>
+                        <li>
+                            <h6 class="c-name">
+                                <span>Seller Name :</span>{{qcRequestObj.seller.name}}
+                            </h6>
+                        </li>
+                    </div>
+
+                    <div class="en-form f-12">
+                        <div class="i-form lab-iss-mod a-lead m-0">
+                            <div class="ci-top-right pe-0">
+                                <div class="d-flex align-items-center mb-1">
+                                    <div class="form-data">
+                                        <label>Rej. Comment:</label>
+                                    </div>
+                                    <div class="form-data">
+                                        <input type="text" name="comments" [(ngModel)]="qcRequestStoneReject"
+                                            #comments="ngModel" id="comments" class="ms-1 sm_input">
+                                    </div>
+                                    <div *ngIf="!(mySelection.length == 0 || !qcRequestStoneReject); else elseBlock">
+                                        <button type="button" class="ms-2" kendoButton title="Mark as reject"
+                                            [disabled]="mySelection.length == 0 || !qcRequestStoneReject"
+                                            (click)="approveOrRejectQcstones('reject')"><i
+                                                class="icon-delete pe-0"></i></button>
+                                    </div>
+                                    <ng-template #elseBlock>
+                                        <button type="button" class="ms-2" kendoButton title="Mark as accept"
+                                            [disabled]="mySelection.length == 0"
+                                            (click)="approveOrRejectQcstones('accept')"><i
+                                                class="icon-check pe-0"></i></button>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-wrap">
+                        <kendo-grid *ngIf="gridDetailView" [data]="gridDetailView" [reorderable]="true"
+                            [resizable]="true" [sortable]="true" [skip]="detailSkip" [pageSize]="detailPageSize"
+                            [pageable]="true" [sort]="sort" (pageChange)="pageChangeDetail($event)"
+                            style="height: calc(100vh - 298px);" [(selectedKeys)]="mySelection"
+                            [kendoGridSelectBy]="'stoneId'" (selectionChange)="selectedRowChange($event)"
+                            class="mb-grid">
+                            <kendo-grid-checkbox-column [showSelectAll]="isShowCheckBoxAll" [width]="40">
+                            </kendo-grid-checkbox-column>
+                            <ng-container *ngIf="detailFields && detailFields.length > 0">
+                                <ng-container *ngFor="let detailField of detailFields">
+                                    <ng-container *ngIf="detailField.isSelected">
+                                        <kendo-grid-column [width]="detailField.width"
+                                            [field]="detailField.propertyName" [title]="detailField.title">
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="detailField.title == 'Discount'">
+                                                {{dataItem.fDiscount ? dataItem.fDiscount : dataItem.price.discount}}
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="detailField.title == 'NetAmount'">
+                                                {{dataItem.fAmount ? dataItem.fAmount : (dataItem.netAmount ?
+                                                dataItem.netAmount :
+                                                dataItem.price.netAmount)}}
+                                            </ng-template>
+                                            <ng-template kendoGridCellTemplate let-dataItem
+                                                *ngIf="detailField.title == '$/CT'">
+                                                {{dataItem.perCarat ? dataItem.perCarat : dataItem.price.perCarat}}
+                                            </ng-template>
+                                        </kendo-grid-column>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </kendo-grid>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

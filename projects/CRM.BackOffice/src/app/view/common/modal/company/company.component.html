@@ -1,0 +1,164 @@
+<div class="modal c-modal addemp la-mas logi-modal" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <form name="form" #companyForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-addemployee"></i>Company Master</h5>
+          <button type="button" class="close" (click)="closeMasterDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form l-master">
+                <h6 class="title"><i class="icon-info"></i>Information</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="lname">Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                    <input type="text" id="" name="name" #name="ngModel" [(ngModel)]="companyObj.name" required>
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Email<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('email')) || (email.errors?.required && email.touched))}">
+                    <input type="text" id="" name="email" #email="ngModel" [(ngModel)]="companyObj.email" required
+                      email>
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Mobile No.</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': mobileNo.invalid && (mobileNo.errors?.required && mobileNo.touched) }">
+                    <kendo-maskedtextbox type="text" id="" name="mobileNo" #mobileNo="ngModel"
+                      [(ngModel)]="companyObj.mobileNo">
+                    </kendo-maskedtextbox>
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Phone No.</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': phoneNo.invalid && (phoneNo.errors?.required && phoneNo.touched) }">
+                    <kendo-maskedtextbox type="text" id="" name="phoneNo" #phoneNo="ngModel"
+                      [(ngModel)]="companyObj.phoneNo">
+                    </kendo-maskedtextbox>
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Fax No.</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-maskedtextbox type="text" id="" name="faxNo" #faxNo="ngModel" [(ngModel)]="companyObj.faxNo">
+                    </kendo-maskedtextbox>
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Website</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': website.invalid && ((website.touched && website.hasError('pattern')) || (website.errors?.required && website.touched))}">
+                    <input type="text" id="" name="website" #website="ngModel" [(ngModel)]="companyObj.website"
+                      [pattern]="websitePattern">
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Regi.No.</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="registrationNo" #registrationNo="ngModel"
+                      [(ngModel)]="companyObj.registrationNo">
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">IncomeTax No.</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="incomeTaxNo" #incomeTaxNo="ngModel"
+                      [(ngModel)]="companyObj.incomeTaxNo">
+                  </div>
+                  <div class="form-data">
+                    <label for="lname">Tax No.</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="taxNo" #taxNo="ngModel" [(ngModel)]="companyObj.taxNo">
+                  </div>
+                </div>
+              </div>
+              <div class="i-form a-add">
+                <h6 class="title"><i class="icon-mapmarker"></i>Address</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label>Line1</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line1" #line1="ngModel"
+                      [(ngModel)]="companyAddress.line1">
+                    </textarea>
+                  </div>
+                  <div class="form-data">
+                    <label>Line2</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line2" #line2="ngModel"
+                      [(ngModel)]="companyAddress.line2">
+                    </textarea>
+                  </div>
+                  <div class="form-data">
+                    <label>Type</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listAddressTypeItems" [valuePrimitive]="true" name="addressType"
+                      #addressType="ngModel" [(ngModel)]="companyAddress.type" [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>Country<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings"
+                      [textField]="'name'" [valueField]="'name'" name="country" #country="ngModel"
+                      (valueChange)="onCountryChange($event)" [valuePrimitive]="true"
+                      [(ngModel)]="companyAddress.country" required>
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>State</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onStateChange($event)" [valuePrimitive]="true" name="state"
+                      #state="ngModel" [(ngModel)]="companyAddress.state">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>City</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city"
+                      #city="ngModel" [(ngModel)]="companyAddress.city">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>ZipCode</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="zipcode" #zipcode="ngModel" [(ngModel)]="companyAddress.zipCode">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" (click)="onFormSubmit(companyForm,false)" [disabled]="!companyForm.valid"
+            class="btn btn-primary"><i class="icon-add"></i>New</button>
+          <button type="button" (click)="onFormSubmit(companyForm,true)" [disabled]="!companyForm.valid"
+            class="btn btn-primary"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeMasterDialog()"></div>
+  </form>
+</div>

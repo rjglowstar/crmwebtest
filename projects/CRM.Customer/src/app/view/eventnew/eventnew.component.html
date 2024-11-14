@@ -1,0 +1,64 @@
+<section class="eventIntro_sec" *ngIf="eventObj">
+    <div class="mGrid_wrap">
+        <div class="gridBox">
+            <div class="img_wrap">
+                <img src="{{ eventObj.eventImage }}" class="img-fluid" alt="event">
+            </div>
+        </div>
+        <div class="gridBox">
+            <div class="container">
+                <div class="txt_box">
+                    <div class="upComing_txt">
+                        <h3 class="text_title">{{'EventPage.UPCOMING EVENT'|translate}}</h3>
+                        <h3 class="text_lg">{{ eventObj.eventName ? eventObj.eventName : '\u00A0' }}</h3>
+                        <h4 class="text_sm">{{ eventObj.tagline ? eventObj.tagline : '\u00A0' }}</h4>
+                    </div>
+                    <div class="venue_txt">
+                        <h3 class="text_title">{{'EventPage.VENUE'|translate}}</h3>
+                        <h3 class="text_lg">{{ eventObj.venue ? eventObj.venue : '\u00A0' }}</h3>
+                    </div>
+                    <div class="booth_txt">
+                        <h3 class="text_title">{{'EventPage.BOOTH NO'|translate}}</h3>
+                        <h3 class="text_lg">{{ eventObj.boothNo ? eventObj.boothNo : '\u00A0' }}</h3>
+                    </div>
+                    <div class="venue_txt">
+                        <h3 class="text_title">{{'EventPage.START DATE'|translate}}</h3>
+                        <h3 class="text_lg" *ngIf="eventObj.startDate && eventObj.endDate">{{
+                            getFormattedDateRange(eventObj.startDate, eventObj.endDate) }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="eventGallery_sec" *ngIf="previousEventsObj.length > 0">
+    <div class="content_wraper">
+        <div class="banner_title">
+            <h1>We shine everywhere</h1>
+            <h2>EVENT GALLERIES</h2>
+        </div>
+    </div>
+    <div class="content_wraper container">
+        <swiper [config]="eventGallery" class="eventGallery_slider">
+            <ng-template swiperSlide *ngFor="let item of previousEventsObj">
+                <div class="content_box">
+                    <div class="img_wrap">
+                        <img src="{{item.eventImage}}" class="img-fluid" alt="slider-img-2">
+                    </div>
+                    <div class="slide_content">
+                        <h3>{{ item.eventName }}</h3>
+                        <h4>{{ item.startDate | date: 'd MMMM, y' }}</h4>
+                    </div>
+                </div>
+            </ng-template>
+        </swiper>
+    </div>
+</section>
+
+<section class="no_event" *ngIf="!eventObj && !previousEventsObj.length">
+    <div class="img_wrap">
+        <img src="../../../assets/images/NoEventFound.png" class="img-fluid" alt="event-not-found-image">
+    </div>
+    <div class="notfound_txt">No Event Found</div>
+</section>

@@ -1,0 +1,113 @@
+.config_btns {
+    display: inline-flex;
+    gap: 15px;
+}
+
+.config_btns .k-button,
+.config_btns .k-button:hover {
+    padding: 0 !important;
+    background-color: transparent !important;
+    color: #212529 !important;
+    border: 0 !important;
+    font-size: 14px;
+}
+
+.config_btns .k-button:hover i {
+    color: #212529;
+}
+
+.config_btns .k-button i {
+    opacity: 0.4;
+    font-size: 14px;
+}
+
+.ms-config .o-edit {
+    display: flex;
+}
+
+.ms-config .o-edit i {
+    margin-right: initial;
+}
+
+.ms-config .in-block .o-edit {
+    padding: initial;
+    align-items: center;
+}
+
+.ms-config button.btn {
+    padding: 0 0 0 5px;
+    vertical-align: middle;
+}
+
+.ms-config .flex.in-block {
+    padding: 5px;
+    border: 0;
+    background-color: #dddddd;
+    height: 30px;
+    margin-bottom: initial;
+}
+
+.ms-config .o-title h6.title {
+    margin: initial;
+    border-bottom: 0;
+    font-size: 14px;
+}
+
+.data-list {
+    margin: 10px 0;
+    height: 150px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.data-list ul,
+.lab-list ul {
+    padding: 0 5px 0 25px !important;
+}
+
+.data-list li {
+    font-size: 13px;
+    list-style: disc;
+    padding: 0 5px;
+}
+
+.data-list li .btnGroup {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.data-list li i {
+    opacity: 0.5;
+}
+
+.data-list li:hover {
+    background-color: #e3e3e3;
+}
+
+.data-list li:hover i {
+    opacity: 1;
+}
+
+.data-list span {
+    font-weight: 600;
+    padding-left: 10px;
+}
+
+.data-list a {
+    float: right;
+    padding-right: 5px;
+}
+
+.masterConfig .config_ul li {
+    justify-content: initial;
+}
+
+.masterConfig .config_ul li .c_label {
+    line-height: 1.2;
+    justify-content: initial;
+}
+
+.wrd.grid {
+    grid-template-columns: 95px 1fr auto;
+}

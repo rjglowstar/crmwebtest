@@ -1,0 +1,118 @@
+/* ===== NEW Ui Responsive Css Start ===== */
+
+@media(max-width:1630px) {
+    .cus_container {
+        max-width: 93% !important;
+    }
+
+    .cLogIn .cus_container {
+        max-width: 100% !important;
+    }
+}
+
+@media(max-width:1199px) {
+    .sideDetails {
+        top: 0;
+        max-height: 100%;
+        bottom: 0;
+    }
+
+    .sideDetails .sideDet_body {
+        max-height: calc(100vh - 70px);
+    }
+}
+
+@media(max-width:990px) {
+    body {
+        margin: 0 !important;
+    }
+
+    .content_wrap {
+        margin-top: 0 !important;
+    }
+}
+
+@media(max-width:767px) {
+    .secbg_wrap {
+        margin: 0 15px 15px;
+    }
+
+    .secbg_wrap :is(.button-panel, .btntop_group) :is(button, button:hover) {
+        padding: 10px 10px !important;
+    }
+
+    .secbg_wrap :is(.button-panel, .btntop_group) :is(button, button:hover) i {
+        justify-content: center;
+    }
+
+    .secbg_wrap :is(.button-panel, .btntop_group) button:not(.border_btn) i {
+        height: initial;
+        aspect-ratio: initial;
+    }
+
+    .grid-setting .k-grid {
+        height: calc(100vh - 15vh) !important;
+    }
+
+    .k-grid-pager {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px 0;
+    }
+
+    .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item {
+        margin: 0 5px 0;
+    }
+
+    span.btn-text {
+        display: none !important;
+    }
+
+    .sideDetails .sideDet_head {
+        padding: 15px 15px;
+    }
+
+    .sideDetails .sideDet_body {
+        max-height: calc(100vh - 90px);
+    }
+
+    .sideDetails.sendmail_sec .sideDet_body {
+        padding: 20px 15px;
+    }
+
+    .sideDetails.sendmail_sec .mail_grid {
+        grid-template-columns: 100px 1fr;
+    }
+}
+
+@media(max-width:720px) {
+    .grid-setting>.d-flex {
+        display: block !important;
+    }
+}
+
+@media(max-width:575px) {
+    .secbg_wrap {
+        margin: 0 10px 10px;
+    }
+
+    .btntop_group {
+        gap: 5px;
+    }
+}
+
+@media(max-width:400px) {
+    .sideDetails.sendmail_sec .mail_grid {
+        grid-template: none;
+        gap: 5px;
+    }
+}
+
+@media(max-width:350px) {
+    .sec_title :is(svg, i, img) {
+        margin-left: 5px !important;
+        width: 35px !important;
+    }
+}
+
+/* ===== Responsive Css End ===== */

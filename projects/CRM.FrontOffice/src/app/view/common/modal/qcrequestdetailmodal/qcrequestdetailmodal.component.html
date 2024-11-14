@@ -1,0 +1,92 @@
+<div class="modal c-modal dialog-lg-l" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-view-request"></i>Qc Request Details
+        </h5>
+        <button type="button" class="close" (click)="closeDetailsDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="sr">
+          <h6>Search By Filter</h6>
+          <form name="form" #qcRequestDetailsSearchForm="ngForm" novalidate>
+            <div class="i-form">
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data d-flex flex-wrap">
+                  <div class="form-data me-2">
+                    <label for="">Stone Id</label>
+                  </div>
+                  <div class="form-data me-2">
+                    <input type="text" id="" name="stoneIdStr" [(ngModel)]="filterStoneId" #stoneIdStr="ngModel"
+                      autocomplete="off">
+                  </div>
+                  <div class="form-data me-2">
+                    <label for="Lead No">Certi No</label>
+                  </div>
+                  <div class="form-data me-2">
+                    <input type="text" name="certiNo" #certiNo="ngModel" [(ngModel)]="filterCertiNo" />
+                  </div>
+                  <div class="form-data me-2">
+                    <label for="Lead No">IsApprover</label>
+                  </div>
+                  <div class="form-data check-box">
+                    <ng2-tri-state-checkbox name="isApprover" [(ngModel)]="filterIsApprover" #isApprover="ngModel">
+                    </ng2-tri-state-checkbox>
+                  </div>
+
+                  <div class="ci-top-right">
+                    <div class="en-form f-12">
+                      <div class="i-form lab-iss-mod a-lead m-0">
+                        <div class=" pe-0">
+                          <button type="button" class="btn k-button me-1"
+                            (click)="onFilterDetailSubmit(qcRequestDetailsSearchForm)">
+                            <i class="icon-search p-0"></i>
+                          </button>
+                          <button type="button" (click)="clearDetailFilter(qcRequestDetailsSearchForm)"
+                            class="btn k-button me-1">
+                            <i class="icon-clear p-0"></i>
+                          </button>
+                          <kendo-buttongroup kendoTooltip position="bottom">
+                            <button type="button" kendoButton title="Copy StoneIds"
+                              (click)="copyRejectedToClipboard()"><i class="icon-copy pe-0"></i></button>
+                          </kendo-buttongroup>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="grid-wrap">
+          <kendo-grid *ngIf="gridDetailView" [data]="gridDetailView" [reorderable]="true" [resizable]="true"
+            [sortable]="true" [skip]="detailSkip" [pageSize]="detailPageSize" [pageable]="true"
+            (pageChange)="pageChangeDetail($event)" style="height: calc(100vh - 298px);" class="mb-grid">
+            <ng-container *ngIf="detailFields && detailFields.length > 0">
+              <ng-container *ngFor="let detailField of detailFields">
+                <ng-container *ngIf="detailField.isSelected">
+                  <kendo-grid-column [width]="detailField.width" [field]="detailField.propertyName"
+                    [title]="detailField.title">
+                    <ng-template kendoGridCellTemplate let-dataItem *ngIf="detailField.title == 'Discount'">
+                      {{dataItem.fDiscount ? dataItem.fDiscount : dataItem.price.discount}}
+                    </ng-template>
+                    <ng-template kendoGridCellTemplate let-dataItem *ngIf="detailField.title == 'NetAmount'">
+                      {{dataItem.fAmount ? dataItem.fAmount : (dataItem.netAmount ? dataItem.netAmount :
+                      dataItem.price.netAmount)}}
+                    </ng-template>
+                    <ng-template kendoGridCellTemplate let-dataItem *ngIf="detailField.title == '$/CT'">
+                      {{dataItem.perCarat ? dataItem.perCarat : dataItem.price.perCarat}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </kendo-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

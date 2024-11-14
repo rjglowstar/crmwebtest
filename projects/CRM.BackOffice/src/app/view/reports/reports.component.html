@@ -1,0 +1,64 @@
+<title>Reports</title>
+<section class="wrap-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100 pe-0">
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Reports</li>
+            </ul>
+          </div>
+        </div>
+        <div class="content_box content_scroll">
+          <div class="report-grid">
+            <div class="report-div">
+              <h4>Rojmel Report</h4>
+              <div class="optionicons">
+                <div class="rpt-icon"><i class="icon-search" (click)="openRojmelReportDialog()"></i>
+                </div>
+              </div>
+            </div>
+            <div class="report-div">
+              <h4>Ledger Outstanding Report</h4>
+              <div class="optionicons">
+                <div class="rpt-icon"><i class="icon-search" (click)="openLOReportDialog()"></i>
+                </div>
+              </div>
+            </div>
+            <div class="report-div">
+              <h4>Sales Payment Statistic</h4>
+              <div class="optionicons">
+                <div class="rpt-icon"><i class="icon-search" (click)="openSalesPaymentDialog()"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- #region Rojmel Modal Start -->
+<ng-container *ngIf="isRojmelReport">
+  <app-rojmel (toggle)="closeRojmelReportDialog()">
+  </app-rojmel>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Sales Payment Statistic Modal Start -->
+<ng-container *ngIf="isSalesPaymentReport">
+  <app-salesstatistics (toggle)="closeSalesPaymentDialog()">
+  </app-salesstatistics>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Ledger OutStanding Modal Start -->
+<ng-container *ngIf="isShowLedgerOutStandingReport">
+  <app-ledgeroutstandingmodal (toggle)="closeLOReportDialog($event)"></app-ledgeroutstandingmodal>
+</ng-container>
+<!-- #endregion Ledger OutStanding Modal End-->
+
+<div kendoDialogContainer></div>

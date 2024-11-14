@@ -1,0 +1,55 @@
+.saleanalysis :is(.k-tabstrip-content, .k-tabstrip>.k-content) {
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 10px;
+    max-height: 100%;
+    overflow-x: auto;
+}
+
+.saleanalysis .k-tabstrip-items {
+    gap: 15px;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+}
+
+.saleanalysis .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item {
+    border: none;
+    margin: 0 !important;
+}
+
+.saleanalysis kendo-tabstrip .k-tabstrip-items .k-link {
+    border-radius: 3px 3px 0px 0px;
+    border: 1px solid #E5E5E5;
+    border-bottom: none;
+    color: #212529;
+    padding: 9px 18px;
+    line-height: 1;
+}
+
+.saleanalysis .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item.k-active {
+    border-bottom: none;
+}
+
+.saleanalysis kendo-tabstrip .k-item.k-active .k-link {
+    border-color: #E4E4E4 !important;
+}
+
+.saleanalysis kendo-tabstrip .k-tabstrip-items .k-item.k-active {
+    border-radius: 3px 3px 0px 0px;
+    background: #e3e3e3;
+    border-color: #e3e3e3;
+}
+
+.saleanalysis kendo-tabstrip .k-tabstrip-items .k-item:not(.k-active):hover {
+    background: #E3E3E390;
+}
+
+.saleanalysis kendo-tabstrip .grid-wrap .k-grid {
+    height: calc(100vh - 190px) !important;
+}
+
+@media(max-width:990px), (max-width:767px) {
+    .saleanalysis kendo-tabstrip .grid-wrap .k-grid {
+        height: calc(100vh - 175px) !important;
+    }
+}

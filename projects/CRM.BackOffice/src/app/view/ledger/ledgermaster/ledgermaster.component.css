@@ -1,0 +1,22 @@
+.d-prop-wrap {
+    border: 1px solid #dddddd;
+}
+
+.d-prop {
+    height: 215px;
+    overflow-y: scroll;
+}
+
+.d-prop span.title {
+    font-size: 13px;
+}
+
+.d-prop .flex {
+    border: 0;
+    padding: 0 5px;
+    margin-bottom: initial;
+}
+
+.d-prop ul {
+    padding: 5px;
+}

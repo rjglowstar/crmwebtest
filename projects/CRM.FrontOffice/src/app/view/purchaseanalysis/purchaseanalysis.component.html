@@ -1,0 +1,43 @@
+<title>Purchase Analysis</title>
+<section class="stockmain-wrap">
+  <div class="content_wrap">
+    <div class="e-left w-100">
+      <div class="breadcrumb bg">
+        <div class="breadcrumb-left">
+          <ul>
+            <li class="breadcrumb-item">
+              <a href="#"></a><i class="icon-home"></i>Home
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Purchase Analysis</li>
+          </ul>
+        </div>
+        <div class="breadcrumb-right pe-0">
+          <kendo-buttongroup kendoTooltip position="bottom">
+            <input #filePA type="file" (click)="filePA.value=''" (change)="onSelectExcelFile($event)" hidden
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
+            <button kendoButton (click)="filePA.click();" title="Import Excel"><i class="icon-excelnew"></i></button>
+            <button kendoButton #anchor (click)="excelDownload()" [disabled]="invPurchaseAnalysisData.length == 0"
+              title="Export Excel"><i class="icon-doc_download"></i></button>
+            <button kendoButton [disabled]="!gridView || gridView.total == 0" (click)="clearGrid()"
+              title="Clear grid"><i class="icon-delete"></i></button>
+          </kendo-buttongroup>
+        </div>
+      </div>
+      <div class="content_box">
+        <div class="grid-wrap">
+          <kendo-grid #orgGrid [data]="gridView" [reorderable]="true" [resizable]="true">
+            <ng-container *ngIf="fields && fields.length > 0">
+              <ng-container *ngFor="let field of fields">
+                <ng-container *ngIf="field.isSelected">
+                  <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                  </kendo-grid-column>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </kendo-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div kendoDialogContainer></div>
+</section>

@@ -1,0 +1,47 @@
+<kendo-grid [resizable]="true" #bidDetailGrid [data]="gridView!" [groupable]="true" [sortable]="true" [sort]="sort"
+    (sortChange)="sortChange($event)" [selectable]="selectableSettings" [group]="groups"
+    (groupChange)="groupChange($event)" [pageable]="true" [kendoGridSelectBy]="'id'" class="rs-grid"
+    [pageSize]="pageSize" [skip]="skip" (pageChange)="pageChange($event)">
+    <kendo-grid-column field="stoneId" title="StoneId" [width]="20"></kendo-grid-column>
+    <kendo-grid-column field="customerName" title="Customer Name" [width]="30"></kendo-grid-column>
+    <kendo-grid-column field="mainDiscount" title="Curr. Disc" [width]="15">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{ mainDiscount }}
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="bidPerCT" title="Bid $/Ct" [width]="20">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.bidPerCT.toFixed(2)}}
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="bidAmount" title="Bid Amount" [width]="20">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.bidAmount.toFixed(2)}}
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="discount" title="Discount" [width]="15"></kendo-grid-column>
+    <kendo-grid-column field="companyName" title="Company Name" [width]="20"></kendo-grid-column>
+    <kendo-grid-column field="email" title="Email" [width]="40"></kendo-grid-column>
+    <kendo-grid-column field="mobile" title="Mobile No" [width]="25"></kendo-grid-column>
+    <kendo-grid-column field="actions" title="Actions" [width]="35">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <button kendoButton class="approve-button"
+                [disabled]="dataItem.isApproved || isAnyItemApproved(dataItem.isApproved) || isKeepUnsold"
+                (click)="onClickBidApproved(dataItem, true)">Approved</button>
+            <button kendoButton class="mr-5 reject-button"
+                [disabled]="!dataItem.isApproved || isAnyItemApproved(dataItem.isApproved) || isKeepUnsold"
+                (click)="onClickBidApproved(dataItem, false)">Disapproved</button>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="createdDate" title="Created Date" [width]="30">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.createdDate |date: 'dd/MM/yyyy hh:mm a'}}
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="bidStatus" title="Bid Approval Status" [width]="25">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="badge-approve-bidstatus" *ngIf="dataItem.isApproved">APPROVED</span>
+            <span class="badge-Pending-bidstatus" *ngIf="!dataItem.isApproved">PENDING</span>
+        </ng-template>
+    </kendo-grid-column>
+</kendo-grid>

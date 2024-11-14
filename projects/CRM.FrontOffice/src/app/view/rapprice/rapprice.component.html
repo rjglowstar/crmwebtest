@@ -1,0 +1,173 @@
+<title>Rap Price</title>
+<section class="omaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <!-- #region Header -->
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item">
+                <a href="#"></a><i class="icon-home"></i>Home
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Rap price</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <input #file type="file" (click)="file.value=''" (change)="onSelectExcelFile($event)" hidden
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" />
+              <button kendoButton title="Load Rap" (click)="getRapPriceData()">
+                <i class="icon-clear p-0"></i>
+              </button>
+              <button kendoButton title="Upload Rap Price" (click)="file.click()">
+                <i class="icon-fileupload p-0"></i>
+              </button>
+              <button kendoButton title="Save Rap Price" [disabled]="listRapPrice.length == 0"
+                (click)="uploadInclusionResultFile()"><i class="icon-save"></i></button>
+              <button kendoButton title="Apply Rap Update" (click)="applyRapUpdate()" *ngIf="isCanApplyRapUpload"><i
+                  class="icon-check"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <!-- #endregion -->
+        <!-- #region Grid -->
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid [data]="gridData" [groupable]="true" [resizable]="true" [group]="groups"
+              (groupChange)="groupChange($event)">
+              <kendo-grid-column [width]="100" field="shape" title="Shape"></kendo-grid-column>
+              <kendo-grid-column [width]="100" field="minSize" title="Min Size"></kendo-grid-column>
+              <kendo-grid-column [width]="100" field="maxSize" title="Max Size"></kendo-grid-column>
+              <kendo-grid-column [width]="100" field="color" title="Color"></kendo-grid-column>
+              <kendo-grid-column [width]="100" field="clarity" title="Clarity"></kendo-grid-column>
+              <kendo-grid-column [width]="100" field="price" title="Price"></kendo-grid-column>
+              <kendo-grid-column [width]="100" field="createdDate" title="Updated On">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem.createdDate | date: 'dd/MM/yyyy'}}
+                </ng-template>
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+        </div>
+        <!-- #endregion -->
+      </div>
+      <!-- #region Filter -->
+      <form class="e-right" name="form" #rapPriceSearchForm="ngForm" novalidate>
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <div class="i-form">
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label>Shape</label>
+                  <kendo-multiselect name="shape" class="customselect" [data]="listShape" [(ngModel)]="filterObj.shape"
+                    [textField]="'name'" [valueField]="'name'" [valuePrimitive]="true" [popupSettings]="{width: 'auto'}"
+                    [autoClose]="false" [kendoMultiSelectSummaryTag]="0" #shape="ngModel"
+                    (valueChange)="onMultiSelectChange(listShape, filterObj.shape)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="dropdown-header single k-widget k-header">
+                        <span class="temp-single">Select Shape</span>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom" [title]="getCommaSapratedString(filterObj.shape, true)">
+                        {{getCommaSapratedString(filterObj.shape)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label>Size</label>
+                  <div class="size" [ngClass]="{'error': (errWeight.length > 0 || minSize.invalid || maxSize.invalid) && 
+                        (minSize.touched && maxSize.touched) }">
+                    <div class="d-flex">
+                      <input type="text" class="me-2" name="minSize" placeholder="Min" required #minSize="ngModel"
+                        id="minSize" (blur)="errWeight = checkMinMaxValidation(filterObj.minSize, filterObj.maxSize)"
+                        [(ngModel)]="filterObj.minSize" (keypress)="utilityService.floatOnly($event);" />
+                      <input type="text" placeholder="Max" required name="maxSize" #maxSize="ngModel" id="maxSize"
+                        [(ngModel)]="filterObj.maxSize" (keypress)="utilityService.floatOnly($event);"
+                        (blur)="errWeight = checkMinMaxValidation(filterObj.minSize, filterObj.maxSize)" />
+                    </div>
+                    <span class="font-smaller s-error">{{errWeight.length > 0 ? '(' + errWeight + ')' : ''}}</span>
+                  </div>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label>Color</label>
+                  <kendo-multiselect name="color" class="customselect" [data]="listColor" [(ngModel)]="filterObj.color"
+                    [textField]="'name'" [valueField]="'name'" [valuePrimitive]="true" [popupSettings]="{width: 'auto'}"
+                    [autoClose]="false" [kendoMultiSelectSummaryTag]="0" #color="ngModel"
+                    (valueChange)="onMultiSelectChange(listColor, filterObj.color)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="dropdown-header single k-widget k-header">
+                        <span class="temp-single">Select Color</span>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom" [title]="getCommaSapratedString(filterObj.color, true)">
+                        {{getCommaSapratedString(filterObj.color)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label>Clarity</label>
+                  <kendo-multiselect name="clarity" class="customselect" [data]="listClarity"
+                    [(ngModel)]="filterObj.clarity" [textField]="'name'" [valueField]="'name'" [valuePrimitive]="true"
+                    [popupSettings]="{width: 'auto'}" [autoClose]="false" [kendoMultiSelectSummaryTag]="0"
+                    #clarity="ngModel" (valueChange)="onMultiSelectChange(listClarity, filterObj.clarity)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="dropdown-header single k-widget k-header">
+                        <span class="temp-single">Select Clarity</span>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom" [title]="getCommaSapratedString(filterObj.clarity, true)">
+                        {{getCommaSapratedString(filterObj.clarity)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label>Price</label>
+                  <input type="text" placeholder="Price" required name="price" #price="ngModel" id="price"
+                    [(ngModel)]="filterObj.price" (keypress)="utilityService.floatOnly($event);" />
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                  <button class="btn btn-action" (click)="onFilterSubmit(rapPriceSearchForm)">
+                    <i class="icon-search"></i>Search
+                  </button>
+                  <button (click)="clearFilter(rapPriceSearchForm)" class="btn btn-action">
+                    <i class="icon-clear"></i>Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- #endregion -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="onFilterSubmit(rapPriceSearchForm)"><i class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(rapPriceSearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div kendoDialogContainer></div>

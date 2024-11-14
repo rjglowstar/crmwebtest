@@ -1,0 +1,317 @@
+section>.secbg_img {
+    position: absolute;
+    top: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+}
+
+section>.secbg_img img {
+    height: 100%;
+}
+
+.content_wraper {
+    z-index: 1;
+    padding: 0 15px;
+    position: relative;
+    text-align: center;
+}
+
+.intro_banner {
+    padding: 12.6% 0 47.7% 0;
+    text-align: center;
+    margin-top: -77px;
+}
+
+.intro_banner .secbg_img {
+    background-color: #010101;
+}
+
+.intro_banner .secbg_img img {
+    object-fit: contain;
+    object-position: top;
+}
+
+.intro_banner .banner_title {
+    max-width: 60%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.intro_banner .banner_title h1 {
+    font-family: 'Rollgates Luxury';
+    font-size: calc(35px + (80 - 35) * ((100vw - 320px) / (1920 - 320)));
+    color: #fff;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.intro_banner .banner_title h2 {
+    font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1920 - 320)));
+    color: #fff;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.certiDiam_sec {
+    padding: 50px 0 41.8% 0;
+}
+
+.certiDiam_sec .secbg_img {
+    background-color: #010101;
+}
+
+.certiDiam_sec .secbg_img img {
+    object-fit: contain;
+    object-position: bottom;
+}
+
+:is(.certiDiam_sec, .looseDiam_sec, .fancyShape_sec, .matchPair_sec) :is(.secSm_title, .secLg_title, .sec_des) {
+    color: #fff;
+}
+
+.looseDiam_sec {
+    padding: 2% 0 43.98% 0;
+}
+
+.looseDiam_sec .secbg_img {
+    background-color: #000;
+}
+
+.looseDiam_sec .secbg_img img {
+    object-fit: contain;
+    object-position: bottom;
+}
+
+.fancyShape_sec {
+    padding: 0 0 3.3% 0;
+}
+
+.fancyShape_sec .content1 {
+    max-width: 930px;
+    margin: 0 auto;
+}
+
+.fancyShape_sec .secLg_title {
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+.fancyShape_sec .img_wrap {
+    margin-top: 7%;
+    -webkit-animation: var(--animationMove);
+    animation: var(--animationMove);
+    animation-timeline: var(--animation-timeline);
+    animation-range: var(--animation-range);
+    -webkit-animation-fill-mode: var(--fill-forwards);
+    animation-fill-mode: var(--fill-forwards);
+    visibility: hidden;
+}
+
+.fancyShape_sec .secbg_img {
+    background-color: #b6dff1;
+}
+
+.fancyShape_sec .secbg_img img {
+    object-fit: contain;
+    object-position: top;
+}
+
+.fancyColor_sec {
+    padding: 13% 0 27.35% 0;
+}
+
+.fancyColor_sec .secbg_img {
+    background-color: #b6dff1;
+}
+
+.fancyColor_sec .secbg_img img {
+    object-fit: contain;
+    object-position: bottom;
+}
+
+.fancyColor_sec .content1 {
+    max-width: 815px;
+    margin: 0 auto;
+}
+
+.fancyColor_sec .sec_des {
+    margin-top: 50px;
+}
+
+.matchPair_sec {
+    padding: 8.2% 0 10% 0;
+}
+
+.matchPair_sec .sec_des {
+    margin-top: -2.39%;
+}
+
+.matchPair_sec .secbg_img {
+    background-color: #0b0b0b;
+}
+
+.matchPair_sec .secbg_img img {
+    object-fit: contain;
+    object-position: top;
+}
+
+.matchPair_sec .img_wrap {
+    display: block;
+    margin: 0 auto;
+}
+
+.matchPair_sec .img_wrap {
+    -webkit-animation: var(--animationMove);
+    animation: var(--animationMove);
+    animation-timeline: var(--animation-timeline);
+    animation-range: var(--animation-range);
+    -webkit-animation-fill-mode: var(--fill-forwards);
+    animation-fill-mode: var(--fill-forwards);
+    visibility: hidden;
+}
+
+.matchPair_sec .img_wrap img {
+    max-width: 50%;
+}
+
+@media(min-width:1801px) {
+    body .secbg_img img {
+        object-fit: cover !important;
+    }
+}
+
+@media(max-width:1800px) {
+    .chLan .looseDiam_sec {
+        padding: 2% 0 46.98% 0;
+    }
+
+    .chLan .fancyShape_sec {
+        padding: 0 0 7.3% 0;
+    }
+
+    .chLan .fancyColor_sec {
+        padding: 13% 0 30.35% 0;
+    }
+
+    .chLan .matchPair_sec {
+        padding: 9.2% 0 10% 0;
+    }
+}
+
+@media(max-width:1600px) {
+    .fancyColor_sec {
+        padding: 7% 0 32.35% 0;
+    }
+
+    .matchPair_sec .img_wrap img {
+        max-width: 48%;
+    }
+
+    .fancyShape_sec {
+        padding: 0 0 4.3% 0;
+    }
+}
+
+@media(max-width:1199px) {
+    .fancyShape_sec {
+        padding: 6.6% 0 0 0;
+    }
+
+    .chLan .fancyShape_sec {
+        padding: 0 0 9.3% 0;
+    }
+}
+
+@media(max-width:991px) {
+    .intro_banner {
+        margin: 0;
+        padding: 8.6% 0 47.7% 0;
+    }
+
+    .intro_banner .banner_title h2 {
+        letter-spacing: 4px;
+    }
+
+    .intro_banner .banner_title {
+        max-width: 90%;
+    }
+
+    .intro_banner .secbg_img img {
+        object-fit: cover;
+    }
+}
+
+@media(max-width:767px) {
+    .intro_banner {
+        padding: 6.6% 0 51.7% 0;
+    }
+
+    .looseDiam_sec {
+        padding: 60px 0 50% 0;
+    }
+
+    .certiDiam_sec {
+        padding: 60px 0 50% 0;
+    }
+
+    .fancyShape_sec {
+        padding: 60px 0 60px 0;
+    }
+
+    .fancyColor_sec {
+        padding: 60px 0 40% 0;
+    }
+
+    .matchPair_sec {
+        padding: 60px 0 80px 0;
+    }
+}
+
+@media(max-width:575px) {
+    .intro_banner {
+        padding: 12% 0 90% 0;
+    }
+
+    .intro_banner .banner_title h2 {
+        letter-spacing: 3px;
+    }
+
+    .intro_banner .banner_title {
+        max-width: 95%;
+    }
+
+    .looseDiam_sec {
+        padding: 45px 0 50% 0;
+    }
+
+    .certiDiam_sec {
+        padding: 45px 0 50% 0;
+    }
+
+    .fancyShape_sec {
+        padding: 45px 0 45px 0;
+    }
+
+    .fancyColor_sec {
+        padding: 45px 0 40% 0;
+    }
+
+    .fancyColor_sec .sec_des {
+        margin-top: 25px;
+    }
+
+    .matchPair_sec {
+        padding: 45px 0 60px 0;
+    }
+}
+
+@media(max-width:575px) {
+    .intro_banner {
+        padding: 12% 0 100% 0;
+    }
+}

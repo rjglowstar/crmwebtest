@@ -1,0 +1,96 @@
+<!-- #region My Appoint -->
+<div class="modal addemp c-modal dialog-ui" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <form name="form" #AppointmentForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="icon-appointment"></i>My Appointment</h5>
+          <button type="button" class="close" (click)="closeMyAppointDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="i-form">
+            <div class="appointment-grid">
+              <div class="form-data">
+                <label>First Name</label>
+                <input type="text" class="k-input" name="name" #name="ngModel"
+                  [(ngModel)]="appointmentObj.customer.name" [disabled]="true">
+              </div>
+              <div class="form-data">
+                <label>Email Address</label>
+                <input type="text" class="k-input" name="email" #email="ngModel"
+                  [(ngModel)]="appointmentObj.customer.email" [disabled]="true">
+              </div>
+              <div class="form-data">
+                <label>Company Name</label>
+                <input type="text" class="k-input" name="companyName" #companyName="ngModel"
+                  [(ngModel)]="appointmentObj.customer.companyName" [disabled]="true">
+              </div>
+              <div class="form-data">
+                <label>Mobile</label>
+                <input type="text" class="k-input" name="mobile" #mobile="ngModel"
+                  [(ngModel)]="appointmentObj.customer.mobile" [disabled]="true">
+              </div>
+              <div class="form-data">
+                <label>Address</label>
+                <input type="text" name="sendTo" class="k-input" name="city" #city="ngModel"
+                  [(ngModel)]="appointmentObj.customer.city" [disabled]="true">
+              </div>
+              <div class="form-data">
+                <label>Select Date<span class="require">*</span></label>
+                <kendo-datepicker calendarType="classic" name="appointmentDateTime" #appointmentDateTime="ngModel"
+                  format="dd/MM/yyyy" [(ngModel)]="appointmentObj.appointmentDate" required [disabled]="true">
+                </kendo-datepicker>
+              </div>
+              <div class="form-data">
+                <label>Select Time<span class="require">*</span></label>
+                <kendo-timepicker name="appointmentTime" #appointmentTime="ngModel"
+                  [(ngModel)]="appointmentObj.appointmentTime" required [disabled]="true">
+                </kendo-timepicker>
+              </div>
+              <div class="form-data">
+                <label>Purpose<span class="require">*</span></label>
+                <textarea name="cc" class="k-textarea w-100 bg-white" cols="4" rows="4" resizable="auto"
+                  style="height: 40px;" name="purpose" #purpose="ngModel" [(ngModel)]="appointmentObj.purpose" required
+                  [disabled]="true"></textarea>
+              </div>
+            </div>
+          </div>
+          <!-- #region Grid Stone-->
+          <div class="grid-wrap">
+            <kendo-grid *ngIf=" gridViewStone" [data]="gridViewStone" class="grid-ui upload-grid" [sortable]="true"
+              [resizable]="true" [height]="250">
+              <ng-container *ngIf="fieldsStone && fieldsStone.length > 0">
+                <ng-container *ngFor="let field of fieldsStone">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <!-- <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'Action'">
+                        <ng-container style="text-align: center">
+                          <i class="icon-delete p-0" (click)="deletestone(dataItem)"></i>
+                        </ng-container>
+                      </ng-template> -->
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'StoneIds'">
+                        {{dataItem}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+            <!-- #endregion -->
+          </div>
+        </div>
+
+
+        <!-- <div class="modal-footer">
+          <button class="btn" type="button" (click)="onSubmit(AppointmentForm,true)" [disabled]="!AppointmentForm.valid"
+            class="btn btn-primary"><i class="icon-save"></i>Save</button>
+        </div> -->
+
+      </div>
+    </div>
+    <div (document:keydown.esc)="closeMyAppointDialog()"></div>
+  </form>
+</div>
+<!-- #endregion My Appointment-->

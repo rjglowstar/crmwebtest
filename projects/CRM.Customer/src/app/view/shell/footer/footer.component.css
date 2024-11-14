@@ -1,0 +1,581 @@
+footer {
+    width: 100%;
+    margin: 10px 15px 15px;
+    font-family: 'Inter', sans-serif;
+}
+
+.fo_landing footer {
+    margin: 0;
+}
+
+.fLogin_wrap {
+    border-radius: 5px;
+    background: #FFF;
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(77, 77, 77, 0.20);
+    box-shadow: 0px 0px 3px 0px rgba(77, 77, 77, 0.20);
+    overflow: hidden;
+}
+
+.cLogIn .fLogin_wrap .cus_container {
+    max-width: 100% !important;
+}
+
+.fo_landing .fLogin_wrap {
+    background: #4d4d4d;
+    color: #fff;
+    border-radius: 0;
+}
+
+.fo_landing .fLogin_wrap .bgF_wrap {
+    background: rgba(153, 153, 153, 10%);
+}
+
+.fLogin_wrap .f_grid {
+    display: -ms-grid;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc((100% - 60px) / 4), auto));
+    grid-gap: 15px;
+    padding: 20px;
+}
+
+.fo_landing .fLogin_wrap .f_grid {
+    padding: 30px 0;
+}
+
+.fLogin_wrap .f_title {
+    color: #212529;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    font-style: italic;
+}
+
+.fo_landing .fLogin_wrap .f_title {
+    color: rgba(255, 255, 255, 92%);
+}
+
+.fLogin_wrap ul.ul_grid {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.fLogin_wrap ul.ul_grid li {
+    line-height: 1;
+}
+
+.fLogin_wrap ul.ul_grid li :is(a, a:hover) {
+    color: #212529;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    -webkit-transition: all .2s;
+    -o-transition: all .2s;
+    transition: all .2s;
+}
+
+.fo_landing .fLogin_wrap ul.ul_grid li :is(a, a:hover) {
+    color: rgba(255, 255, 255, 90%);
+}
+
+.fLogin_wrap ul.ul_grid li a::before {
+    content: "\e154b";
+    font-family: icomoon !important;
+    margin-right: 7px;
+    top: 0;
+    left: 0;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    font-size: 9px;
+    font-weight: 600;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.fLogin_wrap ul.ul_grid li a:hover {
+    padding-left: 10px;
+    font-weight: 600;
+}
+
+.fLogin_wrap ul.f_socialLinks {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 25px;
+    margin-top: 10px;
+}
+
+.fLogin_wrap .apps_dwd {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.fLogin_wrap .apps_dwd :is(a, a:hover) {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 7px;
+    background-color: rgba(77, 77, 77, 0.75);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    line-height: 1;
+    min-width: 135px;
+    height: 40px;
+}
+
+.fo_landing .fLogin_wrap .apps_dwd :is(a, a:hover) {
+    background-color: rgba(153, 153, 153, 20%);
+}
+
+.fLogin_wrap .apps_dwd :is(a, a:hover) i {
+    font-size: 20px;
+}
+
+.fLogin_wrap .apps_dwd a .sm_txt {
+    color: #FFF;
+    font-size: 9px;
+    font-weight: 400;
+    display: block;
+}
+
+.fLogin_wrap .apps_dwd a .h_txt {
+    color: #FFF;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.fLogin_wrap ul.f_socialLinks li a {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(77, 77, 77, 0.75);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    border-radius: 3px;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.fo_landing .fLogin_wrap ul.f_socialLinks li a {
+    background-color: rgba(153, 153, 153, 20%);
+}
+
+.fLogin_wrap ul.f_socialLinks li a:hover {
+    -webkit-transform: scale(1.1) rotate(45deg);
+    -ms-transform: scale(1.1) rotate(45deg);
+    transform: scale(1.1) rotate(45deg);
+    background-color: #4d4d4d;
+    text-decoration: none;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.fLogin_wrap ul.f_socialLinks li a i {
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    color: #fff;
+}
+
+.fLogin_wrap .f_add .f_navbarBrand {
+    display: inline-block;
+    margin-bottom: 30px;
+}
+
+.fLogin_wrap .f_add .f_navbarBrand img {
+    display: block;
+    max-width: 190px;
+    width: 100%;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.fLogin_wrap .f_add .add_txt {
+    color: #212529;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.fo_landing .fLogin_wrap .f_add .add_txt {
+    color: rgba(255, 255, 255, 90%);
+}
+
+.fLogin_wrap .f_add :is(.cmail_link, .cmail_link:hover) {
+    color: #212529;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+.fo_landing .fLogin_wrap .f_add :is(.cmail_link, .cmail_link:hover) {
+    color: rgba(255, 255, 255, 90%);
+}
+
+.fLogin_wrap .copyright_txt {
+    border-radius: 0px 0px 5px 5px;
+    background: rgba(77, 77, 77, 0.05);
+    overflow: hidden;
+    text-align: center;
+    padding: 10px;
+    color: #212529;
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 15px;
+}
+
+.fo_landing .fLogin_wrap .copyright_txt {
+    background: rgba(153, 153, 153, 1%);
+    color: rgba(255, 255, 255, 92%);
+    margin-top: 0;
+}
+
+/* Back-to-Top   */
+a.goBackToBtn {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    position: fixed;
+    z-index: 1;
+    background-color: #555555;
+    border: 1px solid #d3d3d320;
+    border-radius: 50%;
+    bottom: 30px;
+    right: 30px;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+a.goBackToBtn i {
+    font-size: 16px;
+    color: #fff;
+    -webkit-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    opacity: 0.7;
+    margin-top: -2px;
+}
+
+a.goBackToBtn:hover {
+    -webkit-box-shadow: 0 0 5px rgba(211, 211, 211, 0.6);
+    box-shadow: 0 0 5px rgba(211, 211, 211, 0.6);
+}
+
+a.goBackToBtn:hover i {
+    opacity: 1;
+}
+
+a.goBackToBtn.btt_show {
+    opacity: 1;
+}
+
+.cLogIn a.goBackToBtn {
+    display: none;
+}
+
+/* Back-to-Top   */
+
+@media(max-width:1680px) {
+    .fo_landing .cus_container {
+        max-width: 100% !important;
+    }
+
+    .fo_landing .fLogin_wrap .f_grid {
+        padding: 30px 20px;
+    }
+}
+
+@media(max-width:1200px) {
+    .fLogin_wrap .f_grid {
+        -ms-grid-columns: minmax(275px, auto) 15px 1fr 15px 1fr 15px 1fr !important;
+        grid-template-columns: minmax(275px, auto) 1fr 1fr 1fr !important;
+    }
+}
+
+@media(max-width:1024px) {
+    .cLogIn .fLogin_wrap .f_grid {
+        padding: 15px !important;
+    }
+}
+
+@media(max-width:991px) {
+    .cLogIn footer {
+        margin: 10px !important;
+    }
+
+    .fLogin_wrap .f_grid {
+        -ms-grid-columns: 1fr 15px 1fr 15px 1fr !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+    }
+
+    .fLogin_wrap .apps_dwd {
+        margin-top: 0 !important;
+    }
+
+    .fLogin_wrap .f_follow {
+        -ms-grid-column: 1 !important;
+        grid-column-start: 1 !important;
+        -ms-grid-column-span: 3 !important;
+        grid-column-end: 4 !important;
+    }
+
+    .fLogin_wrap .apps_dwd {
+        gap: 25px !important;
+        margin-left: 7% !important;
+    }
+
+    .navbar-light .navbar-toggler {
+        display: none !important;
+    }
+
+    .mb-nav,
+    .header_wrap .nav-link.mb-nav {
+        display: block !important;
+    }
+
+    a.goBackToBtn {
+        right: 20px !important;
+    }
+}
+
+@media(max-width:767px) {
+    .cLogIn .fLogin_wrap .f_grid {
+        padding: 25px !important;
+    }
+
+    .fLogin_wrap .f_grid {
+        padding: 25px !important;
+        -ms-grid-columns: 1fr 15px 1fr !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-gap: 15px 20px !important;
+    }
+
+    .fLogin_wrap .f_uLinks {
+        -ms-grid-row: 1 !important;
+        grid-row-start: 1 !important;
+    }
+
+    .fLogin_wrap .f_title {
+        margin-top: 0 !important;
+    }
+
+    .fLogin_wrap .f_uLinks:nth-child(2) {
+        -ms-grid-column: 1 !important;
+        grid-column-start: 1 !important;
+        -ms-grid-column-span: 1 !important;
+        grid-column-end: 2 !important;
+    }
+
+    .fLogin_wrap .f_uLinks:nth-child(3) {
+        -ms-grid-column: 2 !important;
+        grid-column-start: 2 !important;
+        -ms-grid-column-span: 1 !important;
+        grid-column-end: 3 !important;
+    }
+
+    .fLogin_wrap .f_follow {
+        -ms-grid-row: 2 !important;
+        grid-row-start: 2 !important;
+        -ms-grid-column: 2 !important;
+        grid-column-start: 2 !important;
+        -ms-grid-column-span: 1 !important;
+        grid-column-end: 3 !important;
+    }
+
+    .fLogin_wrap .f_grid .f_add {
+        -ms-grid-column: 1 !important;
+        grid-column-start: 1 !important;
+        -ms-grid-column-span: 1 !important;
+        grid-column-end: 2 !important;
+        -ms-grid-row: 2 !important;
+        grid-row-start: 2 !important;
+    }
+
+    .fLogin_wrap .f_add .f_navbarBrand {
+        margin-bottom: 15px !important;
+        margin-top: 15px !important;
+    }
+
+    .fLogin_wrap .f_add .f_navbarBrand img {
+        max-width: 125px !important;
+    }
+
+    .fLogin_wrap .f_follow .f_title {
+        margin-bottom: 15px !important;
+        margin-top: 25px !important;
+    }
+
+    .fLogin_wrap .apps_dwd {
+        margin-left: 0 !important;
+        margin-top: 30px !important;
+    }
+}
+
+@media(max-width:575px) {
+    .cLogIn .fLogin_wrap .f_grid {
+        padding: 15px !important;
+    }
+
+    .fLogin_wrap .f_grid {
+        gap: 7x 15px !important;
+        padding: 15px !important;
+    }
+
+    .fLogin_wrap .f_title {
+        font-size: 14px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .fLogin_wrap .f_follow .f_title {
+        margin-top: 15px !important;
+    }
+
+    .fLogin_wrap ul.ul_grid li :is(a, a:hover) {
+        font-size: 13px !important;
+        white-space: nowrap !important;
+    }
+
+    .fLogin_wrap .f_add :is(.cmail_link, .cmail_link:hover) {
+        font-size: 13px !important;
+    }
+
+    .fLogin_wrap .f_uLinks:nth-child(2) {
+        -ms-grid-column: 1 !important;
+        grid-column-start: 1 !important;
+        -ms-grid-column-span: 1 !important;
+        grid-column-end: 2 !important;
+    }
+
+    .fLogin_wrap .f_title.blank {
+        opacity: 0 !important;
+    }
+
+    .fLogin_wrap .f_uLinks:nth-child(3) {
+        -ms-grid-row: 1 !important;
+        grid-row-start: 1 !important;
+        -ms-grid-column: 2 !important;
+        grid-column-start: 2 !important;
+        -ms-grid-column-span: 1 !important;
+        grid-column-end: 3 !important;
+    }
+
+    .fLogin_wrap .f_follow {
+        -ms-grid-row: 3 !important;
+        grid-row-start: 3 !important;
+        -ms-grid-column: 1 !important;
+        grid-column-start: 1 !important;
+        -ms-grid-column-span: 2 !important;
+        grid-column-end: 3 !important;
+    }
+
+    .fLogin_wrap .f_grid .f_add {
+        -ms-grid-column: 1 !important;
+        grid-column-start: 1 !important;
+        -ms-grid-column-span: 2 !important;
+        grid-column-end: 3 !important;
+        -ms-grid-row: 4 !important;
+        grid-row-start: 4 !important;
+    }
+
+    .fLogin_wrap .f_socGroup {
+        display: -webkit-box !important;
+        display: -ms-flexbox !important;
+        display: flex !important;
+        -webkit-box-align: center !important;
+        -ms-flex-align: center !important;
+        align-items: center !important;
+        -ms-flex-wrap: wrap !important;
+        flex-wrap: wrap !important;
+        -webkit-box-pack: justify !important;
+        -ms-flex-pack: justify !important;
+        justify-content: space-between !important;
+        gap: 30px 20px !important;
+        margin-top: 20px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .fLogin_wrap ul.f_socialLinks {
+        margin-top: 0 !important;
+    }
+
+    .fLogin_wrap .apps_dwd {
+        gap: 10px !important;
+        margin: 0 !important;
+    }
+
+    .fLogin_wrap .copyright_txt {
+        margin-top: 0 !important;
+    }
+}
+
+@media(max-width:400px) {
+    .cLogIn :is(.fLogin_wrap .apps_dwd a .h_txt) {
+        font-size: 14px !important;
+        white-space: nowrap !important;
+    }
+}
+
+@media(max-width:350px) {
+    .fLogin_wrap .apps_dwd {
+        gap: 10px !important;
+    }
+}
+
+@media(max-width:335px) {
+    .cLogIn :is(.fLogin_wrap .apps_dwd :is(a, a:hover)) {
+        min-width: 125px !important;
+    }
+}
+
+@media(min-width:575px) {
+    .fLogin_wrap .f_add .add_txt {
+        max-width: 245px !important;
+    }
+}

@@ -1,0 +1,71 @@
+<!-- #region RFID StockTally Box Modal -->
+<div class="modal c-modal addemp dialog-sm rorgan" tabindex="-1" role="dialog" data-keyboard="false"
+    data-backdrop="static">
+    <form name="stockTallyBoxForm" #stockTallyBoxForm="ngForm" novalidate>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="icon-box"></i>StockTally Box</h5>
+                    <button type="button" class="close" (click)="closeBoxDialog()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="stocktally-grid">
+                        <div class="form-data">
+                            <input type="text" [(ngModel)]="rfidStockTallyBoxCriteria.stockTallyBoxNo"
+                                name="stockTallyBoxNo" (keypress)="utilityService.numberOnly($event)"
+                                #stockTallyBoxNo="ngModel" placeholder="BoxNo">
+                        </div>
+                        <kendo-daterange class="d-flex">
+                            <kendo-floatinglabel class="me-2">
+                                <kendo-dateinput kendoDateRangeStartInput
+                                    [(value)]="rfidStockTallyBoxCriteria.fromDate!" format="dd/MMM/yyyy"
+                                    (valueChange)="rfidStockTallyBoxCriteria.fromDate = $event"></kendo-dateinput>
+                            </kendo-floatinglabel>
+                            <kendo-floatinglabel>
+                                <kendo-dateinput kendoDateRangeEndInput [(value)]="rfidStockTallyBoxCriteria.toDate!"
+                                    format="dd/MMM/yyyy"
+                                    (valueChange)="rfidStockTallyBoxCriteria.toDate = $event"></kendo-dateinput>
+                            </kendo-floatinglabel>
+                            <kendo-daterange-popup [animate]="false" adaptiveMode="auto"></kendo-daterange-popup>
+                        </kendo-daterange>
+
+                        <button kendoButton kendoTooltip position="bottom"
+                            [disabled]="(!rfidStockTallyBoxCriteria.stockTallyBoxNo && !rfidStockTallyBoxCriteria.toDate && !rfidStockTallyBoxCriteria.fromDate)"
+                            title="Search" class="btn btn-action" (click)="searchTallyBox()">
+                            <i class="icon-search pe-0"></i>
+                        </button>
+                        <button kendoButton kendoTooltip position="bottom" title="Clear Search" class="btn btn-action"
+                            (click)="clearStockTallyBox()">
+                            <i class="icon-delete pe-0"></i>
+                        </button>
+                    </div>
+                    <div class="boxstaocktally-scroll">
+                        <div class="boxstocktally" *ngIf="stockTallyBoxList && stockTallyBoxList.length > 0">
+                            <div class="box-ui" *ngFor="let stBox of stockTallyBoxList">
+                                <span>
+                                    <span class="d-block"> {{stBox.createdDate | date: 'dd/MM/yyyy'}}</span>
+                                    <i class="icon-box"></i>{{stBox.stockTallyBoxNo}}
+                                    <i class="icon-remainingstock ms-3"></i>{{stBox.stockTallyBoxList.length}}
+                                </span>
+                                <button kendoButton title="Download" (click)="exportToExcel(stBox.stockTallyBoxList)"
+                                    kendoTooltip position="bottom">
+                                    <i class="icon-doc_download p-0"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="nrf-div" *ngIf="stockTallyBoxList && stockTallyBoxList.length == 0">
+                            No record found
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+
+        <div (document:keydown.esc)="closeBoxDialog()"></div>
+    </form>
+</div>
+<!-- #endregion -->

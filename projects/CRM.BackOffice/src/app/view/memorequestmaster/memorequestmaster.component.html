@@ -1,0 +1,210 @@
+<title>Memo Request</title>
+<section class="omaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Memo Request</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton title="View Details" (click)="openDetailsDialog()"
+                [disabled]="this.mySelection.length == 0"><i class="icon-view "></i>
+              </button>
+              <button kendoButton (click)="issueMemo()" title="Memo Issue" [disabled]="mySelection.length == 0"><i
+                  class="icon-memoissue"></i>
+              </button>
+              <button kendoButton (click)="deleteMemoMaster()" title="Delete" [disabled]="mySelection.length == 0"
+                *ngIf="isCanDeleteMemo"><i class="icon-trash "></i>
+              </button>
+              <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                  class="icon-gridconfig"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <!-- #region labissue Grid (dblclick)="issueMemo()" -->
+            <kendo-grid #memoRequestGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings" [group]="groups"
+              (groupChange)="groupChange($event)" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+              (pageChange)="pageChange($event)" [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'"
+              (selectionChange)="selectedRowChange($event)">
+              <kendo-grid-checkbox-column [width]="10">
+              </kendo-grid-checkbox-column>
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <!-- #region Filter fields -->
+
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'isRequest'">
+                        {{dataItem.isRequest?"Approved":"Pending"}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'createdDate'">
+                        {{dataItem.createdDate |date: 'dd/MM/yyyy hh:mm'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'stonecount'">
+                        {{dataItem.memoStoneIds.length}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+            <!-- #endregion labissue Grid -->
+          </div>
+        </div>
+      </div>
+
+      <!-- #region side filter -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #memoRequestSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <div class="form-data me-2">
+                      <label for="">Stone Id</label>
+                    </div>
+                    <div class="form-data me-2">
+                      <input type="text" id="" name="stoneIdStr" [(ngModel)]="stoneId" #stoneIdStr="ngModel"
+                        autocomplete="off">
+                    </div>
+                    <div class="form-data me-2">
+                      <label for="Lead No">Certi No</label>
+                    </div>
+                    <div class="form-data me-2">
+                      <input type="text" name="certiNo" #certiNo="ngModel" [(ngModel)]="certificateNo" />
+                    </div>
+                    <div class="form-data me-2">
+                      <label for="f-name">Broker</label>
+                    </div>
+                    <div class="form-data me-2">
+                      <kendo-autocomplete class="w-100" [data]="listBrokerItems" [filterable]="true"
+                        (filterChange)="handleBrokerFilter($event)" [kendoDropDownFilter]="filterSettings" name="Broker"
+                        [(ngModel)]="selectedBroker" (valueChange)="brokerChange($event)"
+                        [popupSettings]="{width: 'auto'}" #Broker="ngModel" valueField="value">
+                        <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                          <span>{{dataItem.text}}</span>
+                        </ng-template>
+                      </kendo-autocomplete>
+                    </div>
+                    <div class="form-data me-2">
+                      <label for="f-name">Party</label>
+                    </div>
+                    <div class="form-data me-2">
+                      <kendo-autocomplete class="w-100" [data]="listPartyItems" [filterable]="true"
+                        (filterChange)="handlePartyFilter($event)" [kendoDropDownFilter]="filterSettings" name="Party"
+                        [(ngModel)]="selectedParty" (valueChange)="partyChange($event)"
+                        [popupSettings]="{width: 'auto'}" #Party="ngModel" valueField="value">
+                        <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                          <span>{{dataItem.text}}</span>
+                        </ng-template>
+                      </kendo-autocomplete>
+                    </div>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button type="button" class="btn btn-action" (click)="onFilterSubmit(memoRequestSearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button type="button" (click)="clearFilter(memoRequestSearchForm)" class="btn btn-action">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- #endregion side filter -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button>
+        </li>
+        <li><button (click)="onFilterSubmit(memoRequestSearchForm)"><i class="icon-search"></i></button>
+        </li>
+        <li><button (click)="clearFilter(memoRequestSearchForm)"><i class="icon-clear"></i></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<div class="modal c-modal dialog-lg-l" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isShowDetails">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-lab"></i>Memo Request Details
+        </h5>
+        <button type="button" class="close" (click)="closeDetailsDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="grid-wrap">
+          <kendo-grid *ngIf="gridDetailView" [data]="gridDetailView" [reorderable]="true" [resizable]="true"
+            [sortable]="true" [skip]="detailSkip" [pageSize]="detailPageSize" [pageable]="true"
+            (pageChange)="pageChangeDetail($event)" style="height: calc(100vh - 298px);" class="mb-grid">
+            <ng-container *ngIf="detailFields && detailFields.length > 0">
+              <ng-container *ngFor="let detailField of detailFields">
+                <ng-container *ngIf="detailField.isSelected">
+                  <kendo-grid-column [width]="detailField.width" [field]="detailField.propertyName"
+                    [title]="detailField.title">
+                    <ng-template kendoGridCellTemplate let-dataItem *ngIf="detailField.title == 'Discount'">
+                      {{dataItem.fDiscount ? dataItem.fDiscount : dataItem.price.discount}}
+                    </ng-template>
+                    <ng-template kendoGridCellTemplate let-dataItem *ngIf="detailField.title == 'NetAmount'">
+                      {{dataItem.fAmount ? dataItem.fAmount : (dataItem.netAmount ? dataItem.netAmount :
+                      dataItem.price.netAmount)}}
+                    </ng-template>
+                    <ng-template kendoGridCellTemplate let-dataItem *ngIf="detailField.title == '$/CT'">
+                      {{dataItem.perCarat ? dataItem.perCarat : dataItem.price.perCarat}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </kendo-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #region Memo Model-->
+<ng-container *ngIf="memoIssueDialog">
+  <app-memo (toggle)="memoIssueDialog=$event;loadMemoRequests();mySelection=[];selectedMemoRequestList=[]"
+    [memoRequest]="memoRequestObj" [memoRequestList]="selectedMemoRequestList">
+  </app-memo>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Ledger Dialog -->
+<ng-container *ngIf="isLedgerFlag">
+  <app-ledger-modal [showSearch]="true" [ledgerIdent]="ledgerIdent" [ledgerType]="ledgerType"
+    (successEvent)="updateLedgers($event)" (toggle)="isLedgerFlag=$event"></app-ledger-modal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Grid config -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'MemoRequestMaster'" [gridName]="'MemoRequestMasterGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion Grid config -->
+
+<div kendoDialogContainer></div>

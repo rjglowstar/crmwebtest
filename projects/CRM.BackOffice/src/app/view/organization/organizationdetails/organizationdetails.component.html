@@ -1,0 +1,437 @@
+<title>Organization Details</title>
+<section class="edetails-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item"><a routerLink="/organization">Organizations</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Organization Details</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right pe-0">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton (click)="openOrgRedirect('configurations')" title="Configuration"><i
+                  class="icon-setting"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+
+        <div class="content_scroll">
+          <div class="profile_wrap org_wrap" *ngIf="organizationData">
+            <div class="pro_block column2">
+              <div class="orgDetails">
+                <div class="p_info mb-0">
+                  <h6 class="p_title">Organization</h6>
+                  <ul class="pro_data">
+                    <li>Name : <span>{{organizationData.name}}</span></li>
+                    <li>Org.Type : <span>{{organizationData.organizationType}}</span></li>
+                    <li>Business Type : <span>{{organizationData.businessType}}</span></li>
+                    <li>Registration No : <span>{{organizationData.registrationNo}}</span></li>
+                    <li>IncomeTax No : <span>{{organizationData.incomeTaxNo}}</span></li>
+                    <li>GST No : <span>{{organizationData.gstNo}}</span></li>
+                    <li>Membership : <span>{{organizationData.membership}}</span></li>
+                    <li>Website : <span>{{organizationData.website}}</span></li>
+                    <li>Person : <span>{{organizationData.person}}</span></li>
+                    <li>Country : <span>{{organizationData.address.country}}</span></li>
+                    <li>Email : <span>{{organizationData.email}}</span></li>
+                    <li>Mobile No :<span>{{organizationData.mobileNo | numberfilter:'mobile'}}</span></li>
+                    <li>Phone: <span>{{organizationData.phoneNo | numberfilter:'phone'}}</span></li>
+                    <li>Fax No: <span>{{organizationData.faxNo | numberfilter:'fax'}}</span></li>
+                    <li>Code : <span>{{organizationData.code}}</span></li>
+                    <li class="w_100">Address Note : <span>
+                        {{organizationData.address.line1}},
+                        {{organizationData.address.line2}},
+                        {{organizationData.address.city}},
+                        {{organizationData.address.state}},
+                        {{organizationData.address.country}},
+                        {{organizationData.address.zipCode}},
+                        StateCode: {{organizationData.address.stateCode}},
+                        DistrictCode : {{organizationData.address.districtCode}}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="p_info tax_info">
+                  <h6 class="p_title">Tax</h6>
+                  <ul class="pro_data">
+                    <li class="w_100">Tax No : <span>{{organizationData.taxNo}}</span></li>
+                    <li class="w_100">IEC No : <span>{{organizationData.iecNo}}</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- #region Branch Information-->
+            <div class="pro_block">
+              <h6 class="p_title pb_5">
+                <span>Branch</span>
+                <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap">
+                  <button kendoButton (click)="openAddBranchDialog()" title="Add Branch">
+                    <i class="icon-add"></i>
+                  </button>
+                </kendo-buttongroup>
+              </h6>
+              <div class="config_Wrapper columnGroup"
+                *ngIf="organizationData && organizationData.branches && organizationData.branches.length > 0">
+                <div class="config_box" *ngFor="let branch of organizationData.branches">
+                  <div class="config_head btns">
+                    <div class="config_title">{{branch.name}}</div>
+                    <kendo-buttongroup kendoTooltip position="bottom">
+                      <button kendoButton (click)="updateBranch(branch)" title="Edit Branch Information"><i
+                          class="icon-edit"></i></button>
+                      <button kendoButton (click)="deleteBranch(branch)" title="Delete Branch"><i
+                          class="icon-trash"></i></button>
+                    </kendo-buttongroup>
+                  </div>
+                  <ul class="config_ul branch_list">
+                    <li>RegistrationNo : <span>{{branch.registrationNo}}</span></li>
+                    <li>IncomeTax No : <span>{{branch.incomeTaxNo}}</span></li>
+                    <li>Tax No : <span>{{branch.taxNo}}</span></li>
+                    <li>Person Name : <span>{{branch.person}}</span></li>
+                    <li>Email : <span>{{branch.email}}</span></li>
+                    <li>Mobile No : <span>{{branch.mobileNo | numberfilter:'mobile'}}</span></li>
+                    <li>Phone No : <span>{{branch.phoneNo | numberfilter:'phone'}}</span>
+                    </li>
+                    <li>Fax No : <span>{{branch.faxNo|numberfilter:'fax'}}</span>
+                    </li>
+                    <li>RFID Device Url : <span>{{branch.deviceRFIDUrl}}</span></li>
+                    <li class="w_100">Address : <span>
+                        {{branch.address.line1}}, {{branch.address.line2}}, {{branch.address.city}},
+                        {{branch.address.state}}, {{branch.address.country}},
+                        {{branch.address.zipCode}},
+                        State Code:{{branch.address.stateCode}},
+                        District Code:{{branch.address.districtCode}}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="not_found"
+                *ngIf="organizationData == undefined || organizationData.branches == undefined || organizationData.branches.length == 0">
+                Data Not Found
+              </div>
+            </div>
+            <!-- #endregion -->
+            <!-- #region Department Information-->
+            <div class="pro_block">
+              <h6 class="p_title pb_5">
+                <span>Department</span>
+                <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap">
+                  <button kendoButton (click)="openAddDepartmentDialog()" title="Add Department">
+                    <i class="icon-add"></i>
+                  </button>
+                </kendo-buttongroup>
+              </h6>
+              <div class="config_Wrapper columnGroup"
+                *ngIf="organizationData && organizationData.departments && organizationData.departments.length > 0">
+                <div class="config_box" *ngFor="let department of organizationData.departments">
+                  <div class="config_head btns">
+                    <div class="config_title">{{department.name}}</div>
+                    <kendo-buttongroup kendoTooltip position="bottom">
+                      <button kendoButton (click)="setPermission(department)" title="User Prmission Configuration"><i
+                          class="icon-user_permissions"></i></button>
+                      <button kendoButton (click)="updateDepartment(department)" title="Edit Department Information"><i
+                          class="icon-edit"></i></button>
+                      <button kendoButton (click)="deleteDepartment(department)" title="Delete Department"><i
+                          class="icon-trash"></i></button>
+                    </kendo-buttongroup>
+                  </div>
+                  <ul class="config_ul orgDepart">
+                    <li>Origin : <span>{{department.origin}}</span></li>
+                    <li>Branch Name :<span>{{department.branchName}}</span></li>
+                    <li>Phone No : <span>{{department.phoneExtNo | numberfilter:'phone'}}</span></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="not_found"
+                *ngIf="organizationData == undefined || organizationData.departments == undefined || organizationData.departments.length == 0">
+                Data Not Found
+              </div>
+            </div>
+            <!-- #endregion -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- #region Add Branch Modal Start -->
+<div class="modal addemp c-modal rorgan" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isAddBranch">
+  <form name="form" #branchForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-branch"></i>Add Branch</h5>
+          <button type="button" class="close" (click)="closeAddBranchDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-branch">
+                <h6 class="title"><i class="icon-creditlimit"></i>Branch Information</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                    <input type="text" name="name" [(ngModel)]="branchObj.name" #name="ngModel" id="" required>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Reg.No</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': registrationNo.invalid && (registrationNo.dirty || registrationNo.touched)}">
+                    <input type="text" name="registrationNo" [(ngModel)]="branchObj.registrationNo"
+                      #registrationNo="ngModel" id="">
+                  </div>
+                  <div class="form-data">
+                    <label for="">IncomeTaxno</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': incomeTaxNo.invalid && (incomeTaxNo.dirty || incomeTaxNo.touched)}">
+                    <input type="text" name="incomeTaxNo" [(ngModel)]="branchObj.incomeTaxNo" #incomeTaxNo="ngModel"
+                      id="">
+                  </div>
+                  <div class="form-data">
+                    <label>Tax No.</label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': taxNo.invalid && (taxNo.dirty || taxNo.touched)}">
+                    <input type="text" name="taxNo" [(ngModel)]="branchObj.taxNo" #taxNo="ngModel" id="">
+                  </div>
+                  <div class="form-data">
+                    <label for="">Person Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': person.invalid && (person.dirty || person.touched)}">
+                    <input type="text" name="person" [(ngModel)]="branchObj.person" #person="ngModel" id="" required>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Email<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('email')) || (email.errors?.required && email.touched))}">
+                    <input type="text" name="email" [(ngModel)]="branchObj.email" #email="ngModel" id="" required email>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Mobile No<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': mobileNo.invalid &&  (mobileNo.errors?.required && mobileNo.touched)}">
+                    <kendo-maskedtextbox name="mobileNo" [(ngModel)]="branchObj.mobileNo" #mobileNo="ngModel" id=""
+                      [mask]="mobileMask" required>
+                    </kendo-maskedtextbox>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Phone No</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-maskedtextbox name="phoneNo" [(ngModel)]="branchObj.phoneNo" #phoneNo="ngModel" id=""
+                      [mask]="phoneMask">
+                    </kendo-maskedtextbox>
+                  </div>
+                  <div class="form-data">
+                    <label for="">RFIDDeviceUrl<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': deviceUrl.invalid && (deviceUrl.dirty || deviceUrl.touched)}">
+                    <input type="text" name="deviceUrl" [(ngModel)]="branchObj.deviceRFIDUrl" #deviceUrl="ngModel" id=""
+                      placeholder="192.168.21.11"
+                      pattern="((^|\.)((25[0-5]_*)|(2[0-4]\d_*)|(1\d\d_*)|([1-9]?\d_*))){4}_*$" required>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Fax No</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': faxNo.invalid && (faxNo.touched && faxNo.hasError('pattern')) }">
+                    <kendo-maskedtextbox name="faxNo" [(ngModel)]="branchObj.faxNo" #faxNo="ngModel" id=""
+                      [mask]="faxMask">
+                    </kendo-maskedtextbox>
+                  </div>
+
+                </div>
+              </div>
+              <div class="i-form om-add">
+                <h6 class="title"><i class="icon-mapmarker"></i>Address</h6>
+                <div class="grid">
+
+                  <div class="form-data">
+                    <label>Line1</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line1" #line1="ngModel"
+                      [(ngModel)]="branchObj.address.line1"></textarea>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Line2</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line2" #line2="ngModel"
+                      [(ngModel)]="branchObj.address.line2"></textarea>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Type</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listAddressTypeItems" [valuePrimitive]="true" name="addressType"
+                      #addressType="ngModel" [(ngModel)]="branchObj.address.type"
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Country</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="country" #country="ngModel" (valueChange)="onCountryChange($event)"
+                      [valuePrimitive]="true" [(ngModel)]="branchObj.address.country"
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>State</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onStateChange($event)" [valuePrimitive]="true" name="state"
+                      #state="ngModel" [(ngModel)]="branchObj.address.state" [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>City</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city"
+                      #city="ngModel" [(ngModel)]="branchObj.address.city" [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>ZipCode</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="zipcode" #zipcode="ngModel" [(ngModel)]="branchObj.address.zipCode">
+                  </div>
+
+                  <div class="form-data">
+                    <label>State Code</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="stateCode" #stateCode="ngModel"
+                      [(ngModel)]="branchObj.address.stateCode">
+                  </div>
+
+                  <div class="form-data">
+                    <label>District Code</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="districtCode" #districtCode="ngModel"
+                      [(ngModel)]="branchObj.address.districtCode">
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="onBranchSubmit(branchForm,false)" [disabled]="!branchForm.valid" class="btn btn-primary"><i
+              class="icon-add"></i>New</button>
+          <button (click)="onBranchSubmit(branchForm,true)" [disabled]="!branchForm.valid" class="btn btn-primary"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeAddBranchDialog()"></div>
+  </form>
+</div>
+<!-- #endregion Add Branch Modal End -->
+
+<!-- #region Add Department Modal Start -->
+<div class="modal c-modal addemp adddep rorgan" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isAddDepartment">
+  <form name="form" #departmentForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-branch"></i>Add Department</h5>
+          <button type="button" class="close" (click)="closeAddDepartmentDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-branch">
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">Name <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                    <input type="text" name="name" [(ngModel)]="departmentObj.name" #name="ngModel" id="" required>
+                  </div>
+                  <div class="form-data">
+                    <label>Origin<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': origin.invalid && (origin.dirty || origin.touched) }">
+                    <!-- -->
+                    <kendo-combobox [data]="listOriginItems" [valuePrimitive]="true" name="origin"
+                      [(ngModel)]="departmentObj.origin" #origin="ngModel" required
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>Branch Name</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox name="branchName" [textField]="'name'" [valueField]="'name'"
+                      [(ngModel)]="departmentObj.branchName" #branchName="ngModel" [data]="organizationData.branches!"
+                      [valuePrimitive]="true" [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label for="">PhoneExt No</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-maskedtextbox name="phoneExtNo" [(ngModel)]="departmentObj.phoneExtNo" #phoneExtNo="ngModel"
+                      [mask]="mobileMask">
+                    </kendo-maskedtextbox>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="onDepartmentSubmit(departmentForm,false)" [disabled]="!departmentForm.valid"
+            class="btn btn-primary"><i class="icon-add"></i>New</button>
+          <button (click)="onDepartmentSubmit(departmentForm,true)" [disabled]="!departmentForm.valid"
+            class="btn btn-primary"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeAddDepartmentDialog()"></div>
+  </form>
+</div>
+<!-- #endregion Add Department Modal End -->
+
+<!-- #region user permission -->
+<ng-container *ngIf="isPermission">
+  <app-userpermission [title]="modalTitle" [deptPermi]="deptPermi" [pageComeFromPermission]="pageComeFromPermission"
+    (toggle)="isPermission=$event"></app-userpermission>
+</ng-container>
+<!--- #endregion user permission -->
+
+<div kendoDialogContainer></div>

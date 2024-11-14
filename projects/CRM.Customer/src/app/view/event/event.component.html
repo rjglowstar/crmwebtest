@@ -1,0 +1,21 @@
+<section class="new_ui">
+    <div class="wrapper-full gridtbl_wrap event_wrapper mt-0">
+        <div class="pg-title text-center mb-1">
+            <h4 class="p_title">{{'BasicText.News & Events'| translate}}</h4>
+            <p class="p_sbTitle">{{'BasicText.Check out this space for exciting news and events that our company is a
+                part of'|translate}}</p>
+        </div>
+        <div class="event_grid">
+            <div class="event_box" (click)="redirectToDetailPage(item);" *ngFor="let item of eventObj">
+                <div class="event_img">
+                    <img alt="img" src="{{ item.eventImage}}" />
+                </div>
+                <div class="event_content">
+                    <h6 class="e_title">{{item.eventName}}</h6>
+                    <div class="e_des">{{item.description}}</div>
+                    <h5 class="e_date">{{item.startDate | date : "MMM dd, yyyy"}}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

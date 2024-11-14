@@ -1,0 +1,150 @@
+<div class="modal c-modal addemp dialog-sm rorgan" tabindex="-1" role="dialog" data-keyboard="false"
+    data-backdrop="static">
+    <form name="rejecetdMultiForm" #rejecetdMultiForm="ngForm" novalidate>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="icon-block"></i>Rejected Lead with Offer</h5>
+                    <button type="button" class="close" (click)="closeRejectedDialog()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="rejected-grids">
+                        <div class="form-data"><label>Customer : <span><b>{{customerCompany}}</b> - {{
+                                    customerName}}</span></label></div>
+                        <div class="form-data"><label>Sellername : <span>{{sellerName}}</span></label></div>
+                        <div class="form-data"><label *ngIf="brokerName">Broker :
+                                <span>{{brokerName}}</span></label></div>
+                        <div class="form-data"><label>LeadNo : <span>{{leadNo}}</span></label></div>
+                    </div>
+
+                    <div class="en-form f-12 mt-1">
+                        <div class="ma-issue-top">
+                            <div class="grid input-reject-grid">
+                                <div class="form-data">
+                                    <input type="text" name="stoneId" autocomplete="off" id="stoneId"
+                                        placeholder="StoneId" [(ngModel)]="filterStoneId" #stoneId="ngModel">
+                                </div>
+                                <div class="form-data mul-select">
+                                    <kendo-multiselect name="shape" class="customselect" [data]="allTheShapes"
+                                        [kendoDropDownFilter]="filterSettings" [(ngModel)]="filterShapes"
+                                        [textField]="'name'" [valueField]="'name'" [valuePrimitive]="true"
+                                        [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                                        [kendoMultiSelectSummaryTag]="0"
+                                        (open)="filterShapeChk = utilityService.onOpenDropdown(allTheShapes,filterShapeChk, filterShapes)"
+                                        placeholder="Select Shape"
+                                        (valueChange)="onMultiSelectChange(allTheShapes, filterShapes)">
+                                        <ng-template kendoComboBoxHeaderTemplate>
+                                            <div class="dropdown-header single k-widget k-header">
+                                                <span class="temp-single">Select Shape</span>
+                                            </div>
+                                            <div class="single k-widget k-header ps-2">
+                                                <input type="checkbox" class="k-checkbox me-1" name="filterShapeChk"
+                                                    id="filterShapeChk" title="Select all" [(ngModel)]="filterShapeChk"
+                                                    (change)="filterShapes = utilityService.checkAllListItems(allTheShapes, filterShapeChk, filterShapes)">
+                                                <label>Select all</label>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                                            <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                                            <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                                        </ng-template>
+                                        <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                                            <span kendoTooltip position="bottom"
+                                                [title]="utilityService.getCommaSapratedString(filterShapes, true)">
+                                                {{utilityService.getCommaSapratedString(filterShapes)}}
+                                            </span>
+                                        </ng-template>
+                                    </kendo-multiselect>
+                                </div>
+
+                                <div class="form-data">
+                                    <input type="text" name="weight" autocomplete="off" maxlength="10" id="weight"
+                                        placeholder="From Weight" (keypress)="utilityService.floatOnly($event)"
+                                        [(ngModel)]="filterFWeight" #weight="ngModel">
+                                </div>
+                                <div class="form-data">
+                                    <input type="text" name="weight" autocomplete="off" maxlength="10" id="weight"
+                                        placeholder="To Weight" (keypress)="utilityService.floatOnly($event)"
+                                        [(ngModel)]="filterTWeight" #weight="ngModel">
+                                </div>
+                                <button kendoButton title="Filter" kendoTooltip position="bottom"
+                                    (click)="filterRejectedList()">
+                                    <i class="icon-search p-0"></i>
+                                </button>
+                                <button kendoButton title="Clear" kendoTooltip position="bottom"
+                                    (click)="clearRejectFilter()">
+                                    <i class="icon-clear p-0"></i>
+                                </button>
+                                <div class="form-data">
+                                    <input type="text" name="offer" autocomplete="off" maxlength="10" id="offer"
+                                        (keypress)="utilityService.discountfloat($event)" [(ngModel)]="filterOffer"
+                                        #offer="ngModel" placeholder="Offer Disc">
+                                </div>
+                                <div class="form-data">
+                                    <input type="text" name="comment" autocomplete="off" maxlength="100" id="comment"
+                                        [(ngModel)]="filterComment" #comment="ngModel" placeholder="Comment">
+                                </div>
+                                <button kendoTooltip position="bottom" kendoButton title="Update Comment or Offer"
+                                    [disabled]="rejectedOfferItemShowList.length == 0"
+                                    (click)="updateCommentOrOffer()"><i class="icon-save pe-0"></i>
+                                </button>
+                                <button kendoTooltip position="bottom" kendoButton title="Calculate Offer"
+                                    [disabled]="!filterOffer && !filterComment?.trim()" (click)="calculate()"><i
+                                        class="icon-Calculater pe-0"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panelbar-wrapper ms-config">
+                        <div class="grid-wrap mt-2 grid-rejecetd">
+                            <kendo-grid class="rejected-offer-grid" [resizable]="true" [data]="gridViewInvItemList"
+                                [sortable]="true" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+                                (pageChange)="pageChange($event)" (cellClick)="cellClickHandler($event)"
+                                (cellClose)="cellCloseHandler($event)" [sortable]="true"
+                                style="height:calc(100vh - 490px);">
+                                <kendo-grid-column field="stoneId" title="Stone Id" [width]="100">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="shape" title="Shape" [width]="100">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="weight" title="Ct" [width]="70">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="price.rap" title="Rap" [width]="70">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="price.discount" title="Discount" [width]="70">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="price.netAmount" title="NetAmount" [width]="70">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="price.perCarat" title="$/CT" [width]="70">
+                                </kendo-grid-column>
+                                <kendo-grid-column field="offer" title="Offer" [width]="100" editor="numeric">
+                                    <ng-template kendoGridCellTemplate let-dataItem>
+                                        <div class="whole-cell"
+                                            [ngClass]="{ 'grid-highlight': !((dataItem.offer == null || dataItem.offer == undefined) && (dataItem.comment == null || dataItem.comment == undefined || dataItem.comment == '')) ? false:dataItem.isRequired }">
+                                            {{dataItem.offer}}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                                <kendo-grid-column field="comment" title="Comment" [width]="100">
+                                    <ng-template kendoGridCellTemplate let-dataItem>
+                                        <div class="whole-cell"
+                                            [ngClass]="{ 'grid-highlight': !((dataItem.offer == null || dataItem.offer == undefined) && (dataItem.comment == null || dataItem.comment == undefined || dataItem.comment == '')) ? false:dataItem.isRequired }">
+                                            {{dataItem.comment}}
+                                        </div>
+                                    </ng-template>
+                                </kendo-grid-column>
+                            </kendo-grid>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" *ngIf="!leadRejectedId" (click)="onSubmit(rejecetdMultiForm)"
+                        [disabled]="!rejecetdMultiForm.valid"><i class="icon-save"></i>Save</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>

@@ -1,0 +1,234 @@
+<!-- Before login contact page - start -->
+<ng-container *ngIf="!isLogin">
+    <section class="intro_banner">
+        <div class="secbg_img">
+            <img src="../../../assets/images/contact_Video_thumb.png" class="img-fluid" alt="glowstar natural diamond">
+        </div>
+    </section>
+
+    <section class="addMap_sec">
+        <div class="content_wraper container">
+            <div class="mapWrap">
+                <iframe [src]="contactUsDetail.locationUrl" width="100%" height="100%"
+                    style="border:1px solid rgba(255, 255, 255, 12%)" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="conDetail">
+                <a [href]="'mailto:' + contactUsDetail.email">
+                    <i class="icon-mail-trans"></i>
+                    {{contactUsDetail.email}}
+                </a>
+                <a [href]="'tel:' + contactUsDetail.contactNo">
+                    <i class="icon-phone-trans"></i>
+                    {{contactUsDetail.contactNo}}
+                </a>
+                <a class="add_link"><i class="icon-location_new"></i>
+                    {{contactUsDetail.address}}
+                </a>
+            </div>
+            <a [href]="getGoogleMapsUrlWithAddress(contactUsDetail.address)" target="_blank" class="getDir_btn">
+                <i class="icon-direction"></i>{{"ContactPage.Get Direction" | translate}}</a>
+        </div>
+    </section>
+
+    <section class="conform_sec">
+        <div class="content_wraper container">
+            <div class="secTitle">
+                <h1>{{"ContactPage.We Are Willingly Accessible" | translate}}</h1>
+                <h2>{{"ContactPage.CONNECT" | translate}}</h2>
+            </div>
+            <form name="getIntouchForm" #getIntouchForm="ngForm">
+                <div class="input_grid">
+                    <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                        <input type="text" placeholder="&nbsp;" class="k-input" name="name" #name="ngModel"
+                            [(ngModel)]="contactObj.name" required pattern="^[^\s][\s\S]*$">
+                        <label class="input_lbl">{{"ContactPage.Name" | translate}} *</label>
+                    </div>
+                    <div class="form-data"
+                        [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('pattern')) || (email.errors?.required && email.touched)) }">
+                        <input type="text" placeholder="&nbsp;" class="k-input" name="email" #email="ngModel"
+                            [(ngModel)]="contactObj.email" required pattern="^[^\s][\s\S]*$">
+                        <label class="input_lbl">{{"ContactPage.Email" | translate}} *</label>
+                    </div>
+                    <div class="form-data"
+                        [ngClass]="{ 'error': contactNo.invalid && ((contactNo.touched && contactNo.hasError('pattern')) || (contactNo.errors?.required && contactNo.touched)) }">
+                        <input type="text" placeholder="&nbsp;" class="k-input" name="contactNo" #contactNo="ngModel"
+                            [(ngModel)]="contactObj.contactNo" required pattern="^[^\s][\s\S]*$">
+                        <label class="input_lbl">{{"ContactPage.Mobile No" | translate}} *</label>
+                    </div>
+                    <div class="form-data"
+                        [ngClass]="{ 'error': companyName.invalid && (companyName.dirty || companyName.touched)}">
+                        <input type="text" placeholder="&nbsp;" class="k-input" name="companyName"
+                            #companyName="ngModel" [(ngModel)]="contactObj.companyName" required
+                            pattern="^[^\s][\s\S]*$">
+                        <label class="input_lbl">{{"ContactPage.CompanyName" | translate}} *</label>
+                    </div>
+                    <div class="form-data">
+                        <input type="text" placeholder="&nbsp;" class="k-input" name="country" #country="ngModel"
+                            [(ngModel)]="contactObj.address.country">
+                        <label class="input_lbl">{{"ContactPage.Country" | translate}}</label>
+                    </div>
+                    <div class="form-data">
+                        <input type="text" placeholder="&nbsp;" class="k-input" name="state" #state="ngModel"
+                            [(ngModel)]="contactObj.address.state">
+                        <label class="input_lbl">{{"ContactPage.State" | translate}}</label>
+                    </div>
+                    <div class="form-data">
+                        <input type="text" placeholder="&nbsp;" class="k-input" name="city" #city="ngModel"
+                            [(ngModel)]="contactObj.address.city">
+                        <label class="input_lbl">{{"ContactPage.City" | translate}}</label>
+                    </div>
+                    <div class="form-data">
+                        <input type="text" placeholder="&nbsp;" class="k-input" name="line1" #line1="ngModel"
+                            [(ngModel)]="contactObj.address.line1">
+                        <label class="input_lbl">{{"ContactPage.StreetAddress" | translate}}</label>
+                    </div>
+                    <div class="form-data">
+                        <input type="text" placeholder="&nbsp;" class="k-input" name="zipcode" #zipcode="ngModel"
+                            [(ngModel)]="contactObj.address.zipCode">
+                        <label class="input_lbl">{{"ContactPage.ZipPostalCode" | translate}}</label>
+                    </div>
+                    <div class="form-data"
+                        [ngClass]="{ 'error': message.invalid && (message.dirty || message.touched)}">
+                        <textarea class="k-textarea w-100 bg-white" placeholder="&nbsp;" rows="3" resizable="auto"
+                            style="min-height:31px;" name="message" #message="ngModel" [(ngModel)]="contactObj.message"
+                            required pattern="^[^\s][\s\S]*$"></textarea>
+                        <label class="input_lbl">{{"ContactPage.Message" | translate}} *</label>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="sec_btn send_btn" (click)="onSubmit(getIntouchForm)" kendoButton
+                        [disabled]="!getIntouchForm.valid">
+                        {{"ContactPage.Send" |translate}}<span class="icon_wrap"><i class="icon-right_new"></i></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</ng-container>
+<!-- Before login contact page - end -->
+
+<!-- After login contact page - start -->
+<ng-container *ngIf="isLogin">
+    <section class="contact_sec bg_theme">
+        <div class="cus_container">
+            <div class="sec_title">
+                <span>{{"Contact.Title" | translate}}</span>
+                <img src="../../../assets/images/svg/title_diaIcon.svg" class="img-fluid" alt="diamond icon">
+            </div>
+            <p class="secSub_title">{{"Contact.Desc" | translate}}</p>
+
+            <div class="grid_wrap">
+
+                <div class="loc_map">
+                    <iframe [src]="contactUsDetail.locationUrl" width="100%" height="100%"
+                        style="border:1px solid rgba(255, 255, 255, 12%)" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+
+                <div class="conForm_wrap">
+                    <form name="getIntouchForm" #getIntouchForm="ngForm">
+                        <div class="contact-grid">
+                            <div class="form-data"
+                                [ngClass]="{ 'error': companyName.invalid && (companyName.dirty || companyName.touched)}">
+                                <label class="lbl">{{"Contact.CompanyName" | translate}}<span
+                                        class="require">*</span></label>
+                                <input type="text" class="k-input" name="companyName" #companyName="ngModel"
+                                    [(ngModel)]="contactObj.companyName" required pattern="^[^\s][\s\S]*$">
+                            </div>
+                            <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                                <label class="lbl">{{"Contact.Name" | translate}}<span class="require">*</span></label>
+                                <input type="text" class="k-input" name="name" #name="ngModel"
+                                    [(ngModel)]="contactObj.name" required pattern="^[^\s][\s\S]*$">
+                            </div>
+                            <div class="form-data"
+                                [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('pattern')) || (email.errors?.required && email.touched)) }">
+                                <label class="lbl">{{"Contact.E-mail" | translate}}<span
+                                        class="require">*</span></label>
+                                <input type="text" class="k-input" name="email" #email="ngModel"
+                                    [(ngModel)]="contactObj.email" required pattern="^[^\s][\s\S]*$">
+                            </div>
+                            <div class="form-data">
+                                <label class="lbl">{{"Contact.Country" | translate}}</label>
+                                <input type="text" class="k-input" name="country" #country="ngModel"
+                                    [(ngModel)]="contactObj.address.country">
+                            </div>
+                            <div class="form-data">
+                                <label class="lbl">{{"Contact.State" | translate}}</label>
+                                <input type="text" class="k-input" name="state" #state="ngModel"
+                                    [(ngModel)]="contactObj.address.state">
+                            </div>
+                            <div class="form-data">
+                                <label class="lbl">{{"Contact.City" | translate}}</label>
+                                <input type="text" class="k-input" name="city" #city="ngModel"
+                                    [(ngModel)]="contactObj.address.city">
+                            </div>
+                            <div class="form-data">
+                                <label class="lbl">{{"Contact.StreetAddress" | translate}}</label>
+                                <input type="text" class="k-input" name="line1" #line1="ngModel"
+                                    [(ngModel)]="contactObj.address.line1">
+                            </div>
+                            <div class="form-data">
+                                <label class="lbl">{{"Contact.ZipPostalCode" | translate}}</label>
+                                <input type="text" class="k-input" name="zipcode" #zipcode="ngModel"
+                                    [(ngModel)]="contactObj.address.zipCode">
+                            </div>
+                            <div class="form-data"
+                                [ngClass]="{ 'error': contactNo.invalid && ((contactNo.touched && contactNo.hasError('pattern')) || (contactNo.errors?.required && contactNo.touched)) }">
+                                <label class="lbl">{{"BasicText.Mobile No" | translate}}<span
+                                        class="require">*</span></label>
+                                <input type="text" class="k-input" name="contactNo" #contactNo="ngModel"
+                                    [(ngModel)]="contactObj.contactNo" required pattern="^[^\s][\s\S]*$">
+                            </div>
+                            <div class="form-data"
+                                [ngClass]="{ 'error': message.invalid && (message.dirty || message.touched)}">
+                                <label class="lbl">{{"BasicText.Message" | translate}}<span
+                                        class="require">*</span></label>
+                                <textarea class="k-textarea w-100 bg-white" placeholder="Enter your message..." cols="4"
+                                    rows="4" resizable="auto" style="height: 100px;" name="message" #message="ngModel"
+                                    [(ngModel)]="contactObj.message" required pattern="^[^\s][\s\S]*$"></textarea>
+                            </div>
+                        </div>
+                        <div class="contbtn_wrap text-center">
+                            <button class="grid-btn" (click)="onSubmit(getIntouchForm)" kendoButton
+                                [disabled]="!getIntouchForm.valid" style="width:auto">{{"BasicText.Send" |
+                                translate}}</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="cont_dtl">
+                    <div class="con_box">
+                        <i class="icon-mapmarker"></i>
+                        <div class="contact-detail">
+                            <h6>{{"Contact.Address" | translate}}</h6>
+                            <p>{{contactUsDetail.address}}</p>
+                        </div>
+                    </div>
+                    <a [href]="'tel:' + contactUsDetail.contactNo" class="con_box">
+                        <i class="icon-telphone"></i>
+                        <div class="contact-detail">
+                            <h6>{{"Contact.Contact" | translate}}</h6>
+                            <p>{{contactUsDetail.contactNo}}</p>
+                        </div>
+                    </a>
+                    <a [href]="'mailto:' + contactUsDetail.email" class="con_box">
+                        <i class="icon-icon_email"></i>
+                        <div class="contact-detail">
+                            <h6>{{"Contact.Email" | translate}}</h6>
+                            <p>{{contactUsDetail.email}}</p>
+                        </div>
+                    </a>
+                    <a [href]="contactUsDetail.websiteUrl" target="_blank" class="con_box">
+                        <i class="icon-globe"></i>
+                        <div class="contact-detail">
+                            <h6>{{"Contact.Website" | translate}}</h6>
+                            <p>{{contactUsDetail.websiteUrl}}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</ng-container>
+<!-- After login contact page - end -->

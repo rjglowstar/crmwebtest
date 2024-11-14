@@ -1,0 +1,138 @@
+<title>Order</title>
+<section class="omaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+
+      <div class="e-left">
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Order</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid #orderGrid *ngIf="gridOrderView" [data]="gridOrderView" [reorderable]="true" [groupable]="true"
+              [sortable]="true" [selectable]="selectableSettings" (selectionChange)="selectedRowChange($event)"
+              [group]="groups" (groupChange)="groupChange($event)" (pageChange)="pageChange($event)" [resizable]="true"
+              [pageSize]="pageSize" [skip]="skip" [pageable]="true" [(selectedKeys)]="mySelection"
+              [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title=='Customer'">
+                        <span><b>{{dataItem.customer.companyName}}</b>-{{dataItem.customer.name}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='orderDate'">
+                        <span> {{dataItem.orderDate | date: 'dd/MM/yyyy hh:mm a'}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='processDate'">
+                        <span> {{dataItem.processDate | date: 'dd/MM/yyyy hh:mm a'}}</span>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+
+      <!--#region Filter -->
+      <form class="e-right" name="filterForm" #orderSearchForm="ngForm" novalidate>
+        <div class="sr-wrap active" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <div class="i-form">
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">From Date</label>
+                  <kendo-datepicker calendarType="classic" name="fromDate" #fromDate="ngModel" format="dd/MM/yyyy"
+                    [(ngModel)]="orderSearchCriteria.fromDate"></kendo-datepicker>
+
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">To Date</label>
+                  <kendo-datepicker calendarType="classic" name="toDate" #toDate="ngModel" format="dd/MM/yyyy"
+                    [(ngModel)]="orderSearchCriteria.toDate"></kendo-datepicker>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Stone Id</label>
+                  <input type="text" name="filterStoneId" [(ngModel)]="stoneId" #filterStoneId="ngModel"
+                    id="filterStoneId" autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Certificate No</label>
+                  <input type="text" name="filtercertificateNo" [(ngModel)]="certificateNo"
+                    #filtercertificateNo="ngModel" id="filtercertificateNo" autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Lead No</label>
+                  <input type="text" name="filterLeadNo" [(ngModel)]="leadNo" #filterStoneId="ngModel" id="filterLeadNo"
+                    autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Broker</label>
+                  <kendo-combobox [data]="listBrokerItems" textField="text" valueField="value" name="Broker"
+                    [(ngModel)]="selectedBrokerItem" (valueChange)="brokerChange()"
+                    [kendoDropDownFilter]="filterSettings" #Broker="ngModel">
+                  </kendo-combobox>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Party</label>
+                  <kendo-autocomplete class="w-100" [data]="listCustomerItems" name="customer"
+                    [(ngModel)]="selectedCustomerItem" (valueChange)="customerChange($event)" #customer="ngModel"
+                    [filterable]="true" (filterChange)="handleCustomerFilter($event)"
+                    [kendoDropDownFilter]="filterSettings" [popupSettings]="{width: 'auto'}" valueField="value">
+                    <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                      <span><b>{{dataItem.companyName}}</b>-{{dataItem.text}}</span>
+                    </ng-template>
+                  </kendo-autocomplete>
+                </div>
+                <!-- <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                      <label for="f-name">Seller</label>
+                      <kendo-combobox [data]="listSellerItems" textField="text" valueField="value" name="Seller"
+                        [(ngModel)]="selectedSeller" #Seller="ngModel"
+                        (valueChange)="orderSearchCriteria.sellerId == $event">
+                      </kendo-combobox>
+                    </div> -->
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                  <button class="btn btn-action" (click)="onFilterSubmit(orderSearchForm)">
+                    <i class="icon-search"></i>Search
+                  </button>
+                  <button (click)="clearFilter(orderSearchForm);" class="btn btn-action">
+                    <i class="icon-clear"></i>Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!--#endregion -->
+    </div>
+
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button>
+        </li>
+        <li><button (click)="onFilterSubmit(orderSearchForm)"><i class="icon-search"></i></button>
+        </li>
+        <li><button (click)="clearFilter(orderSearchForm)"><i class="icon-clear"></i></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<ng-container *ngIf="isVisibleOrderDetail">
+  <app-ordermodal [lead]="lead" (toggle)="isVisibleOrderDetail=$event;mySelection=[];loadOrdersFromApprovedLead()">
+  </app-ordermodal>
+</ng-container>
+
+<div kendoDialogContainer></div>

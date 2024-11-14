@@ -1,0 +1,381 @@
+<div class="d-media-wrap" *ngIf="invItemsSearchResult">
+  <!-- #region Media -->
+  <div class="grid-1 p-r-7">
+    <div class="d-media">
+      <h6 class="title">Diamond Media</h6>
+      <kendo-tabstrip>
+        <kendo-tabstrip-tab title="" [selected]="true">
+          <ng-template kendoTabTitle>
+            <i class="icon-camera"></i>&nbsp;Image
+          </ng-template>
+          <ng-template kendoTabContent>
+            <div class="content">
+              <img [src]="sanitizeURL('image')" alt="diamond image" class="m-auto d-block">
+            </div>
+          </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="">
+          <ng-template kendoTabTitle>
+            <i class="icon-diamond"></i>&nbsp;360 View
+          </ng-template>
+          <ng-template kendoTabContent>
+            <div class="content">
+              <iframe [src]="sanitizeURL('video')" width="100%" height="288px" style="border: 0;"
+                allow='autoplay'></iframe>
+            </div>
+          </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="">
+          <ng-template kendoTabTitle>
+            <i class="icon-cerificate"></i>&nbsp;Certificate
+          </ng-template>
+          <ng-template kendoTabContent>
+            <div class="content">
+              <iframe [src]="sanitizeURL('cert')" width="100%" height="288px" style="border: 0;"
+                allow='autoplay'></iframe>
+            </div>
+          </ng-template>
+        </kendo-tabstrip-tab>
+      </kendo-tabstrip>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Inv Details -->
+  <div class="grid-1">
+    <div class="d-media d-details">
+      <h6 class="title">Diamond Detail</h6>
+      <kendo-tabstrip>
+        <kendo-tabstrip-tab title="Basic Details" [selected]="true">
+          <ng-template kendoTabContent>
+            <div class="content t-details">
+              <ul>
+                <li>
+                  <span class="l-head">Shape</span>
+                  <span class="r-det">: {{invItemsSearchResult.shape}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Weight</span>
+                  <span class="r-det">: {{invItemsSearchResult.weight}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Color</span>
+                  <span class="r-det">: {{invItemsSearchResult.color}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Clarity</span>
+                  <span class="r-det">: {{invItemsSearchResult.clarity}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Cut</span>
+                  <span class="r-det">: {{invItemsSearchResult.cut}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Polish</span>
+                  <span class="r-det">: {{invItemsSearchResult.polish}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Symmentry</span>
+                  <span class="r-det">: {{invItemsSearchResult.symmetry}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Fluorescence</span>
+                  <span class="r-det">: {{invItemsSearchResult.fluorescence}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Lab</span>
+                  <span class="r-det">: {{invItemsSearchResult.lab}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Location</span>
+                  <span class="r-det">: {{invItemsSearchResult.location}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Status</span>
+                  <span class="r-det">: {{invItemsSearchResult.status}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Certificate No</span>
+                  <span class="r-det">: {{invItemsSearchResult.certificateNo}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Inscription</span>
+                  <span class="r-det">: {{invItemsSearchResult.inscription}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Rap</span>
+                  <span class="r-det">: {{invItemsSearchResult.price.rap}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Discount</span>
+                  <span class="r-det">: {{invItemsSearchResult.price.discount}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Per Carat</span>
+                  <span class="r-det">: {{invItemsSearchResult.price.perCarat}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Net Amount</span>
+                  <span class="r-det">: {{invItemsSearchResult.price.netAmount}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Comments</span>
+                  <span class="r-det">: {{invItemsSearchResult.comments}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Lab Send Date</span>
+                  <span class="r-det">: {{invItemsSearchResult.labSendDate | date: 'dd/MM/yyyy'}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Lab Recive Date</span>
+                  <span class="r-det">: {{invItemsSearchResult.labReceiveDate | date: 'dd/MM/yyyy'}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Market Sheet Date</span>
+                  <span class="r-det">: {{invItemsSearchResult.marketSheetDate | date: 'dd/MM/yyyy'}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Created Date</span>
+                  <span class="r-det">: {{invItemsSearchResult.createdDate | date: 'dd/MM/yyyy'}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Box No</span>
+                  <span class="r-det">: {{invItemsSearchResult.boxSerialNo}}</span>
+                </li>
+              </ul>
+            </div>
+          </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="Inclusion">
+          <ng-template kendoTabContent>
+            <div class="content t-details">
+              <ul>
+                <li *ngIf="inclusionConfig.shade && (inclusionData  | typefilter:'shade').length > 0">
+                  <span class="l-head">Shade</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.shade}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.brown && (inclusionData  | typefilter:'brown').length > 0">
+                  <span class="l-head">Brown</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.brown}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.green && (inclusionData  | typefilter:'green').length > 0">
+                  <span class="l-head">Green</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.green}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.milky && (inclusionData  | typefilter:'milky').length > 0">
+                  <span class="l-head">Milky</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.milky}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.sideBlack && (inclusionData  | typefilter:'sideBlack').length > 0">
+                  <span class="l-head">Side Black</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.sideBlack}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.centerBlack && (inclusionData  | typefilter:'centerSideBlack').length > 0">
+                  <span class="l-head">Center Side Black</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.centerSideBlack}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.centerBlack && (inclusionData  | typefilter:'centerBlack').length > 0">
+                  <span class="l-head">Center Black</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.centerBlack}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.sideWhite && (inclusionData  | typefilter:'sideWhite').length > 0">
+                  <span class="l-head">Side White</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.sideWhite}}</span>
+                </li>
+                <li
+                  *ngIf="inclusionConfig.centerSideWhite && (inclusionData  | typefilter:'centerSideWhite').length > 0">
+                  <span class="l-head">Center Side White</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.centerSideWhite}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.centerWhite && (inclusionData  | typefilter:'centerWhite').length > 0">
+                  <span class="l-head">Center White</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.centerWhite}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.openCrown && (inclusionData  | typefilter:'openCrown').length > 0">
+                  <span class="l-head">Open Crown</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.openCrown}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.openTable && (inclusionData  | typefilter:'openTable').length > 0">
+                  <span class="l-head">Open Table</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.openTable}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.openPavilion && (inclusionData  | typefilter:'openPavilion').length > 0">
+                  <span class="l-head">Open Pavalion</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.openPavilion}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.openGirdle && (inclusionData  | typefilter:'openGirdle').length > 0">
+                  <span class="l-head">Open Girdle</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.openGirdle}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.efoc && (inclusionData  | typefilter:'efoc').length > 0">
+                  <span class="l-head">EFOC</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.efoc}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.efot && (inclusionData  | typefilter:'efot').length > 0">
+                  <span class="l-head">EFOT</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.efot}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.efog && (inclusionData  | typefilter:'efog').length > 0">
+                  <span class="l-head">EFOG</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.efog}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.efop && (inclusionData  | typefilter:'efop').length > 0">
+                  <span class="l-head">EFOP</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.efop}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.naturalOnTable && (inclusionData  | typefilter:'naturalOnTable').length > 0">
+                  <span class="l-head">NOT</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.naturalOnTable}}</span>
+                </li>
+                <li
+                  *ngIf="inclusionConfig.naturalOnGirdle && (inclusionData  | typefilter:'naturalOnGirdle').length > 0">
+                  <span class="l-head">NOG</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.naturalOnGirdle}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.naturalOnCrown && (inclusionData  | typefilter:'naturalOnCrown').length > 0">
+                  <span class="l-head">NOC</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.naturalOnCrown}}</span>
+                </li>
+                <li
+                  *ngIf="inclusionConfig.naturalOnPavilion && (inclusionData  | typefilter:'naturalOnPavillion').length > 0">
+                  <span class="l-head">NOP</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.naturalOnPavillion}}</span>
+                </li>
+                <li
+                  *ngIf="inclusionConfig.girdleCondition && (inclusionData  | typefilter:'girdleCondition').length > 0">
+                  <span class="l-head">Grid. Con.</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.girdleCondition}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.culet && (inclusionData  | typefilter:'culet').length > 0">
+                  <span class="l-head">Culet</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.culet}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.hna && (inclusionData  | typefilter:'hna').length > 0">
+                  <span class="l-head">HNA</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.hna}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.eyeClean && (inclusionData  | typefilter:'eyeClean').length > 0">
+                  <span class="l-head">Eye Clean</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.eyeClean}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.ktoS && (inclusionData  | typefilter:'ktoS').length > 0">
+                  <span class="l-head">Key To Symbol</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.ktoS}}</span>
+                </li>
+                <li *ngIf="inclusionConfig.bowtie && (inclusionData  | typefilter:'bowtie').length > 0">
+                  <span class="l-head">Bowtie</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.bowtie}}</span>
+                </li>
+                <li>
+                  <span class="l-head">IGrade</span>
+                  <span class="r-det">: {{invItemsSearchResult.inclusion.iGrade}}</span>
+                </li>
+              </ul>
+            </div>
+          </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="Measurement">
+          <ng-template kendoTabContent>
+            <div class="content t-details">
+              <ul>
+                <li *ngIf="measurementConfig.length">
+                  <span class="l-head">Length</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.length}}</span>
+                </li>
+                <li *ngIf="measurementConfig.width">
+                  <span class="l-head">Width</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.width}}</span>
+                </li>
+                <li *ngIf="measurementConfig.height">
+                  <span class="l-head">Height</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.height}}</span>
+                </li>
+                <li *ngIf="measurementConfig.depth">
+                  <span class="l-head">Depth</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.depth}}</span>
+                </li>
+                <li *ngIf="measurementConfig.table">
+                  <span class="l-head">Table</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.table}}</span>
+                </li>
+                <li *ngIf="measurementConfig.crownHeight">
+                  <span class="l-head">Crown Height</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.crownHeight}}</span>
+                </li>
+                <li *ngIf="measurementConfig.crownAngle">
+                  <span class="l-head">Crown Angle</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.crownAngle}}</span>
+                </li>
+                <li *ngIf="measurementConfig.pavillionAngle">
+                  <span class="l-head">Pavilion Angle</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.pavilionAngle}}</span>
+                </li>
+                <li *ngIf="measurementConfig.pavillionDepth">
+                  <span class="l-head">Pavilion Depth</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.pavilionDepth}}</span>
+                </li>
+                <li *ngIf="measurementConfig.girdlePer">
+                  <span class="l-head">Girdle%</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.girdlePer}}</span>
+                </li>
+                <li *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                  <span class="l-head">Min Girdle</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.minGirdle}}</span>
+                </li>
+                <li *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                  <span class="l-head">Max Girdle</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.maxGirdle}}</span>
+                </li>
+                <li *ngIf="measurementConfig.ratio">
+                  <span class="l-head">Ratio</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.ratio}}</span>
+                </li>
+                <li>
+                  <span class="l-head">MGrade</span>
+                  <span class="r-det">: {{invItemsSearchResult.measurement.mGrade}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Str Ln</span>
+                  <span class="r-det">: {{invItemsSearchResult.strLn}}</span>
+                </li>
+                <li>
+                  <span class="l-head">Lr Half</span>
+                  <span class="r-det">: {{invItemsSearchResult.lrHalf}}</span>
+                </li>
+              </ul>
+            </div>
+          </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="Disc. History">
+          <ng-template kendoTabContent>
+            <div class="content">
+            <kendo-grid [data]="listPricingHistory" [resizable]="true"
+              [height]="329">
+              <kendo-grid-column [width]="20" title="Before">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{calculateDateDiff(dataItem.createdDate)}}
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column [width]="40" title="Date">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem.createdDate | date: 'dd-MM-yyyy hh:mm:ss a'}}
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column [width]="25" field="price.rap" title="Rap">
+              </kendo-grid-column>
+              <kendo-grid-column [width]="20" field="price.discount" title="Discount">
+              </kendo-grid-column>
+              <kendo-grid-column [width]="25" field="price.perCarat" title="$/CT">
+              </kendo-grid-column>
+              <kendo-grid-column [width]="25" field="price.netAmount" title="Net Amount">
+              </kendo-grid-column>
+              <kendo-grid-column [width]="25" field="identity.name" title="User">
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+          </ng-template>
+        </kendo-tabstrip-tab>
+      </kendo-tabstrip>
+    </div>
+  </div>
+  <!-- #endregion -->
+</div>

@@ -1,0 +1,273 @@
+<div class="modal c-modal addemp dialog-sm-l rs-payment" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form class="modal-content" name="ReceiptForm" #ReceiptForm="ngForm" novalidate>
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="icon-receipt"></i>Receipt Transaction
+        </h5>
+        <button type="button" class="close" (click)="closeReceiptDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="title k-justify-content-between"><span><i class="icon-info"></i>Receipt Details</span>
+          <div class="d-flex">
+            <div class="tr-no me-1">
+              <span>Current FY Amt : {{fromLedgerSummary}}</span>
+            </div>
+            <div class="tr-no">
+              <span><i class="icon-transactitem"></i>Transactions No : {{receiptTransactionObj.number}}</span>
+            </div>
+          </div>
+        </h6>
+        <div class="receipt-dialog-grid">
+          <div class="form-data">
+            <label>From<span class="require">*</span></label>
+          </div>
+          <div class="form-data">
+            <kendo-autocomplete [disabled]="isEdit" class="w-100" [data]="listFromLedgerItems" [filterable]="true"
+              (filterChange)="FromLedgerFilter($event)" [kendoDropDownFilter]="filterSettings" name="FromLedger"
+              [(ngModel)]="selectedFromLedgerItem" (valueChange)="fromLedgerChange($event)" placeholder="Search by name"
+              [popupSettings]="{width: 'auto'}" #FromLedger="ngModel" valueField="value" required>
+              <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                <span>{{dataItem.text}}</span>
+              </ng-template>
+            </kendo-autocomplete>
+          </div>
+          <div class="form-data me-2">
+            <label>To<span class="require">*</span></label>
+          </div>
+          <div class="form-data basis-100" style="flex-basis: 30%;">
+            <kendo-autocomplete [disabled]="isEdit" class="w-100" [data]="listToLedgerItems" [filterable]="true"
+              (filterChange)="ToLedgerFilter($event)" [kendoDropDownFilter]="filterSettings" name="ToLedger"
+              [(ngModel)]="selectedToLedgerItem" (valueChange)="toLedgerChange($event)" placeholder="Search by name"
+              [popupSettings]="{width: 'auto'}" #ToLedger="ngModel" valueField="value" required>
+              <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                <span>{{dataItem.text}}-<b>{{dataItem.group}}</b></span>
+              </ng-template>
+            </kendo-autocomplete>
+          </div>
+          <div class="form-data">
+            <label>Date<span class="require">*</span></label>
+          </div>
+          <div class="form-data">
+            <kendo-datepicker calendarType="classic" name="eDate" #eDate="ngModel" format="dd/MM/yyyy"
+              [(ngModel)]="receiptTransactionObj.transactionDate" required></kendo-datepicker>
+          </div>
+          <div class="form-data">
+            <label>Payment Type<span class="require">*</span></label>
+          </div>
+          <div class="form-data">
+            <kendo-combobox [data]="listPaymentType" [valuePrimitive]="true" name="filterPaymentType"
+              placeholder="Select Payment Type" [kendoDropDownFilter]="filterSettings"
+              [(ngModel)]="receiptTransactionObj.paymentDetail.paymentType" #filterPaymentType="ngModel" required>
+            </kendo-combobox>
+          </div>
+          <div class="form-data me-2" *ngIf="isEdit">
+            <label>Adv Amt</label>
+          </div>
+          <div class="form-data" *ngIf="isEdit">
+            <input type="text" disabled readonly value="{{remainAmount}}">
+          </div>
+          <div class="form-data" *ngIf="receiptTransactionObj.paymentDetail.paymentType == 'Cheque'">
+            <label>Chq.No<span class="require">*</span></label>
+          </div>
+          <div class="form-data" *ngIf="receiptTransactionObj.paymentDetail.paymentType == 'Cheque'">
+            <input type="text" name="chequeNo" autocomplete="off" #chequeNo="ngModel" placeholder="Cheque No"
+              [(ngModel)]="receiptTransactionObj.paymentDetail.chequeNo" required>
+          </div>
+          <div class="form-data" *ngIf="receiptTransactionObj.paymentDetail.paymentType == 'Cheque'">
+            <label>Chq.Date<span class="require">*</span></label>
+          </div>
+          <div class="form-data" *ngIf="receiptTransactionObj.paymentDetail.paymentType == 'Cheque'">
+            <kendo-datepicker calendarType="classic" name="chequeDate" #chequeDate="ngModel" format="dd/MM/yyyy"
+              [(ngModel)]="receiptTransactionObj.paymentDetail.chequeDate" required>
+            </kendo-datepicker>
+          </div>
+
+          <div class="form-data" *ngIf="receiptTransactionObj.paymentDetail.paymentType == 'ET'">
+            <label>Ref. No<span class="require">*</span></label>
+          </div>
+          <div class="form-data" *ngIf="receiptTransactionObj.paymentDetail.paymentType == 'ET'">
+            <input type="text" name="etRefNo" autocomplete="off" #etRefNo="ngModel" placeholder="Reference No"
+              [(ngModel)]="receiptTransactionObj.paymentDetail.etRefNo" required>
+          </div>
+          <div class="form-data" *ngIf="receiptTransactionObj.paymentDetail.paymentType == 'ET'">
+            <label>Pay. Method<span class="require">*</span></label>
+          </div>
+          <div class="form-data" *ngIf="receiptTransactionObj.paymentDetail.paymentType == 'ET'">
+            <kendo-combobox [data]="listETPaymentMethod" [valuePrimitive]="true" name="filterpaymentMethod"
+              [(ngModel)]="receiptTransactionObj.paymentDetail.paymentMethod" #filterpaymentMethod="ngModel" required>
+            </kendo-combobox>
+          </div>
+
+        </div>
+        <div class="grid-wrap mt-2">
+          <kendo-grid [resizable]="true" [data]="salesTransactions" [selectable]="selectableSettings"
+            [(selectedKeys)]="mySelectionTrans" [kendoGridSelectBy]="'id'" style="height:calc(100vh - 732px)"
+            class="mb-grid" (selectionChange)="selectTransactionData()">
+            <kendo-grid-checkbox-column [width]="25">
+              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <input type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                 [kendoGridSelectionCheckbox]="rowIndex"
+                  [disabled]="!(dataItem.ccAmount > dataItem.paidAmount)" />
+                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                </label>
+              </ng-template>
+            </kendo-grid-checkbox-column>
+            <kendo-grid-column field="number" title="Tran. No" [width]="70"></kendo-grid-column>
+            <kendo-grid-column field="refNumber" title="Invoice No" [width]="70"></kendo-grid-column>
+            <kendo-grid-column field="transactionDate" title="Tran. Date" [width]="70">
+              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{dataItem.transactionDate | date: 'dd/MM/yyyy'}}
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="amount" title="Amount" [width]="70"></kendo-grid-column>
+            <kendo-grid-column field="netTotal" title="Net Total" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="ccAmount" title="CC Amount" [width]="70"></kendo-grid-column>
+            <kendo-grid-column field="paidAmount" title="Paid Amount" [width]="70"></kendo-grid-column>
+            <kendo-grid-column field="transactionDetail.toCurrency" title="Currency" [width]="70"></kendo-grid-column>
+            <kendo-grid-column field="transactionDetail.shippingCharge" title="Ship. Charge" [width]="70">
+            </kendo-grid-column>
+          </kendo-grid>
+        </div>
+        <div class="grid-total d-flex p-2 border">
+          <div class="receipt-left-total">
+            <div class="form-data">
+              <label>Currency</label>
+            </div>
+            <div class="form-data">
+              <kendo-combobox class="w-auto" [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+                valueField="value" name="convCurrencyTypeFrom" [kendoDropDownFilter]="filterSettings"
+                [(ngModel)]="receiptTransactionObj.transactionDetail.fromCurrency" #convCurrencyTypeFrom="ngModel"
+                (valueChange)="getCurrencyRate();calculateTotal();" [disabled]="isFromCurrDisable" required>
+              </kendo-combobox>
+              <!-- <input type="text" readonly disabled value="{{receiptTransactionObj.transactionDetail.fromCurrency}}"> -->
+            </div>
+            <div class="form-data">
+              <label>Conv. Curr.</label>
+            </div>
+            <div class="form-data">
+              <kendo-combobox class="w-auto" [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+                valueField="value" name="convCurrencyType" [kendoDropDownFilter]="filterSettings"
+                [(ngModel)]="receiptTransactionObj.transactionDetail.toCurrency" #convCurrencyType="ngModel"
+                (valueChange)="getCurrencyRate();calculateTotal();" [disabled]="isCurrDisable" required>
+              </kendo-combobox>
+            </div>
+            <div class="form-data">
+              <label>Conv. Rate</label>
+            </div>
+            <div class="form-data">
+              <input type="text" name="convcurrencyRate" autocomplete="off"
+                [(ngModel)]="receiptTransactionObj.transactionDetail.toCurRate" #convcurrencyRate="ngModel"
+                id="convcurrencyRate" (keypress)="utilityService.floatOnly($event)" (keyup)="calculateTotal();">
+            </div>
+            <div class="form-data">
+              <label>Amount</label>
+            </div>
+            <div class="form-data">
+              <input type="text" autocomplete="off" name="amount" #amount="ngModel"
+                [(ngModel)]="receiptTransactionObj.amount" (keyup)="calculateTotal();"
+                (keypress)="utilityService.discountfloat($event);">
+            </div>
+            <div class="form-data">
+              <label>Interest (%)</label>
+            </div>
+            <div class="form-data">
+              <input type="text" autocomplete="off" name="interestPer" #interestPer="ngModel"
+                [(ngModel)]="receiptTransactionObj.paymentDetail.interestPer" (keyup)="calculateTotal();"
+                (keypress)="utilityService.discountfloat($event);">
+            </div>
+            <div class="form-data">
+              <label>Interest Amt</label>
+            </div>
+            <div class="form-data">
+              <input type="text" disabled readonly value="{{receiptTransactionObj.paymentDetail.interestAmount}}">
+            </div>
+            <div class="form-data">
+              <label>Logi. Charge</label>
+            </div>
+            <div class="form-data">
+              <input type="text" autocomplete="off" name="logisticCharge" #logisticCharge="ngModel"
+                [(ngModel)]="receiptTransactionObj.paymentDetail.logisticCharge" (keyup)="calculateTotal();"
+                (keypress)="utilityService.discountfloat($event);">
+            </div>
+            <div class="form-data">
+              <label>Expense</label>
+            </div>
+            <div class="form-data">
+              <input type="text" autocomplete="off" name="expence" #expence="ngModel"
+                [(ngModel)]="receiptTransactionObj.paymentDetail.expence" (keyup)="calculateTotal();"
+                (keypress)="utilityService.discountfloat($event);">
+            </div>
+            <div class="form-data" *ngIf="receiptTransactionObj.paymentDetail.paymentType == 'Cash'">
+              <label>C. Handling</label>
+            </div>
+            <div class="form-data" *ngIf="receiptTransactionObj.paymentDetail.paymentType == 'Cash'">
+              <input type="text" autocomplete="off" name="cashHandlingCharge" #cashHandlingCharge="ngModel"
+                [(ngModel)]="receiptTransactionObj.paymentDetail.cashHandlingCharge" (keyup)="calculateTotal();"
+                (keypress)="utilityService.discountfloat($event);">
+            </div>
+
+            <div class="form-data">
+              <label>Remark</label>
+              <textarea cols="4" type="text" autocomplete="off" name="remark" #remark="ngModel"
+                [(ngModel)]="receiptTransactionObj.note" placeholder="Remark">
+              </textarea>
+            </div>
+          </div>
+          <div class="receipt-right-total">
+            <div class="form-data">
+              <label>TCS Amt</label>
+            </div>
+            <div class="form-data">
+              <input type="text" autocomplete="off" name="tcsAmount" #tcsAmount="ngModel" (keyup)="calculateTotal();"
+                [(ngModel)]="receiptTransactionObj.tcsAmount" (keypress)="utilityService.floatOnly($event);">
+            </div>
+            <div class="form-data">
+              <label>TDS Amt</label>
+            </div>
+            <div class="form-data">
+              <input type="text" autocomplete="off" name="tdsAmount" #tdsAmount="ngModel"
+                (keyup)="calculateTotal(false, true);" [(ngModel)]="receiptTransactionObj.tdsAmount"
+                (keypress)="utilityService.floatOnly($event);">
+            </div>
+            <div class="form-data">
+              <label>Add Amt</label>
+            </div>
+            <div class="form-data" [ngClass]="{ 'error': !validAddAmtLimit }">
+              <input type="text" autocomplete="off" name="addamt" #addamt="ngModel"
+                [(ngModel)]="receiptTransactionObj.addAmount" (keypress)="utilityService.discountfloat($event);"
+                (keyup)="calculateTotal(true);validAddAmtLimit = utilityService.validateAddAmountLimit(receiptTransactionObj.addAmount, accountingConfigData.addAmountLimit);">
+              <span class="font-smaller s-error" *ngIf="!validAddAmtLimit">Amount exceed limit</span>
+            </div>
+            <div class="form-data">
+              <label>Total Amt</label>
+            </div>
+            <div class="form-data">
+              <input type="text" readonly disabled value="{{receiptTransactionObj.netTotal}}">
+            </div>
+            <div class="form-data">
+              <label>CC Amt</label>
+            </div>
+            <div class="form-data">
+              <input type="text" readonly disabled value="{{receiptTransactionObj.ccAmount}}">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" *ngIf="isEdit" (click)="printGet()">
+          <i class="icon-save"></i>Print</button>
+        <button type="button" class="btn btn-primary" *ngIf="!isEdit"
+          [disabled]="receiptTransactionObj.netTotal == 0 || !ReceiptForm.valid" (click)="saveTransaction(true)">
+          <i class="icon-add"></i>New</button>
+        <button type="button" class="btn btn-primary" *ngIf="!isEdit"
+          [disabled]="receiptTransactionObj.netTotal == 0 || !ReceiptForm.valid" (click)="saveTransaction()">
+          <i class="icon-save"></i>Save</button>
+        <button type="button" class="btn btn-primary" *ngIf="isEdit"
+          [disabled]="receiptTransactionObj.netTotal == 0 || !ReceiptForm.valid" (click)="updateTransaction()">
+          <i class="icon-save"></i>Update</button>
+      </div>
+    </form>
+  </div>

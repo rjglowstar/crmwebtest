@@ -1,0 +1,173 @@
+/* Report Page Css */
+.report-div {
+    background: #eee;
+    border-radius: 3px;
+    font-weight: 600;
+    position: relative;
+    height: 155px;
+    overflow: hidden;
+    padding: 8px;
+    border: 1px dashed;
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    padding: 2px;
+    grid-gap: 10px;
+    overflow-y: auto;
+}
+
+.report-div h4 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    height: 27px;
+    text-transform: uppercase;
+    word-spacing: 5px;
+    font-size: 15px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.optionicons {
+    text-align: right;
+    opacity: 0;
+    position: relative;
+    top: -10px;
+    transition: all 0.3s;
+}
+
+.report-div:hover .optionicons {
+    opacity: 1;
+    top: 0;
+}
+
+.rpt-icon i:hover {
+    background: #4d4d4d;
+    color: #fff;
+}
+
+.rpt-icon i {
+    padding: 4px;
+}
+
+/* Report Page Css */
+
+/* Dialog Css */
+.sales-report {
+    display: grid;    
+    grid-template-columns: 36px 170px 36px 130px 91px 168px 85px 170px 98px 170px 28px 28px 28px 28px;
+    gap: 10px;
+    justify-content: end;
+    align-items: center;
+}
+
+.rm-title p {
+    font-size: 14px;
+}
+
+.rm-title {
+    margin-top: 15px;
+    border: 1px solid #d3d3d3;
+}
+
+.rm-table .pf-design {
+    max-height: calc(100vh - 470px);
+    min-height: 470px;
+    height: auto;
+}
+
+.rm-table h6 {
+    background: #eeeeee;
+    padding: 5px;
+    font-weight: 600;
+}
+
+.closing-balance h6 {
+    grid-column: 2 span/3;
+}
+
+.rm-table.closing-balance {
+    margin-top: 20px;
+}
+
+.rm-table .k-grid {
+    height: calc(100vh - 320px);
+}
+
+.rm-table.closing-balance .k-grid {
+    height: 160px;
+}
+
+.green {
+    color: #27ad27;
+}
+
+.orange {
+    color: #d5b049;
+}
+
+.red {
+    color: red;
+}
+
+.blue {
+    color: blue;
+}
+
+/* Dialog Css */
+@media (min-width:1415px) {
+    .dialog-lg.salesStatics .modal-dialog {
+        max-width: 1415px;
+    }
+}
+
+@media (max-width:1420px) {
+    .sales-report {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+}
+
+@media (max-width:850px) {
+    .closing-balance h6 {
+        grid-column: auto;
+    }
+
+    .sales-report {
+        grid-template-columns: 36px 1fr 36px 1fr 92px 1fr auto auto;
+    }
+}
+
+@media (max-width:767px) {
+    .mb-grid {
+        height: auto !important;
+    }
+}
+
+@media (max-width:580px) {
+    .sales-report {
+        grid-template-columns: 36px 1fr 36px 1fr 92px 1fr auto auto;
+    }
+}
+
+@media (max-width:650px) {
+    .sales-report {
+        grid-template-columns: 92px 1fr;
+        grid-row-gap: 5px;
+    }
+
+    .sales-report button {
+        width: 28px;
+    }
+    
+    .sales-report button:nth-child(5),
+    .sales-report button:nth-child(6) {
+        grid-column: 1 span / 3;
+    }
+}

@@ -1,0 +1,53 @@
+<div class="sideDetails ordersum_sec" [ngClass]="{'active': toggle}">
+	<div class="sideDet_head">
+		<h6>{{"BasicText.Order Summary"| translate}}</h6>
+		<div class="btntop_group">
+			<button kendoButton [disabled]="(!pickUpLocation && !isContinuBtnDisabled) || (isContinuBtnDisabled)"
+				(click)="continueCheckOut()">
+				<i class="icon-orderNew_btn"></i>
+				Place Order
+			</button>
+			<button kendoButton class="active" (click)="closeCheckoutDialog()">
+				<i class="icon-menu_close"></i>
+			</button>
+		</div>
+	</div>
+	<div class="sideDet_body">
+		<div class="order-summary">
+			<div class="subtitle">VOW Discount Summary</div>
+			<ul class="dtl_grid bb">
+				<li>{{"BasicText.Your Past 7 Days Purchase"| translate}} <span>{{lastPurchase}} US $</span></li>
+				<li>{{"BasicText.Current Order Value"| translate}}<span>{{totalAmount}} US $</span></li>
+				<li>{{"BasicText.Total Purchase Of This Week Is"| translate}} <span>{{totalVowValue}} US $</span></li>
+			</ul>
+			<ul class="dtl_grid colone">
+				<li>{{"BasicText.You Are Getting"| translate}}
+					<span>{{appliedVowDisc}} % ({{"BasicText.InAmount"| translate}} : {{appliedVowAmt}} US
+						$</span>) Addtional VOW on your this Purchase.
+				</li>
+				<li>{{"BasicText.TOTAL AFTER ALL DISCOUNTS"| translate}} <span>{{paybleAmount}} US $</span></li>
+			</ul>
+		</div>
+		<div class="subtitle">{{"BasicText.Choose PickUp Location"| translate}}</div>
+		<ul class="dtl_grid colone mt-1" [ngClass]="{'bb':isShowOtherLocation}">
+			<li *ngFor="let pLocation of pickupLocations">
+				<input type="radio" id="{{pLocation.name}}" name="pickupLocation"
+					[checked]="pLocation.name == pickUpLocation" (change)="addPickupLocation(pLocation, $event)"
+					kendoRadioButton />
+				<label for="{{pLocation.name}}">{{pLocation.name}}</label>
+			</li>
+		</ul>
+		<!-- <div class="mb-1" *ngIf="isShowOtherLocation">
+			<kendo-label class="k-radio-label" text="{{otherLocation}}">
+			</kendo-label>
+		</div> -->
+		<ul class="dtl_grid colone" *ngIf="isShowOtherLocation">
+			<li>{{"BasicText.Your Registered Location"| translate}} : <span>{{otherLocation}}</span></li>
+			<li><span>{{"BasicText.NOTE"| translate}} : </span> {{"BasicText.Shipment Charges May Apply Extra, Please
+				Contact your"| translate}}
+				<span>RM</span>
+				{{"BasicText.for more information"| translate}}
+			</li>
+		</ul>
+	</div>
+</div>

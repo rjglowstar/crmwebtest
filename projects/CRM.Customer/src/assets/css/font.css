@@ -1,0 +1,62 @@
+@font-face {
+    font-family: 'Poppins';
+    font-display: swap;
+    src: url("../font/Poppins-I.woff2") format("woff2"),
+        url("../font/Poppins-I.woff") format("woff"),
+        url("../font/Poppins-I.ttf") format("ttf");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-display: swap;
+    src: url("../font/Poppins-EL.woff2") format("woff2"),
+        url("../font/Poppins-EL.woff") format("woff"),
+        url("../font/Poppins-EL.ttf") format("ttf");
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-display: swap;
+    src: url("../font/Poppins-L.woff2") format("woff2"),
+        url("../font/Poppins-L.woff") format("woff"),
+        url("../font/Poppins-L.ttf") format("ttf");
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-display: swap;
+    src: url("../font/Poppins-R.woff2") format("woff2"),
+        url("../font/Poppins-R.woff") format("woff"),
+        url("../font/Poppins-R.ttf") format("ttf");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-display: swap;
+    src: url("../font/Poppins-M.woff2") format("woff2"),
+        url("../font/Poppins-M.woff") format("woff"),
+        url("../font/Poppins-M.ttf") format("ttf");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-display: swap;
+    src: url("../font/Poppins-S.woff2") format("woff2"),
+        url("../font/Poppins-S.woff") format("woff"),
+        url("../font/Poppins-S.ttf") format("ttf");
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    font-display: swap;
+    src: url("../font/Poppins-B.woff2") format("woff2"),
+        url("../font/Poppins-B.woff") format("woff"),
+        url("../font/Poppins-B.ttf") format("ttf");
+    font-weight: 700;
+}

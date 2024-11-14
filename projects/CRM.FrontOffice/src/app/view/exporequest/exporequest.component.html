@@ -1,0 +1,448 @@
+<section class="omaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Expo Inquiries</li>
+            </ul>
+          </div>
+        </div>
+        <div class="summarybar bg">
+          <div class="summary-left">
+            <ul>
+              <li>Total : <span>{{expoRequestsSummary.totalStoneCount}}</span></li>
+              <li>Pending : <span>{{expoRequestsSummary.pendingStoneCount}}</span></li>
+              <li>Issue : <span>{{expoRequestsSummary.issueStoneCount}}</span></li>
+              <li>Receive : <span>{{expoRequestsSummary.receiveStoneCount}}</span></li>
+              <li>Order : <span>{{expoRequestsSummary.orderStoneCount}}</span></li>
+            </ul>
+          </div>
+          <div class="summary-right">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton title="View Request" [disabled]="mySelection.length == 0" (click)="openDetail()">
+                <i class="icon-view"></i>
+              </button>
+              <button kendoButton title="Update Inquiries"
+                (click)="loadExpoRequestData();loadExpoRequestSummaryData();">
+                <i class="icon-clear"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap grid-summury">
+            <kendo-grid #grid *ngIf="gridView" [data]="gridView" [reorderable]="true" [groupable]="true"
+              [sortable]="true" [selectable]="selectableSettings" (selectionChange)="selectedRowChange($event)"
+              [group]="groups" (groupChange)="groupChange($event)" (pageChange)="pageChange($event)" [resizable]="true"
+              [pageSize]="pageSize" [skip]="skip" [pageable]="true" [(selectedKeys)]="mySelection"
+              [kendoGridSelectBy]="'id'" class="rs-grid">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+
+                      <ng-template *ngIf="field.title == 'Checkbox'" kendoGridHeaderTemplate></ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                        *ngIf="field.title == 'Checkbox'">
+                        <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                          id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                        </label>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='stoneCount'">
+                        <span> {{dataItem.invItems.length}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='issueCount'">
+                        <span> {{getStatusCount(dataItem, "issueCount")}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='pendingCount'">
+                        <span> {{getStatusCount(dataItem, "pendingCount")}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='receivedCount'">
+                        <span> {{getStatusCount(dataItem, "receivedCount")}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='createdDate'">
+                        <span> {{dataItem.createdDate | date: 'dd/MM/yyyy hh:mm:ss a'}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='updatedAt'">
+                        <span> {{dataItem.updatedAt | date: 'dd/MM/yyyy hh:mm:ss a'}}</span>
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <!--#region Filter -->
+      <form class="e-right" name="filterForm" #expoReqSearchForm="ngForm" novalidate>
+        <div class="sr-wrap active" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <div class="i-form">
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Stone Id</label>
+                  <input type="text" name="filterStoneId" [(ngModel)]="stoneId" #filterStoneId="ngModel"
+                    id="filterStoneId" autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Certificate No</label>
+                  <input type="text" name="filtercertificateNo" [(ngModel)]="certificateNo"
+                    #filtercertificateNo="ngModel" id="filtercertificateNo" autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label for="f-name">Request Number</label>
+                  <input type="text" name="filterNumber" [(ngModel)]="reqNumbers" #filterNumber="ngModel"
+                    id="filterNumber" autocomplete="off">
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label for="f-name">Seller</label>
+                  <kendo-multiselect name="seller" class="customselect" [data]="listSellerDNormItems"
+                    [(ngModel)]="expoRequestCriteria.sellerIds" [textField]="'name'" [valueField]="'value'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                    (valueChange)="utilityService.onMultiSelectValueChange(listSellerDNormItems, expoRequestCriteria.sellerIds)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="dropdown-header single k-widget k-header">
+                        <span class="temp-single">Select Seller</span>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="getCommaSapratedStringFromData(expoRequestCriteria.sellerIds, listSellerDNormItems, true)">
+                        {{getCommaSapratedStringFromData(expoRequestCriteria.sellerIds, listSellerDNormItems)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label>Status</label>
+                  <kendo-multiselect name="status" class="customselect" [data]="listStatus"
+                    [(ngModel)]="expoRequestCriteria.status" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" [kendoDropDownFilter]="filterSettings"
+                    (valueChange)="utilityService.onMultiSelectChange(listStatus, expoRequestCriteria.status)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="dropdown-header single k-widget k-header">
+                        <span class="temp-single">Select Status</span>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(expoRequestCriteria.status, true)">
+                        {{utilityService.getCommaSapratedString(expoRequestCriteria.status)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                  <button class="btn btn-action" (click)="onFilterSubmit(expoReqSearchForm)">
+                    <i class="icon-search"></i>Search
+                  </button>
+                  <button (click)="clearFilter(expoReqSearchForm);" class="btn btn-action">
+                    <i class="icon-clear"></i>Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!--#endregion -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button>
+        </li>
+        <li><button (click)="onFilterSubmit(expoReqSearchForm)"><i class="icon-search"></i></button>
+        </li>
+        <li><button (click)="clearFilter(expoReqSearchForm)"><i class="icon-clear"></i></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- #region Detail View Model-->
+<div class="modal addemp c-modal dialog-xs-l" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isViewDetail">
+  <form name="form">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-info"></i>Expo Inquiry</h5>
+          <button type="button" class="close" (click)="toggleDetailDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="status-btn mb-1 p-1 d-flex justify-content-between align-items-center">
+                <span><strong>Number :</strong> {{expoRequestObj.number}}&nbsp;|&nbsp;
+                  <strong>Status :</strong> {{expoRequestObj.status | uppercase}}</span>
+                <span class="drp-status">
+                  <span>
+                    <strong>Date :</strong> {{expoRequestObj.createdDate | date: 'dd/MM/yyyy'}}</span>
+                </span>
+              </div>
+            </div>
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 ">
+              <div class="en-form f-12">
+                <div class="e-details-n">
+                  <div class="info-block we-3">
+                    <li *ngIf="expoRequestObj.seller" class="w-100">
+                      <h6 class="c-name" style="white-space: normal;"><span>Seller
+                          Name:</span>{{expoRequestObj.seller.name}}
+                      </h6>
+                    </li>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="en-form f-12 d-flex align-items-center justify-content-between flex-wrap">
+                <div class="i-form ad-le-top mb-0 d-flex">
+                  <div class="form-data me-2">
+                    <input autocomplete="off" type="text" id="stoneTxt" placeholder="Stone ID / Certficate ID"
+                      #StoneTxtInput name="stoneTxt" class="c-wi" (keyup.enter)="onEnterAddStone($event)"
+                      [(ngModel)]="filterOrAddText">
+                  </div>
+                  <div class="form-data">
+                    <button type="button" kendoTooltip (click)="selectStoneDetailsData(filterOrAddText)"
+                      class="btn btn-primary" title="Search Inventory"><i class="icon-search pe-0"></i></button>
+                  </div>
+                </div>
+                <div class="en-form f-12">
+                  <div class="i-form ci-top m-0">
+                    <div class="ci-top-right pe-0">
+                      <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap">
+                        <button type="button" (click)="UpdateInvViewing()" [disabled]="myInvSelection.length == 0"
+                          kendoButton title="Mark Issue"><i class="icon-view pe-0"></i>
+                        </button>
+                        <button type="button" (click)="UpdateInvViewing(false)" [disabled]="myInvSelection.length == 0"
+                          kendoButton title="Mark Received"><i class="icon-clear pe-0"></i>
+                        </button>
+                        <button type="button" (click)="OrderDialog()" [disabled]="myInvSelection.length == 0"
+                          kendoButton title="Add Order"><i class="icon-order pe-0"></i>
+                        </button>
+                        <button type="button" (click)="copyToClipboard()" kendoButton title="Copy Issued Stone Id"><i
+                            class="icon-copy pe-0"></i>
+                        </button>
+                        <button type="button" (click)="lightToggle()" kendoButton title="toggle Light"><i
+                            class="icon-light pe-0"></i>
+                        </button>
+                      </kendo-buttongroup>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="expo-grid mt-2">
+                <div class="grid-wrap">
+                  <kendo-grid [data]="reqInventories" class="grid-ui upload-grid" [sortable]="true" [resizable]="true"
+                    [selectable]="invSelectableSettings" [(selectedKeys)]="myInvSelection" [kendoGridSelectBy]="'stoneId'"
+                    [rowClass]="isNotValid">
+                    <ng-container *ngIf="fields && invFields.length > 0">
+                      <ng-container *ngFor="let field of invFields;let i= index">
+                        <ng-container *ngIf="field.isSelected">
+                          <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+
+                            <ng-template *ngIf="field.title == 'Checkbox'" kendoGridHeaderTemplate>
+                              <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox"
+                                (selectAllChange)="selectAllInventories($event)" />
+                              <label class="k-checkbox-label" for="headerCheckbox"></label>
+                            </ng-template>
+                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                              *ngIf="field.title == 'Checkbox'">
+                              <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                                id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                              <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                              </label>
+                            </ng-template>
+                            <!-- <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='updatedAt'">
+                              <span> {{dataItem.updatedAt | date: 'dd/MM/yyyy hh:mm:ss a'}}</span>
+                            </ng-template> -->
+                            <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='issueAt'">
+                              <span> {{dataItem.createdDate | date: 'dd/MM/yyyy hh:mm:ss a'}}</span>
+                            </ng-template>
+                            <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='receiveAt'">
+                              <span> {{dataItem.updatedAt | date: 'dd/MM/yyyy hh:mm:ss a'}}</span>
+                            </ng-template>
+                            <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'expoRemark'">
+                              <span [title]="dataItem.expoRemark"> {{dataItem.expoRemark}}</span>
+                            </ng-template>
+                            <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'relatedInquiries'">
+                              <span [title]="this.getOtherInquiriesNumbers(dataItem.stoneId)"> {{ this.getOtherInquiriesNumbers(dataItem.stoneId) }}</span>
+                            </ng-template>
+
+                          </kendo-grid-column>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </kendo-grid>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-primary">
+            <i class="icon-save"></i>Save</button>
+        </div> -->
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<!-- #region Add Order -->
+<div class="modal addemp rorgan c-modal dialog-sm-ex" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isOrder">
+  <form name="Orderform" #Order="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-info"></i>Add Order</h5>
+          <button type="button" class="close" (click)="toggleOrderDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="expoday-grid">
+            <div class="form-data">
+              <label>Customer<span class="require">*</span></label>
+            </div>
+            <div class="form-data" [ngClass]="{ 'error': Customer.invalid && (Customer.dirty || Customer.touched)}">
+              <kendo-combobox [data]="listCustomerItems" textField="text" valueField="value" name="Customer"
+                [valuePrimitive]="true" [(ngModel)]="selectedCustomer" [kendoDropDownFilter]="filterSettings"
+                [filterable]="true" (filterChange)="handleCustomerFilter($event)" #Customer="ngModel"
+                (valueChange)="onCustomerChange()">
+              </kendo-combobox>
+            </div>
+            <div class="form-data">
+              <button type="button" kendoTooltip (click)="toggleCustomerDialog()" class="btn btn-primary"
+                title="Add Customer"><i class="icon-add pe-0"></i></button>
+            </div>
+          </div>
+          <div class="expo-ordergrid mt-2">
+            <div class="grid-wrap">
+              <kendo-grid [data]="leadObj.leadInventoryItems" class="grid-ui upload-grid" [sortable]="true"
+                [resizable]="true">
+                <ng-container *ngIf="fields && orderInvFields.length > 0">
+                  <ng-container *ngFor="let field of orderInvFields;let i= index">
+                    <ng-container *ngIf="field.isSelected">
+                      <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      </kendo-grid-column>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </kendo-grid>
+            </div>
+
+          </div>
+          <div class="cart-info justify-content-end">
+            <div class="left-count">
+              <table class="position-relative me-4">
+                <tr>
+                  <td>PCS : </td>
+                  <td>{{leadObj.leadSummary.totalPcs}}</td>
+                </tr>
+                <tr>
+                  <td>CARAT : </td>
+                  <td>{{leadObj.leadSummary.totalCarat| number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>AVG. RAP ($) : </td>
+                  <td>{{leadObj.leadSummary.avgRap| number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>AVG. DISC. (%) :</td>
+                  <td>{{leadObj.leadSummary.avgDiscPer| number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>PER CARAT ($) : </td>
+                  <td>{{leadObj.leadSummary.perCarat| number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>AMT ($) : </td>
+                  <td>{{leadObj.leadSummary.totalAmount| number:'0.2-2'}}
+                  </td>
+                </tr>
+              </table>
+              <table>
+
+                <tr>
+                  <td> Volume DISC. (%) : </td>
+                  <td>{{leadObj.leadSummary.totalVOWDiscPer| number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>Volume DISC. ($) : </td>
+                  <td>{{leadObj.leadSummary.totalVOWDiscAmount| number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>DISC. (%) : </td>
+                  <td>{{leadObj.leadSummary.discPer| number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>PRICE PER CARAT ($) : </td>
+                  <td>{{leadObj.leadSummary.pricePerCarat| number:'0.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td>Broker AMT ($) : </td>
+                  <td>{{leadObj.leadSummary.totalBrokerAmount| number:'0.2-2'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>AMT ($) : </td>
+                  <td>
+                    {{(leadObj.leadSummary.totalBrokerAmount && leadObj.leadSummary.totalPayableAmount)
+                    ? ((leadObj.leadSummary.totalPayableAmount - leadObj.leadSummary.totalBrokerAmount)| number:'0.2-2')
+                    : (leadObj.leadSummary.totalPayableAmount | number:'0.2-2')}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>PAYABLE AMT ($) : </td>
+                  <td>{{leadObj.leadSummary.totalPayableAmount| number:'0.2-2'}}</td>
+                </tr>
+
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" [disabled]="!Order.valid" class="btn btn-primary" (click)="submitOrder(Order)"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<!-- #region Add New Customer Model-->
+<ng-container *ngIf="isCustomer">
+  <app-expoCustRegister (toggle)="toggleCustomerDialog()">
+  </app-expoCustRegister>
+</ng-container>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

@@ -1,0 +1,364 @@
+<title>Broker</title>
+<section class="broker-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item">
+                <a href="#"></a><i class="icon-home"></i>Home
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Broker</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton (click)="openAddDialog()" title="Add"><i class="icon-add"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openUpdateDialog()" title="Edit">
+                <i class="icon-edit"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openDeleteDialog()" title="Delete"><i
+                  class="icon-trash"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <!-- Skeleton start -->
+            <ng-container *ngIf="!gridView">
+              <div class="k-grouping-header k-grouping-header-flex">
+                <div class="k-indicator-container">
+                  <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                  </kendo-skeleton>
+                </div>
+              </div>
+              <table *ngIf="fields && fields.length > 0" class="w-100">
+                <th *ngFor="let field of fields">{{field.propertyName}}</th>
+                <tr *ngFor="let field of skeletonArray">
+                  <td *ngFor="let field of fields">
+                    <kendo-skeleton shape="text" animation="wave" [width]="75" [height]="40">
+                    </kendo-skeleton>
+                  </td>
+                </tr>
+              </table>
+            </ng-container>
+            <!-- Skeleton end -->
+            <kendo-grid #orgGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+              (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+              [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)"
+              [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='address'">
+                        <span>{{utilityService.addressDtlNullNConcat(dataItem.address)}} </span>
+                      </ng-template>
+                      <!-- <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='mobileNo'">
+                          <span>{{dataItem.mobileNo | numberfilter:'mobile'}}</span>
+                        </ng-template>
+                        <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='refmobileNo'">
+                          <span>{{dataItem.mobileNo | numberfilter:'mobile'}}</span>
+                        </ng-template> -->
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #SearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Name</label>
+                    <input type="text" id="" name="filtername" [(ngModel)]="brokerCriteria.name" #filtername="ngModel">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Code</label>
+                    <input type="text" id="" name="filtercode" [(ngModel)]="brokerCriteria.code" #filtercode="ngModel">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Email</label>
+                    <input type="mail" id="" name="filterEmail" [(ngModel)]="brokerCriteria.email"
+                      #filterEmail="ngModel">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="l-name">Mobile No</label>
+                    <input type="text" id="l-name" name="filtermobileno" [(ngModel)]="brokerCriteria.mobileNo"
+                      #filtermobileno="ngModel" (keypress)="utilityService.numberOnly($event)">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" (click)="SearchForm.form.valid && onFilterSubmit(SearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button (click)="clearFilter(SearchForm)" class="btn btn-action">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Search End -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="SearchForm.form.valid && onFilterSubmit(SearchForm)"><i class="icon-search"></i></button>
+        </li>
+        <li><button (click)="clearFilter(SearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Add Modal Start -->
+<div class="modal c-modal addemp br-ref" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isReg">
+  <form name="form" #Form="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">
+            <i class="icon-broker"></i>
+            {{brokerObj.id?"Edit":"Add"}} Broker
+          </h5>
+          <button type="button" class="close" (click)="closeDialog(Form)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <!-- BASIC INFO -->
+              <div class="i-form ad-broker-01">
+                <h6 class="title"><i class="icon-info"></i>Information</h6>
+                <div class="grid">
+                  <div class="form-img pe-0" [ngClass]="{'error': profileImageErrorFlag}">
+                    <div class="c-upload">
+                      <label for="file-input" class="w-100">
+                        <img
+                          [src]="imagePreviewprofile ? sanitizeURL(imagePreviewprofile) : 'commonAssets/images/userprofile.png'">
+                      </label>
+                      <input #profileFileupload type="file"
+                        (change)="uploadFiles(Form,$event, FileStoreTypes.BrokerProfile)"
+                        accept="image/jpeg,image/png,image/jpg" id="file-input" type="file" name="profileImage" />
+                      <input type="hidden" name="fileHidden">
+                    </div>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                    <input type="text" name="name" [(ngModel)]="brokerObj.name" #name="ngModel" id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Code</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="code" [(ngModel)]="brokerObj.code" #code="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Email<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('pattern')) || (email.errors?.required && email.touched)) }">
+                    <input type="email" name="email" [(ngModel)]="brokerObj.email" #email="ngModel" id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Mobile No<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': mobileNo.invalid && ((mobileNo.touched && mobileNo.hasError('pattern')) || (mobileNo.errors?.required && mobileNo.touched)) }">
+                    <input type="text" name="mobileNo" [(ngModel)]="brokerObj.mobileNo" #mobileNo="ngModel" id=""
+                      required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Brokerage %<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': brokrage.invalid && (brokrage.dirty || brokrage.touched)}">
+                    <input type="text" name="brokrage" (keypress)="utilityService.floatOnly($event)"
+                      [(ngModel)]="brokerObj.brokrage" #brokrage="ngModel" id="" required>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Income-Tax</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="incomeTax" [(ngModel)]="brokerObj.incomeTaxNo" #incomeTax="ngModel" id="">
+                  </div>
+                </div>
+              </div>
+              <!-- ADDRESS -->
+              <div class="i-form ad-broker-02">
+                <h6 class="title"><i class="icon-mapmarker"></i>Address</h6>
+                <div class="grid">
+
+                  <div class="form-data">
+                    <label>Line1</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line1" #line1="ngModel"
+                      [(ngModel)]="brokerObj.address.line1">
+                                        </textarea>
+                  </div>
+                  <div class="form-data">
+                    <label>Line2</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line2" #line2="ngModel"
+                      [(ngModel)]="brokerObj.address.line2">
+                                        </textarea>
+                  </div>
+                  <!-- <div class="form-data">
+                    <label>Type</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listAddressTypeItems" [valuePrimitive]="true" name="addressType"
+                      #addressType="ngModel" [(ngModel)]="brokerObj.address.type">
+                    </kendo-combobox>
+                  </div> -->
+                  <div class="form-data">
+                    <label>Country</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="country" #country="ngModel" (valueChange)="onCountryChange($event)"
+                      [valuePrimitive]="true" [(ngModel)]="brokerObj.address.country">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>State</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onStateChange($event)" [valuePrimitive]="true" name="state"
+                      #state="ngModel" [(ngModel)]="brokerObj.address.state">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>City</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city"
+                      #city="ngModel" [(ngModel)]="brokerObj.address.city">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>ZipCode</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="zipcode" #zipcode="ngModel" [(ngModel)]="brokerObj.address.zipCode">
+                  </div>
+                </div>
+              </div>
+              <!-- REFERENCE -->
+              <div class="i-form ad-broker-03">
+                <h6 class="title"><i class="icon-candidates"></i>Reference Information</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">Company Name</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="refCompanyName" [(ngModel)]="brokerObj.refCompanyName"
+                      #refCompanyName="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Person Name</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="refPersonName" [(ngModel)]="brokerObj.refPersonName"
+                      #refPersonName="ngModel" id="">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Email</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': refemail.invalid && ((refemail.touched && refemail.hasError('email')))}">
+                    <input type="email" name="refemail" [(ngModel)]="brokerObj.refemail" #refemail="ngModel" id=""
+                      email>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Mobile No</label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': refmobileNo.invalid && (refmobileNo.hasError('pattern')) }">
+                    <input type="text" name="refmobileNo" [(ngModel)]="brokerObj.refmobileNo" #refmobileNo="ngModel"
+                      id="" id="" pattern="((\\+91-?)|0)?[0-9]{10}">
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Address</label>
+                  </div>
+                  <div class="form-data add-te-ref">
+                    <textarea cols="4" name="refAddress" [(ngModel)]="brokerObj.refAddress" #refAddress="ngModel"
+                      id=""></textarea>
+                  </div>
+
+                  <div class="k-text-end"></div>
+                  <div class="c-l-fs">
+                    <input type="checkbox" class="k-checkbox" name="isActive" [(ngModel)]="brokerObj.isActive">
+                    <label class="k-checkbox-label" for="">Active</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="multiple-gallery o-title d-flex align-items-center justify-content-between">
+                <span class="title">Documents</span>
+                <div class="o-edit">
+                  <button kendobutton class="k-button" (click)="file.click()">Upload
+                    Photos</button>
+                  <input #file type='file' multiple accept="image/jpeg,image/png,image/jpg,application/pdf"
+                    (change)="uploadFiles(Form,$event, FileStoreTypes.BrokerExtraDocument)" style="display: none;">
+                </div>
+              </div>
+              <div class="gallery-pic p-2 border border-top-0">
+                <span *ngFor='let evt of extraImage'>
+                  <i class="icon-delete" (click)="removeImage(evt)"></i>
+                  <img *ngIf="evt.filetype == 'image'" [src]="sanitizeURL(evt.file)" height="100" width="100">
+                  <img class="img-thumbnail" *ngIf="evt.filetype == 'pdf'" alt="Photo Identity"
+                    src="commonAssets/images/pdf_doc.png" [width]="150">
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="onSubmit(Form,false)" [disabled]="!Form.valid" class="btn btn-primary"><i
+              class="icon-add"></i>New</button>
+          <button (click)="onSubmit(Form,true)" [disabled]="!Form.valid" class="btn btn-primary"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+    <div (document:keydown.esc)="closeDialog(Form)"></div>
+  </form>
+</div>
+<!-- Add Modal End -->
+
+<div kendoDialogContainer></div>

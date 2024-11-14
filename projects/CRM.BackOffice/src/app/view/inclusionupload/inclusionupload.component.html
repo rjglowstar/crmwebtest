@@ -1,0 +1,725 @@
+<title>Inclusion Upload</title>
+<section class="inclusionupload-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <!--#region Header -->
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">InclusionUpload</li>
+            </ul>
+          </div>
+        </div>
+        <div class="summarybar bg">
+          <div class="summary-left">
+            <ul>
+              <li>Stone Count : <span>{{totalPcs}}</span></li>
+              <li>Selected Stone(s) : <span>{{mySelection.length}}</span></li>
+            </ul>
+          </div>
+          <div class="summary-right pe-0">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton (click)="filterSidebar()" class="c-searh-btn"><i class="icon-search"
+                  title="Search Stone"></i></button>
+              <button kendoButton title="Add Stone" (click)="openInclusionUploadDialog()"><i
+                  class="icon-add"></i></button>
+              <button kendoButton title="Edit Stone" [disabled]="!(mySelection && mySelection.length == 1)"
+                (click)="editInclusionData()"><i class="icon-edit"></i></button>
+              <input #file type="file" (click)="file.value=''" (change)="onSelectExcelFile($event)" hidden
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
+              <button kendoButton title="Upload Inclusion" (click)="file.click()">
+                <i class="icon-excelnew p-0"></i>
+              </button>
+              <button kendoButton title="Save Inclusion" [disabled]="!(mySelection.length > 0)"
+                (click)="uploadInclusionResultFile()"><i class="icon-save"></i></button>
+              <button kendoButton title="Refresh Grid" [disabled]="!(inclusionExcelItems && inclusionExcelItems.length)"
+                (click)="clearGrid()"><i class="icon-clear"></i></button>
+              <button kendoButton [disabled]="!(inclusionExcelItems && inclusionExcelItems.length > 0)"
+                title="Search Stone" #anchor class="nf-click" (click)="FilterToggle()"><i
+                  class="icon-filter"></i></button>
+              <button kendoButton title="Grid Configuration" (click)="openGridConfigDialog()">
+                <i class="icon-gridconfig"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <kendo-popup [anchor]="$any(anchor)" class="bac-tra" *ngIf="isFilter">
+          <div class="n-fil inc-upl">
+            <div class="n-fil-right">
+              <div class="f-group incluplFil_grid">
+                <label for="">Stone Id</label>
+                <input class="form-control me-0" name="searchStoneId" id="searchStoneId" [(ngModel)]="searchStoneId">
+                <button type=" submit" class="btn btn-primary" (click)="filterData()"><i
+                    class="icon-search me-1"></i>Search</button>
+                <button type="submit" class="btn btn-primary" (click)="clearFilterData()"><i
+                    class="icon-clear me-1"></i>Clear</button>
+              </div>
+              <span class="k-cursor-pointer pt-1" (click)="FilterToggle()"><i class="icon-delete me-1"></i></span>
+            </div>
+          </div>
+        </kendo-popup>
+        <!--#endregion -->
+        <!--#region Grid -->
+        <div class="content_box">
+          <div class="grid-wrap grid-summury">
+            <kendo-grid [data]="gridView" class="grid-ui upload-grid rs-grid" [sortable]="true"
+              (sortChange)="sortChange($event)" [sort]="sort" [groupable]="true" [group]="groups"
+              (groupChange)="groupChange($event)" [selectable]="selectableSettings" [resizable]="true"
+              [rowClass]="isDisabled" [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'stoneId'"
+              (cellClick)="cellClickHandler($event)">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <kendo-grid-checkbox-column [width]="40">
+                  <ng-template *ngIf="isShowCheckBoxAll" kendoGridHeaderTemplate>
+                    <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox" />
+                    <label class="k-checkbox-label" for="headerCheckbox"></label>
+                  </ng-template>
+                  <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                    <div class="i-hov" *ngIf="dataItem.isDisabled" (click)="updateData(dataItem)">
+                      <i class="icon-info" *ngIf="!dataItem.isDataMissing"></i>
+                      <i class="icon-edit" *ngIf="dataItem.isDataMissing"></i>
+                      <div class="em-box" *ngIf="fetchError(dataItem?.stoneId)">
+                        <h6 class="title">stoneId:
+                          {{fetchError(dataItem?.stoneId)?.stoneId}}
+                        </h6>
+                        <span>Reasons:
+                          <div class="e-msg" *ngFor="let message of fetchError(dataItem?.stoneId)?.messageList">
+                            <span>{{message}}</span>
+                          </div>
+                        </span>
+                      </div>
+                    </div>
+                    <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                      [kendoGridSelectionCheckbox]="rowIndex" />
+                    <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                    </label>
+                  </ng-template>
+                </kendo-grid-checkbox-column>
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+        <!--#endregion -->
+      </div>
+      <!-- #region Filter -->
+      <div class="e-right">
+        <div class="sr-wrap inclusion-panel" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter <i class="icon-delete float-end mt-1 me-1" (click)="filterSidebar()"></i>
+            </h6>
+            <form name="form" #InclusionSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 content">
+                    <div class="form-data">
+                      <label>Stone Id</label>
+                    </div>
+                    <div class="form-data">
+                      <input type="text" class="input-sm form-control text-start" name="stoneId" [(ngModel)]="stoneId"
+                        autocomplete="off" />
+                    </div>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 content">
+                    <div class="pt-2 ps-2 pe-2">
+                      <!-- [ngClass]="{ 'error': filterOption.length == 0 && InclusionSearchForm.submitted }" -->
+                      <div class="mb-1">
+                        <input type="radio" name="filterOption" value="included" #searched="ngModel"
+                          [(ngModel)]="filterOption" kendoRadioButton />
+                        <label class="k-label ms-2 radio-input" [for]="searched">Included</label>
+                      </div>
+                      <div class="mb-1">
+                        <input type="radio" name="filterOption" value="nonIncluded" #selected="ngModel"
+                          [(ngModel)]="filterOption" kendoRadioButton />
+                        <label class="k-label ms-2 radio-input" [for]="selected">Non Included</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label class="k-label ci-title">Inclusion Filters</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                    <input type="checkbox" class="k-checkbox" id="nobgmCheckbox" name="nobgmCheckbox"
+                      [(ngModel)]="inclusionFilter.noBGM" />
+                    <label class="k-checkbox-label" for="nobgmCheckbox">No BGM</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.brown">
+                    <input type="checkbox" class="k-checkbox" id="brownCheckbox" name="brownCheckbox"
+                      [(ngModel)]="inclusionFilter.brown" />
+                    <label class="k-checkbox-label" for="brownCheckbox">Brown</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.green">
+                    <input type="checkbox" class="k-checkbox" id="greenCheckbox" name="greenCheckbox"
+                      [(ngModel)]="inclusionFilter.green" />
+                    <label class="k-checkbox-label" for="greenCheckbox">Green</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.milky">
+                    <input type="checkbox" class="k-checkbox" id="milkyCheckbox" name="milkyCheckbox"
+                      [(ngModel)]="inclusionFilter.milky" />
+                    <label class="k-checkbox-label" for="milkyCheckbox">Milky</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.shade">
+                    <input type="checkbox" class="k-checkbox" id="shadeCheckbox" name="shadeCheckbox"
+                      [(ngModel)]="inclusionFilter.shade" />
+                    <label class="k-checkbox-label" for="shadeCheckbox">Shade</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.sideBlack">
+                    <input type="checkbox" class="k-checkbox" id="sideBlackCheckbox" name="sideBlackCheckbox"
+                      [(ngModel)]="inclusionFilter.sideBlack" />
+                    <label class="k-checkbox-label" for="sideBlackCheckbox">Side Black</label>
+                  </div>
+                  <!-- <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                        *ngIf="inclusionConfig.centerSideBlack">
+                        <input type="checkbox" class="k-checkbox" id="centerSideBlackCheckbox"
+                          name="centerSideBlackCheckbox" [(ngModel)]="inclusionFilter.centerSideBlack" />
+                        <label class="k-checkbox-label" for="centerSideBlackCheckbox">Center Side Black</label>
+                      </div> -->
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.centerBlack">
+                    <input type="checkbox" class="k-checkbox" id="centerBlackCheckbox" name="centerBlackCheckbox"
+                      [(ngModel)]="inclusionFilter.centerBlack" />
+                    <label class="k-checkbox-label" for="centerBlackCheckbox">Center Black</label>
+                  </div>
+                  <!-- <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                        *ngIf="inclusionConfig.sideWhite">
+                        <input type="checkbox" class="k-checkbox" id="sideWhiteCheckbox"
+                          name="sideWhiteCheckbox" [(ngModel)]="inclusionFilter.sideWhite" />
+                        <label class="k-checkbox-label" for="sideWhiteCheckbox">Side White</label>
+                      </div>
+                      <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                        *ngIf="inclusionConfig.centerSideWhite">
+                        <input type="checkbox" class="k-checkbox" id="centerSideWhiteCheckbox"
+                          name="centerSideWhiteCheckbox" [(ngModel)]="inclusionFilter.centerSideWhite" />
+                        <label class="k-checkbox-label" for="centerSideWhiteCheckbox">Center Side White</label>
+                      </div>
+                      <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                        *ngIf="inclusionConfig.centerWhite">
+                        <input type="checkbox" class="k-checkbox" id="centerWhiteCheckbox"
+                          name="centerWhiteCheckbox" [(ngModel)]="inclusionFilter.centerWhite" />
+                        <label class="k-checkbox-label" for="centerWhiteCheckbox">Center White</label>
+                      </div> -->
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.openCrown">
+                    <input type="checkbox" class="k-checkbox" id="openCrownCheckbox" name="openCrownCheckbox"
+                      [(ngModel)]="inclusionFilter.openCrown" />
+                    <label class="k-checkbox-label" for="openCrownCheckbox">Open Crown</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.openTable">
+                    <input type="checkbox" class="k-checkbox" id="openTableCheckbox" name="openTableCheckbox"
+                      [(ngModel)]="inclusionFilter.openTable" />
+                    <label class="k-checkbox-label" for="openTableCheckbox">Open Table</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.openPavilion">
+                    <input type="checkbox" class="k-checkbox" id="openPavilionCheckbox" name="openPavilionCheckbox"
+                      [(ngModel)]="inclusionFilter.openPavilion" />
+                    <label class="k-checkbox-label" for="openPavilionCheckbox">Open Pavilion</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.openGirdle">
+                    <input type="checkbox" class="k-checkbox" id="openGirdleCheckbox" name="openGirdleCheckbox"
+                      [(ngModel)]="inclusionFilter.openGirdle" />
+                    <label class="k-checkbox-label" for="openGirdleCheckbox">Open Girdle</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.girdleCondition">
+                    <input type="checkbox" class="k-checkbox" id="girdleConditionCheckbox"
+                      name="girdleConditionCheckbox" [(ngModel)]="inclusionFilter.girdleCondition" />
+                    <label class="k-checkbox-label" for="girdleConditionCheckbox">Girdle Condition</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box" *ngIf="inclusionConfig.efoc">
+                    <input type="checkbox" class="k-checkbox" id="efocCheckbox" name="efocCheckbox"
+                      [(ngModel)]="inclusionFilter.efoc" />
+                    <label class="k-checkbox-label" for="efocCheckbox">EFOC</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box" *ngIf="inclusionConfig.efop">
+                    <input type="checkbox" class="k-checkbox" id="efopCheckbox" name="efopCheckbox"
+                      [(ngModel)]="inclusionFilter.efop" />
+                    <label class="k-checkbox-label" for="efopCheckbox">EFOP</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.culet">
+                    <input type="checkbox" class="k-checkbox" id="culetCheckbox" name="culetCheckbox"
+                      [(ngModel)]="inclusionFilter.culet" />
+                    <label class="k-checkbox-label" for="culetCheckbox">Culet</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box" *ngIf="inclusionConfig.hna">
+                    <input type="checkbox" class="k-checkbox" id="hnaCheckbox" name="hnaCheckbox"
+                      [(ngModel)]="inclusionFilter.hna" />
+                    <label class="k-checkbox-label" for="hnaCheckbox">HNA</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.eyeClean">
+                    <input type="checkbox" class="k-checkbox" id="eyeCleanCheckbox" name="eyeCleanCheckbox"
+                      [(ngModel)]="inclusionFilter.eyeClean" />
+                    <label class="k-checkbox-label" for="eyeCleanCheckbox">Eye Clean</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.naturalOnGirdle">
+                    <input type="checkbox" class="k-checkbox" id="naturalOnGirdleCheckbox"
+                      name="naturalOnGirdleCheckbox" [(ngModel)]="inclusionFilter.naturalOnGirdle" />
+                    <label class="k-checkbox-label" for="naturalOnGirdleCheckbox">Natural On Girdle</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.naturalOnCrown">
+                    <input type="checkbox" class="k-checkbox" id="naturalOnCrownCheckbox" name="naturalOnCrownCheckbox"
+                      [(ngModel)]="inclusionFilter.naturalOnCrown" />
+                    <label class="k-checkbox-label" for="naturalOnCrownCheckbox">Natural On Crown</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.naturalOnPavilion">
+                    <input type="checkbox" class="k-checkbox" id="naturalOnPavilionCheckbox"
+                      name="naturalOnPavilionCheckbox" [(ngModel)]="inclusionFilter.naturalOnPavilion" />
+                    <label class="k-checkbox-label" for="naturalOnPavilionCheckbox">Natural On Pavilion</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box"
+                    *ngIf="inclusionConfig.bowtie">
+                    <input type="checkbox" class="k-checkbox" id="bowtieCheckbox" name="bowtieCheckbox"
+                      [(ngModel)]="inclusionFilter.bowtie" />
+                    <label class="k-checkbox-label" for="bowtieCheckbox">Bowtie</label>
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" type="submit" (click)="onFilterSubmit(InclusionSearchForm)">
+                      <i class="icon-search"></i>Search</button>
+                    <button (click)="clearFilter(InclusionSearchForm)" class="btn btn-action"><i
+                        class="icon-clear"></i>Clear</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- #endregion -->
+    </div>
+  </div>
+</section>
+
+<!-- #region Add Inclusion Upload Modal -->
+<div class="modal c-modal addemp edinv inc-upl-mod" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isInclusionUpload">
+  <form name="inventoryForm" #inventoryForm="ngForm" novalidate>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="icon-inventroy"></i>
+            Inclusion Upload
+          </h5>
+          <button type="button" class="close" (click)="closeInclusionUploadDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="account-content">
+                <div class="tab-content">
+                  <div class="panelbar-wrapper">
+                    <div class="grid d-flex">
+                      <div class="form-data">
+                        <label>Stone Id</label>
+                      </div>
+                      <div class="form-data ps-ico"
+                        [ngClass]="{ 'error': stoneId.invalid && (stoneId.dirty || stoneId.touched)}">
+                        <input type="text" name="stoneId" id="stoneId" autocomplete="off" #stoneId="ngModel"
+                          [(ngModel)]="inclusionUploadObj.stoneId" placeholder="Search Stone Id" required
+                          (keyup)="isValidStone = false;">
+                        <span class="formicon">
+                          <button class="spanbutton"
+                            [disabled]="((inclusionUploadObj.stoneId != null) ? (inclusionUploadObj.stoneId.length == 0 || isValidStone) : true)"
+                            (click)="getInventoryMeasurementData(true)"><i class="icon-search"></i></button>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="i-form ed-measurement">
+                      <div class="flex">
+                        <div class="i-title">
+                          <h6 class="title"><i class="icon-measure"></i> Measurement</h6>
+                        </div>
+                      </div>
+                      <div class="grid c-drop">
+                        <div class="form-data" *ngIf="measurementConfig.length">
+                          <label>Length</label>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.length">
+                          <input type="text" name="length" [(ngModel)]="inclusionUploadObj.length" #length="ngModel"
+                            autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="length"
+                            (change)="calculateDept(inclusionUploadObj)">
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.width">
+                          <label>Width</label>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.width">
+                          <input type="text" name="width" [(ngModel)]="inclusionUploadObj.width" #width="ngModel"
+                            autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="width"
+                            (change)="calculateDept(inclusionUploadObj)">
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.height">
+                          <label>Height</label>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.height">
+                          <input type="text" name="height" [(ngModel)]="inclusionUploadObj.height" #height="ngModel"
+                            autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="height"
+                            (change)="calculateDept(inclusionUploadObj)">
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.depth">
+                          <label for="">Depth</label>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.depth">
+                          <input type="text" name="depth" [(ngModel)]="inclusionUploadObj.depth" #depth="ngModel"
+                            id="depth" autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)">
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.table">
+                          <label>Table</label>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.table">
+                          <input type="text" name="table" [(ngModel)]="inclusionUploadObj.table" #table="ngModel"
+                            autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="table">
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.crownHeight">
+                          <label>CrHeight</label>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.crownHeight">
+                          <input type="text" name="crownHeight" [(ngModel)]="inclusionUploadObj.crownHeight"
+                            #crownHeight="ngModel" autocomplete="off" maxlength="10"
+                            (keypress)="utilityService.floatOnly($event)" id="crownHeight">
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.crownAngle">
+                          <label>CrAngle</label>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.crownAngle">
+                          <input type="text" name="crownAngle" [(ngModel)]="inclusionUploadObj.crownAngle"
+                            #crownAngle="ngModel" autocomplete="off" maxlength="10"
+                            (keypress)="utilityService.floatOnly($event)" id="crownAngle">
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.pavillionDepth">
+                          <label>PvlDepth</label>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.pavillionDepth">
+                          <input type="text" name="pavilionDepth" [(ngModel)]="inclusionUploadObj.pavilionDepth"
+                            #pavilionDepth="ngModel" autocomplete="off" maxlength="10"
+                            (keypress)="utilityService.floatOnly($event)" id="pavilionDepth">
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.pavillionAngle">
+                          <label>PvlAngle</label>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.pavillionAngle">
+                          <input type="text" name="pavilionAngle" [(ngModel)]="inclusionUploadObj.pavilionAngle"
+                            #pavilionAngle="ngModel" autocomplete="off" maxlength="10"
+                            (keypress)="utilityService.floatOnly($event)" id="pavilionAngle">
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.girdlePer">
+                          <label>GirdlePer</label>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.girdlePer">
+                          <input type="text" name="girdlePer" [(ngModel)]="inclusionUploadObj.girdlePer"
+                            #girdlePer="ngModel" autocomplete="off" maxlength="10"
+                            (keypress)="utilityService.floatOnly($event)" id="girdlePer">
+                        </div>
+                        <div class="form-data"
+                          *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                          <label>Min Girdle</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                          <kendo-dropdownlist [data]="measurementData  | typefilter:'girdle'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="mingirdle"
+                            [(ngModel)]="inclusionUploadObj.minGirdle" #mingirdle="ngModel" id="mingirdle">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                          <label>Max Girdle</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="measurementConfig.girdle && (measurementData  | typefilter:'girdle').length > 0">
+                          <kendo-dropdownlist [data]="measurementData  | typefilter:'girdle'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="maxgirdle"
+                            [(ngModel)]="inclusionUploadObj.maxGirdle" #maxgirdle="ngModel" id="maxgirdle">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.ratio">
+                          <label>Ratio</label>
+                        </div>
+                        <div class="form-data" *ngIf="measurementConfig.ratio">
+                          <input type="text" name="ratio" [(ngModel)]="inclusionUploadObj.ratio" #ratio="ngModel"
+                            autocomplete="off" maxlength="10" (keypress)="utilityService.floatOnly($event)" id="ratio">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="i-form ed-inclusion">
+                      <div class="flex">
+                        <div class="i-title">
+                          <h6 class="title"><i class="icon-inclusion"></i> Inclusion</h6>
+                        </div>
+                      </div>
+                      <div class="grid c-drop">
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.shade && (inclusionData | typefilter:'Shade').length > 0">
+                          <label>Shade</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.shade && (inclusionData | typefilter:'Shade').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'Shade'" [valuePrimitive]="true"
+                            textField="name" valueField="name" name="shade" [(ngModel)]="inclusionUploadObj.shade"
+                            #shade="ngModel" id="shade">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.brown && (inclusionData | typefilter:'Brown').length > 0">
+                          <label for="">Brown</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.brown && (inclusionData | typefilter:'Brown').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'Brown'" [valuePrimitive]="true"
+                            textField="name" valueField="name" name="brown" [(ngModel)]="inclusionUploadObj.brown"
+                            #brown="ngModel" id="brown">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.green && (inclusionData | typefilter:'Green').length > 0">
+                          <label>Green</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.green && (inclusionData | typefilter:'Green').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'Green'" [valuePrimitive]="true"
+                            textField="name" valueField="name" name="green" [(ngModel)]="inclusionUploadObj.green"
+                            #green="ngModel" id="green">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.milky && (inclusionData | typefilter:'Milky').length > 0">
+                          <label>Milky</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.milky && (inclusionData | typefilter:'Milky').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'Milky'" [valuePrimitive]="true"
+                            textField="name" valueField="name" name="milky" [(ngModel)]="inclusionUploadObj.milky"
+                            #milky="ngModel" id="milky">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.sideBlack && (inclusionData | typefilter:'SideBlack').length > 0">
+                          <label>SideBlack</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.sideBlack && (inclusionData | typefilter:'SideBlack').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'SideBlack'" [valuePrimitive]="true"
+                            textField="name" valueField="name" name="sideBlack"
+                            [(ngModel)]="inclusionUploadObj.sideBlack" #sideBlack="ngModel" id="sideBlack">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.centerBlack && (inclusionData | typefilter:'centerBlack').length > 0">
+                          <label>CenterBlack</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.centerBlack && (inclusionData | typefilter:'centerBlack').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'centerBlack'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="centerBlack"
+                            [(ngModel)]="inclusionUploadObj.centerBlack" #centerBlack="ngModel" id="centerBlack">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.openCrown && (inclusionData | typefilter:'openCrown').length > 0">
+                          <label>OpenCrown</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.openCrown && (inclusionData | typefilter:'openCrown').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'openCrown'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="openCrown"
+                            [(ngModel)]="inclusionUploadObj.openCrown" #openCrown="ngModel" id="openCrown">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.openTable && (inclusionData | typefilter:'openTable').length > 0">
+                          <label>OpenTable</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.openTable && (inclusionData | typefilter:'openTable').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'openTable'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="openTable"
+                            [(ngModel)]="inclusionUploadObj.openTable" #openTable="ngModel" id="openTable">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.openPavilion && (inclusionData | typefilter:'openPavilion').length > 0">
+                          <label>OpenPavilion</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.openPavilion && (inclusionData | typefilter:'openPavilion').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'openPavilion'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="openPavilion"
+                            [(ngModel)]="inclusionUploadObj.openPavilion" #openPavilion="ngModel" id="openPavilion">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.openGirdle && (inclusionData | typefilter:'openGirdle').length > 0">
+                          <label>OpenGirdle</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.openGirdle && (inclusionData | typefilter:'openGirdle').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'openGirdle'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="openGirdle"
+                            [(ngModel)]="inclusionUploadObj.openGirdle" #openGirdle="ngModel" id="openGirdle">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.girdleCondition && (inclusionData | typefilter:'GirdleCondition').length > 0">
+                          <label>GirdleCondition</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.girdleCondition && (inclusionData | typefilter:'GirdleCondition').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'GirdleCondition'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="girdleCondition"
+                            [(ngModel)]="inclusionUploadObj.girdleCondition" #girdleCondition="ngModel"
+                            id="girdleCondition">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.efoc && (inclusionData | typefilter:'efoc').length > 0">
+                          <label>EFOC</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.efoc && (inclusionData | typefilter:'efoc').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'efoc'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="efoc" [(ngModel)]="inclusionUploadObj.efoc"
+                            #efoc="ngModel" id="efoc">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.efop && (inclusionData | typefilter:'efop').length > 0">
+                          <label>EFOP</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.efop && (inclusionData | typefilter:'efop').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'efop'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="efop" [(ngModel)]="inclusionUploadObj.efop"
+                            #efop="ngModel" id="efop">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.culet && (inclusionData | typefilter:'culet').length > 0">
+                          <label>Culet</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.culet && (inclusionData | typefilter:'culet').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'culet'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="culet"
+                            [(ngModel)]="inclusionUploadObj.culet" #culet="ngModel" id="culet">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.hna && (inclusionData | typefilter:'hna').length > 0">
+                          <label>HNA</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.hna && (inclusionData | typefilter:'hna').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'hna'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="hna" [(ngModel)]="inclusionUploadObj.hna"
+                            #hna="ngModel" id="hna">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.eyeClean && (inclusionData | typefilter:'eyeClean').length > 0">
+                          <label>EyeClean</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.eyeClean && (inclusionData | typefilter:'eyeClean').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'eyeClean'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="eyeClean"
+                            [(ngModel)]="inclusionUploadObj.eyeClean" #eyeClean="ngModel" id="eyeClean">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.naturalOnGirdle && (inclusionData | typefilter:'naturalOnGirdle').length > 0">
+                          <label>NOG</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.naturalOnGirdle && (inclusionData | typefilter:'naturalOnGirdle').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalOnGirdle'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="naturalOnGirdle"
+                            [(ngModel)]="inclusionUploadObj.naturalOnGirdle" #naturalOnGirdle="ngModel"
+                            id="naturalOnGirdle">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.naturalOnCrown && (inclusionData | typefilter:'naturalOnCrown').length > 0">
+                          <label>NOC</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.naturalOnCrown && (inclusionData | typefilter:'naturalOnCrown').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalOnCrown'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="naturalOnCrown"
+                            [(ngModel)]="inclusionUploadObj.naturalOnCrown" #naturalOnCrown="ngModel"
+                            id="naturalOnCrown">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.naturalOnPavilion && (inclusionData | typefilter:'naturalonpavilion').length > 0">
+                          <label>NOP</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.naturalOnPavilion && (inclusionData | typefilter:'naturalonpavilion').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'naturalonpavilion'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="naturalOnPavillion"
+                            [(ngModel)]="inclusionUploadObj.naturalOnPavillion" #naturalOnPavillion="ngModel"
+                            id="naturalOnPavillion">
+                          </kendo-dropdownlist>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.bowtie && (inclusionData | typefilter:'bowtie').length > 0">
+                          <label>BowTie</label>
+                        </div>
+                        <div class="form-data"
+                          *ngIf="inclusionConfig.bowtie && (inclusionData | typefilter:'bowtie').length > 0">
+                          <kendo-dropdownlist [data]="inclusionData  | typefilter:'bowtie'" textField="name"
+                            valueField="name" [valuePrimitive]="true" name="bowtie"
+                            [(ngModel)]="inclusionUploadObj.bowtie" #bowtie="ngModel" id="bowtie">
+                          </kendo-dropdownlist>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" [disabled]="!isValidStone" (click)="addInclusionData(inventoryForm, true)"><i
+              class="icon-add"></i>New</button>
+          <button class="btn btn-primary" [disabled]="!isValidStone" (click)="addInclusionData(inventoryForm, false)"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!--#endregion -->
+
+<!-- #region Grid Modal -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'InclusionUpload'" [gridName]="'InclusionUploadGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!--#endregion -->
+
+<div (document:keydown.esc)="closeInclusionUploadDialog()"></div>
+<div kendoDialogContainer></div>

@@ -1,0 +1,235 @@
+.content_wraper {
+    z-index: 1;
+    padding: 0 15px;
+    position: relative;
+    text-align: center;
+}
+
+.eventIntro_sec {
+    background-color: #fff;
+}
+
+.eventIntro_sec .mGrid_wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.eventIntro_sec .img_wrap {
+    height: 100%;
+    min-height: calc(100dvh - 181px);
+    overflow: hidden;
+}
+
+.eventIntro_sec .img_wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.eventIntro_sec .txt_box {
+    padding: calc(30px + (75 - 30)*((100vw - 320px) /(1920 - 320))) 0 calc(30px + (50 - 30)*((100vw - 320px) /(1920 - 320)));
+}
+
+.eventIntro_sec .container {
+    max-width: 575px;
+}
+
+.text_title {
+    color: #595959;
+    font-size: calc(18px + (20 - 18) * ((100vw - 320px) / (1920 - 320)));
+    text-align: center;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 6.6%;
+}
+
+.text_lg {
+    color: #999;
+    text-align: center;
+    font-family: "Rollgates Luxury";
+    font-size: calc(28px + (40 - 28) * ((100vw - 320px) / (1920 - 320)));
+    font-weight: 400;
+    line-height: normal;
+}
+
+.text_sm {
+    color: #595959;
+    font-size: calc(18px + (20 - 18) * ((100vw - 320px) / (1920 - 320)));
+    text-align: center;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+}
+
+.upComing_txt .text_title {
+    color: #0C4875;
+}
+
+.venue_txt {
+    margin: 10% 0;
+}
+
+:is(.venue_txt, .booth_txt) .text_title {
+    margin-bottom: 16px;
+}
+
+.eventGallery_sec {
+    padding: 9% 0;
+}
+
+.eventGallery_sec .banner_title h1 {
+    font-family: 'Rollgates Luxury';
+    font-size: calc(38px + (80 - 38) * ((100vw - 320px) / (1920 - 320)));
+    font-weight: 400;
+    color: #999;
+    line-height: 1;
+    text-align: center;
+    margin-bottom: 25px;
+    -webkit-animation: var(--animationBlur);
+    animation: var(--animationBlur);
+    animation-timeline: var(--animation-timeline);
+    animation-range: var(--animation-range);
+    -webkit-animation-fill-mode: var(--fill-forwards);
+    animation-fill-mode: var(--fill-forwards);
+    visibility: hidden;
+}
+
+.eventGallery_sec .banner_title h2 {
+    font-size: calc(17px + (20 - 17) * ((100vw - 320px) / (1920 - 320)));
+    color: #595959;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0;
+    -webkit-animation: var(--animationBlur);
+    animation: var(--animationBlur);
+    animation-timeline: var(--animation-timeline);
+    animation-range: var(--animation-range);
+    -webkit-animation-fill-mode: var(--fill-forwards);
+    animation-fill-mode: var(--fill-forwards);
+    visibility: hidden;
+}
+
+.eventGallery_sec .container {
+    max-width: 1500px;
+}
+
+.eventGallery_slider {
+    padding-top: 8%;
+}
+
+.eventGallery_sec .img_wrap {
+    max-width: 83%;
+    aspect-ratio: 1 / 1;
+    border-radius: 0px 48px;
+    background-color: #fff;
+    overflow: hidden;
+    margin: 0 auto 25px auto;
+}
+
+.eventGallery_sec .img_wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.eventGallery_sec .slide_content h3 {
+    color: #595959;
+    text-align: center;
+    font-size: calc(15px + (20 - 15) * ((100vw - 320px) / (1920 - 320)));
+    font-style: normal;
+    font-weight: 700;
+    line-height: 34px;
+    margin: 0;
+}
+
+.eventGallery_sec .slide_content h4 {
+    color: #595959;
+    font-size: calc(15px + (20 - 15) * ((100vw - 320px) / (1920 - 320)));
+    font-style: normal;
+    text-align: center;
+    font-weight: 400;
+    line-height: 34px;
+    margin: 0;
+}
+
+.no_event {
+    padding: 6% 0 6% 0;
+    text-align: center;
+}
+
+.no_event .img_wrap img {
+    max-width: 35%;
+}
+
+.no_event .notfound_txt {
+    color: #0A4875;
+    font-family: "Rollgates Luxury";
+    font-size: 40px;
+    font-size: calc(20px + (40 - 20) * ((100vw - 320px) / (1920 - 320)));
+    font-weight: 400;
+    line-height: 1.5;
+    margin-top: 4.2%;
+}
+
+@media(max-width:1199px) {
+    .booth_txt .text_title {
+        margin-bottom: 3.6%;
+    }
+
+    body.default .content_wraper.f_width {
+        max-width: 100%;
+    }
+
+    .eventIntro_sec .mGrid_wrap {
+        grid-template: none;
+    }
+
+    .eventGallery_sec .img_wrap {
+        border-radius: 0 25px;
+    }
+}
+
+@media(max-width:991px) {
+
+    .eventIntro_sec .mGrid_wrap {
+        grid-template: none;
+        gap: calc(30px + (50 - 30)*((100vw - 320px) /(1920 - 320))) 0;
+    }
+
+    .eventIntro_sec .img_wrap {
+        min-height: initial;
+    }
+
+    .eventIntro_sec .img_wrap img {
+        height: auto;
+    }
+
+    .eventGallery_sec {
+        margin-top: 9%;
+        position: relative;
+    }
+
+    .eventGallery_sec:before {
+        position: absolute;
+        content: '';
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 1px;
+        background-color: #B7B6B8;
+    }
+}
+
+@media(max-width:575px) {
+    .eventGallery_sec .img_wrap {
+        margin-bottom: 15px;
+    }
+}

@@ -1,0 +1,60 @@
+.attachment-dialog i {
+    background: #4d4d4d;
+    color: #fff;
+    padding: 5px;
+    margin-right: 6px;
+    display: block;
+    float: left;
+    border-radius: 4px;
+}
+
+.s-email .form-data textarea {
+    height: initial;
+    padding: 5px !important;
+}
+
+.s-email .form-data:nth-child(odd),
+.s-email .form-data:last-child {
+    margin-bottom: initial;
+}
+
+.s-email .form-data input {
+    background-color: transparent;
+    height: 30px;
+}
+
+.mail-grid {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+}
+
+/* Praposal-sent-successfully modal - start */
+.praposal-sucModal .modal-dialog {
+    max-width: 500px;
+}
+
+@media(max-width:515px) {
+    .praposal-sucModal .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.praposal-sucModal a.btn.btn-primary {
+    font-size: 14px;
+    color: #000;
+    background: #ffffff;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    padding: 4px 8px;
+    height: 30px;
+}
+
+.praposal-sucModal a.btn.btn-primary:hover {
+    background-color: rgba(77, 77, 77, 0.7) !important;
+    color: #fff;
+    border-color: #3d3d3d;
+}
+
+/* Praposal-sent-successfully modal - end */

@@ -1,0 +1,432 @@
+<title>Search History</title>
+<section class="omaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Search History
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="searhis_scroll" *ngIf="parseCustomerSearchHistory.length > 0">
+            <div class="searhis_wrap">
+              <div class="seaHis_box" *ngFor="let item of parseCustomerSearchHistory;let i = index;">
+                <div class="seahis_head">
+                  <div>
+                    <span class="seahis_title">{{item.customer.name}}
+                      ({{item.customer.companyName}})</span>
+                    <span class="seahis_date">{{item.createdDate | date:'dd/MM/yyyy | hh:mm a'}}</span>
+                  </div>
+                  <div class="searchBtn d-flex align-items-center">
+                    <span class="seahis_count">Count : <span>{{item.searchStoneIds.length}}</span></span>
+                    <a class="seahis_btn" (click)="openSearchhistoryDialog(item)"
+                      *ngIf="item.searchStoneIds.length > 0">
+                      <i class="icon-search"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="searhis_tag">
+                  <ul>
+                    <li *ngIf="item.searchQuery.StoneIds?.length > 0"><span>Stone Id :</span>
+                      {{item.searchQuery.StoneIds?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.CertificateNos?.length > 0"><span>Certificate :</span>
+                      {{item.searchQuery.CertificateNos?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Shape?.length > 0"><span>Shape :</span>
+                      {{item.searchQuery.Shape?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Carat?.length > 0"><span>Size :</span>
+                      {{item.searchQuery.Carat}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Clarity?.length > 0"><span>Clarity :</span>
+                      {{item.searchQuery.Clarity?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Color?.length > 0"><span>Color :</span>
+                      {{item.searchQuery.Color?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Flour?.length > 0"><span>Fluorescence :</span>
+                      {{item.searchQuery.Flour?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Cut?.length > 0"><span>Cut :</span>
+                      {{item.searchQuery.Cut?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Polish?.length > 0"><span>Polish :</span>
+                      {{item.searchQuery.Polish?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Symm?.length > 0"><span>Symm :</span>
+                      {{item.searchQuery.Symm?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Lab?.length > 0"><span>Lab :</span>
+                      {{item.searchQuery.Lab?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Brown?.length > 0"><span>Brown :</span>
+                      {{item.searchQuery.Brown?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Milky?.length > 0"><span>Milky :</span>
+                      {{item.searchQuery.Milky?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Green?.length > 0"><span>Green :</span>
+                      {{item.searchQuery.Green?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Location?.length > 0"><span>Location :</span>
+                      {{item.searchQuery.Location?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.SideBlack?.length > 0"><span>Side Black :</span>
+                      {{item.searchQuery.SideBlack?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.CenterBlack?.length > 0"><span>Center Black :</span>
+                      {{item.searchQuery.CenterBlack?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.HNA?.length > 0"><span>HNA :</span>
+                      {{item.searchQuery.HNA?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.EyeClean?.length > 0"><span>Eye Clean :</span>
+                      {{item.searchQuery.EyeClean?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.NaturalOnPavillion?.length > 0"><span>Natural On Pavillion :</span>
+                      {{item.searchQuery.NaturalOnPavillion?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.NaturalOnGirdle?.length > 0"><span>Natural On Girdle :</span>
+                      {{item.searchQuery.NaturalOnGirdle?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.NaturalOnTable?.length > 0"><span>Natural On Table :</span>
+                      {{item.searchQuery.NaturalOnTable?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.OpenCrown?.length > 0"><span>Open Crown :</span>
+                      {{item.searchQuery.OpenCrown?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.OpenGirdle?.length > 0"><span>OpenGirdle :</span>
+                      {{item.searchQuery.OpenGirdle?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.OpenPavilion?.length > 0"><span>OpenPavilion :</span>
+                      {{item.searchQuery.OpenPavilion?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.OpenTable?.length > 0"><span>OpenTable :</span>
+                      {{item.searchQuery.OpenTable?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.SideBlack?.length > 0"><span>SideBlack :</span>
+                      {{item.searchQuery.SideBlack?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.SideWhite?.length > 0"><span>SideWhite :</span>
+                      {{item.searchQuery.SideWhite?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.Bowtie?.length > 0"><span>Bowtie :</span>
+                      {{item.searchQuery.Bowtie?.join(', ')}}
+                    </li>
+                    <li *ngIf="item.searchQuery.FromCrownAngle != null || item.searchQuery.ToCrownAngle != null">
+                      <span>CrownAngle :</span>
+                      {{item.searchQuery.FromCrownAngle}} - {{item.searchQuery.ToCrownAngle}}
+                    </li>
+                    <li *ngIf="item.searchQuery.FromCrownHeight != null || item.searchQuery.ToCrownHeight != null">
+                      <span>CrownHeight :</span>
+                      {{item.searchQuery.FromCrownHeight}} - {{item.searchQuery.ToCrownHeight}}
+                    </li>
+                    <li *ngIf="item.searchQuery.FromPavilionAngle != null || item.searchQuery.ToPavilionAngle != null">
+                      <span>PavilionAngle :</span>
+                      {{item.searchQuery.FromPavilionAngle}} - {{item.searchQuery.ToPavilionAngle}}
+                    </li>
+                    <li *ngIf="item.searchQuery.FromPavilionDepth != null || item.searchQuery.ToPavilionDepth != null">
+                      <span>PavilionDepth :</span>
+                      {{item.searchQuery.FromPavilionDepth}} - {{item.searchQuery.ToPavilionDepth}}
+                    </li>
+                    <li *ngIf="item.searchQuery.FromRatio != null || item.searchQuery.ToRatio != null">
+                      <span>Ratio :</span>
+                      {{item.searchQuery.FromRatio}} - {{item.searchQuery.ToRatio}}
+                    </li>
+                    <li *ngIf="item.searchQuery.FromDepth != null || item.searchQuery.ToDepth != null">
+                      <span>Depth :</span>
+                      {{item.searchQuery.FromDepth}} - {{item.searchQuery.ToDepth}}
+                    </li>
+                    <li *ngIf="item.searchQuery.FromTable != null || item.searchQuery.ToTable != null">
+                      <span>Table :</span>
+                      {{item.searchQuery.FromTable}} - {{item.searchQuery.ToTable}}
+                    </li>
+                    <li *ngIf="item.searchQuery.FromLength != null || item.searchQuery.ToLength != null">
+                      <span>Length :</span>
+                      {{item.searchQuery.FromLength}} - {{item.searchQuery.ToLength}}
+                    </li>
+                    <li *ngIf="item.searchQuery.FromWidth != null || item.searchQuery.ToWidth != null">
+                      <span>Width :</span>
+                      {{item.searchQuery.FromWidth}} - {{item.searchQuery.ToWidth}}
+                    </li>
+                    <li *ngIf="item.searchQuery.FromHeight != null || item.searchQuery.ToHeight != null">
+                      <span>Height :</span>
+                      {{item.searchQuery.FromHeight}} - {{item.searchQuery.ToHeight}}
+                    </li>
+                    <li *ngIf="item.searchQuery.WeightRanges?.length > 0"><span>Size :</span>
+                      <span class="tc" *ngFor="let weight of item.searchQuery.WeightRanges; let last=last">
+                        {{weight.MinWeight}}- {{weight.MaxWeight }} {{last?'':', '}} </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12" *ngIf="parseCustomerSearchHistory.length > 0">
+            <div class="row seacHis_footer">
+              <div class="col-md-4">
+              </div>
+              <div class="col-md-4 text-center">
+                <button class="btn btn-primary lodMore_btn" *ngIf="totalRecords > parseCustomerSearchHistory.length"
+                  (click)="loadMoreSearchHistory()">Load More</button>
+              </div>
+              <div class="col-md-4 text-end">
+                <div class="totalHis_items">
+                  1 - {{parseCustomerSearchHistory.length}} of {{totalRecords}} items
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center p-2 nf-div d-flex justify-content-center align-items-center"
+            *ngIf="parseCustomerSearchHistory.length == 0">
+            <h6>No Record(s) Found</h6>
+          </div>
+        </div>
+      </div>
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Stone Id</label>
+                    <input type="text" name="stoneIdStr" #stoneIdStr="ngModel" [(ngModel)]="stoneId">
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>From Date</label>
+                    <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="fDate" #fDate="ngModel"
+                      [(ngModel)]="searchHistorySearchCriteria.fromDate">
+                    </kendo-datepicker>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label> To Date</label>
+                    <kendo-datepicker calendarType="classic" format="dd/MM/yyyy" name="tDate" #tDate="ngModel"
+                      [(ngModel)]="searchHistorySearchCriteria.toDate">
+                    </kendo-datepicker>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Customer</label>
+                    <kendo-dropdownlist [data]="customerItems" [(ngModel)]="searchHistorySearchCriteria.customerId"
+                      #customer="ngModel" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'id'" name="customer" [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Seller</label>
+                    <kendo-dropdownlist [data]="sellerItems" [(ngModel)]="searchHistorySearchCriteria.sellerId"
+                      #seller="ngModel" [kendoDropDownFilter]="filterSettings" [textField]="'fullName'"
+                      [valueField]="'id'" name="seller" [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Shape</label>
+                    <kendo-dropdownlist [data]="allTheShapes!" [(ngModel)]="searchHistorySearchCriteria.shape"
+                      #shape="ngModel" [kendoDropDownFilter]="filterSettings" [textField]="'name'" [valueField]="'name'"
+                      name="shape" [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Color</label>
+                    <kendo-dropdownlist [data]="allColors!" [(ngModel)]="searchHistorySearchCriteria.color"
+                      #color="ngModel" [kendoDropDownFilter]="filterSettings" [textField]="'name'" [valueField]="'name'"
+                      name="color" [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Cut</label>
+                    <kendo-dropdownlist [data]="allTheCPS!" [(ngModel)]="searchHistorySearchCriteria.cut" #cut="ngModel"
+                      [kendoDropDownFilter]="filterSettings" [textField]="'name'" [valueField]="'name'" name="cut"
+                      [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Clarity</label>
+                    <kendo-dropdownlist [data]="allClarities!" [(ngModel)]="searchHistorySearchCriteria.clarity"
+                      #clarity="ngModel" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="clarity" [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Polish</label>
+                    <kendo-dropdownlist [data]="allTheCPS!" [(ngModel)]="searchHistorySearchCriteria.polish"
+                      #polish="ngModel" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="polish" [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Symmetry</label>
+                    <kendo-dropdownlist [data]="allTheCPS!" [(ngModel)]="searchHistorySearchCriteria.symm"
+                      #symmetry="ngModel" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="symmetry" [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Fluorescence</label>
+                    <kendo-dropdownlist [data]="allTheFluorescences!" [(ngModel)]="searchHistorySearchCriteria.flour"
+                      #flour="ngModel" [kendoDropDownFilter]="filterSettings" [textField]="'name'" [valueField]="'name'"
+                      name="flour" [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Select Lab</label>
+                    <kendo-dropdownlist [data]="allTheLab!" [(ngModel)]="searchHistorySearchCriteria.lab" #lab="ngModel"
+                      [kendoDropDownFilter]="filterSettings" [textField]="'name'" [valueField]="'name'" name="lab"
+                      [valuePrimitive]="true">
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                    <ng2-tri-state-checkbox name="showBlankEntry"
+                      [(ngModel)]="searchHistorySearchCriteria.showBlankEntry" #showBlankEntry="ngModel">
+                    </ng2-tri-state-checkbox>
+                    <label for="a-employee">Show Blank Entry</label>
+                    <!-- <input type="checkbox" class="k-checkbox" id="Checkbox" name="Checkbox" />
+                        <label class="k-checkbox-label" for="Checkbox">Show Blank Entry</label> -->
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" (click)="loadSearchHistory()">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button class="btn btn-action" (click)="clearSearchCriteria()">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Search End -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button><i class="icon-search" (click)="loadSearchHistory()"></i></button></li>
+        <li><button><i class="icon-clear" (click)="clearSearchCriteria()"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- #region Search History Modal -->
+<div class="modal c-modal addemp edinv rorgan" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isSearchhistory">
+  <form>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="icon-search"></i>
+            Search History
+          </h5>
+          <button type="button" class="close" (click)="closeSearchhistoryDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="grid-wrap">
+              <kendo-grid class="grid-ui mb-grid" [data]="gridView" [resizable]="true" [sortable]="true"
+                [groupable]="true" [pageable]="true" [pageSize]="invPageSize" [skip]="invSkip" [group]="groups"
+                (groupChange)="groupChange($event)" style="height:calc(100vh - 300px)"
+                (pageChange)="pageChange($event)">
+                <kendo-grid-column field="stoneId" title="Stock Id" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="rfid" title="RFID" [width]="65">
+                </kendo-grid-column>
+                <kendo-grid-column field="shape" title="Shape" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="weight" title="Size" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="color" title="Color" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="clarity" title="Clarity" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="cut" title="Cut" [width]="50">
+                </kendo-grid-column>
+                <kendo-grid-column field="polish" title="Polish" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="symmetry" title="Symmetry" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="fluorescence" title="Fluo" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="measurement.length" title="Length" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="measurement.depth" title="TDepth%" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="measurement.table" title="Table%" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="lab" title="Lab" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="certificateNo" title="Certi No" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="price.perCarat" title="Rap" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="price.discount" title="Disc(%)" [width]="60">
+                </kendo-grid-column>
+                <kendo-grid-column field="price.perCarat" title="$/Ct" [width]="60">
+                </kendo-grid-column>
+                <kendo-grid-column field="price.netAmount" title="NetAmount" [width]="86">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.culet" title="Shade" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.shade" title="Shade" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.brown" title="Brown" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.green" title="Green" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.milky" title="Milky" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.centerBlack" title="BTable" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.sideBlack" title="BCrown" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.hna" title="HNA" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.eyeClean" title="EClean" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.ktoS" title="KtoS" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="measurement.crownHeight" title="CHeight" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="measurement.crownAngle" title="CAngle" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="measurement.pavilionDepth" title="PDepth" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="measurement.pavilionAngle" title="PAngle" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.openTable" title="OTable" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.openCrown" title="OCrown" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.openPavilion" title="OPavilion" [width]="70">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.openGirdle" title="OGirdle" [width]="50">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.naturalOnPavillion" title="NOP" [width]="50">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.naturalOnCrown" title="NOC" [width]="50">
+                </kendo-grid-column>
+                <kendo-grid-column field="inclusion.naturalOnGirdle" title="NOG" [width]="50">
+                </kendo-grid-column>
+              </kendo-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>

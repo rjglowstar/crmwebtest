@@ -1,0 +1,118 @@
+.whyp_sec {
+    padding-bottom: 100px;
+}
+
+.whyp_sec .bg_content {
+    background-color: rgba(153, 153, 153, 20%);
+    padding: 30px;
+    -webkit-box-shadow: 0 0px 5px rgba(0, 0, 0, 7%);
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 7%);
+}
+
+.whyp_sec .grid_wrap h5 {
+    font-weight: 600;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.whyp_sec .grid_wrap p {
+    font-size: calc(15px + (16 - 15) * ((100vw - 320px) / (1920 - 320)));
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 85%);
+    margin: 0;
+    overflow: hidden;
+}
+
+.whyp_sec .grid_wrap p:not(:last-child) {
+    margin-bottom: 20px;
+}
+
+.cLogIn .whyp_sec {
+    padding-bottom: 50px;
+}
+
+.cLogIn .whyp_sec .grid_wrap h5 {
+    color: #212529;
+}
+
+.cLogIn .whyp_sec .grid_wrap p {
+    color: rgba(33, 37, 41, 0.95);
+    font-size: 15px;
+}
+
+@media(max-width:1200px) {
+
+    .sec_title,
+    .cLogIn .sec_title {
+        margin: 40px 0 !important;
+    }
+}
+
+@media(max-width:1024px) {
+    .cLogIn .sec_title {
+        margin: 25px 0 !important;
+    }
+
+    .whyp_sec {
+        padding-bottom: 50px !important;
+    }
+
+    .cLogIn .whyp_sec {
+        padding-bottom: 30px !important;
+    }
+
+    .cLogIn .whyp_sec .bg_content {
+        padding: 15px !important;
+    }
+
+    .cLogIn .whyp_sec .grid_wrap p:not(:last-child) {
+        margin-bottom: 15px !important;
+    }
+}
+
+@media(max-width:991px) {
+
+    .sec_title,
+    .cLogIn .sec_title {
+        margin: 30px 0 !important;
+    }
+}
+
+@media(max-width:767px) {
+
+    .sec_title,
+    .cLogIn .sec_title {
+        margin: 25px 0 !important;
+    }
+
+    .whyp_sec .bg_content {
+        padding: 25px !important;
+    }
+}
+
+@media(max-width:575px) {
+    .sec_title {
+        margin: 20px 0 !important;
+    }
+
+    .cLogIn .sec_title {
+        margin: 15px 0 !important;
+    }
+
+    .whyp_sec .bg_content {
+        padding: 15px !important;
+    }
+
+    .whyp_sec .bg_content p:not(:last-child) {
+        margin-bottom: 15px !important;
+    }
+
+    .whyp_sec .bg_content p {
+        line-height: 1.6 !important;
+    }
+
+    .cLogIn .whyp_sec .grid_wrap p {
+        font-size: 14px !important;
+        line-height: 1.6 !important;
+    }
+}

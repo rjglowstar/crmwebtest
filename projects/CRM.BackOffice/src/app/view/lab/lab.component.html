@@ -1,0 +1,504 @@
+<title>Lab Master</title>
+<section class="lab-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Lab Master</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton (click)="openAddLabDialog()" title="Add Lab"><i class="icon-add"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openUpdateLabDialog()" title="Edit Lab">
+                <i class="icon-edit"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openDeleteDialog()" title="Delete Lab Data"><i
+                  class="icon-trash"></i></button>
+              <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                  class="icon-gridconfig"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <!-- Skeleton start -->
+            <ng-container *ngIf="!gridView">
+              <div class="k-grouping-header k-grouping-header-flex">
+                <div class="k-indicator-container">
+                  <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                  </kendo-skeleton>
+                </div>
+              </div>
+              <table *ngIf="fields && fields.length > 0" class="w-100 skeleton-tbl">
+                <ng-container *ngFor="let field of fields">
+                  <th *ngIf="field.isSelected">
+                    {{field.title}}
+                  </th>
+                </ng-container>
+                <tr *ngFor="let field of skeletonArray">
+                  <ng-container *ngFor="let fieldItem of fields">
+                    <td *ngIf="fieldItem.isSelected">
+                      <kendo-skeleton shape="text" animation="wave" [width]="94" [height]="40">
+                      </kendo-skeleton>
+                    </td>
+                  </ng-container>
+                </tr>
+              </table>
+            </ng-container>
+            <!-- Skeleton End -->
+
+            <!-- Lab Grid Start -->
+            <kendo-grid #labGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+              (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+              [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)"
+              [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+          <!-- Lab Grid END -->
+        </div>
+      </div>
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #labSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Lab Name</label>
+                    <input type="text" id="" name="name" [(ngModel)]="labCriteria.name" #name="ngModel">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" (click)="labSearchForm.form.valid && onFilterSubmit(labSearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button (click)="clearFilter(labSearchForm)" class="btn btn-action">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Search End -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="labSearchForm.form.valid && onFilterSubmit(labSearchForm)"><i
+              class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(labSearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Lab Configuration Modal Start -->
+<div class="modal c-modal addemp la-mas" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isLabMaster">
+  <form name="form" #labForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-addemployee"></i>Lab
+            Master</h5>
+          <button type="button" class="close" (click)="closeAddLabDialog(labForm)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="">
+            <kendo-tabstrip>
+              <kendo-tabstrip-tab title="" [selected]="true">
+                <ng-template kendoTabTitle>
+                  <i class="icon-info"></i>&nbsp;Lab Information
+                </ng-template>
+                <ng-template kendoTabContent>
+                  <div class="content">
+                    <div class="i-form l-master">
+                      <div class="grid">
+                        <div class="form-data">
+                          <label for="lname">Name<span class="require">*</span></label>
+                        </div>
+                        <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched)}">
+                          <input type="text" id="" name="name" #name="ngModel" [(ngModel)]="labObj.name" required>
+                        </div>
+                        <div class="form-data">
+                          <label for="lname">Code<span class="require">*</span></label>
+                        </div>
+                        <div class="form-data" [ngClass]="{ 'error': code.invalid && (code.dirty || code.touched)}">
+                          <input type="text" id="" name="code" #code="ngModel" [(ngModel)]="labObj.code" required>
+                        </div>
+                        <div class="form-data">
+                          <label for="lname">Website</label>
+                        </div>
+                        <div class="form-data"
+                          [ngClass]="{ 'error': website.invalid && ((website.touched && website.hasError('pattern')) || (website.errors?.required && website.touched))}">
+                          <input type="text" id="" name="website" #website="ngModel" [(ngModel)]="labObj.website"
+                            [pattern]="websitePattern">
+                        </div>
+                        <div class="form-data">
+                          <label for="lname">Email<span class="require">*</span></label>
+                        </div>
+                        <div class="form-data"
+                          [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('email')) || (email.errors?.required && email.touched))}">
+                          <input type="text" id="" name="email" #email="ngModel" [(ngModel)]="labObj.email" required
+                            email>
+
+                        </div>
+                        <div class="form-data">
+                          <label for="lname">Mobile No.<span class="require">*</span></label>
+                        </div>
+                        <div class="form-data"
+                          [ngClass]="{ 'error': mobileNo.invalid && (mobileNo.errors?.required && mobileNo.touched) }">
+                          <kendo-maskedtextbox type="text" id="" name="mobileNo" #mobileNo="ngModel"
+                            [(ngModel)]="labObj.mobileNo" required>
+                          </kendo-maskedtextbox>
+                        </div>
+                        <div class="form-data">
+                          <label for="lname">Phone No.</label>
+                        </div>
+                        <div class="form-data">
+                          <kendo-maskedtextbox type="text" id="" name="phoneNo" #phoneNo="ngModel"
+                            [(ngModel)]="labObj.phoneNo">
+                          </kendo-maskedtextbox>
+                        </div>
+                        <div class="form-data">
+                          <label for="lname">Fax No.</label>
+                        </div>
+                        <div class="form-data">
+                          <kendo-maskedtextbox type="text" id="" name="faxNo" #faxNo="ngModel"
+                            [(ngModel)]="labObj.faxNo">
+                          </kendo-maskedtextbox>
+                        </div>
+                        <div class="form-data">
+                          <label for="lname">Account
+                            No.</label>
+                        </div>
+                        <div class="form-data">
+                          <input type="text" id="" name="accountNo" #accountNo="ngModel" [(ngModel)]="labObj.accountNo">
+
+                        </div>
+                        <div class="form-data">
+                          <label for="lname">Inc. Tax No.</label>
+                        </div>
+                        <div class="form-data">
+                          <input type="text" id="" name="incomeTaxNo" #incomeTaxNo="ngModel"
+                            [(ngModel)]="labObj.incomeTaxNo">
+                        </div>
+                        <div class="form-data">
+                          <label for="lname">Regi.
+                            No.</label>
+                        </div>
+                        <div class="form-data">
+                          <input type="text" id="" name="registrationNo" #registrationNo="ngModel"
+                            [(ngModel)]="labObj.registrationNo">
+                        </div>
+
+                        <div class="form-data">
+                          <label for="lname">Tax No.</label>
+                        </div>
+                        <div class="form-data">
+                          <input type="text" id="" name="taxNo" #taxNo="ngModel" [(ngModel)]="labObj.taxNo">
+                        </div>
+
+                        <div class="form-data">
+                          <label>Currency<span class="require">*</span></label>
+                        </div>
+                        <div class="form-data"
+                          [ngClass]="{ 'error': CurrencyType.invalid && (CurrencyType.dirty || CurrencyType.touched)}">
+                          <kendo-dropdownlist [data]="listCurrencyType" [valuePrimitive]="true"
+                            textField="text" valueField="value" name="CurrencyType" [(ngModel)]="labObj.currencyType"
+                            #CurrencyType="ngModel" required>
+                          </kendo-dropdownlist>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="i-form l-master">
+                      <h6 class="title"><i class="icon-info"></i>Lab Format</h6>
+                      <div class="grid">
+                        <div class="form-data">
+                          <label>Excel Format</label>
+                        </div>
+                        <div class="form-data"
+                          [ngClass]="{ 'error': excFormat.invalid && (excFormat.errors?.required && excFormat.touched) }">
+                          <kendo-dropdownlist [data]="listExcelTypeItems" [valuePrimitive]="true" name="excFormat"
+                            #excFormat="ngModel" [(ngModel)]="labObj.excFormat">
+                          </kendo-dropdownlist>
+                        </div>
+
+
+                        <div class="form-data">
+                          <label>Upload Excel</label>
+                        </div>
+                        <div class="form-data d-flex">
+                          <div class="c-upload l-upload">
+                            <label *ngIf="currentFormat" for="file-input" class="k-label"><span class="file-name"
+                                title="{{currentFormat.name}}">{{currentFormat.name}}</span>
+                              <i class="ms-2 icon-delete" (click)="clearFile()"></i>
+                            </label>
+                            <label *ngIf="!currentFormat" for="file-input">
+                              <span><i class="icon-upload"></i></span>
+                              <span>Select file</span>
+                            </label>
+                            <input *ngIf="!currentFormat" #uploadFormat type="file" (change)="uploadFiles($event)"
+                              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                              id="file-input" type="file" name="uploadFormat" />
+                            <input type="hidden" name="fileHidden">
+                          </div>
+                          <div class="ms-1" *ngIf="labFileStore && labFileStore.length > 0">
+                            <button class="btn btn-primary icon-doc_download"
+                              (click)="openDocumentDialog(labObj)"></button>
+                          </div>
+                        </div>
+
+
+                        <div class="form-data"
+                          *ngIf="labObj.excFormat == 'GIA-India' || labObj.excFormat == 'GIA-Surat'">
+                          <label>Csv</label>
+                        </div>
+                        <div class="form-data d-flex"
+                          *ngIf="labObj.excFormat == 'GIA-India' || labObj.excFormat == 'GIA-Surat'">
+                          <div class="c-upload l-upload">
+                            <label *ngIf="currentCsvFormat" for="file-input" class="k-label"><span class="file-name"
+                                title="{{currentCsvFormat.name}}">{{currentCsvFormat.name}}</span>
+                              <i class="ms-2 icon-delete" (click)="clearCsvFile()"></i>
+                            </label>
+                            <label *ngIf="!currentCsvFormat" for="file-input">
+                              <span><i class="icon-upload"></i></span>
+                              <span>Select CSV file</span>
+                            </label>
+                            <input *ngIf="!currentCsvFormat" #uploadCsvFormat type="file"
+                              (change)="uploadCsvFiles($event)" accept="text/csv" id="file-input" type="file"
+                              name="uploadCsvFormat" />
+                            <input type="hidden" name="fileHidden">
+                          </div>
+                          <div class="ms-1" *ngIf="labFileStore && labFileStore.length > 0">
+                            <button class="btn btn-primary icon-doc_download"
+                              (click)="openDocumentCSVDialog(labObj)"></button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!--Lab Address start -->
+                      <div class="i-form a-add">
+                        <h6 class="title"><i class="icon-mapmarker"></i>Lab Address</h6>
+                        <div class="grid">
+                          <div class="form-data">
+                            <label>Line1</label>
+                          </div>
+                          <div class="form-data">
+                            <textarea cols="4" type="text" id="" name="line1" #line1="ngModel"
+                              [(ngModel)]="labAddress.line1">
+                            </textarea>
+                          </div>
+                          <div class="form-data">
+                            <label>Line2</label>
+                          </div>
+                          <div class="form-data">
+                            <textarea cols="4" type="text" id="" name="line2" #line2="ngModel"
+                              [(ngModel)]="labAddress.line2">
+                            </textarea>
+                          </div>
+                          <div class="form-data">
+                            <label>Country</label>
+                          </div>
+                          <div class="form-data">
+                            <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings"
+                              [textField]="'name'" [valueField]="'name'" name="country" #country="ngModel"
+                              (valueChange)="onCountryChange($event)" [valuePrimitive]="true"
+                              [(ngModel)]="labAddress.country" [kendoDropDownFilter]="filterSettings">
+                            </kendo-combobox>
+                          </div>
+                          <div class="form-data">
+                            <label>State</label>
+                          </div>
+                          <div class="form-data">
+                            <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings"
+                              [kendoDropDownFilter]="filterSettings" [textField]="'name'" [valueField]="'name'"
+                              (valueChange)="onStateChange($event)" [valuePrimitive]="true" name="state"
+                              #state="ngModel" [(ngModel)]="labAddress.state">
+                            </kendo-combobox>
+                          </div>
+                          <div class="form-data">
+                            <label>City</label>
+                          </div>
+                          <div class="form-data">
+                            <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings"
+                              [kendoDropDownFilter]="filterSettings" [textField]="'name'" [valueField]="'name'"
+                              (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city" #city="ngModel"
+                              [(ngModel)]="labAddress.city">
+                            </kendo-combobox>
+                          </div>
+                          <div class="form-data">
+                            <label>ZipCode</label>
+                          </div>
+                          <div class="form-data">
+                            <input type="text" id="" name="zipcode" #zipcode="ngModel" [(ngModel)]="labAddress.zipCode">
+                          </div>
+                        </div>
+
+                      </div>
+                      <!-- Lab Address END -->
+
+                      <!-- Lab Configuration Start -->
+                      <div class="i-form l-con">
+                        <h6 class="title"><i class="icon-setting"></i>Lab Configuration
+                        </h6>
+                        <div class="grid">
+                          <div class="form-data">
+                            <label for="lname">Lab API</label>
+                          </div>
+                          <div class="form-data">
+                            <input type="text" id="" name="labAPI" #labAPI="ngModel" [(ngModel)]="labConfig.labAPI"
+                              [pattern]="websitePattern">
+
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Lab Configuration End -->
+                    </div>
+                  </div>
+                </ng-template>
+              </kendo-tabstrip-tab>
+              <kendo-tabstrip-tab title="">
+                <ng-template kendoTabTitle>
+                  <i class="icon-lablabour"></i>&nbsp;Charge Information
+                </ng-template>
+                <ng-template kendoTabContent>
+                  <div class="content">
+                    <!-- Labour Information Start -->
+                    <div class="i-form l-lab">
+                      <form name="form" #labLabourForm="ngForm" novalidate>
+                        <div class="grid">
+
+                          <div class="form-data">
+                            <label>Service Code</label>
+                          </div>
+                          <div class="form-data"
+                            [ngClass]="{ 'error': labService.invalid && (labService.errors?.required && labService.touched) }">
+                            <kendo-combobox [data]="listLabServices" textField="name" valueField="name"
+                              [valuePrimitive]="true" name="labService" #labService="ngModel"
+                              [kendoDropDownFilter]="filterSettings" [(ngModel)]="labLabourObj.labService" required
+                              [popupSettings]="{width: 'auto'}">
+                            </kendo-combobox>
+                          </div>
+
+                          <div class="form-data">
+                            <label for="lname">Min. Size</label>
+                          </div>
+                          <div class="form-data"
+                            [ngClass]="{ 'error': minSize.invalid && (minSize.errors?.required && minSize.touched) }">
+                            <input type="text" name="minSize" #minSize="ngModel" [(ngModel)]="labLabourObj.minSize"
+                              (keypress)="utilityService.floatOnly($event)" (blur)="validateSizes()" required>
+                          </div>
+                          <div class="form-data">
+                            <label for="lname">Max. Size</label>
+                          </div>
+                          <div class="form-data"
+                            [ngClass]="{ 'error': maxSize.invalid && (maxSize.errors?.required && maxSize.touched) }">
+                            <input type="text" name="maxSize" #maxSize="ngModel" [(ngModel)]="labLabourObj.maxSize"
+                              (keypress)="utilityService.floatOnly($event)" (blur)="validateSizes()" required>
+                          </div>
+                          <div class="form-data">
+                            <label for="lname">Amount</label>
+                          </div>
+                          <div class="form-data"
+                            [ngClass]="{ 'error': amount.invalid && (amount.errors?.required && amount.touched) }">
+                            <input type="text" name="amount" #amount="ngModel" [(ngModel)]="labLabourObj.amount"
+                              (keypress)="utilityService.floatOnly($event)" required>
+                          </div>
+
+                          <div class="form-data">
+                            <ng-container>
+                              <button class="btn btn-primary icon-add" (click)="onLabLabourSubmit(labLabourForm)"
+                                [disabled]="!labLabourForm.valid"></button>
+                            </ng-container>
+
+
+                            <input #file type="file"
+                              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv"
+                              (click)="file.value=''" (change)="onSelectExcelFile($event)" hidden />
+                            <button kendoButton (click)="file.click()" title="Lab Charge Upload" class="ms-2">
+                              <i class="icon-excelnew p-0"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                      <div class="o-border mt-2">
+                        <div class="lab-list">
+                          <ul *ngIf="labLabours && labLabours.length > 0">
+                            <li *ngFor="let item of labLabours;let i = index">
+                              <span class="font600">Service: </span>
+                              {{item.labService}}
+                              <span class="font600">Size:</span>
+                              {{item.minSize}} - {{item.maxSize}}
+                              <span class="font600">Amount:</span>
+                              {{item.amount}}
+                              <a title="Delete">
+                                <i class="icon-delete" (click)="deleteLabLabour(item,i)"></i>
+                              </a>
+                            </li>
+                          </ul>
+                          <ul *ngIf="labLabours && labLabours.length == 0">
+                            <li>
+                              No labLabours Found
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Labour Information END -->
+                  </div>
+                </ng-template>
+              </kendo-tabstrip-tab>
+            </kendo-tabstrip>
+
+
+
+
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" (click)="onLabSubmit(labForm,false)" [disabled]="!labForm.valid"
+            class="btn btn-primary"><i class="icon-add"></i>New</button>
+          <button type="button" (click)="onLabSubmit(labForm,true)" [disabled]="!labForm.valid"
+            class="btn btn-primary"><i class="icon-save"></i>Save</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeAddLabDialog(labForm)"></div>
+  </form>
+</div>
+<!-- Lab Configuration Modal End -->
+
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'Lab'" [gridName]="'LabGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+
+<div kendoDialogContainer></div>

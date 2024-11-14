@@ -1,0 +1,403 @@
+<!-- #region Purchase Modal -->
+<div class="modal c-modal addemp dialog-sm" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form class="modal-content" name="PurchaseForm" #PurchaseForm="ngForm" novalidate>
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="icon-addtocart"></i>Purchase</h5>
+        <button type="button" class="close" (click)="closPurchaseDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="title k-justify-content-between"><span><i class="icon-info"></i>Purchase Details</span>
+          <div>
+            <span class="me-2" style="font-size:12px;">{{purchaseTransactionObj.packingList.length > 0 ? 'Package(s) : '
+              + purchaseTransactionObj.packingList.length
+              : ''}}</span>
+            <span class="dash-ui">Transactions No: <i
+                class="icon-transactitem"></i>{{purchaseTransactionObj.number}}</span>
+          </div>
+        </h6>
+        <div class="purchase-grid">
+          <div class="form-data">
+            <label>Party<span class="require">*</span></label>
+          </div>
+          <div class="form-data">
+            <kendo-autocomplete [disabled]="isEdit" class="w-100" [data]="listPartyItems" [filterable]="true"
+              (filterChange)="handlePartyFilter($event)" [kendoDropDownFilter]="filterSettings" name="Party"
+              [(ngModel)]="selectedParty" (valueChange)="onPartyChange($event)" [popupSettings]="{width: 'auto'}"
+              #Party="ngModel" valueField="value" required placeholder="Search party by name">
+              <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                <span>{{dataItem.text}}</span>
+              </ng-template>
+            </kendo-autocomplete>
+          </div>
+          <div class="form-data">
+            <label>Ref. Invoice No</label>
+          </div>
+          <div class="form-data">
+            <input type="text" name="refNo" autocomplete="off" #refNo="ngModel" placeholder="Reference Invoice No"
+              [(ngModel)]="purchaseTransactionObj.refNumber">
+          </div>
+          <div class="form-data">
+            <label>Date<span class="require">*</span></label>
+          </div>
+          <div class="form-data">
+            <kendo-datepicker calendarType="classic" name="eDate" #eDate="ngModel" format="dd/MM/yyyy"
+              [(ngModel)]="purchaseTransactionObj.transactionDate" required></kendo-datepicker>
+          </div>
+          <div class="form-data">
+            <label>Curr. Type<span class="require">*</span></label>
+          </div>
+          <div class="form-data">
+            <kendo-combobox class="w-auto" [data]="listCurrencyType" [valuePrimitive]="true" textField="text"
+              valueField="value" name="convCurrencyType" [kendoDropDownFilter]="filterSettings" required
+              (valueChange)="currencyChange()" [(ngModel)]="purchaseTransactionObj.transactionDetail.toCurrency"
+              #convCurrencyType="ngModel">
+            </kendo-combobox>
+          </div>
+          <div class="form-data">
+            <label>Curr. Rate<span class="require">*</span></label>
+          </div>
+          <div class="form-data">
+            <input type="text" name="convcurrencyRate" autocomplete="off"
+              [(ngModel)]="purchaseTransactionObj.transactionDetail.toCurRate" #convcurrencyRate="ngModel"
+              id="convcurrencyRate" (keypress)="utilityService.floatOnly($event)" (keyup)="calculateCCAmt()"
+              [disabled]="false">
+          </div>
+          <div class="form-data" *ngIf="showTaxSection">
+            <label>Tax</label>
+          </div>
+          <div class="form-data mul-select" *ngIf="showTaxSection">
+            <kendo-multiselect name="tax" class="customselect" [data]="listTax" [(ngModel)]="taxTypesZ"
+              [textField]="'name'" [valueField]="'name'" [valuePrimitive]="true" [popupSettings]="{width: 'auto'}"
+              [autoClose]="false" [kendoMultiSelectSummaryTag]="0" [filterable]="true"
+              (valueChange)="onMultiSelectChange(listTax,taxTypesZ)"
+              (open)="filterTaxChk = onOpenDropdown(listTax,filterTaxChk, taxTypesZ)"
+              (filterChange)="filterTax = handleFilter($event); listTax = filterDropdownSearch(allTheTax, $event, taxTypesZ)">
+
+              <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                <label class="k-checkbox-label"> {{dataItem.name}} </label>
+              </ng-template>
+              <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                <span kendoTooltip position="bottom" [title]="getCommaSapratedString(taxTypesZ, true)">
+                  {{getCommaSapratedString(taxTypesZ)}}
+                </span>
+              </ng-template>
+            </kendo-multiselect>
+          </div>
+        </div>
+        <div class="input-grid border-top pt-2 mt-2">
+          <div class="form-data">
+            <kendo-combobox [data]="listTransactItemItems" [kendoDropDownFilter]="filterSettings" [textField]="'text'"
+              [valueField]="'value'" name="transactItem" #transactItem="ngModel" [valuePrimitive]="true"
+              placeholder="Select Item" [(ngModel)]="selectedTransactItem" (valueChange)="onTransactItemChange()">
+            </kendo-combobox>
+          </div>
+          <div class="form-data">
+            <input type="text" autocomplete="off" name="quantity" #quantity="ngModel"
+              [(ngModel)]="transactionItemObj.quantity" placeholder="Qty"
+              (keypress)="utilityService.floatOnly($event);">
+          </div>
+          <div class="form-data">
+            <input type="text" autocomplete="off" name="weight" #weight="ngModel"
+              [(ngModel)]="transactionItemObj.weight" placeholder="Weight"
+              (keypress)="utilityService.floatOnly($event);">
+          </div>
+          <div class="form-data">
+            <input type="text" autocomplete="off" name="rate" #rate="ngModel" [(ngModel)]="transactionItemObj.rate"
+              placeholder="Rate" (keypress)="utilityService.floatOnly($event);">
+          </div>
+          <div class="form-data">
+            <input type="text" autocomplete="off" name="discPerc" #discPerc="ngModel"
+              [(ngModel)]="transactionItemObj.discPerc" placeholder="Dis%"
+              (keypress)="utilityService.floatOnly($event);">
+          </div>
+          <button kendoButton title="Add" kendoTooltip position="bottom" (click)="addTransactionItem()">
+            <i class="icon-add p-0"></i>
+          </button>
+          <button kendoButton title="Delete" kendoTooltip position="bottom" (click)="removeTransactionItems()"
+            [disabled]="mySelectionTrans.length == 0">
+            <i class="icon-trash p-0"></i>
+          </button>
+          <button kendoTooltip position="bottom" kendoButton title="Add Packing List"
+            (click)="openPackinglistDialog()"><i class="icon-packinglist pe-0"></i></button>
+        </div>
+        <div class="grid-wrap mt-2">
+          <kendo-grid [resizable]="true" [data]="purchaseTransactionObj.items" [selectable]="selectableSettings"
+            [(selectedKeys)]="mySelectionTrans" [kendoGridSelectBy]="'index'" style="height:calc(100vh - 472px)"
+            class="mb-grid">
+            <kendo-grid-checkbox-column [width]="25">
+              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <input type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                  [kendoGridSelectionCheckbox]="rowIndex" />
+                <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                </label>
+              </ng-template>
+            </kendo-grid-checkbox-column>
+            <kendo-grid-column field="item.name" title="Name" [width]="120">
+            </kendo-grid-column>
+            <kendo-grid-column field="quantity" title="Qty" [width]="30"></kendo-grid-column>
+            <kendo-grid-column field="weight" title="Weight" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="rate" title="Rate" [width]="70"></kendo-grid-column>
+            <kendo-grid-column field="amount" title="Amount" [width]="70"></kendo-grid-column>
+            <kendo-grid-column field="discPerc" title="Dis(%)" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="discount" title="Dis" [width]="50"></kendo-grid-column>
+            <kendo-grid-column field="taxAmount" title="Tax" [width]="70"></kendo-grid-column>
+            <kendo-grid-column field="total" title="Total" [width]="70"></kendo-grid-column>
+            <kendo-grid-column field="edit" title="Edit" [width]="32">
+              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <button kendoTooltip position="bottom" kendoButton title="Edit Item" [disabled]="isEdit"
+                  (click)="editItem(dataItem, rowIndex)"><i class="icon-edit pe-0"></i></button>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid>
+        </div>
+        <div class="d-flex p-1 border" *ngIf="advancePaymentReceiptTransaction.id">
+          <div class="me-2">
+            <input type="checkbox" class="k-checkbox" id="advance" name="advance" [(ngModel)]="advancePaymentFlag">
+          </div>
+          <div class="form-data"><label for="advance">Advance Payment :- T.No :
+              {{advancePaymentReceiptTransaction.number}} |
+              NetAmt : {{advancePaymentReceiptTransaction.netTotal}} |
+              RmgAmt : {{(advancePaymentReceiptTransaction.netTotal - advancePaymentReceiptTransaction.paidAmount) |
+              number:'1.2-2'}}
+            </label>
+          </div>
+        </div>
+        <div class="grid-total d-flex p-2 border">
+          <div class="grid-left-total">
+            <div class="form-data">
+              <label>Amount</label>
+            </div>
+            <div class="form-data">
+              <input type="text" readonly disabled value="{{purchaseTransactionObj.amount}}">
+            </div>
+            <div class="form-data">
+              <label>Discount</label>
+            </div>
+            <div class="form-data">
+              <input type="text" readonly disabled value="{{purchaseTransactionObj.discount}}">
+            </div>
+            <div class="form-data">
+              <label>Tax</label>
+            </div>
+            <div class="form-data">
+              <input type="text" readonly disabled [value]="purchaseTransactionObj.taxAmount">
+            </div>
+            <div class="form-data">
+              <label>Remark</label>
+              <textarea cols="4" type="text" autocomplete="off" name="remark" #remark="ngModel"
+                [(ngModel)]="purchaseTransactionObj.note" placeholder="Remark">
+              </textarea>
+            </div>
+          </div>
+          <div class="grid-right-total">
+            <div class="form-data">
+              <label>Total Amt</label>
+            </div>
+            <div class="form-data">
+              <input type="text" name="tamt" readonly disabled value="{{purchaseTotalAmount}}">
+            </div>
+            <div class="form-data">
+              <label>Add Amt</label>
+            </div>
+            <div class="form-data" [ngClass]="{ 'error': !validAddAmtLimit }">
+              <input type="text" autocomplete="off" name="addamt" #addamt="ngModel"
+              [disabled]="purchaseTransactionObj.netTotal == purchaseTransactionObj.paidAmount ? true :false"
+                [(ngModel)]="purchaseTransactionObj.addAmount" (keypress)="utilityService.discountfloat($event);"
+                (keyup)="calculateTransactionItems(true);validAddAmtLimit = utilityService.validateAddAmountLimit(purchaseTransactionObj.addAmount, accountingConfigData.addAmountLimit);">
+              <span class="font-smaller s-error" *ngIf="!validAddAmtLimit">Amount exceed limit</span>
+            </div>
+            <div class="form-data">
+              <label>Net Amt</label>
+            </div>
+            <div class="form-data">
+              <input type="text" readonly disabled value="{{purchaseTransactionObj.netTotal}}">
+            </div>
+            <div class="form-data">
+              <label>CC Amt</label>
+            </div>
+            <div class="form-data">
+              <input type="text" name="ccAmount" readonly disabled value="{{purchaseTransactionObj.ccAmount}}">
+            </div>
+            <!-- <div class="form-data">
+              <label>Paid Amt</label>
+            </div>
+            <div class="form-data">
+              <input type="text" autocomplete="off" name="paidAmt" #paidAmt="ngModel"
+                [(ngModel)]="purchaseTransactionObj.paidAmount" (keypress)="utilityService.discountfloat($event);"
+                (keyup)="calculateTransactionItems(true)">
+            </div> -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <ng-container *ngIf="!isStockTallyEnable">
+          <button type="button" class="btn btn-primary" *ngIf="!isEdit"
+            [disabled]="!(PurchaseForm.valid && validAddAmtLimit)" (click)="saveTransaction(true)">
+            <i class="icon-add"></i>New</button>
+          <button type="button" class="btn btn-primary" *ngIf="!isEdit"
+            [disabled]="!(PurchaseForm.valid && validAddAmtLimit)" (click)="saveTransaction()">
+            <i class="icon-save"></i>Save</button>
+          <button type="button" class="btn btn-primary" *ngIf="isEdit"
+            [disabled]="!(PurchaseForm.valid && validAddAmtLimit)" (click)="updateTransaction()">
+            <i class="icon-save"></i>Update</button>
+        </ng-container>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- #endregion -->
+<!-- #region Packing List Dialog -->
+<div class="modal c-modal addemp dialog-sm-l" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  [hidden]="!isPackinglistDialog">
+  <form name="form">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="icon-packinglist"></i>Packing List
+          </h5>
+          <button type="button" class="close" (click)="closePackinglistDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-le-top mb-0">
+                <div class="grid filter-grid">
+                  <div>
+                    <div class="form-data" *ngIf="!isEdit">
+                      <label>Stone ID</label>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="form-data" *ngIf="!isEdit">
+                      <input autocomplete="off" type="text" id="stoneTxt" #StoneTxtInput name="stoneTxt" class="c-wi"
+                        [disabled]="purchaseTransactionObj.toLedger.id == null || purchaseTransactionObj.toLedger.id == ''"
+                        [(ngModel)]="stoneSearch">
+                    </div>
+                  </div>
+                  <div>
+                    <div class="form-data" *ngIf="!isEdit">
+                      <label>Certficate ID</label>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="form-data" *ngIf="!isEdit">
+                      <input id="cerid" autocomplete="off" #CertificateTxtInput name="cerid" class="c-wi"
+                        [disabled]="purchaseTransactionObj.toLedger.id == null || purchaseTransactionObj.toLedger.id == ''"
+                        [(ngModel)]="certiSearch">
+                    </div>
+                  </div>
+                  <div *ngIf="purchaseTransactionObj?.invPurchaseStatus != 'Stock'">
+                    <kendo-label class="k-radio-label" [for]="Transit" text="Transit"></kendo-label>
+                    <input type="radio" name="stock" [value]="transitStatus" [(ngModel)]="invStatus" #Transit
+                      kendoRadioButton />
+
+                    <kendo-label class="k-radio-label" [for]="Stock" text="Stock">
+                    </kendo-label>
+                    <input type="radio" name="stock" [value]="stockStatus" [(ngModel)]="invStatus" #Stock
+                      kendoRadioButton />
+                  </div>
+                </div>
+              </div>
+              <div>
+
+              </div>
+              <div class="d-flex justify-content-between mt-2">
+                <div class="tag">
+                  <ul>
+                    <li>
+                      <span class="t-title">Count:</span>{{inventoryExcelItems.length}}
+                    </li>
+                  </ul>
+                </div>
+                <div *ngIf="!isEdit">
+                  <input #file type="file" (click)="file.value=''" (change)="onSelectExcelFile($event)" hidden
+                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                    multiple />
+                  <button kendoButton title="Upload Excel" kendoTooltip position="bottom" *ngIf="!isEdit"
+                    (click)="file.click();" class="me-1">
+                    <i class="icon-fileupload p-0"></i>
+                  </button>
+                  <button kendoButton title="Delete" kendoTooltip position="bottom" *ngIf="!isEdit"
+                    (click)="removeExcelInv()" [disabled]="mySelectionPackage.length == 0">
+                    <i class="icon-trash p-0"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="grid-wrap mt-2">
+                <kendo-grid [resizable]="true" [data]="inventoryExcelItems" [height]="500"
+                  [selectable]="selectableSettings" [(selectedKeys)]="mySelectionPackage"
+                  [kendoGridSelectBy]="'stoneId'">
+                  <kendo-grid-checkbox-column [width]="40">
+                    <ng-template kendoGridHeaderTemplate>
+                      <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox" />
+                      <label class="k-checkbox-label" for="headerCheckbox"></label>
+                    </ng-template>
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      <div class="i-hov" *ngIf="dataItem.isDisabled">
+                        <i class="icon-info" *ngIf="dataItem.isPriceAvailable"></i>
+                        <i class="icon-edit" *ngIf="!dataItem.isPriceAvailable"></i>
+                        <div class="em-box" *ngIf="fetchError(dataItem?.stoneId)">
+                          <h6 class="title">stoneId:
+                            {{fetchError(dataItem?.stoneId)?.stoneId}}
+                          </h6>
+                          <span>Reasons:
+                            <div class="e-msg" *ngFor="let message of fetchError(dataItem?.stoneId)?.messageList">
+                              <span>{{message}}</span>
+                            </div>
+                          </span>
+                        </div>
+                      </div>
+                      <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                        [kendoGridSelectionCheckbox]="rowIndex" />
+                      <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                      </label>
+                    </ng-template>
+                  </kendo-grid-checkbox-column>
+                  <kendo-grid-column field="stoneId" title="Stone Id" [width]="80">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="certificateNo" title="Certicate No" [width]="100">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="certiType" title="Certi. Type" [width]="100">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="shape" title="Shape" [width]="80">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="weight" title="Ct" [width]="70">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="color" title="Color" [width]="50">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="clarity" title="Clarity" [width]="70">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="cut" title="Cut" [width]="50"></kendo-grid-column>
+                  <kendo-grid-column field="polish" title="Polish" [width]="60">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="symmetry" title="Symmetry" [width]="70">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="fluorescence" title="Fluorescence" [width]="70">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="rap" title="Rap" [width]="70"></kendo-grid-column>
+                  <kendo-grid-column field="perCarat" title="$/Ct" [width]="60">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="discount" title="Dis %" [width]="60">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="netAmount" title="Net Amount" [width]="60"></kendo-grid-column>
+                </kendo-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" *ngIf="!isEdit">
+          <button type="button" class="btn btn-primary" (click)="saveExcelItemInTransaction()"
+            [disabled]="inventoryExcelItems.length == 0">
+            <i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->

@@ -1,0 +1,977 @@
+<div class="addemp c-modal modal mo-he-fix lead-rs lead-xs leadModal" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <form name="Leadform" #Lead="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-lead"></i>{{!isEditLead?"Add Lead":"Lead Information"}}
+          </h5>
+          <button type="button" class="close" (click)="closeLeadDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" [ngClass]="{'addLead_cls': !isEditLead}">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div *ngIf="leadObj.id && leadObj.leadStatus"
+                class="status-btn d-flex flex-wrap justify-content-between align-items-center"
+                [ngClass]="{ 'status-btn-offline ': leadObj && leadObj.platform!='online', 'status-btn-online ':leadObj && leadObj.platform=='online'}">
+                <div class="leadSum">
+                  <span>Lead No :</span> {{leadObj.leadNo}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+                  <span>Status :</span> {{leadObj.leadStatus | uppercase}}
+                </div>
+                <span class="drp-status">
+                  <div class="form-data">
+                    <span class="text-end"
+                      *ngIf="leadObj && leadObj.platform!='online' && leadObj.leadStatus != 'Rejected' &&  leadObj.leadStatus!='Delivered'">Volume
+                      Disc.
+                      <span class="ms-1">
+                        <kendo-switch class="k-widget k-switch-off me-1" #volDistoggle="ngModel" name="volDistoggle"
+                          id="m-chk" [(ngModel)]="leadObj.isVolDiscFlag"
+                          [disabled]="leadObj.leadStatus == 'Order' ? true : false"
+                          (valueChange)="isValDiscToggle($event)">
+                        </kendo-switch>
+                      </span>
+                    </span>
+                  </div>
+                  <div class="form-data">
+                    <div
+                      [ngClass]="{ 'error': leadStatus.invalid && (leadStatus.errors?.required && leadStatus.touched) }"
+                      *ngIf="(leadTitle!='Rejected' && leadTitle!='Delivered' && leadTitle!='Order') && !isAdmin">
+                      <kendo-dropdownlist [data]="listLeadStatus" [valuePrimitive]="true" name="leadStatus"
+                        #leadStatus="ngModel" [(ngModel)]="leadUpdateStatus">
+                      </kendo-dropdownlist>
+                    </div>
+                  </div>
+                  <div class="leadSum">
+                    <span>Date :</span> {{leadObj.createdDate | date: 'dd/MM/yyyy'}}
+                  </div>
+                </span>
+              </div>
+            </div>
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 infoGrid"
+              [ngClass]="{ 'lead-info-grid': leadObj && leadObj.platform!='online'}">
+              <div class="en-form f-12">
+                <div class="align-items-center d-flex justify-content-between">
+                  <h6 class="title d-flex justify-content-between w-100">
+                    <span><i class="icon-party p-0 me-2"></i>Party Information</span>
+                    <div class="form-data"
+                      *ngIf="leadObj.id && !isAdmin && leadObj.platform?.toLowerCase() != 'online'">
+                      <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap">
+                        <button kendoButton title="Edit Customer" class="border" type="button"
+                          [disabled]="(leadObj.leadStatus == 'Rejected' || leadObj.leadStatus == 'Order'|| leadObj.leadStatus == 'Delivered')"
+                          (click)="toggleEditCustomer()"><i class="icon-edit pe-0"></i></button>
+                      </kendo-buttongroup>
+                    </div>
+                  </h6>
+                </div>
+                <div class="leadInfo">
+                  <ul>
+                    <li *ngIf="(customerObj.name || (leadObj.id== null) || (isEditableCustomer))" class="w_100">
+                      Party :
+                      <span class="require" *ngIf="!isEditLead">*&nbsp;&nbsp;</span>
+                      <span *ngIf="isEditLead" kendoTooltip position="bottom"
+                        title="{{customerObj.name}}">{{customerObj.companyName}}-{{customerObj.name}}</span>
+                      <span>
+                        <kendo-autocomplete *ngIf="!isEditLead" class="w-100" [data]="listCustomerItems" name="customer"
+                          [(ngModel)]="selectedCustomerItem" (valueChange)="customerChange($event)" #customer="ngModel"
+                          [filterable]="true" (filterChange)="handleCustomerFilter($event)"
+                          [kendoDropDownFilter]="filterSettings" [popupSettings]="{width: 'auto'}" valueField="value"
+                          required style="width:50% !important">
+                          <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                            <span><b>{{dataItem.companyName}}</b>-{{dataItem.text}}</span>
+                          </ng-template>
+                        </kendo-autocomplete>
+                      </span>
+                    </li>
+                    <li *ngIf="customerObj.email">Email : <span kendoTooltip position="bottom"
+                        title="{{customerObj.email}}">{{customerObj.email}}</span></li>
+                    <li *ngIf="customerObj.mobile">Mobile No. : <span>{{customerObj.mobile}}</span></li>
+                    <li *ngIf="leadObj.pickupLocation">PickUp Location : <span>{{leadObj.pickupLocation}}</span></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="en-form f-12" *ngIf="leadObj && leadObj.platform!='online'">
+                <h6 class="title d-flex justify-content-between w-100">
+                  <span><i class="icon-broker p-0 me-2"></i>Broker Information</span>
+                  <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap">
+                    <button kendoButton title="Add Brokerage" class="border" type="button"
+                      [disabled]="(leadObj.leadStatus == 'Rejected' || leadObj.leadStatus == 'Order'|| leadObj.leadStatus == 'Delivered')"
+                      *ngIf="!leadObj.broker.id && leadObj.id && !isEditableBrokerage"
+                      (click)="toggleEditBrokerage()"><i class="icon-add pe-0"></i></button>
+                    <button kendoButton title="Edit Brokerage" class="border" type="button"
+                      [disabled]="(leadObj.leadStatus == 'Rejected' || leadObj.leadStatus == 'Order'|| leadObj.leadStatus == 'Delivered')"
+                      *ngIf="!isEditableBrokerage && brokerObj.id && leadObj.id" (click)="toggleEditBrokerage()"><i
+                        class="icon-edit pe-0"></i></button>
+                    <button kendoButton title="Delete Broker" class="border" type="button"
+                      [disabled]="(leadObj.leadStatus == 'Rejected' || leadObj.leadStatus == 'Order'|| leadObj.leadStatus == 'Delivered')"
+                      *ngIf="!isEditableBrokerage && brokerObj.id && leadObj.id" (click)="changeBrokerage(true)"><i
+                        class="icon-trash pe-0"></i></button>
+
+                    <button kendoButton title="Edit" class="border" *ngIf="isEditableBrokerage" type="button"
+                      [disabled]="!brokerageValue" (click)="changeBrokerage()"><i class="icon-check pe-0"></i></button>
+                    <button kendoButton title="Cancel" class="border" *ngIf="isEditableBrokerage" type="button"
+                      (click)="toggleEditBrokerage(false)"><i class="icon-delete pe-0"></i></button>
+                  </kendo-buttongroup>
+                </h6>
+                <div class="leadInfo">
+                  <ul>
+                    <li *ngIf="(brokerObj.name || (leadObj.id== null) || (isEditableBrokerage))" class="w_100">
+                      Name :
+                      <span *ngIf="!isEditableBrokerage && isEditLead" kendoTooltip position="bottom"
+                        title="{{brokerObj.name}}">{{brokerObj.name}}</span>
+                      <span>
+                        <kendo-combobox *ngIf="isEditableBrokerage || !isEditLead" [data]="listBrokerItems"
+                          textField="text" valueField="value" name="Broker" [(ngModel)]="selectedBrokerItem"
+                          (valueChange)="brokerChange()" [kendoDropDownFilter]="filterSettings"
+                          [disabled]="((leadObj.id!= null) && !isEditableBrokerage)" #Broker="ngModel"
+                          style="width:50% !important">
+                        </kendo-combobox>
+                      </span>
+                    </li>
+                    <li *ngIf="brokerObj.brokrage">
+                      Brokrage(%) : <span *ngIf="!isEditableBrokerage">{{brokerObj.brokrage}}</span>
+                      <span class="form-data">
+                        <input id="brokeragetxt" autocomplete="off" name="brokeragetxt" [(ngModel)]="brokerageValue"
+                          class="w-50 me-2" *ngIf="isEditableBrokerage" (keypress)="utilityService.floatOnly($event)">
+                      </span>
+                    </li>
+                    <li *ngIf="brokerObj.mobileNo" class="d-none-sm">Mobile No. : <span>{{brokerObj.mobileNo}}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-wrap mt-2 mt-md-1">
+            <kendo-tabstrip (tabSelect)="onTabSelect($event)">
+              <kendo-tabstrip-tab title="" [selected]="true">
+                <ng-template kendoTabTitle>
+                  <i class="icon-info" title="Details"></i>&nbsp;
+                </ng-template>
+                <ng-template kendoTabContent>
+                  <div class="tab-data le-details">
+                    <div class="mod-wrap leadDe_wrap">
+                      <div class="gridLead">
+                        <div class="en-form f-12 d-flex align-items-center justify-content-between">
+                          <div class="i-form ad-le-top mb-0 d-flex">
+                            <!-- *ngIf="!isAdmin && (editCardStatus=='proposal' || ( editCardStatus=='hold' && leadObj.orderExpiredDate))" -->
+                            <div class="grid"
+                              *ngIf="!(leadObj.leadStatus=='Delivered' || leadObj.leadStatus=='Rejected')">
+                              <div class="form-data">
+                                <input autocomplete="off" type="text" id="stoneTxt"
+                                  placeholder="Stone ID / Certficate ID" #StoneTxtInput name="stoneTxt" class="c-wi"
+                                  (keyup.enter)="onEnterAddStone($event)" [(ngModel)]="filterOrAddText">
+                              </div>
+                              <div class="form-data">
+                                <button type="button" kendoTooltip (click)="loadStoneDetails(filterOrAddText)"
+                                  class="btn btn-primary" title="Add Or Search Inventory"><i
+                                    class="icon-search pe-0"></i></button>
+                              </div>
+                            </div>
+
+                            <div class="ms-3 d-flex align-items-center disc-mb"
+                              *ngIf="!isAdmin && (editCardStatus=='hold' || (editCardStatus=='proposal' && leadObj.id)) && leadObj.platform=='offline'">
+                              <div class="form-data w-50">
+                                <input id="adisc" placeholder="Add. Disc." autocomplete="off" #aDiscTxtInput
+                                  name="adisc" [disabled]="leadObj.leadAdminFlag"
+                                  (keypress)="utilityService.numberAddMinusOnly($event)" [(ngModel)]="commonDisc"
+                                  (keyup.enter)="onEnterCommonADisc($event)" class="c-wi w-100">
+                              </div>
+                              <div class="form-data ms-2">
+                                <button type="button" kendoTooltip [disabled]="!commonDisc"
+                                  (click)="onCommonADisc(commonDisc)" class="btn btn-primary"
+                                  title="Add addtional disc."><i class="icon-add pe-0"></i></button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="en-form f-12 ms-auto">
+                            <div class="i-form lab-iss-mod a-lead m-0">
+                              <div class="ci-top-right pe-0">
+                                <kendo-buttongroup kendoTooltip position="bottom" class="btnGroup_gap">
+                                  <button type="button"
+                                    *ngIf="(leadTitle=='Hold' || leadTitle=='Order') && leadItem && leadItem.platform!='online'"
+                                    (click)="raiseMemoRequest()" kendoButton title="Memo Issue"><i
+                                      class="icon-memoissue pe-0"></i></button>
+                                  <button type="button" [disabled]="isPrimarySupplier"
+                                    *ngIf="(leadTitle=='Hold' || leadTitle=='Order') && leadItem && leadItem.platform!='online'"
+                                    (click)="raiseQcRequest()" kendoButton title="Qc Request"><i
+                                      class="icon-qcrequest pe-0"></i></button>
+                                  <button type="button" *ngIf="(leadTitle=='Hold' || leadTitle=='Order') && leadItem"
+                                    (click)="raiseExportRequest()" kendoButton title="Export Request"><i
+                                      class="icon-export-request pe-0"></i></button>
+                                  <button type="button" *ngIf="leadTitle=='Proposal'" kendoButton title="Qc Criteria "
+                                    (click)="openQcReasonDialog()">
+                                    <i class="icon-criteria pe-0"></i>
+                                  </button>
+                                  <button type="button" *ngIf="leadTitle=='Proposal'" kendoButton
+                                    title="Release Request" (click)="toggleStoneDialog()">
+                                    <i class="icon-request-send pe-0"></i>
+                                  </button>
+                                  <button type="button" kendoButton title="Copy StoneIds" (click)="copyToClipboard()"><i
+                                      class="icon-copy pe-0"></i></button>
+                                  <input #file type="file" (click)="file.value=''"
+                                    (change)="onSelectInvFromExcelFile($event)" hidden
+                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
+                                  <button type="button" kendoButton (click)="file.click();"
+                                    *ngIf="!isAdmin && ((editCardStatus=='proposal' || editCardStatus=='hold') && leadObj.id && (leadObj && leadObj.platform=='offline'))"
+                                    title="Import Excel"><i class="icon-import pe-0"></i></button>
+                                  <button type="button" kendoButton #anchor *ngIf="editCardStatus!='rejected'"
+                                    (click)="onExcelToggle()" title="Export Excel"><i
+                                      class="icon-export pe-0"></i></button>
+                                  <button type="button" kendoButton (click)="toggleRejectedStone()" type="button"
+                                    *ngIf="leadObj && leadObj.id  && (editCardStatus!='rejected' && editCardStatus!='delivered')"
+                                    title="Rejected Stone List"
+                                    [ngClass]="{'rejected-active-list': visibleRejectedStone}">
+                                    <i class="icon-block pe-0"></i>
+                                  </button>
+                                  <button type="button" [disabled]="mySelection.length == 0" kendoButton
+                                    (click)="stoneCancelProccess()" type="button"
+                                    *ngIf="leadObj.id && (leadObj.leadStatus.toLowerCase() =='delivered' || leadObj.leadStatus.toLowerCase() =='order')"
+                                    [title]="leadObj.leadStatus.toLowerCase() =='order' ? 'Order Cancel' : 'Sales Cancel'">
+                                    <i class="icon-sales-cancel pe-0"></i>
+                                  </button>
+                                  <button type="button"
+                                    [disabled]="leadObj.leadStatus.toLowerCase() =='order' ? true :(disabledFlag || mySelection.length == 0)"
+                                    kendoButton title="Delete Inventory"
+                                    *ngIf="!isAdmin && ((editCardStatus!='rejected') && (leadObj && leadObj.leadStatus.toLowerCase() !='delivered'))"
+                                    (click)="openDeleteDialog()"><i class="icon-trash pe-0"></i>
+                                  </button>
+                                  <button type="button"
+                                    *ngIf="leadObj.platform?.toLowerCase() =='online' && leadObj.leadStatus?.toLowerCase() =='order'"
+                                    kendoButton (click)="confirmMailSend()" title="Send Order Approve Mail">
+                                    <i class="icon-icon_email pe-0"></i>
+                                  </button>
+                                  <button type="button" [disabled]="disabledFlag" *ngIf="editCardStatus!='rejected'"
+                                    kendoButton (click)="openGridConfigDialog()" title="Grid Configuration">
+                                    <i class="icon-gridconfig pe-0"></i>
+                                  </button>
+                                </kendo-buttongroup>
+                                <kendo-popup [anchor]="$any(anchor)" #popup
+                                  (anchorViewportLeave)="showExcelOption = false" *ngIf="showExcelOption"
+                                  [anchorAlign]="anchorAlign" [popupAlign]="popupAlign">
+                                  <div class="content p-2">
+                                    <div class="mb-1">
+                                      <input type="radio" name="excelOption" value="all" #all [(ngModel)]="excelOption"
+                                        kendoRadioButton />
+                                      <label class="k-label" class="ms-2" [for]="all">All
+                                        Stones</label>
+                                    </div>
+                                    <div class="mb-1">
+                                      <input type="radio" name="excelOption" value="selected" #selected
+                                        [(ngModel)]="excelOption" kendoRadioButton />
+                                      <label class="k-label" class="ms-2" [for]="selected">Selected
+                                        Stone</label>
+                                    </div>
+                                    <div class="text-center">
+                                      <button type="button" class="btn btn-primary w-100 mt-1"
+                                        [disabled]="excelOption == null" (click)="exportToExcel()">
+                                        <i class="icon-excelnew"></i> Export
+                                        to Excel
+                                      </button>
+                                    </div>
+                                  </div>
+                                </kendo-popup>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="grid-wrap chk-grid">
+                          <kendo-grid [data]="gridViewLeadInventory" class="grid-ui upload-grid" [sortable]="true"
+                            [pageSize]="pageSize" [skip]="skip" [pageable]="true" [resizable]="true"
+                            (pageChange)="pageChange($event)" [selectable]="selectableSettings"
+                            [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'invId'" [groupable]="true"
+                            [group]="groups" [rowClass]="isDisabled" (groupChange)="groupChange($event)">
+                            <ng-container *ngIf="fields && fields.length > 0">
+                              <ng-container *ngFor="let field of fields;let i= index">
+                                <ng-container *ngIf="field.isSelected">
+                                  <kendo-grid-column [width]="field.width" [field]="field.propertyName"
+                                    [title]="field.title">
+                                    <ng-template kendoGridGroupHeaderTemplate let-group="group" let-value="value"
+                                      let-field="field" let-aggregates="aggregates">
+                                      <span class="ps-1">{{getTitle(field)}} :
+                                      </span>
+                                      <b class="ps-1">{{value}}</b>&nbsp;
+                                      &nbsp;
+                                      <span class="ps-1">Total Carat :
+                                      </span>
+                                      <b class="ps-1">{{aggregates.weight.sum.toFixed(2)}}</b>&nbsp;
+                                      &nbsp;
+                                      <span class="ps-1">Total Amount ($):
+                                      </span>
+                                      <b class="ps-1">{{aggregates.netAmount.sum.toFixed(2)}}</b>&nbsp;
+                                      &nbsp;
+                                    </ng-template>
+                                    <ng-template *ngIf="isShowCheckBoxAll && field.title == 'Checkbox'"
+                                      kendoGridHeaderTemplate>
+                                      <input kendoGridSelectAllCheckbox [disabled]="disabledFlag" type="checkbox"
+                                        class="k-checkbox" id="headerCheckbox"
+                                        (selectAllChange)="selectAllInventories($event)" />
+                                      <label class="k-checkbox-label" for="headerCheckbox"></label>
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                      *ngIf="field.title == 'Checkbox'">
+                                      <input type="checkbox" class="k-checkbox" *ngIf="!dataItem.isRejected"
+                                        id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex"
+                                        (change)="onSelectChange()" />
+                                      <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                      </label>
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                      *ngIf="field.title == 'Rejected'">
+                                      <input type="checkbox" class="k-checkbox" id="checkbox-isRejected-{{rowIndex}}"
+                                        [checked]="dataItem.isRejected" [disabled]="true" />
+                                      <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                      </label>
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                      *ngIf="field.title == 'IsLabReturn'">
+                                      <input type="checkbox" class="k-checkbox" id="checkbox-isLabReturn-{{rowIndex}}"
+                                        [checked]="dataItem.isLabReturn" [disabled]="true" />
+                                      <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                      </label>
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                      *ngIf="field.title == 'Hold'">
+                                      <input type="checkbox" class="k-checkbox" id="checkbox-isHold-{{rowIndex}}"
+                                        [checked]="dataItem.isHold" [disabled]="true" />
+                                      <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                      </label>
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                      *ngIf="field.title == 'Delivered'">
+                                      <input type="checkbox" class="k-checkbox" id="checkbox-isDelivered-{{rowIndex}}"
+                                        [checked]="dataItem.isDelivered" [disabled]="true" />
+                                      <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                      </label>
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                      *ngIf="field.title == 'Memo'">
+                                      <input type="checkbox" class="k-checkbox" id="checkbox-isMemo-{{rowIndex}}"
+                                        [checked]="dataItem.isMemo" [disabled]="true" />
+                                      <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                      </label>
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                      *ngIf="field.title == 'Vow Amount' && leadObj.platform=='online'">
+                                      {{dataItem.vowAmount}}
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                      *ngIf="field.title == 'Volume Amount' && leadObj.platform=='offline'">
+                                      {{dataItem.vowAmount}}
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                      *ngIf="field.propertyName=='aDiscount' && leadObj.platform?.toLowerCase() == 'offline'">
+                                      <div class="form-data"
+                                        *ngIf="leadObj.leadStatus=='Hold' || leadObj.leadStatus=='Proposal'">
+                                        <input type="text" id="reqDisName_{{rowIndex}}" name="reqDisName_{{rowIndex}}"
+                                          [(ngModel)]="dataItem.aDiscount" #reqDisName="ngModel"
+                                          (keyup)="calIndiDis(dataItem)"
+                                          (keypress)="utilityService.numberAddMinusOnly($event)"
+                                          *ngIf="!leadObj.leadAdminFlag" class="w-100" />
+                                        <input type="text" *ngIf="leadObj.leadAdminFlag" class="w-100" disabled="true"
+                                          readonly value="{{dataItem.aDiscount}}" />
+                                      </div>
+                                      <span *ngIf="leadObj.leadStatus=='Order'">{{dataItem.aDiscount}}</span>
+                                    </ng-template>
+                                  </kendo-grid-column>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+                          </kendo-grid>
+                        </div>
+                      </div>
+                      <div *ngIf="isAdmin" class="leInfo_detail adDetail">
+                        <ul class="mt-2">
+                          <li>
+                            <span>PCS : </span>
+                            <span>{{gridDetailSummary.totalPcs}}</span>
+                          </li>
+                          <li>
+                            <span>CARAT : </span>
+                            <span>{{gridDetailSummary.totalCarat|
+                              number:'0.2-2'}}
+                            </span>
+                          </li>
+                          <li>
+                            <span>AVG. RAP ($) : </span>
+                            <span>{{gridDetailSummary.avgRap| number:'0.2-2'}}
+                            </span>
+                          </li>
+                          <li>
+                            <span>AVG. DISC. (%) :</span>
+                            <span>{{gridDetailSummary.avgDiscPer|
+                              number:'0.2-2'}}
+                            </span>
+                          </li>
+                          <li>
+                            <span>PER CARAT ($) : </span>
+                            <span>{{gridDetailSummary.perCarat| number:'0.2-2'}}
+                            </span>
+                          </li>
+                          <li>
+                            <span>AMT ($) : </span>
+                            <span>{{gridDetailSummary.totalAmount|
+                              number:'0.2-2'}}
+                            </span>
+                          </li>
+                          <li>
+                            <span>{{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. (%) : </span>
+                            <span>{{gridDetailSummary.totalVOWDiscPer|
+                              number:'0.2-2'}}</span>
+                          </li>
+                          <li>
+                            <span>{{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. ($) : </span>
+                            <span>{{gridDetailSummary.totalVOWDiscAmount|
+                              number:'0.2-2'}}</span>
+                          </li>
+                          <li>
+                            <span>DISC. (%) : </span>
+                            <span>{{gridDetailSummary.discPer|
+                              number:'0.2-2'}}</span>
+                          </li>
+                          <li>
+                            <span>PRICE PER CARAT ($) : </span>
+                            <span>{{gridDetailSummary.pricePerCarat|
+                              number:'0.2-2'}}</span>
+                          </li>
+                          <li>
+                            <span>Broker AMT ($) : </span>
+                            <span>{{gridDetailSummary.totalBrokerAmount |
+                              number:'0.2-2'}}
+                            </span>
+                          </li>
+                          <li>
+                            <span>AMT ($) : </span>
+                            <span>{{ (gridDetailSummary.totalBrokerAmount &&
+                              gridDetailSummary.totalPayableAmount) ? ((gridDetailSummary.totalPayableAmount
+                              - gridDetailSummary.totalBrokerAmount)|
+                              number:'0.2-2') : (gridDetailSummary.totalPayableAmount | number:'0.2-2')
+                              }}
+                            </span>
+                          </li>
+                          <li>
+                            <span>PAYABLE AMT ($) : </span>
+                            <span>{{gridDetailSummary.totalPayableAmount|
+                              number:'0.2-2'}}</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <div *ngIf="!isAdmin" class="leInfo_detail"
+                        [ngClass]="(leadObj.leadStatus=='Rejected' || leadObj.leadStatus=='Order' || leadObj.leadStatus=='Delivered') ? 'adDetail' : ''"
+                        [ngStyle]="{'justify-content': 'space-between' }">
+                        <div>
+                          <h6 class="tbl_title">Stones Summary</h6>
+                          <ul>
+                            <li>
+                              <span>PCS : </span>
+                              <span>{{gridDetailSummary.totalPcs}}</span>
+                            </li>
+                            <li>
+                              <span>CARAT : </span>
+                              <span>{{gridDetailSummary.totalCarat|
+                                number:'0.2-2'}}
+                              </span>
+                            </li>
+                            <li>
+                              <span>AVG. RAP ($) : </span>
+                              <span>{{gridDetailSummary.avgRap| number:'0.2-2'}}
+                              </span>
+                            </li>
+                            <li>
+                              <span>AVG. DISC. (%) :</span>
+                              <span>{{gridDetailSummary.avgDiscPer|
+                                number:'0.2-2'}}
+                              </span>
+                            </li>
+                            <li>
+                              <span>PER CARAT ($) : </span>
+                              <span>{{gridDetailSummary.perCarat| number:'0.2-2'}}
+                              </span>
+                            </li>
+                            <li>
+                              <span>AMT ($) : </span>
+                              <span>{{gridDetailSummary.totalAmount|
+                                number:'0.2-2'}}
+                              </span>
+                            </li>
+                            <li>
+                              <span> {{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. (%) : </span>
+                              <span>{{gridDetailSummary.totalVOWDiscPer|
+                                number:'0.2-2'}}</span>
+                            </li>
+                            <li>
+                              <span>{{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. ($) : </span>
+                              <span>{{gridDetailSummary.totalVOWDiscAmount|
+                                number:'0.2-2'}}</span>
+                            </li>
+                            <li>
+                              <span>DISC. (%) : </span>
+                              <span>{{gridDetailSummary.discPer|
+                                number:'0.2-2'}}</span>
+                            </li>
+                            <li>
+                              <span>PRICE PER CARAT ($) : </span>
+                              <span>{{gridDetailSummary.pricePerCarat|
+                                number:'0.2-2'}}</span>
+                            </li>
+                            <li>
+                              <span>Broker AMT ($) : </span>
+                              <span>{{gridDetailSummary.totalBrokerAmount|
+                                number:'0.2-2'}}
+                              </span>
+                            </li>
+                            <li>
+                              <span>AMT ($) : </span>
+                              <span>{{(gridDetailSummary.totalBrokerAmount && gridDetailSummary.totalPayableAmount) ?
+                                ((gridDetailSummary.totalPayableAmount -
+                                gridDetailSummary.totalBrokerAmount)|
+                                number:'0.2-2') : (gridDetailSummary.totalPayableAmount | number:'0.2-2')}}
+                              </span>
+                            </li>
+                            <li>
+                              <span>PAYABLE AMT ($) : </span>
+                              <span>{{gridDetailSummary.totalPayableAmount|
+                                number:'0.2-2'}}</span>
+                            </li>
+                          </ul>
+                        </div>
+                        <ng-container
+                          *ngIf="(leadObj &&  !(leadObj.leadStatus=='Rejected' || leadObj.leadStatus=='Order' || leadObj.leadStatus=='Delivered'))">
+                          <div>
+                            <h6 class="tbl_title">Selected Stones Summary</h6>
+                            <ul>
+                              <li>
+                                <span>PCS : </span>
+                                <span>{{gridAcceptedSummary.totalPcs}}</span>
+                              </li>
+                              <li>
+                                <span>CARAT : </span>
+                                <span>{{gridAcceptedSummary.totalCarat|
+                                  number:'0.2-2'}}
+                                </span>
+                              </li>
+                              <li>
+                                <span>AVG. RAP ($) : </span>
+                                <span>{{gridAcceptedSummary.avgRap| number:'0.2-2'}}
+                                </span>
+                              </li>
+                              <li>
+                                <span>AVG. DISC. (%) :</span>
+                                <span>{{gridAcceptedSummary.avgDiscPer|
+                                  number:'0.2-2'}}
+                                </span>
+                              </li>
+                              <li>
+                                <span>PER CARAT ($) : </span>
+                                <span>{{gridAcceptedSummary.perCarat|
+                                  number:'0.2-2'}}
+                                </span>
+                              </li>
+                              <li>
+                                <span>AMT ($) : </span>
+                                <span>{{gridAcceptedSummary.totalAmount|
+                                  number:'0.2-2'}}
+                                </span>
+                              </li>
+                              <li>
+                                <span>{{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. (%) : </span>
+                                <span>{{gridAcceptedSummary.totalVOWDiscPer|
+                                  number:'0.2-2'}}</span>
+                              </li>
+                              <li>
+                                <span>{{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. ($) : </span>
+                                <span>{{gridAcceptedSummary.totalVOWDiscAmount|
+                                  number:'0.2-2'}}</span>
+                              </li>
+                              <li>
+                                <span>DISC. (%) : </span>
+                                <span>{{gridAcceptedSummary.discPer|
+                                  number:'0.2-2'}}</span>
+                              </li>
+                              <li>
+                                <span>PRICE PER CARAT ($) : </span>
+                                <span>{{gridAcceptedSummary.pricePerCarat|
+                                  number:'0.2-2'}}</span>
+                              </li>
+                              <li>
+                                <span>Broker AMT ($) : </span>
+                                <span>{{gridAcceptedSummary.totalBrokerAmount |
+                                  number:'0.2-2'}}
+                                </span>
+                              </li>
+                              <li>
+                                <span>AMT ($) : </span>
+                                <span>{{ (gridAcceptedSummary.totalBrokerAmount &&
+                                  gridAcceptedSummary.totalPayableAmount) ? ((gridAcceptedSummary.totalPayableAmount
+                                  - gridAcceptedSummary.totalBrokerAmount)|
+                                  number:'0.2-2') :(gridAcceptedSummary.totalPayableAmount | number:'0.2-2')
+                                  }}
+                                </span>
+                              </li>
+                              <li>
+                                <span>PAYABLE AMT ($) : </span>
+                                <span>{{gridAcceptedSummary.totalPayableAmount|
+                                  number:'0.2-2'}}</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </kendo-tabstrip-tab>
+              <kendo-tabstrip-tab title="LeadHistory">
+                <ng-template kendoTabTitle>
+                  <i class="icon-history" title="History"></i>&nbsp;
+                </ng-template>
+                <ng-template kendoTabContent>
+                  <div class="tab-data le-history">
+                    <!-- START:- Progress bar -->
+                    <h6 class="title_bar">Progress</h6>
+                    <div class="progressBar">
+                      <ul *ngFor="let item of leadHistoryData;let i= index">
+                        <ng-container *ngIf="leadHistoryAction.includes(item.action)">
+                          <li>
+                            <div class="text-center">
+                              <div class="proTitle_top">{{leadHistoryProggress[item.action]}}</div>
+                              <div class="line_progress"></div>
+                              <div class="proTitle_bottom">
+                                <span class="imgWrap">
+                                  <img src="commonAssets/images/profile.png" alt="his img">
+                                </span>
+                                <span class="subUser">{{item?.seller?.name}} <br><span class="date_sp">
+                                    {{item?.createdDate | date: 'dd/MM/yyyy'}}
+                                  </span></span>
+                              </div>
+                            </div>
+                            <span class="label">{{leadHistoryProggressStatus[item.action]}}</span>
+                          </li>
+                        </ng-container>
+                      </ul>
+                    </div>
+                    <!-- END:- Progress bar -->
+
+                    <!-- START:- Histroy timeline -->
+                    <h6 class="title_bar bt mb-2 mt-4">Histroy</h6>
+                    <div class="d-flex flex_gap overflow_wrap">
+                      <div class="timeline_leftbar">
+
+                        <!-- timeline -->
+                        <ul class="timeline_ul w-100">
+                          <ng-container *ngFor="let item of sortedData; let i= index">
+                            <ng-container *ngIf="i%2==0; else elseNotDone">
+                              <li (click)="onClickOnStep(item)">
+                                <div class="dir_right">
+                                  <div class="dis_his" [ngClass]="{'isActive': item?.isSelected}">
+                                    <p>{{convertToTitleCase(item.action)}}</p>
+                                    <h4>{{item.createdDate | date}}</h4>
+                                  </div>
+                                </div>
+                              </li>
+                            </ng-container>
+                            <ng-template #elseNotDone>
+                              <li (click)="onClickOnStep(item)">
+                                <div class="dir_left">
+                                  <div class="dis_his" [ngClass]="{'isActive': item?.isSelected}">
+                                    <p>{{convertToTitleCase(item.action)}}</p>
+                                    <h4>{{item.createdDate | date}}</h4>
+                                  </div>
+                                </div>
+                              </li>
+                            </ng-template>
+                          </ng-container>
+                        </ul>
+                      </div>
+
+                      <!-- timeline histroy data -->
+                      <div class="tabRightbar">
+                        <div class="tab_head d-flex">
+                          <div class="his_img bg_slateBlue">G</div>
+                          <div class="head_dis"><span class="name_txt">
+                              {{leadHistoryItem.seller.name}}</span><span>Final for planing
+                              approved</span>
+                          </div>
+                          <span class="time"
+                            *ngIf="leadHistoryData[0]?.action=='Created'">{{leadHistoryData[0].createdDate
+                            | date: 'dd/MM/yyyy'}} {{leadHistoryData[0].createdDate |
+                            date:"shortTime"}}</span>
+                        </div>
+                        <div class="tab_bodyContent d-flex w-100 h-100">
+                          <ul class="ds-lft">
+                            <li><span>Customer Name :</span>{{leadHistoryItem.customer.companyName}}</li>
+                            <li><span>Seller :</span>{{leadHistoryItem.seller.name}}</li>
+                            <li *ngIf="leadHistoryItem.broker.id"><span>Broker :</span>{{leadHistoryItem.broker.name}}
+                            </li>
+                            <li><span>Description :</span>{{leadHistoryItem.description}}</li>
+                            <li *ngIf="leadHistoryItem.stoneIds.length>0 && leadHistoryItem.action=='LeadStoneAdded'">
+                              <span>New Stone Added
+                                :</span>{{leadHistoryItem.stoneIds}}
+                            </li>
+                            <li
+                              *ngIf="leadHistoryItem.stoneIds.length>0 && leadHistoryItem.action=='AddDiscountChange'">
+                              <span>Add Disc change
+                                :</span>{{leadHistoryItem.stoneIds}}
+                            </li>
+                            <li *ngIf="leadHistoryItem.stoneIds.length>0 && leadHistoryItem.action=='LeadStoneDeleted'">
+                              <span>Stone Deleted
+                                :</span>{{leadHistoryItem.stoneIds}}
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- END:- Histroy timeline -->
+                  </div>
+                </ng-template>
+              </kendo-tabstrip-tab>
+              <kendo-tabstrip-tab title="">
+                <ng-template kendoTabTitle>
+                  <i class="icon-wechat" title="Chat"></i>&nbsp;
+                </ng-template>
+                <ng-template kendoTabContent>
+                  <div class="tab-data c_soon le-link h-100 d-flex align-items-center justify-content-center">
+                    <img style="max-width:90%;top: 50%;transform: translateY(-50%);position: absolute;"
+                      src="commonAssets/images/coming-soon.png" />
+                  </div>
+                </ng-template>
+              </kendo-tabstrip-tab>
+              <kendo-tabstrip-tab title="">
+                <ng-template kendoTabTitle>
+                  <i class="icon-attachament" title="Attachment"></i>&nbsp;
+                </ng-template>
+                <ng-template kendoTabContent>
+                  <div class="tab-data c_soon le-file h-100 d-flex align-items-center justify-content-center">
+                    <img style="max-width:90%;top: 50%;transform: translateY(-50%);position: absolute;"
+                      src="commonAssets/images/coming-soon.png" />
+                  </div>
+                </ng-template>
+              </kendo-tabstrip-tab>
+            </kendo-tabstrip>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" *ngIf="!isAdmin && (!isEditLead && (leadItem && leadItem.platform == 'offline'))"
+            [disabled]="(!Lead.valid || listInventoryItems.length == 0)" class="btn btn-primary"
+            (click)="submitLead(Lead,false)"><i class="icon-add"></i>New</button>
+          <button type="button" *ngIf="!isAdmin && editCardStatus == 'proposal'" class="btn btn-primary"
+            (click)="submitLead(Lead,true)"><i class="icon-save"></i>Save</button>
+          <!-- [disabled]="listAcceptedInventoryItems.length == 0 && !leadObj.pickupLocation" -->
+          <button type="button" *ngIf="!isAdmin && ((editCardStatus == 'hold'))" class="btn btn-primary"
+            (click)="submitSplitLead()"><i class="icon-save"></i>Save</button>
+          <button type="button" *ngIf="isAdmin && leadItem.leadAdminFlag==false" class="btn btn-primary"
+            (click)="AcceptOrRejectLeadByAdmin('approve')"><i class="icon-check"></i>Approve</button>
+          <button type="button" *ngIf="isAdmin && leadItem.leadAdminFlag==false" class="btn btn-primary"
+            (click)="AcceptOrRejectLeadByAdmin('rejected')"><i class="icon-delete"></i>Rejected</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- #region Remove Reason Model-->
+<div class="modal c-modal addemp rorgan dialog-ex-xs " tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isRMReason">
+  <form name="form">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-info"></i>Remove Reason Information</h5>
+          <button type="button" class="close" (click)="toggleRMReasonDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-data mb-1">
+            <label>Reason To Remove<span class="require">*</span></label>
+          </div>
+          <div class="form-data mb-3"
+            [ngClass]="{ 'error': removeReason.invalid && (removeReason.dirty || removeReason.touched)}">
+            <input autocomplete="off" type="text" name="removeReason" #removeReason="ngModel"
+              [(ngModel)]="removeReasonModel" class="c-wi" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="!removeReasonModel" (click)="submitReason()">
+            <i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<!-- #region QC Reason Model-->
+<div class="modal c-modal addemp rorgan dialog-xs " tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isQcReason">
+  <form name="form">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-info"></i>Qc Criteria</h5>
+          <button type="button" class="close" (click)="openQcReasonDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-data mb-1">
+            <label>QC Reason<span class="require">*</span></label>
+          </div>
+          <div class="form-data mb-3" [ngClass]="{ 'error': qcReason.invalid && (qcReason.dirty || qcReason.touched)}">
+            <input autocomplete="off" type="text" name="qcReason" #qcReason="ngModel" [(ngModel)]="qcReasonModel"
+              class="c-wi" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="!qcReasonModel" (click)="submitQCReason()">
+            <i class="icon-save"></i>Save</button>
+          <!--  -->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<!-- #region Memo Issue Modal-->
+<div class="modal c-modal addemp rorgan dialog-ex-xs" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isMemoModal">
+  <form name="form">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-info"></i>Memo Issue</h5>
+          <button type="button" class="close" (click)="toggleMemoIssueDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-data mb-1">
+            <label style="white-space: normal;" [innerHtml]="memoMessage"></label>
+          </div>
+          <div class="form-data mb-1">
+            <label>Conversion Rate<span class="require">*</span></label>
+          </div>
+          <div class="form-data mb-3" [ngClass]="{ 'error': rate.invalid && (rate.dirty || rate.touched)}">
+            <input autocomplete="off" type="text" name="rate" #rate="ngModel" [(ngModel)]="rateModel" class="c-wi"
+              required (keypress)="utilityService.floatOnly($event)">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="!rateModel" (click)="submitMemoIssue()">
+            <i class="icon-check"></i>Yes</button>
+          <button type="button" class="btn btn-primary" (click)="toggleMemoIssueDialog()">
+            <i class="icon-delete"></i>No</button>
+          <!--  -->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<!-- #region Export Request Modal-->
+<div class="modal c-modal addemp rorgan dialog-ex-xs" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isExportRequestModal">
+  <form name="form">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-info"></i>Export Request</h5>
+          <button type="button" class="close" (click)="toggleExportRequestDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-data mb-1">
+            <label style="white-space: normal;" [innerHtml]="exportRequestMessage"></label>
+          </div>
+          <div class="form-data mb-1">
+            <label>Location<span class="require">*</span></label>
+          </div>
+          <div class="form-data mb-3"
+            [ngClass]="{ 'error': location.invalid && (location.errors?.required && location.touched) }">
+            <kendo-dropdownlist [data]="suppliersLocations" [valuePrimitive]="true" name="location" #location="ngModel"
+              [(ngModel)]="locationModel" class="c-wi" required>
+            </kendo-dropdownlist>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="!locationModel" (click)="submitExportRequest()">
+            <i class="icon-check"></i>Yes</button>
+          <button type="button" class="btn btn-primary" (click)="toggleExportRequestDialog()">
+            <i class="icon-delete"></i>No</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<!-- #region Qc Request Modal-->
+<div class="modal c-modal addemp rorgan dialog-ex-xs" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isQCRequest">
+  <form name="form">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-info"></i>QC Request</h5>
+          <button type="button" class="close" (click)="toggleQcRequest()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-data mb-1">
+            <label style="white-space: normal;" [innerHtml]="qcMessage"></label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="submitQcRequest()">
+            <i class="icon-check"></i>Yes</button>
+          <button type="button" class="btn btn-primary" (click)="toggleQcRequest()">
+            <i class="icon-delete"></i>No</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<!-- #region Rejected Offer with Reason Model-->
+<ng-container *ngIf="isRejectedOffer">
+  <app-leadrejectedmodal [leadId]="leadObj.id" [leadInvIds]="mySelection" (toggle)="closeRejectedDialog($event)">
+  </app-leadrejectedmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Edit Request Customer Model-->
+<ng-container *ngIf="isEditableCustomer">
+  <app-leadcustomerrequestmodal [leadId]="leadObj.id" (toggle)="closeRequestParty($event)">
+  </app-leadcustomerrequestmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Sales Cancel stone Lead Modal Start -->
+<ng-container *ngIf="isSalesCancel">
+  <app-leadcancelmodal (toggle)="closeLeadCancel($event)" [leadNo]="leadObj.leadNo" [selectedIds]="mySelection">
+  </app-leadcancelmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Grid Config -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'LeadInventory'" [gridName]="gridName"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Release stone Lead Modal Start -->
+<ng-container *ngIf="isStoneRequest">
+  <app-leadstonereleasemodal [releaseStonesRequest]="releaseStoneList" (toggle)="isStoneRequest=$event">
+  </app-leadstonereleasemodal>
+</ng-container>
+<!-- #endregion Release stone Lead Modal End -->

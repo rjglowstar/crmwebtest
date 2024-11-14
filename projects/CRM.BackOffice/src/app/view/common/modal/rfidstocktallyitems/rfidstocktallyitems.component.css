@@ -1,0 +1,32 @@
+.stocktally-filter {
+    display: grid;
+    grid-template-columns: 48px 166px 1fr 1fr auto 40px 170px auto;
+    align-items: center;
+    grid-gap: 10px;
+}
+
+@media (max-width:1050px) {
+    .stocktally-filter {
+        grid-template-columns: 48px 166px 1fr 1fr auto;
+    }
+}
+
+@media (max-width:768px) {
+    .stocktally-filter {
+        grid-template-columns: 48px 166px 1fr 1fr;
+    }
+
+    .stocktally-filter .check-box {
+        grid-column: 3 span / 5;
+    }
+}
+
+@media (max-width:420px) {
+    .stocktally-filter {
+        grid-template-columns: 1fr;
+    }
+
+    .stocktally-filter .check-box {
+        grid-column: auto;
+    }
+}

@@ -1,0 +1,24 @@
+.pr-analytics .grid-wrap .k-grid {
+    height: 314px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.pr-analytics h6.title {
+    margin-bottom: 5px;
+    padding: initial;
+}
+
+.summary-shadow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 100%;
+}
+
+.summary-shadow>span {
+    font-size: 13px;
+    background: #ececec;
+    padding: 5px 10px;
+    display: inline-block;
+}

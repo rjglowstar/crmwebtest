@@ -1,0 +1,314 @@
+.c-modal .account-content {
+    margin-top: 15px;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    height: 390px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.c-modal .account-content .form-data {
+    margin-bottom: 10px;
+}
+
+.treeview_parent {
+    display: block;
+    border: 1px solid #ddd !important;
+    margin-bottom: 10px;
+}
+
+.treeviewmain {
+    padding: 10px 5px;
+    background: #e5e5e5;
+    font-size: 14px;
+}
+
+.treeview--icon {
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.treeview_child {
+    display: block;
+    padding-bottom: 0;
+    margin-left: 45px;
+}
+
+.treeview_child label {
+    font-size: 14px;
+}
+
+.treeview_parent i {
+    padding: 0 0 0 5px;
+}
+
+button.spanbutton {
+    height: 30px;
+    border: 0;
+    background: none;
+    width: 31px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+button.spanbutton:hover {
+    background-color: #4d4d4d;
+    color: #fff;
+}
+
+button[disabled].spanbutton:hover {
+    background-color: transparent;
+    color: #d3d3d3;
+}
+
+.em-box {
+    position: absolute;
+    left: 30px;
+    background-color: #4d4d4d;
+    color: #fff;
+    padding: 5px;
+    z-index: 9999;
+    border: 1px solid #4d4d4d;
+    display: none;
+    margin-top: -22px;
+}
+
+.em-box::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: -8px;
+    border-top: 10px solid transparent;
+    border-right: 10px solid #4d4d4d;
+    border-bottom: 10px solid transparent;
+}
+
+.edinv .modal-body {
+    padding: 7px 0;
+}
+
+.c-modal.edinv .account-content {
+    margin: initial;
+    border: initial;
+    padding: 0 15px;
+    height: auto;
+}
+
+.edinv h5.modal-title i {
+    padding-right: 8px;
+}
+
+.edinv.c-modal .form-data textarea {
+    width: 100%;
+    height: 30px;
+}
+
+.edinv h6.title {
+    margin: initial;
+    padding: initial;
+    border: indigo;
+}
+
+.edinv .i-edit button.active {
+    transform: rotate(90deg);
+}
+
+.edinv .i-edit button {
+    border: initial;
+    background-color: transparent;
+    transform: rotate(-90deg);
+    padding: initial;
+}
+
+.edinv i {
+    font-size: 12px;
+}
+
+.edinv .modal-title i,
+.edinv .i-title i {
+    font-size: 16px;
+}
+
+.i-hov {
+    text-align: center;
+}
+
+.i-hov:hover .em-box {
+    display: block;
+}
+
+.i-hov span {
+    display: block;
+    padding: 2px 0;
+}
+
+.i-hov h6.title {
+    color: #fff;
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
+.grid.c-drop {
+    animation: fadeInTop 0.3s both linear;
+}
+
+span.formicon {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.ps-ico i {
+    padding-right: initial;
+}
+
+.inc-upl .f-group label {
+    width: 200px;
+}
+
+.inc-upl-mod .ed-inclusion .grid {
+    grid-template-columns: 72px 1fr 74px 1fr 92px 1fr 66px 1fr;
+}
+
+.sr-wrap.inclusion-panel {
+    position: absolute;
+    background: #fff;
+    box-shadow: -10px 10px 15px rgba(0, 0, 0, 10%);
+    border-radius: 5px;
+    top: 0;
+    right: 0;
+    height: 100%;
+    animation: slideRight 0.5s;
+    width: 250px;
+    z-index: 10;
+    overflow-y: auto;
+    transform: translateX(300px);
+}
+
+.sr-wrap.inclusion-panel.active {
+    transform: translateX(0);
+}
+
+.n-fil {
+    width: max-content;
+    background: #f9f9f9;
+    background: #fff;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    transition: all 0.5s ease;
+    animation: slideTopDown 0.2s both linear;
+    position: relative;
+    z-index: 1;
+}
+
+.n-fil.resUser_fil {
+    position: absolute;
+    width: calc(100% - 20px);
+    box-shadow: 0px 20px 10px rgba(255, 255, 255, 20%);
+    padding: 4px 10px;
+    left: 10px;
+}
+
+.n-fil .k-multiselect .k-input-values {
+    padding: initial;
+}
+
+.n-fil .f-group {
+    display: flex;
+}
+
+.n-fil.active {
+    display: flex;
+}
+
+.n-fil-left {
+    flex: 0 0 60%;
+    max-width: 60%;
+}
+
+.n-fil-right {
+    flex: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.n-fil-right .f-group {
+    padding-right: 15px;
+}
+
+.n-fil .f-group {
+    margin: initial;
+}
+
+.n-fil li {
+    display: flex;
+    align-items: center;
+    padding-right: 15px;
+}
+
+.n-fil-right li {
+    padding: 5px 8px;
+    border-radius: 3px;
+}
+
+.n-fil-right li:hover {
+    background-color: #ececec;
+}
+
+.n-fil-left .f-group label {
+    width: initial;
+    padding-right: 10px;
+}
+
+.n-fil-left .f-group label.c-wid {
+    width: 190px;
+}
+
+.n-fil select {
+    border: 0;
+    background-color: transparent;
+    font-weight: 500;
+    font-size: 14px;
+    color: #000;
+}
+
+.n-fil-right li:active {
+    background-color: #4d4d4d;
+    color: #fff;
+}
+
+.n-fil-right li:active select {
+    color: #fff;
+}
+
+.n-fil-right li:active option {
+    color: #000;
+}
+
+.n-fil .f-group input {
+    background: #ffffff8c;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    height: 30px;
+}
+
+.n-fil .f-group.incluplFil_grid {
+    display: grid;
+    grid-template-columns: 55px 1fr 90px 80px;
+    gap: 5px 10px;
+    align-items: center;
+}
+
+@media(max-width:520px) {
+    .n-fil .f-group.incluplFil_grid {
+        grid-template: none;
+    }
+}

@@ -1,0 +1,138 @@
+<title>Memo Request</title>
+<section class="omaster-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Qc Request</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button kendoButton title="View Details" (click)="openDetailsDialog()"
+                [disabled]="this.mySelection.length == 0"><i class="icon-view "></i>
+              </button>
+              <button kendoButton (click)="deleteMemoMaster()" title="Delete"
+                [disabled]="this.mySelection.length == 0"><i class="icon-trash "></i></button>
+              <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                  class="icon-gridconfig"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid #memoRequestGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings" [group]="groups"
+              (groupChange)="groupChange($event)" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+              (pageChange)="pageChange(memoRequestGrid,$event)" [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'"
+              (selectionChange)="selectedRowChange($event)" (dblclick)="dblClick()">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Party'">
+                        <b> {{dataItem.customer.companyName}}</b> -
+                        {{dataItem.customer.fullName}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'isRequest'">
+                        {{dataItem.isRequest?"Done":"New"}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'createdDate'">
+                        {{dataItem.createdDate |date: 'dd/MM/yyyy hh:mm'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'stonecount'">
+                        {{dataItem.qcStoneIds.length}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+
+      <!-- #region side filter -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #qcRequestSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <div class="form-data me-2">
+                      <label for="">Stone Id</label>
+                    </div>
+                    <div class="form-data me-2">
+                      <input type="text" id="" name="stoneIdStr" [(ngModel)]="stoneId" #stoneIdStr="ngModel"
+                        autocomplete="off">
+                    </div>
+                    <div class="form-data me-2">
+                      <label for="Lead No">Certi No</label>
+                    </div>
+                    <div class="form-data me-2">
+                      <input type="text" name="certiNo" #certiNo="ngModel" [(ngModel)]="certificateNo" />
+                    </div>
+                    <div class="form-data me-2">
+                      <label>Comany Name</label>
+                    </div>
+                    <div class="form-data" style="flex-basis: 50%;">
+                      <kendo-autocomplete class="w-100" [data]="listCustomerItems" name="customer"
+                        [(ngModel)]="selectedCustomerItem" (valueChange)="customerChange($event)" #customer="ngModel"
+                        [filterable]="true" (filterChange)="handleCustomerFilter($event)"
+                        [kendoDropDownFilter]="filterSettings" [popupSettings]="{width: 'auto'}" valueField="value">
+                        <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                          <span><b>{{dataItem.companyName}}</b>-{{dataItem.text}}</span>
+                        </ng-template>
+                      </kendo-autocomplete>
+                    </div>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button type="button" class="btn btn-action" (click)="onFilterSubmit(qcRequestSearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button type="button" (click)="clearFilter(qcRequestSearchForm)" class="btn btn-action">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- #endregion side filter -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="onFilterSubmit(qcRequestSearchForm)"><i class="icon-search"></i></button>
+        </li>
+        <li><button (click)="clearFilter(qcRequestSearchForm)"><i class="icon-clear"></i></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- #region QC request Detail -->
+<ng-container *ngIf="isShowDetails">
+  <app-qcrequestdetailmodal (toggle)="closeDetailsDialog($event)"
+    [qcRequestObj]="selectedQcRequest"></app-qcrequestdetailmodal>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Grid config -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'QcRequestMaster'" [gridName]="'QcRequestMasterGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion Grid config -->
+
+<div kendoDialogContainer></div>

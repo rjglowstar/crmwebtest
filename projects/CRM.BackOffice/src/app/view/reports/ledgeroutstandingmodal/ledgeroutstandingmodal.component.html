@@ -1,0 +1,253 @@
+<!-- #region Ledger Outstanding Report Modal Start -->
+<div class="modal c-modal addemp dialog-lg" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+    <form name="ledgerOutStandingForm" #ledgerOutStandingForm="ngForm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-reports"></i>Ledger Outstanding
+                        Report</h5>
+                    <button type="button" class="close" (click)="closeDialog()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+                            <div class="report-filter mb-2">
+                                <div class="form-data">
+                                    <label for="">Ledger Group</label>
+                                </div>
+                                <div class="form-data mul-select">
+                                    <kendo-multiselect name="ledgerNames" class="customselect"
+                                        [data]="listLedgerGroupNames"
+                                        [(ngModel)]="ledgerSummarySearchCriteria.ledgerGroup" [textField]="'name'"
+                                        [valueField]="'name'" [valuePrimitive]="true" [popupSettings]="{width: 'auto'}"
+                                        [autoClose]="false" [kendoMultiSelectSummaryTag]="0"
+                                        [kendoDropDownFilter]="filterSettings"
+                                        (valueChange)="onMultiSelectChange(listLedgerGroupNames,ledgerSummarySearchCriteria.ledgerGroup)">
+                                        <ng-template kendoMultiSelectHeaderTemplate>
+                                            <div class="dropdown-header single k-widget k-header"
+                                                (click)="onSelectAllClick()">
+                                                <span class="temp-single">
+                                                    <input type="checkbox" class="k-checkbox" kendoCheckBox
+                                                        [checked]="isCheckedAll" />
+                                                    <label class="k-checkbox-label">{{ toggleAllText
+                                                        }}</label>
+                                                </span>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                                            <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                                            <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                                        </ng-template>
+                                        <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                                            <span kendoTooltip position="bottom"
+                                                [title]="utilityService.getCommaSapratedString(ledgerSummarySearchCriteria.ledgerGroup, true)">
+                                                {{utilityService.getCommaSapratedString(ledgerSummarySearchCriteria.ledgerGroup)}}
+                                            </span>
+                                        </ng-template>
+                                    </kendo-multiselect>
+                                </div>
+                                <button kendoButton title="Search" kendoTooltip position="bottom"
+                                    (click)="loadLedgerSummaryReportSummary()">
+                                    <i class="icon-search pe-0"></i></button>
+
+                                <button kendoButton type="button" kendoTooltip (click)="exportExcel()"
+                                    title="Export Excel"> <i class="icon-excelnew pe-0"></i></button>
+
+                            </div>
+
+                            <div class="rm-table">
+                                <!-- Assets -->
+                                <div class="grid-1">
+                                    <h6 class="text-center mb-0">Assets</h6>
+                                    <div class="grid-wrap">
+                                        <kendo-grid #ledgerAssetsGrid [resizable]="true" [data]="gridAssetsView"
+                                            [groupable]="groupSettings" [group]="groups"
+                                            class="mb-grid aggergate-design">
+
+                                            <ng-container *ngIf="fields && fields.length > 0">
+                                                <ng-container *ngFor="let field of fields">
+                                                    <ng-container *ngIf="field.isSelected">
+                                                        <kendo-grid-column [width]="field.width"
+                                                            [field]="field.propertyName" [title]="field.title">
+
+                                                            <!-- #region Aggregations Assets -->
+                                                            <ng-template kendoGridGroupHeaderTemplate let-group="group"
+                                                                let-value="value" let-field="field" let-dataItem
+                                                                let-aggregates="aggregates">
+                                                                <b class="ps-1">{{value}} :
+                                                                    {{aggregates.credit.count}}</b>
+                                                            </ng-template>
+
+                                                            <ng-template kendoGridGroupFooterTemplate let-group="group"
+                                                                let-value="value" let-field="field"
+                                                                let-aggregates="aggregates"
+                                                                *ngIf="field.propertyName == 'ledger.name'">
+                                                                <b class="ps-1">Total :
+                                                                </b>
+                                                            </ng-template>
+
+                                                            <ng-template kendoGridGroupFooterTemplate let-group="group"
+                                                                let-value="value" let-field="field"
+                                                                let-aggregates="aggregates"
+                                                                *ngIf="field.propertyName == 'credit'">
+                                                                <label
+                                                                    class="ps-1">{{aggregates.credit.sum.toFixed(2)}}</label>
+                                                            </ng-template>
+
+                                                            <ng-template kendoGridGroupFooterTemplate let-group="group"
+                                                                let-value="value" let-field="field"
+                                                                let-aggregates="aggregates"
+                                                                *ngIf="field.propertyName == 'debit'">
+                                                                <label
+                                                                    class="ps-1">{{aggregates.debit.sum.toFixed(2)}}</label>
+                                                            </ng-template>
+
+
+                                                            <ng-template kendoGridGroupFooterTemplate let-group="group"
+                                                                let-value="value" let-field="field"
+                                                                let-aggregates="aggregates"
+                                                                *ngIf="field.propertyName == 'total'">
+                                                                <label
+                                                                    class="ps-1">{{aggregates.total.sum.toFixed(2)}}</label>
+                                                            </ng-template>
+                                                            <!-- #endregion -->
+
+                                                            <!-- #region FooterAssets -->
+                                                            <ng-template kendoGridFooterTemplate let-column
+                                                                let-columnIndex="columnIndex"
+                                                                *ngIf="field.propertyName == 'ledger.name'">
+                                                                Grand Total :
+                                                            </ng-template>
+                                                            <ng-template kendoGridFooterTemplate let-column
+                                                                *ngIf="field.propertyName == 'credit'"
+                                                                let-columnIndex="columnIndex">
+                                                                {{ creditAssetsTotal }}
+                                                            </ng-template>
+                                                            <ng-template kendoGridFooterTemplate let-column
+                                                                *ngIf="field.propertyName == 'debit'"
+                                                                let-columnIndex="columnIndex">
+                                                                {{ debitAssetsTotal }}
+                                                            </ng-template>
+                                                            <ng-template kendoGridFooterTemplate let-column
+                                                                *ngIf="field.propertyName == 'total'"
+                                                                let-columnIndex="columnIndex">
+                                                                {{ assetsTotal }}
+                                                            </ng-template>
+                                                            <!-- #endregion -->
+
+                                                        </kendo-grid-column>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </ng-container>
+
+                                            <kendo-grid-excel fileName="OutstandingAssets.xlsx"
+                                                [fetchData]="excelAssetsData"></kendo-grid-excel>
+
+                                        </kendo-grid>
+                                    </div>
+                                </div>
+
+                                <!-- Liabilites -->
+                                <div class="grid-1">
+                                    <h6 class="text-center mb-0">Liabilites</h6>
+
+                                    <div class="grid-wrap">
+                                        <kendo-grid #ledgerLiabilitesGrid [resizable]="true" [data]="gridLiabilityView"
+                                            [groupable]="groupSettings" [group]="groups"
+                                            class="mb-grid aggergate-design">
+                                            <ng-container *ngIf="fields && fields.length > 0">
+                                                <ng-container *ngFor="let field of fields">
+                                                    <ng-container *ngIf="field.isSelected">
+                                                        <kendo-grid-column [width]="field.width"
+                                                            [field]="field.propertyName" [title]="field.title">
+
+                                                            <!-- #region  Aggregations Liabilites-->
+                                                            <ng-template kendoGridGroupHeaderTemplate let-group="group"
+                                                                let-value="value" let-field="field"
+                                                                let-aggregates="aggregates">
+                                                                <b class="ps-1">{{value}} :
+                                                                    {{aggregates.credit.count}}</b>
+                                                            </ng-template>
+
+                                                            <ng-template kendoGridGroupFooterTemplate let-group="group"
+                                                                let-value="value" let-field="field"
+                                                                let-aggregates="aggregates"
+                                                                *ngIf="field.propertyName == 'ledger.name'">
+                                                                <b class="ps-1">Total :
+                                                                </b>
+                                                            </ng-template>
+
+                                                            <ng-template kendoGridGroupFooterTemplate let-group="group"
+                                                                let-value="value" let-field="field"
+                                                                let-aggregates="aggregates"
+                                                                *ngIf="field.propertyName == 'credit'">
+                                                                <label
+                                                                    class="ps-1">{{aggregates.credit.sum.toFixed(2)}}</label>
+                                                            </ng-template>
+
+                                                            <ng-template kendoGridGroupFooterTemplate let-group="group"
+                                                                let-value="value" let-field="field"
+                                                                let-aggregates="aggregates"
+                                                                *ngIf="field.propertyName == 'debit'">
+                                                                <label
+                                                                    class="ps-1">{{aggregates.debit.sum.toFixed(2)}}</label>
+                                                            </ng-template>
+
+
+                                                            <ng-template kendoGridGroupFooterTemplate let-group="group"
+                                                                let-value="value" let-field="field"
+                                                                let-aggregates="aggregates"
+                                                                *ngIf="field.propertyName == 'total'">
+                                                                <label
+                                                                    class="ps-1">{{aggregates.total.sum.toFixed(2)}}</label>
+                                                            </ng-template>
+                                                            <!-- #endregion -->
+
+                                                            <!-- #region Footer Liabilites -->
+                                                            <ng-template kendoGridFooterTemplate let-column
+                                                                let-columnIndex="columnIndex"
+                                                                *ngIf="field.propertyName == 'ledger.name'">
+                                                                Grand Total :
+                                                            </ng-template>
+                                                            <ng-template kendoGridFooterTemplate let-column
+                                                                *ngIf="field.propertyName == 'credit'"
+                                                                let-columnIndex="columnIndex">
+                                                                {{ creditLiabilitesTotal }}
+                                                            </ng-template>
+                                                            <ng-template kendoGridFooterTemplate let-column
+                                                                *ngIf="field.propertyName == 'debit'"
+                                                                let-columnIndex="columnIndex">
+                                                                {{ debitLiabilitesTotal }}
+                                                            </ng-template>
+                                                            <ng-template kendoGridFooterTemplate let-column
+                                                                *ngIf="field.propertyName == 'total'"
+                                                                let-columnIndex="columnIndex">
+                                                                {{ liabilitesTotal }}
+                                                            </ng-template>
+                                                            <!-- #endregion -->
+                                                        </kendo-grid-column>
+
+                                                    </ng-container>
+                                                </ng-container>
+                                            </ng-container>
+
+                                            <kendo-grid-excel fileName="OutstandingLiabilities.xlsx"
+                                                [fetchData]="excelLiabilitesData"></kendo-grid-excel>
+                                        </kendo-grid>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div (document:keydown.esc)="closeDialog()"></div>
+    </form>
+</div>
+<!-- #endregion Ledger Outstanding Report Modal End -->

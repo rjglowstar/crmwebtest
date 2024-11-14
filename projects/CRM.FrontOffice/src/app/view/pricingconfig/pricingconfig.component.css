@@ -1,0 +1,90 @@
+.config_bg {
+    height: calc(100vh - 192px);
+    padding-bottom: 10px !important;
+    overflow: auto;
+}
+
+.price_config .b_config input[type='text'] {
+    width: 100%;
+    height: 30px;
+    font-size: 14px;
+}
+
+.price_config .input_label {
+    display: inline-block;
+    font-weight: 500;
+    font-size: 13px;
+    margin-right: 7px;
+    white-space: nowrap;
+}
+
+.price_config .config_ul li {
+    line-height: 1.2;
+}
+
+.b_config .error input.cus_input,
+.b_config .error .k-combobox .k-dropdown-wrap {
+    border: 1px solid #ff0000 !important;
+}
+
+.config_btns {
+    display: inline-flex;
+    gap: 15px;
+}
+
+.config_btns .k-button,
+.config_btns .k-button:hover {
+    padding: 0 !important;
+    background-color: transparent !important;
+    color: #212529 !important;
+    border: 0 !important;
+    font-size: 14px;
+}
+
+.config_btns .k-button:hover i {
+    color: #212529;
+}
+
+.config_btns .k-button i {
+    opacity: 0.4;
+    font-size: 14px;
+}
+
+.wrd.grid {
+    grid-template-columns: 95px 1fr auto;
+}
+
+.or-config .wrd.grid {
+    grid-template-columns: auto;
+    padding: 10px 10px 5px;
+}
+
+.or-config .form-data input {
+    height: 30px;
+    line-height: 30px;
+    opacity: 0.6;
+    background: #d5d4d4;
+    cursor: not-allowed;
+}
+
+.or-config .form-data {
+    margin-bottom: 5px;
+}
+
+.or-config .d-prop .flex {
+    padding: initial;
+}
+
+.or-config .d-prop span.title {
+    width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.or-config .form-data input.active {
+    border-color: #000;
+    opacity: 1;
+    background: #fff;
+    cursor: initial;
+}

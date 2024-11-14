@@ -1,0 +1,42 @@
+.ad-labservice .grid {
+    grid-template-columns: 88px 1fr !important;
+}
+
+.br-ref.c-modal .form-data textarea {
+    height: initial;
+    line-height: initial;
+    width: 100%;
+    padding: 8px !important;
+}
+
+.ms-config .o-edit {
+    display: flex;
+}
+
+.ms-config .o-edit i {
+    margin-right: initial;
+}
+
+.ms-config .in-block .o-edit {
+    padding: initial;
+    align-items: center;
+}
+
+.ms-config button.btn {
+    padding: 0 0 0 5px;
+    vertical-align: middle;
+}
+
+.ms-config .flex.in-block {
+    padding: 5px;
+    border: 0;
+    background-color: #dddddd;
+    height: 30px;
+    margin-bottom: initial;
+}
+
+.ms-config .o-title h6.title{
+    margin: initial;
+    border-bottom: 0;
+    font-size: 14px;
+}

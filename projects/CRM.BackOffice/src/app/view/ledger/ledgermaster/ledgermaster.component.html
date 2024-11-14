@@ -1,0 +1,198 @@
+<title>Ledger</title>
+<section class="party-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Ledger</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton (click)="openAddOrUpdateLedgerDialog('add')" title="Add Ledger"><i
+                  class="icon-add"></i>
+              </button>
+              <button [disabled]="mySelection.length == 0" kendoButton (click)="openAddOrUpdateLedgerDialog('update')"
+                title="Edit Ledger">
+                <i class="icon-edit"></i>
+              </button>
+              <button [disabled]="mySelection.length == 0" kendoButton (click)="openLinkedCustomer()"
+                title="linked Customer">
+                <i class="icon-link"></i>
+              </button>
+              <button [disabled]="mySelection.length == 0" kendoButton (click)="openLedgerRedirect('details')"
+                title="View Details"> <i class="icon-viewdetilas"></i>
+              </button>
+              <button [disabled]="mySelection.length == 0" kendoButton (click)="openDeleteDialog()"
+                title="Delete Ledger" *ngIf="isCanDeleteLedger"><i class="icon-trash"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid #orgGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+              (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+              [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)"
+              [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='broker.brokrage'">
+                        {{(dataItem.broker.brokrage)?dataItem.broker.brokrage:"NA"}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='broker.through'">
+                        {{(dataItem.broker.through)?dataItem.broker.through:"NA"}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='isVerified'">
+                        <span>{{dataItem.isVerified ? "Yes" : "No"}}</span>
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName=='expiredDate'">
+                        {{dataItem.expiredDate | date:'dd-MM-yyyy'}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #ledgerSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Name</label>
+                    <input type="text" id="" name="filtername" [(ngModel)]="ledgerCriteria.name" #filtername="ngModel">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Code</label>
+                    <input type="text" id="" name="filtercode" [(ngModel)]="ledgerCriteria.code" #filtercode="ngModel">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Ledger Group</label>
+                    <kendo-combobox [data]="listLedgerGroupItems" name="ledgerGroup" textField="name" valueField="id"
+                      [valuePrimitive]="true" [(ngModel)]="ledgerGroupIdForSearch" #ledgerGroup="ngModel"
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="l-name">Contact Person</label>
+                    <input type="text" id="l-name" name="filterContactPerson" [(ngModel)]="ledgerCriteria.contactPerson"
+                      #filtercontactperson="ngModel">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">Email</label>
+                    <input type="mail" id="" name="filterEmail" [(ngModel)]="ledgerCriteria.email"
+                      #filterEmail="ngModel">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="l-name">Mobile No</label>
+                    <input type="text" id="l-name" name="filtermobileno" [(ngModel)]="ledgerCriteria.mobileNo"
+                      #filtermobileno="ngModel">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="l-name">Phone No</label>
+                    <input type="text" id="l-name" name="filterphoneno" [(ngModel)]="ledgerCriteria.phoneNo"
+                      #filterphoneno="ngModel">
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box pt-1">
+                    <ng2-tri-state-checkbox name="filterverified" [(ngModel)]="ledgerCriteria.isVerified">
+                    </ng2-tri-state-checkbox>
+                    <label for="ledger summary">Check Verified</label>
+                  </div>
+
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action"
+                      (click)="ledgerSearchForm.form.valid && onFilterSubmit(ledgerSearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button (click)="clearFilter(ledgerSearchForm)" class="btn btn-action">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Search End -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="ledgerSearchForm.form.valid && onFilterSubmit(ledgerSearchForm)"><i
+              class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(ledgerSearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- #region Ledger-modal Section -->
+<ng-container *ngIf="isRegLedger">
+  <app-ledger-modal [ledgerObj]="ledgerObj" (successEvent)="addedOrUpdatedLedger($event)"
+    (toggle)="isRegLedger=$event;mySelection=[]"></app-ledger-modal>
+</ng-container>
+<!-- #endregion -->
+
+<div kendoDialogContainer></div>
+
+<div class="modal c-modal " tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isCustomerLinked">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-addemployee"></i>Customer Linked</h5>
+        <button type="button" class="close" (click)="closeCustomerLinked()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class=" col-xs-12 plr-5">
+        <div class="i-form ed-top">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="d-prop-wrap">
+                <div class="d-prop">
+                  <ul *ngIf="customerItems.length > 0" class="ms-2">
+                    <li *ngFor="let item of customerItems">
+                      <div class="d-flex justify-content-between p-2">
+                        <span class="title"><b class=" h6">{{item.name}}</b> </span>
+                        <button class="btn p-0" (click)="onCustLinkedDelete(item)"><i class="icon-trash d-flex"
+                            title="Delete" style="font-size: 15px;"></i></button>
+                      </div>
+                      <hr class="mt-0 mb-0">
+                    </li>
+                  </ul>
+                  <div class="text-center m-2" *ngIf="customerItems.length == 0">
+                    <p>Not Found linked Customer</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,185 @@
+<title>Forgot Password</title>
+<div class="form-wrap authScr_bg fpass">
+    <div class="authGrid forgot_wrap">
+
+        <div class="bg_wrap">
+            <div class="img_wrap">
+                <img src="../../../../assets/images/loginbg.png" class="img-fluid" />
+            </div>
+        </div>
+
+        <div class="right_wrap">
+            <div class="log_wrap">
+                <!-- logo -->
+                <div class="logo_wrap">
+                    <!-- go back -->
+                    <a class="goTohome_btn" title="Go Back" routerLink="/login"><i
+                            class="icon-left-new"></i><span>BACK</span></a>
+
+                    <a routerLink="/home">
+                        <img [src]="logoPath" class="img-fluid white_logo" alt="brand-logo">
+                    </a>
+                </div>
+
+                <!-- title -->
+                <h6 *ngIf="emailSection">{{"BasicText.FPass" |translate}}</h6>
+                <h6 *ngIf="emailVerification">{{"BasicText.FPass" |translate}}</h6>
+                <h6 *ngIf="codeSection">Verification</h6>
+                <h6 *ngIf="setPasswordSection">Create New Password ?</h6>
+
+                <!-- default forgot -->
+                <ng-container *ngIf="emailSection">
+                    <div class="ri-form-wrap f-main create-pass">
+                        <p class="fp_info">{{'BasicText.FPDes'| translate}}</p>
+                        <form name="custForgetPassword" #custForgetPassword="ngForm">
+                            <div class="form-data">
+                                <div
+                                    [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('email')) || (email.errors?.required && email.touched))}">
+                                    <input type="text" placeholder name="email" #email="ngModel"
+                                        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                                        [(ngModel)]="forgetPasswordObj.email" email required>
+                                    <label class="input_lbl">Email</label>
+                                </div>
+                                <div class="error position-absolute" [hidden]="email.valid || email.untouched">
+                                    <span class="s-error" *ngIf="email.errors && email.errors.required">
+                                        Email is required
+                                    </span>
+                                    <span class="s-error" *ngIf="email.errors && email.errors.pattern">
+                                        Email is invalid
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- button group -->
+                            <div class="form-data text-center">
+                                <button type="submit" (click)="sendEmail(custForgetPassword)"
+                                    [disabled]="!custForgetPassword.valid" class="c-btn">{{'BasicText.Send'|
+                                    translate}}</button>
+                            </div>
+                            <div class="form-data text-center">
+                                <a routerLink="/login" class="transpa_btn">{{'BasicText.Login'| translate}}</a>
+                            </div>
+                        </form>
+                    </div>
+                </ng-container>
+
+                <!-- mail send  -->
+                <ng-container *ngIf="emailVerification">
+                    <div class="mailSend_info">
+                        <p class="fp_info">Please check your registered email address we have provided a link and an otp
+                            for
+                            resetting
+                            password.</p>
+                        <div class="form-data sub-btn ri-form-wrap text-center">
+                            <a routerLink="/login" class="c-btn"><i class="icon-left-new"></i>{{"BasicText.Back to
+                                Login" |
+                                translate}}</a>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- otp verify -->
+                <ng-container *ngIf="codeSection">
+                    <div class="ri-form-wrap verification create-pass">
+                        <form name="verifyOtpForm" #verifyOtpForm="ngForm">
+                            <p class="fp_info verif_des">Enter the verification code we just sent you on your email
+                                address.
+                            </p>
+                            <div class="form-data">
+                                <label class="sp_info">Code<span class="require">*</span></label>
+                                <div class="d-flex flex-row p-lr-90">
+                                    <ngx-otp-input [config]="otpInputConfig"
+                                        (fill)="handleOtpValue($event)"></ngx-otp-input>
+                                </div>
+                                <div class="text-center">
+                                    <span class="d-block mobile-text">Don't receive the code ?
+                                        <a href="javascript:void(0)" (click)="resendOtp()">Resend</a>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-data sub-btn text-center">
+                                <button class="c-btn n-btn" [disabled]="!optCode"
+                                    (click)="verifiedOTP()">Verify</button>
+                            </div>
+                        </form>
+                    </div>
+                </ng-container>
+
+                <!-- set new password -->
+                <ng-container *ngIf="setPasswordSection">
+                    <div class=" ri-form-wrap c-pass crea te-pass">
+                        <form name="resetPasswordForm" #resetPasswordForm="ngForm">
+                            <p class="fp_info crePass_des">You new password must be different from previously used
+                                passwords
+                            </p>
+                            <div ngModelGroup="passwords" #passwords="ngModelGroup" appCheckPassword>
+
+                                <div class="form-data">
+                                    <div class="position-relative">
+                                        <input type="password" placeholder id="" #password="ngModel" name="password"
+                                            [(ngModel)]="resetPasswordItem.password" required
+                                            [pattern]="passwordPattern" #FPass>
+                                        <label class="input_lbl">Password<span class="require">*</span></label>
+                                        <span class="pass-view"
+                                            (click)="FPass.type = FPass.type == 'password' ? 'text' : 'password'">
+                                            <i
+                                                class="{{FPass.type == 'password' ?'icon-view':'icon-password-disable'}}"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-data">
+                                    <div class="position-relative">
+                                        <input type="password" placeholder id="" #confirmPassword="ngModel"
+                                            name="confirmPassword" [(ngModel)]="resetPasswordItem.confirmPassword"
+                                            required #FCPass>
+                                        <label class="input_lbl">Confirm Password<span class="require">*</span></label>
+                                        <span class="pass-view"
+                                            (click)="FCPass.type = FCPass.type == 'password' ? 'text' : 'password'">
+                                            <i
+                                                class="{{FCPass.type == 'password' ?'icon-view':'icon-password-disable'}}"></i>
+                                        </span>
+                                    </div>
+                                    <a class="forPass_btn">&nbsp;</a>
+                                    <div class="error">
+                                        <span *ngIf="password.errors?.pattern" class="error s-error">
+                                            Your password must be 8 characters long and include an uppercase, lowercase,
+                                            letter,
+                                            a number character.
+                                        </span>
+                                        <span *ngIf="confirmPassword.invalid && (password.dirty || password.touched)"
+                                            class="error s-error">
+                                            Please confirm your password.
+                                        </span>
+                                        <span
+                                            *ngIf="passwords.errors?.passwordCheck && (confirmPassword.dirty || confirmPassword.touched)"
+                                            class="  s-error">
+                                            Passwords do not match.
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="sub-btn text-center">
+                                    <button type="submit" (click)="changePasswordClick(resetPasswordForm)"
+                                        [disabled]="!resetPasswordForm.valid" class="c-btn">Change Password</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </ng-container>
+
+                <ul class="cLiImg_wrap" [ngClass]="{'veriSecFo':codeSection}"
+                    [ngClass]="{'or_label':!emailVerification}">
+                    <li><img src="../../../../assets/images/cliImg_3.png" class="img-fluid" /></li>
+                    <li><img src="../../../../assets/images/igi.png" class="img-fluid" /></li>
+                    <li><img src="../../../../assets/images/hj.png" class="img-fluid" /></li>
+                    <li><img src="../../../../assets/images/Rapnet-c.png" class="img-fluid" /></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="default" color="#fff"
+    template="<img src='commonAssets/images/gl.gif' style='width:80px;' />" [fullScreen]="true">
+    <!-- <p style="color: white"> Loading... </p> -->
+</ngx-spinner>

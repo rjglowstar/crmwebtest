@@ -1,0 +1,185 @@
+<div class="modal c-modal addemp rorgan dialog-sm" tabindex="-1" role="dialog" data-keyboard="false"
+    data-backdrop="static">
+    <form name="form">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id=""><i class="icon-party"></i>Request to Change Party</h5>
+                    <button type="button" class="close" (click)="closeEditCustomer()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+                            <div *ngIf="leadObj.leadStatus"
+                                class="status-btn mb-1 p-1 d-flex justify-content-between align-items-center"
+                                [ngClass]="{ 'status-btn-offline ': leadObj.platform!='online', 'status-btn-online ': leadObj.platform=='online'}">
+                                <span><strong>Lead No :</strong> {{leadObj.leadNo}}&nbsp;|&nbsp;
+                                    <strong>Status :</strong> {{leadObj.leadStatus | uppercase}}</span>
+                                <span><strong>Date :</strong> {{leadObj.createdDate | date: 'dd/MM/yyyy'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="en-form f-12">
+                        <div class="align-items-center d-flex justify-content-between p-wrap mb-3">
+                            <h6 class="title m-0"><i class="icon-party"></i>Party Information</h6>
+                        </div>
+                        <div class="d-flex mt-2 mb-2 align-items-center" *ngIf="!isAdmin">
+                            <div class=" form-data me-2">
+                                <label>Party :<span class="require">*</span></label>
+                            </div>
+                            <div class="form-data rs-input" style="flex-basis: 24%;"
+                                [ngClass]="{ 'error': customer.invalid && (customer.dirty || customer.touched)}">
+                                <kendo-autocomplete class="w-100" [data]="listCustomerItems" name="customer"
+                                    [(ngModel)]="selectedCustomerItem" (valueChange)="customerEditChange($event)"
+                                    #customer="ngModel" [filterable]="true"
+                                    (filterChange)="handleCustomerFilter($event)" [kendoDropDownFilter]="filterSettings"
+                                    [popupSettings]="{width: 'auto'}" valueField="value" required>
+                                    <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                                        <span><b>{{dataItem.companyName}}</b>-{{dataItem.text}}</span>
+                                    </ng-template>
+                                </kendo-autocomplete>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="main-detail-blk mb-3">
+                        <div class="detail-submodal">
+                            <li class="w-100">
+                                <h6 class="c-name"><span>Old Party
+                                        :</span><b>{{leadObj.customer.companyName}}</b>-{{leadObj.customer.name}}
+                                </h6>
+                            </li>
+                            <li>
+                                <h6 class="c-name">
+                                    <span>Email :</span>{{leadObj.customer.email}}
+                                </h6>
+                            </li>
+                            <li>
+                                <h6 class="c-name">
+                                    <span>Mobile No. :</span>{{leadObj.customer.mobile}}
+                                </h6>
+                            </li>
+                        </div>
+                        <i class="icon-uparrow"></i>
+                        <div class="detail-submodal">
+                            <li class="w-100">
+                                <h6 class="c-name"><span>New Party
+                                        :</span><b>{{customerEditObj.companyName}}</b>-{{customerEditObj.name}}
+                                </h6>
+
+                            </li>
+                            <li>
+                                <h6 class="c-name">
+                                    <span>Email :</span>{{customerEditObj.email}}
+                                </h6>
+                            </li>
+                            <li>
+                                <h6 class="c-name">
+                                    <span>Mobile No. :</span>{{customerEditObj.mobile}}
+                                </h6>
+                            </li>
+                        </div>
+                    </div>
+                    <div class="mt-2 en-form f-12" *ngIf="(leadObj.broker.id)">
+                        <h6 class="title">
+                            <i class="icon-broker"></i>Broker Information
+                        </h6>
+                        <div class="e-details-n bf-detail">
+                            <div class="info-block we-2">
+                                <li>
+                                    <h6 class="c-name"><span>Name :</span>{{leadObj.broker.name}}</h6>
+                                </li>
+                                <li>
+                                    <h6 class="c-name"><span>Mobile No. :</span>{{leadObj.broker.mobileNo}}
+                                    </h6>
+                                </li>
+                                <li>
+                                    <h6 class="c-name"><span>Brokrage(%)
+                                            :</span><span>{{leadObj.broker.brokrage}}</span>
+                                    </h6>
+
+                                </li>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cart-info" [ngStyle]="{'justify-content':  'end' }">
+                        <div class="left-count">
+                            <table class="position-relative me-4">
+                                <tr>
+                                    <td>TOTAL PCS : </td>
+                                    <td>{{gridDetailSummary.totalPcs}}</td>
+                                </tr>
+                                <tr>
+                                    <td>TOTAL CARAT : </td>
+                                    <td>{{gridDetailSummary.totalCarat|
+                                        number:'0.2-2'}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>AVG. DISC. (%) :</td>
+                                    <td>{{gridDetailSummary.avgDiscPer|
+                                        number:'0.2-2'}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PER CARAT ($) : </td>
+                                    <td>{{gridDetailSummary.perCarat| number:'0.2-2'}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>TOTAL AMOUNT ($) : </td>
+                                    <td>{{gridDetailSummary.totalAmount|
+                                        number:'0.2-2'}}
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td>AVG. RAP ($) : </td>
+                                    <td>{{gridDetailSummary.avgRap| number:'0.2-2'}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. (%) : </td>
+                                    <td>{{gridDetailSummary.totalVOWDiscPer|
+                                        number:'0.2-2'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{leadObj.platform=='offline'?"Volume":"V.O.W."}} DISC. ($) : </td>
+                                    <td>{{gridDetailSummary.totalVOWDiscAmount|
+                                        number:'0.2-2'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>DISC. (%) : </td>
+                                    <td>{{gridDetailSummary.discPer|
+                                        number:'0.2-2'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>PRICE PER CARAT ($) : </td>
+                                    <td>{{gridDetailSummary.pricePerCarat|
+                                        number:'0.2-2'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>TOTAL PAYABLE AMOUNT ($) : </td>
+                                    <td>{{gridDetailSummary.totalPayableAmount|
+                                        number:'0.2-2'}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" *ngIf="!isAdmin" class="btn btn-primary" [disabled]="!(customerEditObj.id)"
+                        (click)="requestToChangeParty()">
+                        <i class="icon-save"></i>Save</button>
+                    <button type="button" *ngIf="isAdmin" class="btn btn-primary"
+                        (click)="requestAcceptOrReject(true)"><i class="icon-check"></i>Approve</button>
+                    <button type="button" *ngIf="isAdmin" class="btn btn-primary"
+                        (click)="requestAcceptOrReject(false)"><i class="icon-delete"></i>Rejected</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,1057 @@
+/* ==== Kendo-Grid - START ==== */
+.k-grid-header,
+.k-header,
+th.k-header,
+.k-grid-header-wrap,
+.k-grouping-header,
+.k-grouping-header .k-group-indicator,
+.k-grid td,
+.k-grid-footer,
+.k-grid-footer-wrap,
+.k-grid-content-locked,
+.k-grid-footer-locked,
+.k-grid-header-locked,
+.k-filter-row>td,
+.k-filter-row>th {
+    border-color: #fff;
+}
+
+.k-grid-header,
+.k-grouping-header,
+.k-grid-add-row {
+    background-color: #4d4d4d;
+    color: #fff;
+}
+
+.k-grid th {
+    padding: 5px 9px !important;
+    white-space: nowrap;
+    font-size: 13px;
+    background-color: #4d4d4d;
+    color: #fff;
+    font-weight: 400;
+    text-transform: capitalize;
+    border-width: 0 0 1px 1px !important;
+    border-style: solid !important;
+    border-color: #fff !important;
+    border-right: 1px solid #fff !important;
+}
+
+.grid-summury .k-grid td {
+    padding: 0px 8px !important;
+}
+
+.k-grid td,
+.grid-wrap td.k-touch-action-auto {
+    font-weight: 500;
+    color: #000;
+    padding: 5px 8px !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border: 1px solid rgba(211 211 211 / 50%) !important;
+}
+
+.grid-wrap td.k-touch-action-auto {
+    font-size: 13px;
+}
+
+.k-grid tr[kendogridgroupheader] td {
+    font-size: 13px;
+    padding: 3px 12px !important;
+    font-weight: 600 !important;
+    color: #000;
+}
+
+.k-grid .k-grid-norecords td,
+.grid-wrap .k-grid-norecords td.k-touch-action-auto {
+    padding: 8px 12px !important;
+}
+
+.grid-wrap td.of-initial {
+    overflow: initial !important;
+}
+
+.rm-table td {
+    border: 0 !important;
+}
+
+.rm-table .k-grid-footer-wrap td {
+    background: #ebebeb !important;
+    font-size: 13px !important;
+}
+
+.rm-table td,
+.rm-table th {
+    padding: 5px !important;
+}
+
+.k-pager-info {
+    display: flex !important;
+}
+
+.k-grid-pager .k-dropdown {
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #424242;
+    background-color: #f5f5f5;
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.02));
+}
+
+.k-grid-pager .k-dropdown:focus {
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.k-grid.groupNewUi :is(.k-group-footer td, .k-grouping-row td, tbody .k-group-cell) {
+    background-color: #fff;
+}
+
+.k-grid.groupNewUi :is(.k-group-footer td, .k-grouping-row td, tbody .k-group-cell):hover {
+    background-color: #e3e3e3;
+}
+
+.k-grid.groupNewUi :is(.k-grid .k-grouping-row .k-icon) {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #7B7B7B;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #424242;
+    border-radius: 50%;
+}
+
+.grid-wrap .k-grid tbody tr.table-row-bg-red:hover,
+.k-grid tbody tr.table-row-bg-red:hover,
+.grid-wrap .k-grid tr.k-selected.table-row-bg-red>td {
+    background: #ffdddd !important;
+}
+
+.grid-wrap .k-grid tbody tr.table-row-bg-green:hover,
+.k-grid tbody tr.table-row-bg-green:hover,
+.grid-wrap .k-grid tr.k-selected.table-row-bg-green>td {
+    background: #d3f4d3 !important;
+}
+
+.grid-wrap .k-grid tbody tr.table-row-bg-blue:hover,
+.k-grid tbody tr.table-row-bg-blue:hover,
+.grid-wrap .k-grid tr.k-selected.table-row-bg-blue>td {
+    background-color: #d5ebff !important;
+}
+
+.grid-wrap .k-grid tbody tr.table-row-bg-yellow:hover,
+.k-grid tbody tr.table-row-bg-yellow:hover,
+.grid-wrap .k-grid tr.k-selected.table-row-bg-yellow>td {
+    background-color: #fdffc5 !important;
+}
+
+.grid-wrap .k-grid tr.k-alt {
+    background-color: #fff;
+}
+
+.grid-wrap .k-grid table,
+.k-grid .k-grid-header-wrap {
+    box-sizing: border-box;
+}
+
+.k-grouping-header-flex {
+    flex-flow: initial;
+}
+
+/* skeleton header Css */
+.skeleton-tbl th {
+    padding: 8px 12px;
+    line-height: 14px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* ===== Kendo Overwrite Start ===== */
+
+.k-upload .k-dropzone .k-upload-status {
+    display: none;
+}
+
+.form-data .k-upload .k-dropzone .k-dropzone-hint {
+    display: none;
+}
+
+.form-data .k-upload .k-upload-button {
+    width: 100%;
+    padding: 10px;
+}
+
+.form-data .k-upload .k-dropzone span {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    margin-top: 23px;
+}
+
+.form-data .k-upload .k-dropzone {
+    padding: initial;
+    background: #f3f3f3 0% 0% no-repeat padding-box;
+    position: relative;
+}
+
+.k-dropzone::after {
+    content: "\e01a";
+    font-family: "icomoon";
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -35%);
+    font-size: 24px;
+}
+
+span.k-picker-wrap {
+    height: 38px;
+    line-height: 38px;
+}
+
+.k-panelbar {
+    border: initial;
+}
+
+.k-panelbar>.k-item>.k-link,
+.k-panelbar>.k-panelbar-header>.k-link,
+.k-panelbar>.k-item>.k-link.k-selected,
+.k-panelbar>.k-panelbar-header>.k-link.k-selected,
+.k-panelbar>.k-item>.k-link.k-selected:hover,
+.k-panelbar>.k-item>.k-link.k-selected.k-state-hover,
+.k-panelbar>.k-panelbar-header>.k-link.k-selected:hover,
+.k-panelbar>.k-panelbar-header>.k-link.k-selected.k-state-hover {
+    color: #000;
+    background-color: #dddddd;
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.k-panelbar>.k-item>.k-link:focus,
+.k-panelbar>.k-item>.k-link.k-focus,
+.k-panelbar>.k-item>.k-link.k-focused,
+.k-panelbar>.k-panelbar-header>.k-link:focus,
+.k-panelbar>.k-panelbar-header>.k-link.k-focus,
+.k-panelbar>.k-panelbar-header>.k-link.k-focused {
+    box-shadow: initial;
+}
+
+.k-panelbar>.k-item>.k-link:hover,
+.k-panelbar>.k-item>.k-link.k-state-hover,
+.k-panelbar>.k-panelbar-header>.k-link:hover,
+.k-panelbar>.k-panelbar-header>.k-link.k-state-hover {
+    background-color: #dddddd;
+}
+
+.k-panelbar>.k-item,
+.k-panelbar>.k-panelbar-header {
+    margin-bottom: 10px;
+    border-style: initial;
+}
+
+.k-content.ng-star-inserted,
+.treeview_parent .ng-star-inserted {
+    padding: 13px 0;
+    border: 1px solid #dddddd;
+}
+
+.treeview_parent .ng-star-inserted {
+    border: initial;
+}
+
+.k-text-selection ::selection,
+.k-block ::selection,
+.k-panel ::selection,
+.k-pane-wrapper ::selection,
+.k-view ::selection,
+.k-progressbar ::selection,
+.k-numerictextbox ::selection,
+.k-flatcolorpicker ::selection,
+.k-combobox ::selection,
+.k-datepicker ::selection,
+.k-timepicker ::selection,
+.k-datetimepicker ::selection,
+.k-dateinput ::selection,
+.k-dropdown ::selection,
+.k-dropdowntree ::selection,
+.k-multiselect ::selection,
+.k-maskedtextbox ::selection,
+.k-rating ::selection,
+.k-window ::selection,
+.k-drawer ::selection,
+.k-notification ::selection,
+.k-breadcrumb ::selection,
+.k-pager-wrap ::selection,
+.k-panelbar ::selection,
+.k-card ::selection,
+.k-splitter ::selection,
+.k-spreadsheet ::selection,
+.k-taskboard ::selection,
+.k-scheduler ::selection,
+.k-chat ::selection,
+.k-mediaplayer ::selection,
+.k-pdf-viewer ::selection,
+kendo-scrollview.k-scrollview-wrap ::selection,
+kendo-scrollview.k-scrollview ::selection,
+div.k-scrollview ::selection,
+.k-chart ::selection,
+.k-sparkline ::selection,
+.k-stockchart ::selection {
+    background-color: #4d4d4d;
+}
+
+.ri-form-wrap .k-datepicker .k-picker-wrap,
+.ri-form-wrap .k-timepicker .k-picker-wrap,
+.ri-form-wrap .k-datetimepicker .k-picker-wrap,
+.ri-form-wrap .k-dateinput .k-dateinput-wrap {
+    border-color: #d3d3d3;
+    border-radius: 3px;
+}
+
+.k-content.ng-star-inserted,
+.treeview_parent .ng-star-inserted {
+    padding: 5px 15px;
+}
+
+.k-time-header .k-time-now {
+    color: #4d4d4d;
+    background: transparent;
+}
+
+.k-touch-action-none.k-group-indicator.k-grid-draggable-header {
+    background-color: rgb(77, 77, 77, 0.2);
+    margin: 2px 1px 2px 0;
+}
+
+.k-window-content:last-child {
+    padding-bottom: initial;
+}
+
+.k-window-content:first-child {
+    padding-top: initial;
+}
+
+.k-notification-group {
+    z-index: 9999;
+}
+
+.k-notification {
+    padding: 8px;
+    font-size: 13px;
+    z-index: 9999;
+}
+
+.treeviewmain.noitemsicon {
+    padding: 7.5px 0 7.5px 45px;
+}
+
+.k-switch-container,
+.k-switch {
+    width: 30px;
+}
+
+.k-switch-label-on,
+.k-switch-label-off {
+    display: none;
+}
+
+/* ==== Kendo Overwrite End ==== */
+
+/* ==== Kendo-input - START ==== */
+kendo-multiselect.k-input-solid,
+kendo-datepicker.k-input-solid.k-datepicker,
+kendo-dateinput.k-input-solid.k-dateinput {
+    min-height: 32px !important;
+    max-height: 32px !important;
+}
+
+kendo-multiselect.k-input-solid .k-input-inner {
+    width: 180px !important;
+    height: 32px !important;
+    padding-right: 24px !important;
+    cursor: pointer;
+}
+
+kendo-multiselect.k-input-solid .k-chip-solid-base {
+    min-height: calc(1.4285714286em + 2px + 2px);
+    max-width: 80%;
+}
+
+kendo-multiselect.k-input-solid .k-clear-value {
+    display: none !important;
+}
+
+kendo-datepicker.k-input-solid,
+kendo-dateinput.k-input-solid {
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+kendo-datepicker.k-input-solid .k-input-inner,
+kendo-dateinput.k-input-solid .k-input-inner {
+    height: 30px !important;
+    padding: 0 5px !important;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+kendo-multiselect.k-input-solid .k-clear-value .k-icon {
+    display: none;
+}
+
+kendo-multiselect.k-input-solid:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid #000;
+    position: absolute;
+    z-index: 2;
+    right: 10px;
+    top: 0;
+    bottom: 0;
+    vertical-align: middle;
+    margin: auto;
+    pointer-events: none;
+}
+
+.f-group .k-svg-i-caret-alt-down svg,
+.register .k-svg-i-caret-alt-down svg,
+.c-modal .k-dropdownlist .k-svg-i-caret-alt-down svg,
+.sr .k-svg-i-caret-alt-down svg,
+.o-details .k-dropdownlist .k-svg-i-caret-alt-down svg,
+.sr .k-combobox .k-svg-i-caret-alt-down svg {
+    display: none;
+}
+
+.f-group .k-svg-i-caret-alt-down::before,
+.register .k-svg-i-caret-alt-down::before,
+.c-modal .k-dropdownlist .k-svg-i-caret-alt-down::before,
+.sr .k-svg-i-caret-alt-down::before,
+.o-details .k-dropdownlist .k-svg-i-caret-alt-down::before,
+.sr .k-combobox .k-svg-i-caret-alt-down::before {
+    content: "\e04a";
+    font-family: "icomoon" !important;
+    transform: rotate(270deg);
+    font-size: 12px;
+    color: #a8a8a8;
+}
+
+.sr .k-daterange-picker,
+.sr .k-daterangepicker {
+    flex-wrap: wrap;
+}
+
+/* ==== Kendo-input - END ==== */
+
+/* ==== Dashboard - START ==== */
+.d_wrap .grid_wrapper .k-grid-header,
+.d_wrap .grid_wrapper .k-grouping-header,
+.d_wrap .grid_wrapper .k-grid-add-row {
+    background-color: transparent !important;
+}
+
+.d_wrap .grid_wrapper .dash-grid {
+    min-height: 188px;
+    height: calc((100vh - 560px) / 2) !important;
+    border: 1px solid rgb(211 211 211 / 70%);
+}
+
+.d_wrap .grid_wrapper .dash-grid th {
+    background: rgba(211, 211, 211, 0.20) !important;
+    color: #212529;
+    border-right: 1px solid rgb(211 211 211 / 70%) !important;
+    font-weight: 500;
+}
+
+.d_wrap .grid_wrapper .grid-wrap td {
+    color: #212529;
+    border: 1px solid rgb(211 211 211 / 70%);
+}
+
+.d_wrap kendo-dropdownlist,
+.d_wrap kendo-dropdownlist:focus {
+    width: 87px !important;
+    font-size: 12px !important;
+    color: rgba(77, 77, 77, 0.60) !important;
+    font-weight: 500 !important;
+    border: 1px solid rgba(211, 211, 211, 0.80) !important;
+    border-radius: 5px !important;
+    background: transparent !important;
+    min-height: initial;
+}
+
+.d_wrap kendo-dropdownlist .k-input-inner {
+    height: 24px;
+    padding: 0 0 0 8px !important;
+}
+
+.d_wrap kendo-dropdownlist .k-button-icon {
+    min-width: 16px !important;
+    min-height: 16px !important;
+}
+
+.d_wrap kendo-dropdownlist .k-button-md.k-icon-button svg,
+.d_wrap kendo-dropdownlist .k-button-md.k-icon-button:hover svg {
+    fill: rgba(77, 77, 77, 0.60) !important;
+}
+
+.d_wrap .k-dropdown .k-dropdown-wrap:focus {
+    border: 1px solid rgba(211, 211, 211, 0.80) !important;
+}
+
+.dash-grid th {
+    background: #eaeaea !important;
+    color: #000;
+    font-weight: 500;
+}
+
+.dash-switch .k-switch-track {
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.dash-switch .k-switch-off .k-switch-track,
+.dash-switch .k-switch-on .k-switch-track {
+    background: #fff;
+}
+
+.dash-switch .k-switch-on:focus .k-switch-track,
+.dash-switch .k-switch-on.k-focus .k-switch-track {
+    box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.dash-switch .k-switch .k-switch-thumb {
+    background: #4d4d4d;
+}
+
+.dash-grid td.k-touch-action-auto {
+    border-left: 1px solid #d3d3d3;
+}
+
+/* ==== Ledger out standing modal - START ==== */
+.aggergate-design .k-grid-content b {
+    font-size: 12px;
+}
+
+.aggergate-design .k-grid-content span {
+    font-weight: 400;
+    font-style: italic;
+    font-size: 12px;
+}
+
+.aggergate-design .k-grid-content label {
+    margin-bottom: 0;
+    font-size: 12px;
+}
+
+.aggergate-design td a {
+    margin-right: 0 !important;
+}
+
+/* ==== Repairing - START ==== */
+.grid-repairing tr td:last-child {
+    padding: 0px 2px;
+}
+
+.grid-repairing tr td input[type="text"] {
+    height: 24px;
+}
+
+/* ==== Expo page - START ==== */
+.expo-grid .grid {
+    grid-template-columns: 70px 1fr 70px 1fr;
+}
+
+/* ==== Weekly Summary - START ==== */
+.we_summary .k-grid-content {
+    border-left: 1px solid rgba(211 211 211 / 50%);
+    border-right: 1px solid rgba(211 211 211 / 50%);
+}
+
+.b_config .k-combobox.bHead_combobox {
+    width: 325px !important;
+}
+
+/* ==== Lead - START ==== */
+.lead-search .form-data .k-dropdown .k-dropdown-wrap {
+    height: 30px;
+}
+
+.chk-grid td.k-touch-action-auto:first-child {
+    padding: 2px 8px !important;
+}
+
+.chk-grid td.k-touch-action-auto {
+    padding: 2px 3px !important;
+}
+
+/* ===== Employee page - START ===== */
+.account-content .k-content {
+    padding: 13px 0 !important;
+    border: 1px solid #dddddd;
+}
+
+.account-content .treeview_parent {
+    border: initial;
+}
+
+/* ==== Customer Profile - START ==== */
+.c_profile .k-tabstrip-items {
+    width: 100%;
+    gap: 10px;
+    flex-wrap: wrap !important;
+}
+
+.c_profile .k-tabstrip-content {
+    padding: 10px;
+    border: none;
+    height: calc(100vh - 160px);
+    overflow-y: auto;
+}
+
+.c_profile .k-tabstrip-top>.k-tabstrip-items-wrapper {
+    border-radius: 5px 5px 0 0;
+    border: none;
+    background: #f7f7f7;
+    padding: 10px;
+}
+
+.c_profile .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item {
+    border: none;
+}
+
+.c_profile .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item+.k-item {
+    padding-left: 15px;
+    position: relative;
+}
+
+.c_profile .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item+.k-item:before {
+    position: absolute;
+    content: "";
+    width: 1px;
+    height: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    background: #d3d3d3;
+}
+
+.c_profile .k-tabstrip-items .k-item {
+    margin-left: 0;
+}
+
+.c_profile .k-tabstrip-items .k-link {
+    color: #212529;
+    font-size: 13px;
+    padding: 0;
+}
+
+.c_profile .k-tabstrip-items-wrapper .k-item.k-active {
+    border-bottom: none;
+    background: none;
+    margin-bottom: 0;
+}
+
+.c_profile .k-tabstrip-items-wrapper .k-item.k-active .k-link {
+    font-weight: 600;
+}
+
+/* ==== Inventory page - START ==== */
+.upload-grid tr.k-state-disabled>td {
+    background: #fff !important;
+    opacity: 0.6;
+}
+
+.upload-grid i.icon-info,
+.upload-grid i.icon-edit {
+    color: #ff0000;
+    pointer-events: all;
+}
+
+.upload-grid tr.k-state-disabled {
+    opacity: 1;
+    position: relative;
+}
+
+.upload-grid tr.k-state-disabled>td:first-child {
+    opacity: 1;
+}
+
+.upload-grid .k-state-disabled {
+    filter: none;
+}
+
+.edinv .k-content {
+    padding: 15px 15px 0;
+    border: 0;
+    height: calc(100vh - 288px);
+}
+
+.pricing-wrap .k-grid td.k-hierarchy-cell:first-child {
+    border-right: transparent;
+}
+
+/* ==== Configuration page css - START ==== */
+.memo-info .k-state-disabled .k-multiselect {
+    background: #f4f4f4;
+}
+
+/* ==== Search History - START ==== */
+.nf-div:before {
+    content: "\e47b";
+    font-family: 'icomoon';
+    position: absolute;
+    font-size: 70px;
+    opacity: 0.10;
+}
+
+/* ==== Kapan Analysis - START ==== */
+.kapAnal_sec .k-content {
+    padding: 5px !important;
+}
+
+.kapanCom_sec .panelbar-wrapper .k-content {
+    padding: 10px !important;
+}
+
+.k-analysis-panel .k-icon {
+    color: #fff !important;
+}
+
+.k-analysis-panel .k-panelbar .k-panelbar-header>.k-link {
+    background: #4d4d4d !important;
+    color: #fff !important;
+    border-radius: 5px;
+}
+
+.k-analysis-panel .k-icon.k-i-arrow-n {
+    color: #fff !important;
+}
+
+.analysis-ht .k-grid {
+    height: calc(100vh - 544px) !important;
+}
+
+.k-analysis-panel .k-grid-content-locked td {
+    background: #4d4d4d !important;
+    color: #fff;
+    border: none !important;
+}
+
+.k-analysis-panel .k-icon {
+    color: #fff !important;
+}
+
+.k-analysis-panel .disable-panel .k-header {
+    cursor: not-allowed !important;
+}
+
+/* ==== Transction - START ==== */
+.invprint-tab .k-tabstrip-content {
+    height: 620px;
+}
+
+.sales-tab .k-tabstrip-content {
+    height: calc(100vh - 210px);
+    padding-left: 8px;
+    padding-right: 8px;
+    overflow-x: hidden;
+}
+
+/* ==== Lab Issue - START ==== */
+.l-issue .k-dropdown {
+    width: 12.4em !important;
+}
+
+/* ==== Configruation_FO - START ==== */
+.configWrap>* {
+    margin: 0 !important;
+    border: 1px solid #CFCFCF;
+    border-radius: 5px !important;
+    overflow: hidden;
+}
+
+.configWrap .k-link,
+.configWrap .k-link.k-selected,
+.configWrap .k-link:hover,
+.configWrap .k-link.k-focus {
+    line-height: 1;
+    padding: 8px 11px !important;
+    font-weight: 600 !important;
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 1px solid #E5E5E5 !important;
+    border-radius: 5px !important;
+    box-shadow: none !important;
+}
+
+.configWrap .k-expanded .k-link,
+.configWrap .k-expanded .k-link:hover {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    background-color: #F6F6F6 !important;
+}
+
+.config-main .k-content {
+    height: 100% !important;
+}
+
+.configWrap .k-link+div {
+    height: calc(100% - 34px) !important;
+}
+
+.config-main .k-content {
+    padding: 15px 12px;
+    border: 1px solid #E5E5E5 !important;
+    border-top: none !important;
+    border-bottom-left-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+}
+
+.k-state-expanded .configWrap .k-link.k-header {
+    border-radius: 5px !important;
+}
+
+/* ==== Grading Page CSS - Start ==== */
+.c-modal.plan-maker .k-dropdown .k-i-arrow-s::before {
+    content: "\e006";
+    font-family: "WebComponentsIcons" !important;
+    transform: initial;
+    font-size: 12px;
+    color: rgb(71, 67, 67);
+}
+
+.plan-maker .k-grid .k-grid-container {
+    height: calc(28vh - 80px);
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+/* ==== Price Request - Start ==== */
+.pricing-wrap .k-touch-action-auto {
+    position: relative;
+}
+
+.pricing-grid .k-numerictextbox .k-select {
+    display: none;
+}
+
+/* ==== Inclusion Upload - START ==== */
+.bac-tra .k-popup {
+    background-color: transparent;
+    border: 0;
+}
+
+/* ==== Kanbanbord - START ==== */
+.mo-he-fix .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item,
+.cart-item-grid .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item {
+    margin: initial;
+    border: 1px solid #ddd;
+    border-right: 0;
+}
+
+.mo-he-fix .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item:last-child,
+.cart-item-grid .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item:last-child {
+    border-right: 1px solid #ddd;
+}
+
+.mo-he-fix .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item.k-active,
+.cart-item-grid .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item.k-active {
+    border-bottom-color: transparent;
+}
+
+.mo-he-fix .k-tabstrip-items-wrapper,
+.cart-item-grid .k-tabstrip-items-wrapper {
+    border-color: transparent;
+}
+
+.mo-he-fix .k-content .mo-he-fix .treeview_parent,
+.cart-item-grid .k-content .cart-item-grid .treeview_parent {
+    padding: 13px 0;
+    border: 1px solid #ddd;
+    border-top: 0;
+}
+
+.mo-he-fix .k-hstack,
+.cart-item-grid .k-hstack {
+    position: relative;
+}
+
+.mo-he-fix .k-hstack .k-tabstrip-items,
+.cart-item-grid .k-hstack .k-tabstrip-items {
+    justify-content: flex-end;
+}
+
+.mo-he-fix .k-hstack::after,
+.cart-item-grid .k-hstack::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: calc(100% - 155px);
+    height: 1px;
+    background: #ddd;
+}
+
+.mo-he-fix .k-tabstrip-items .k-link,
+.cart-item-grid .k-tabstrip-items .k-link {
+    padding: initial;
+}
+
+.c-modal.mo-he-fix .k-hstack i,
+.c-modal.cart-item-grid .k-hstack i {
+    padding: 7px 10px;
+}
+
+.i-form.co-inv-pa.le-name .grid {
+    grid-template-columns: 80px 1fr 55px 1fr;
+}
+
+/* ==== Oreder Detail - START ==== */
+.o-details.c-modal .right,
+.o-details.c-modal .left {
+    padding: 5px;
+    height: initial;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.leadModal .k-tabstrip-content {
+    padding: 0;
+}
+
+.leadModal .k-content {
+    padding: 10px;
+}
+
+:is(.leadModal, .cart-item-grid) .k-tabstrip-top>.k-tabstrip-items-wrapper .k-item {
+    border-radius: 0;
+}
+
+.cart-info {
+    background-color: #f4f4f4;
+    padding: 5px;
+    display: flex;
+    font-size: 12px;
+    justify-content: space-between;
+    grid-column-gap: 15px;
+}
+
+.cart-info tr td:nth-child(2) {
+    text-align: right;
+}
+
+.cart-info tr td:nth-child(1) {
+    font-weight: 600;
+    text-align: right;
+}
+
+.o-details.c-modal .right .grid-wrap .k-grid {
+    height: calc(100vh - 404px);
+}
+
+.inv-info .i-form.co-inv-pa .grid {
+    grid-template-columns: 94px 1fr 115px 1fr 100px 1fr 100px 1fr;
+}
+
+.inv-info .grid-wrap .k-grid {
+    height: calc(100vh - 540px);
+}
+
+.inv-info .search-filter {
+    height: calc(100vh - 175px);
+    overflow-y: auto;
+}
+
+.inv-info .company-info .ci-title {
+    border-bottom: 1px solid #000;
+    padding: initial !important;
+    margin-bottom: 5px
+}
+
+.left-count {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.left-count table:nth-child(2):after {
+    content: "";
+    background: #000;
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    top: 0;
+    right: -14px;
+}
+
+.left-admin table:nth-child(1):after {
+    content: "";
+    background: #000;
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    top: 0;
+    right: -14px;
+}
+
+.left-admin table:nth-child(2):after {
+    display: none;
+}
+
+.tbl-title {
+    font-size: 14px;
+    font-weight: 600;
+    grid-column: 2 span / 3;
+}
+
+.lead-rs .e-details-n .info-block.we-3 li,
+.info-block li {
+    width: 50%;
+}
+
+.lead-rs.lead-xs .e-details-n .info-block.we-3 li,
+.info-block li {
+    display: inline-block;
+    width: 33%;
+    margin-bottom: 10px;
+}
+
+.lead-rs .modal-body {
+    padding: 10px;
+}
+
+/* ==== RFID StockTally - START ==== */
+.stocktally .k-grid {
+    border: 0;
+}
+
+.stocktally kendo-grid-toolbar {
+    background: transparent;
+    padding: 0;
+}
+
+.stocktally th {
+    text-align: center;
+    vertical-align: middle !important;
+}
+
+.stocktally th .k-link span {
+    width: 100% !important;
+    text-align: center !important;
+}
+
+.stocktally .red {
+    color: red !important;
+}
+
+.stocktally .tallydone {
+    color: #09c309;
+}
+
+.rfid-grids {
+    display: grid;
+    grid-template-columns: 31% 45% 22%;
+    grid-gap: 10px;
+}
+
+.rfid-grids kendo-pager {
+    font-size: 12px;
+}

@@ -1,0 +1,203 @@
+.modal-dialog-centered {
+    height: calc(100vh - 1rem);
+}
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        margin: 1.75rem auto;
+    }
+
+    .modal-dialog-centered {
+        height: calc(100vh - 3.5rem);
+    }
+}
+
+.dialog-xl .modal-dialog {
+    max-width: 1350px;
+}
+
+@media (max-width:1380px) {
+    .dialog-xl .modal-dialog {
+        max-width: 98%;
+    }
+}
+
+.dialog-xl-l .modal-dialog {
+    max-width: 1260px;
+}
+
+@media (max-width:1180px) {
+    .dialog-xl-l .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.editcell .modal-dialog {
+    max-width: 1050px;
+}
+
+.dialog-lg .modal-dialog {
+    max-width: 1050px;
+}
+
+.dialog-lg.expoMd-filter .modal-dialog {
+    max-width: 1350px;
+}
+
+@media (max-width: 1365px) {
+    .dialog-lg.expoMd-filter .modal-dialog {
+        max-width: 95% !important;
+    }
+}
+
+.dialog-sm .modal-dialog {
+    max-width: 650px;
+}
+
+.dialog-xs .modal-dialog {
+    max-width: 450px;
+}
+
+.modal-header {
+    border: 0;
+}
+
+.dialog-wvd .modal-dialog {
+    max-width: 970px;
+}
+
+.dialog-xsm-search .modal-dialog {
+    max-width: 300px;
+    margin: auto;
+}
+
+.k-window .k-window-content {
+    padding: 0 !important;
+}
+
+/** Dialog Css Start**/
+.modal .modal-header {
+    background-color: #b5dff1;
+    padding: 8px 12px;
+    border-radius: 0;
+    justify-content: space-between;
+}
+
+.modal .modal-header h5 {
+    font-weight: 500;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    color: #242628;
+}
+
+.modal .modal-header .close {
+    color: #242628;
+    opacity: 1;
+    text-shadow: initial;
+    padding: initial;
+    margin: initial;
+    background-color: transparent;
+    border: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.modal .modal-header .close span,
+.modal .modal-header .close:hover span {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 0;
+    vertical-align: middle;
+    color: #242628;
+}
+
+.modal-footer {
+    padding: 0;
+    background: #f9f9f9;
+}
+
+.modal-footer button {
+    font-size: 14px;
+    color: #000;
+    background: #fff;
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    padding: 4px 8px;
+    height: 32px;
+    margin: 0.25rem;
+}
+
+.modal-footer button:hover {    
+    background-color: #0C4875 !important;
+    color: #fff;
+    border-color: #0C4875 ;
+}
+
+.modal-footer button:active {
+    background: #4d4d4d;
+    color: #fff;
+}
+
+.modal .modal-header h5 i,
+.modal-footer button i {
+    padding-right: 5px;
+    vertical-align: middle;
+}
+
+.modal .modal-header .close {
+    color: #fff;
+    opacity: 1 !important;
+    text-shadow: initial;
+    padding: initial;
+    margin: initial;
+    outline: 0;
+}
+
+.modal-body {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 7px;
+}
+
+/** Dialog Css End**/
+
+@media (max-width: 575px) {
+    .modal-dialog-centered.modal-dialog-res-top::before {
+        height: calc(100vh - 3rem) !important;
+    }
+
+    .modal-dialog-res-top .search-filter {
+        height: calc(100vh - 230px) !important;
+    }
+}
+
+@media(max-height:420px) and (max-width:991px) {
+    .modal-body {
+        max-height: calc(100vh - 100px) !important;
+    }
+}
+
+@media(min-width:576px) {
+    .modal-dialog.large-modal {
+        max-width: 550px !important;
+    }
+}
+
+@media(max-width:480px) {
+
+    .modal-footer button {
+        padding: 4px !important;
+    }
+}
+
+.modal {
+    display: block;
+    z-index: 1200;
+}
+
+.dialog-wvd .modal-body {
+    overflow-x: auto;
+}

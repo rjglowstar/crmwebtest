@@ -1,0 +1,646 @@
+<!-- #region Memo popup -->
+<div class="modal c-modal addemp la-mas logi-modal rorgan" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static">
+  <form name="form" #MemoIssue="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-memoissue"></i>Memo {{(isReceive && !isEdit)?"Receive":(isEdit
+            ?"Edit":"Issue")}}</h5>
+          <button type="button" class="close" (click)="closeMemoIssueDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 sr">
+              <!-- #region Party Issue CRUD -->
+              <div class="en-form f-12">
+                <div class="align-items-center justify-content-between p-wrap">
+                  <h6 class="title justify-content-between pt-0">
+                    <span>
+                      <div><i class="icon-info"></i>Information</div>
+                    </span>
+                    <div *ngIf="isReceive && !isEdit">
+                      <input type="radio" name="memo" (ngModelChange)="memoTypeChange($event)" value="ReceiveT"
+                        [(ngModel)]="memoType" #ReceiveT kendoRadioButton />
+                      <kendo-label class="k-radio-label me-2" [for]="ReceiveT" text="Transit"></kendo-label>
+
+                      <input type="radio" name="memo" (ngModelChange)="memoTypeChange($event)" value="Receive"
+                        [(ngModel)]="memoType" #Receive kendoRadioButton />
+                      <kendo-label class="k-radio-label" [for]="Receive" text="Stock"></kendo-label>
+                    </div>
+                  </h6>
+                </div>
+                <div class="memo-info mt-1">
+                  <div class="grid">
+
+                    <div class="form-data">
+                      <label>Party Name<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data" [ngClass]="{ 'error': Party.invalid && (Party.dirty || Party.touched)}">
+                      <kendo-autocomplete class="w-100" [data]="listPartyItems" [filterable]="true"
+                        (filterChange)="handlePartyFilter($event)" [kendoDropDownFilter]="filterSettings" name="Party"
+                        [(ngModel)]="selectedPartyItem" (valueChange)="partyChange($event)"
+                        [popupSettings]="{width: 'auto'}" #Party="ngModel" valueField="value"
+                        [disabled]="!(!isViewOnly) || !(!memoRequest.id)" required>
+                        <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                          <span>{{dataItem.text}}</span>
+                        </ng-template>
+                      </kendo-autocomplete>
+                    </div>
+
+                    <div class="form-data" *ngIf="partyCompanyName">
+                      <label>Person Name :</label>
+                    </div>
+                    <div class="form-data" *ngIf="partyCompanyName">
+                      <label class="ms-2 font600">{{partyCompanyName}}</label>
+                    </div>
+                    <div class="form-data">
+                      <label>Process<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': memoProcess.invalid && (memoProcess.dirty || memoProcess.touched)}">
+                      <kendo-combobox [data]="listMemoProcess" [valuePrimitive]="true" name="memoProcess"
+                        [(ngModel)]="memoObj.process" #memoProcess="ngModel" required
+                        [kendoDropDownFilter]="filterSettings" [disabled]="!(!isViewOnly&& memoType == 'Issue')">
+                      </kendo-combobox>
+                    </div>
+
+                    <div class="form-data">
+                      <label>Taken By<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data d-flex"
+                      [ngClass]="{ 'error': takenBy.invalid && (takenBy.dirty || takenBy.touched)}">
+                      <kendo-autocomplete class="w-100" [data]="listTakenByItems" [filterable]="true"
+                        (filterChange)="handleTakenbyFilter($event)" [kendoDropDownFilter]="filterSettings"
+                        name="takenBy" [(ngModel)]="selectedTakenByNameItem" (valueChange)="takenByChange($event)"
+                        [popupSettings]="{width: 'auto'}" (keyup)="onTakenByKeyPress($event)" #takenBy="ngModel"
+                        valueField="text" [disabled]="!(!isViewOnly&& memoType == 'Issue'|| memoType == 'Edit')"
+                        required>
+                        <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                          <span>{{dataItem.text}}</span>
+                        </ng-template>
+                      </kendo-autocomplete>
+                      <button kendoButton class="ms-2 border" type="button" (click)="openDocumentDialog()"
+                        *ngIf="takenByObj.id">
+                        <i class="icon-view pe-0"></i></button>
+                      <button kendoButton class="ms-2 border" type="button" (click)="openDocumentDialog()"
+                        *ngIf="!takenByObj.id">
+                        <i class="icon-add pe-0"></i></button>
+                    </div>
+
+                    <div class="form-data">
+                      <label>Tax</label>
+                    </div>
+                    <div class="form-data mul-select">
+                      <kendo-multiselect name="tax" class="customselect" [data]="listTax" [(ngModel)]="taxTypesZ"
+                        [textField]="'name'" [valueField]="'name'" [valuePrimitive]="true"
+                        [popupSettings]="{width: 'auto'}" [autoClose]="false" [kendoMultiSelectSummaryTag]="0"
+                        [filterable]="true" (valueChange)="onMultiSelectChange(listTax,taxTypesZ)"
+                        (open)="filterTaxChk = onOpenDropdown(listTax,filterTaxChk, taxTypesZ)"
+                        [disabled]="!(!isViewOnly&& memoType == 'Issue')"
+                        (filterChange)="filterTax = handleFilter($event); listTax = filterDropdownSearch(allTheTax, $event, taxTypesZ)">
+
+                        <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                          <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                          <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                        </ng-template>
+                        <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                          <span kendoTooltip position="bottom" [title]="getCommaSapratedString(taxTypesZ, true)">
+                            {{getCommaSapratedString(taxTypesZ)}}
+                          </span>
+                        </ng-template>
+                      </kendo-multiselect>
+                    </div>
+
+                    <div class="form-data">
+                      <label>Exp. Days<span class="require">*</span></label>
+                    </div>
+                    <div class="form-data"
+                      [ngClass]="{ 'error': expiredDays.invalid && (expiredDays.dirty || expiredDays.touched)}">
+                      <input type="text" class="form-control" name="expiredDays" #expiredDays="ngModel"
+                        [(ngModel)]="memoObj.expiredDays" (keypress)="utilityService.numberOnly($event)"
+                        [disabled]="!(!isViewOnly&& memoType == 'Issue')" required>
+                    </div>
+
+                    <div class="form-data">
+                      <label>Branch</label>
+                    </div>
+                    <div class="form-data">
+                      <kendo-combobox [data]="listBranchItems" textField="text" valueField="value" name="Branch"
+                        [(ngModel)]="selectedBranchItem" #Branch="ngModel" (valueChange)="branchChange($event)"
+                        [disabled]="!(!isViewOnly&& memoType == 'Issue'|| memoType == 'Edit')"
+                        [kendoDropDownFilter]="filterSettings">
+                      </kendo-combobox>
+                    </div>
+                    <div class="form-data">
+                      <label>ReceiveDate </label>
+                    </div>
+                    <div class="form-data">
+                      <input type="datetime-local" class="form-control" name="receiveDate" 
+                        [(ngModel)]="memoObj.receiveDate" [disabled]="true">
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Remove Hidden When required for front Office Request -->
+              <!-- [hidden]="isLocalParty" -->
+              <div class="memo-person mt-1"
+                *ngIf="partyObj && partyObj.id && partyObj.group && partyObj.group.toLowerCase() == 'customer'">
+                <h6 class="title"><i class="icon-addpacket"></i>Person</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label>Seller</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="seller" #seller="ngModel" [(ngModel)]="memoObj.seller"
+                      [disabled]="!(!isViewOnly)  || !(!memoRequest.id)">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Broker</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listBrokerItems" textField="text" valueField="value" name="Broker"
+                      [(ngModel)]="selectedBrokerItem" #Broker="ngModel" (valueChange)="brokerChange($event)"
+                      [disabled]="!(!isViewOnly&& memoType == 'Issue'|| memoType == 'Edit')"
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                </div>
+              </div>
+
+              <div class="memo-otherdetails mt-1" [hidden]="isLocalParty || partyObj.id == null">
+                <h6 class="title"><i class="icon-info"></i>Other Details</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label>Logistic</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listlogisticItems" textField="text" valueField="value" name="Logistic"
+                      [(ngModel)]="selectedlogisticItems" #Logistic="ngModel" (valueChange)="LogisticChange()"
+                      [kendoDropDownFilter]="filterSettings"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>Port Of Loading</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="portOfLoading" #portOfLoading="ngModel"
+                      [(ngModel)]="memoObj.portOfLoading"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                  </div>
+                  <div class="form-data">
+                    <label>Docket No</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                  </div>
+                  <div class="form-data">
+                    <label>Bank</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listBankItems" textField="text" valueField="value" name="Bank"
+                      [(ngModel)]="selectedBankItem" #Bank="ngModel" (valueChange)="bankChange($event)"
+                      [kendoDropDownFilter]="filterSettings"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Terms</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="terms" #terms="ngModel" [(ngModel)]="memoObj.terms"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                  </div>
+                  <div class="form-data">
+                    <label>Export Type</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox class="w-auto" [data]="listExportType" [valuePrimitive]="true" textField="value"
+                      valueField="value" name="exportType" [(ngModel)]="memoObj.exportType" #exportType="ngModel"
+                      [kendoDropDownFilter]="filterSettings"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                    </kendo-combobox>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Box Weight</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="boxWeight" #boxWeight="ngModel"
+                      [(ngModel)]="memoObj.boxWeight"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Shipping Charge</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="shippingCharge" autocomplete="off"
+                      (keypress)="utilityService.floatOnly($event)" [(ngModel)]="memoObj.shippingCharge"
+                      #shippingCharge="ngModel" id="shippingCharge" (keypress)="utilityService.floatOnly($event)"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                  </div>
+                  <div class="form-data">
+                    <label>Consignee Name</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-autocomplete   [data]="listConsignItem" [filterable]="true"
+                      (filterChange)="handleConsignFilter($event)" [kendoDropDownFilter]="filterSettings" name="consigneeName"
+                      [(ngModel)]="memoObj.consigneeName" (valueChange)="onConsignChange($event)"
+                      [popupSettings]="{width: 'auto'}" #consigneeName="ngModel" valueField="value"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')"
+                      placeholder="Search Consignee">
+                      <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                        <span>{{dataItem.text}}</span>
+                      </ng-template>
+                    </kendo-autocomplete>
+                  </div>
+                  <div class="form-data">
+                    <label>Consignee Address</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="consigneeAddress" #consigneeAddress="ngModel"
+                      [(ngModel)]="memoObj.consigneeAddress"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                  </div>
+                  <div class="form-data">
+                    <label>Addi. Declaration</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="additionalDeclaration"
+                      #additionalDeclaration="ngModel" [(ngModel)]="memoObj.additionalDeclaration"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                  </div>
+                  <div class="form-data">
+                    <label>Packing List</label>
+                  </div>
+                  <div class="form-data check-box">
+                    <input type="checkbox" name="isPackingList" class="k-checkbox" [(ngModel)]="memoObj.isPackingList"
+                      #isPackingList="ngModel" [disabled]="!(!isViewOnly&& memoType == 'Issue')" />
+                    <label for="a-employee"></label>
+                  </div>
+
+                  <div class="form-data">
+                    <label>PL Declaration</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="plDeclaration" #plDeclaration="ngModel"
+                      [(ngModel)]="memoObj.plDeclaration"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                  </div>
+
+                  <div class="form-data">
+                    <label>CIF City Name</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" class="form-control" name="cifCityName" #cifCityName="ngModel"
+                      [(ngModel)]="memoObj.cifCityName"
+                      [disabled]="(isViewOnly && memoType == 'Issue') || (memoType == 'Receive') || (memoType == 'ReceiveT') || (memoType == 'Edit')">
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="memo-currency mt-1">
+                <h6 class="title"><i class="icon-currency"></i>Currency</h6>
+                <div class="grid">
+
+                  <div class="form-data">
+                    <label>Currency.<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': CurrencyType.invalid && (CurrencyType.dirty || CurrencyType.touched)}">
+                    <kendo-dropdownlist [data]="listCurrencyType" [valuePrimitive]="true"
+                      textField="text" valueField="value" name="CurrencyType" [(ngModel)]="memoObj.fromCurrency"
+                      #CurrencyType="ngModel" [kendoDropDownFilter]="filterSettings" required
+                      [disabled]="!(!isViewOnly&& memoType == 'Issue')" (valueChange)="currencyChange()">
+                    </kendo-dropdownlist>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Currency. Rate<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': currencyRate.invalid && (currencyRate.dirty || currencyRate.touched)}">
+                    <input type="text" name="currencyRate" autocomplete="off"
+                      (keypress)="utilityService.floatOnly($event)" [(ngModel)]="memoObj.fromCurRate"
+                      #currencyRate="ngModel" id="currencyRate" required (keypress)="utilityService.floatOnly($event)"
+                      [disabled]="false">
+                  </div>
+
+                  <div class="form-data">
+                    <label>Convert Cur.<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': convCurrencyType.invalid && (convCurrencyType.dirty || convCurrencyType.touched)}">
+                    <kendo-dropdownlist [data]="listCurrencyType" [valuePrimitive]="true"
+                      textField="text" valueField="value" name="convCurrencyType" [(ngModel)]="memoObj.toCurrency"
+                      [kendoDropDownFilter]="filterSettings" #convCurrencyType="ngModel"
+                      [disabled]="!(!isViewOnly&& memoType == 'Issue')" (valueChange)="currencyChange()" required>
+                    </kendo-dropdownlist>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Convert Cur. Rate<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': convcurrencyRate.invalid && (convcurrencyRate.dirty || convcurrencyRate.touched)}">
+                    <input type="text" name="convcurrencyRate" autocomplete="off"
+                      (keypress)="utilityService.floatOnly($event)" [(ngModel)]="memoObj.toCurRate"
+                      #convcurrencyRate="ngModel" id="convcurrencyRate" (keypress)="utilityService.floatOnly($event)"
+                      [disabled]="false" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="en-form f-12 mt-1">
+                <h6 class="title"><i class="icon-addpacket"></i>Add Packets</h6>
+                <div class="ma-issues-top">
+                  <div class="grid">
+                    <div class="form-data">
+                      <label for="">Stone ID</label>
+                    </div>
+                    <div class="form-data">
+                      <!-- [disabled]="isViewOnly || !(!memoRequest.id)" -->
+                      <input type="text" id="barcode" [(ngModel)]="stoneIds" #BarcodeInput name="barcode" class="c-wi"
+                        autocomplete="off" (keyup.enter)="onAddStones()">
+                    </div>
+                    <div class="form-data">
+                      <button type="button" type="button" [disabled]="!stoneIds" (click)="onAddStones()"
+                        class="btn btn-primary"><i class="icon-add pe-0"></i></button>
+                    </div>
+                    <div class="form-data text-end">
+                      <kendo-buttongroup kendoTooltip position="bottom">
+                        <input #file type="file" (click)="file.value=''" (change)="onSelectInvFromExcelFile($event)"
+                          hidden
+                          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
+                        <button type="button" kendoButton (click)="file.click();" title="Import Excel"
+                          [disabled]="(memoType == 'Receive') || (memoType == 'ReceiveT')"><i
+                            class="icon-import pe-0"></i></button>
+                      </kendo-buttongroup>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="en-form f-12">
+                <h6 class="title"></h6>
+                <div class="i-form lab-iss-mod m-0">
+                  <div class="d-flex flex-wrap">
+                    <div class="form-data me-3">
+                      <span class="t-title me-1">Pkts :</span> <span class="font100">{{cntMnuStones}}</span>
+                    </div>
+                    <div class="form-data me-3">
+                      <span class="t-title me-1">Weight :</span> <span class="font100">{{sumMnuStonesWeight}}</span>
+                    </div>
+                    <div class="form-data me-3">
+                      <span class="t-title me-1">T.Amount :</span> <span
+                        class="font100">{{sumMnuStonesNetAmount}}</span>
+                    </div>
+
+                    <div class="form-data me-3">
+                      <span class="t-title me-1">Sel Pkts:</span>
+                      <span class="font100">{{selectedcntMnuStones}}</span>
+                    </div>
+                    <div class="form-data me-3">
+                      <span class="t-title me-1">Sel Weight:</span><span
+                        class="font100">{{selectedsumMnuStonesWeight}}</span>
+                    </div>
+                    <div class="form-data">
+                      <span class="t-title me-1">Sel T.Amount:</span><span
+                        class="font100">{{selectedsumMnuStonesNetAmount}}</span>
+                    </div>
+
+                    <div class="ci-top-right" *ngIf="memoRequest.id">
+                      <span class="text-end">Above & Below 0.50 CT Print <span class="ms-1">
+                          <kendo-switch class="k-widget k-switch-off me-1" #canAboveOneCtPrintMemo="ngModel"
+                            name="canAboveOneCtPrintMemo" [(ngModel)]="canAboveOneCTPrintMemo"></kendo-switch>
+                        </span>
+                      </span>
+                    </div>
+                    <div class="ci-top-right" *ngIf="memoRequest.id">
+                      <span class="text-end">Print <span class="ms-1">
+                          <kendo-switch class="k-widget k-switch-off me-1" #canDownload="ngModel" name="excelDownload"
+                            id="m-chk" [(ngModel)]="canPrintMemo"></kendo-switch>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- #endregion -->
+              <!-- #region Grid -->
+              <div class="mod-wrap">
+                <div class="grid-wrap">
+                  <ng-container *ngIf="!gridViewInventory">
+                    <div class="k-grouping-header k-grouping-header-flex">
+                      <div class="k-indicator-container">
+                        <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                        </kendo-skeleton>
+                      </div>
+                    </div>
+                    <table *ngIf="fields && fields.length > 0" class="w-100 table-responsive skeleton-tbl">
+                      <th *ngFor="let field of fields">{{field.propertyName}}</th>
+                      <tr *ngFor="let field of skeletonArray">
+                        <td *ngFor="let field of fields">
+                          <kendo-skeleton shape="text" animation="wave" [width]="75" [height]="40">
+                          </kendo-skeleton>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-container>
+
+                  <kendo-grid *ngIf="gridViewInventory" [data]="gridViewInventory" class="rs-grid" [sortable]="true"
+                    [reorderable]="true" [resizable]="true" [selectable]="selectableSettings"
+                    [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'stoneId'"
+                    (selectionChange)="selectedRowChange($event)">
+                    <ng-container *ngIf="fields && fields.length > 0">
+                      <ng-container *ngFor="let field of fields">
+                        <ng-container *ngIf="field.isSelected">
+                          <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                            <ng-template
+                              *ngIf="isShowCheckBoxAll && field.title == 'Checkbox' && ((memoType == 'Receive') || (memoType == 'ReceiveT'))"
+                              kendoGridHeaderTemplate>
+                              <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox"
+                                (selectAllChange)="selectAllInventories($event)" />
+                              <label class="k-checkbox-label" for="headerCheckbox"></label>
+                            </ng-template>
+                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                              *ngIf="field.title == 'Checkbox' && ((memoType == 'Receive') || (memoType == 'ReceiveT'))">
+                              <input type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                                [kendoGridSelectionCheckbox]="rowIndex" />
+                              <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                              </label>
+                            </ng-template>
+                            <ng-template kendoGridCellTemplate let-dataItem
+                              *ngIf="field.propertyName == 'Action' && memoType != 'Receive'">
+                              <ng-container style="text-align: center">
+                                <i class="icon-delete p-0" (click)="deletePlan(dataItem.stoneId)"></i>
+                              </ng-container>
+                            </ng-template>
+                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                              *ngIf="field.title == 'Hold'">
+                              <input type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                                [checked]="dataItem.isHold" [disabled]="true" />
+                              <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                              </label>
+                            </ng-template>
+                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                              *ngIf="field.title == 'Memo'">
+                              <input type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                                [checked]="dataItem.isMemo" [disabled]="true" />
+                              <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                              </label>
+                            </ng-template>
+                          </kendo-grid-column>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </kendo-grid>
+
+
+                </div>
+              </div>
+              <!-- #endregion -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button *ngIf="memoType=='Issue'" type="button" class="btn btn-primary" (click)="onSaveMemo(MemoIssue,false)"
+            [disabled]="!MemoIssue.valid || selectedInventoryItems.length == 0 || isViewOnly">
+            <i class="icon-add"></i>New</button>
+          <button *ngIf="memoType=='Issue'" type="button" class="btn btn-primary" (click)="onSaveMemo(MemoIssue,true)"
+            [disabled]="!MemoIssue.valid || selectedInventoryItems.length == 0 || isViewOnly">
+            <i class="icon-save"></i>Save</button>
+          <button *ngIf="memoType=='Receive'||memoType=='ReceiveT'" type="button" class="btn btn-primary"
+            (click)="onReceiveMemo(MemoIssue)"
+            [disabled]="(!MemoIssue.valid || mySelection.length == 0 || !isCanReceiveMemo) ">
+            <i class="icon-save"></i>Save</button>
+          <button *ngIf="memoType=='Edit'" type="button" class="btn btn-primary" (click)="onEditMemo(MemoIssue)"
+            [disabled]="(!MemoIssue.valid || !(memoObj.identity.id == fxCredential.id)) ">
+            <i class="icon-save"></i>Update</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<!-- #region takenBy Add -->
+<div class="modal c-modal addemp" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  *ngIf="isAddTakenByPopup">
+  <form name="form" #TakenBy="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-memoissue"></i>TakenBy</h5>
+          <button type="button" class="close" (click)="toggleTakenByDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 sr">
+              <div class="takenby-grid-01 mb-2">
+                <div class="form-data">
+                  <label>Full Name<span class="require">*</span></label>
+                </div>
+                <div class="form-data">
+                  <input type="text" class="form-control" name="takenByName" [disabled]="imageList.length > 0"
+                    #takenByName="ngModel" [(ngModel)]="selectedTakenByNameItem" required />
+                </div>
+                <div class="form-data">
+                  <label>Contact No</label>
+                </div>
+                <div class="form-data"
+                  [ngClass]="{ 'error': contactNo.invalid && (contactNo.dirty || contactNo.touched)}">
+                  <input type="text" name="contactNo" autocomplete="off" maxlength="15"
+                    (keypress)="utilityService.numberOnly($event)" [(ngModel)]="takenByObj.contactNo"
+                    #contactNo="ngModel" id="contactNo">
+                </div>
+                <div class="form-data">
+                  <label>ID Card No</label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': cardIdNo.invalid && (cardIdNo.dirty || cardIdNo.touched)}">
+                  <input type="text" name="cardIdNo" autocomplete="off" [(ngModel)]="takenByObj.cardIdNo"
+                    #cardIdNo="ngModel" id="cardIdNo">
+                </div>
+              </div>
+              <!-- [ngClass]="{'error' : photoIdentityErrorFlag}" -->
+              <div class="form-data text-center img-animated border p-2">
+                <div class="d-flex justify-content-between mb-2">
+                  <label class="d-block text-start">Photo Identity Proof</label>
+                  <div class="form-data">
+                    <button kendoButton type="button" title="Open Camera" (click)="showWebCam=true" class="btn"
+                      *ngIf="!showWebCam"><i class="icon-camera pe-0"></i></button>
+                    <kendo-buttongroup kendoTooltip position="bottom" *ngIf="showWebCam">
+                      <button kendoButton type="button" title="Capture" (click)="triggerSnapshot()" class="btn"><i
+                          class="icon-cameralens pe-0"></i></button>
+                      <button kendoButton type="button" title="Cancel" (click)="showWebCam=false" class="btn"><i
+                          class="icon-delete pe-0"></i></button>
+                    </kendo-buttongroup>
+                  </div>
+                </div>
+                <div *ngIf="!showWebCam">
+                  <div *ngIf="!isImgselectedPhotoIdent && imageList.length==0" class="c-upload">
+                    <label for="file-input">
+                      <span><i class="icon-upload"></i></span>
+                      <span>Select files or Drop jpeg/png Only</span>
+                    </label>
+                    <input #photoIdentityFileupload type="file" (change)="uploadFiles($event)"
+                      accept="image/jpeg,image/png" id="file-input" type="file" name="photoIdentity"
+                      style="height: 380px !important;" />
+                    <input type="hidden" name="fileHidden">
+                  </div>
+                  <img *ngIf="isImgselectedPhotoIdent" alt="Uploaded Photo Identity File" src="{{imagePreviewphoto}}"
+                    class="d-block" width="100%" height="355">
+                  <img *ngIf="imageList.length>0" alt="Uploaded Photo Identity File"
+                    [src]="sanitizeURL(imageList[0].filePath)" class="d-block" width="100%" height="355">
+                  <div class="msg-box" [ngStyle]="{'border-bottom-color': '#028e02'  }" *ngIf="photoIdentityModel">
+                    <div class="success">File successfully attached
+                    </div>
+                    <button type="button" (click)="clearPreviewFile()" class="btn"><i class="icon-delete"></i></button>
+                  </div>
+                </div>
+                <div *ngIf="showWebCam">
+                  <div class="c-upload">
+                    <webcam [width]="618" [height]="355" [trigger]="triggerObservable"
+                      (imageCapture)="handleImage($event)"></webcam>
+                  </div>
+                </div>
+                <!-- <span *ngIf="photoIdentityErrorFlag" class="s-error">photoIdentity image is
+                  required</span> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="!TakenBy.valid" (click)="onSaveTaken(TakenBy)">
+            <i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- #endregion -->
+
+<div (document:keydown.esc)="closeMemoIssueDialog()"></div>
+
+<!-- #region Grid Config -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'LabIssue'" [gridName]="'LabIssueGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->

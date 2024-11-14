@@ -1,0 +1,176 @@
+.msg-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid;
+}
+
+.msg-box i {
+    font-size: 12px;
+}
+
+.msg-box button.btn {
+    padding: 0 0 0 5px;
+}
+
+.msg-box .error {
+    font-size: 11px;
+    color: #ff0000;
+}
+
+.msg-box .success {
+    font-size: 11px;
+    color: #028e02;
+}
+
+.ma-issues-top .grid {
+    grid-template-columns: 50px 220px 1fr auto;
+}
+
+.la-mas.c-modal .form-data textarea {
+    height: 30px;
+}
+
+.img-animated a:before {
+    content: "";
+    position: absolute;
+    background: #0000004d;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.5s;
+    transform: scale(0.5);
+}
+
+.img-animated a {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.img-animated a:hover:before {
+    opacity: 1;
+    transform: scale(1.5);
+}
+
+.img-animated a i {
+    margin: auto;
+    display: block;
+    height: 32px;
+    opacity: 0;
+    color: #fff;
+    font-size: 20px;
+    transition: all 0.5s;
+    background: #000;
+    width: 32px;
+    text-align: center;
+    padding: 0;
+    line-height: 32px;
+    border-radius: 100%;
+    position: absolute;
+    z-index: 9999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.img-animated a:hover i {
+    opacity: 1;
+}
+
+.font100 {
+    font-weight: 400 !important;
+}
+
+.memo-info .grid {
+    grid-template-columns: 80px minmax(120px, auto) 72px minmax(120px, auto) 62px minmax(150px, auto);
+}
+
+.memo-details h6 {
+    font-weight: 400;
+    color: #000;
+    font-size: 14px;
+    padding-right: 3px;
+    margin: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 204px;
+}
+
+.font600 {
+    font-weight: 600;
+}
+
+.memo-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.memo-details label {
+    font-size: 14px !important;
+    margin-right: 5px;
+}
+
+.memo-otherdetails .grid {
+    grid-template-columns: 106px 1fr 118px 1fr 106px 1fr;
+}
+
+.memo-currency .grid {
+    grid-template-columns: 65px 1fr 98px 1fr 77px 1fr 108px 1fr;
+}
+
+.mod-wrap .grid-wrap .k-grid {
+    height: 230px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.memo-person .grid {
+    grid-template-columns: 36px 1fr 40px 1fr;
+}
+
+.takenby-grid-01 {
+    display: grid;
+    grid-template-columns: 68px 1fr 70px 1fr 68px 1fr;
+    grid-column-gap: 10px;
+}
+
+.logi-modal .i-form.l-con .grid {
+    grid-template-columns: 78px 1fr 80px 1fr;
+}
+
+.logi-modal .i-form.l-master .grid {
+    grid-template-columns: 68px 1fr 90px 1fr 72px 1fr;
+}
+
+.logi-modal .i-form.l-con .grid .form-data.t-ap {
+    grid-column: 2 / 7;
+}
+
+.logi-modal .grid.bot.mt-1 {
+    margin-top: 5px;
+}
+
+@media (max-width:767px) {
+    .logi-modal .i-form.l-master .grid {
+        grid-template-columns: 68px 1fr 90px 1fr;
+    }
+}
+
+@media (max-width:480px) {
+    .logi-modal .i-form.l-master .grid {
+        grid-template-columns: 90px 1fr;
+    }
+
+    .logi-modal .i-form.l-con .grid {
+        grid-template-columns: 78px 1fr;
+    }
+}
+
+@media (max-width: 420px) {
+    .ma-issues-top .grid {
+        grid-template-columns: 50px auto;
+    }
+}

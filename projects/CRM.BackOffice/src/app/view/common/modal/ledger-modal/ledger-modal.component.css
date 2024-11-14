@@ -1,0 +1,130 @@
+.msg-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid;
+}
+
+.msg-box i {
+    font-size: 12px;
+}
+
+.msg-box button.btn {
+    padding: 0 0 0 5px;
+}
+
+.msg-box .error {
+    font-size: 11px;
+    color: #ff0000;
+}
+
+.msg-box .success {
+    font-size: 11px;
+    color: #028e02;
+}
+
+.ad-party .grid {
+    grid-template-columns: 95px 1fr 98px 1fr 92px 1fr;
+}
+
+.i-form.ad-party .form-data.pate-area {
+    grid-area: 3 / 2 / 4 / 5;
+}
+
+.broker-add .grid {
+    grid-template-columns: 90px 1fr 86px 1fr 78px 1fr;
+}
+
+.grid-animated {
+    animation: fadeInTop 0.2s both linear;
+}
+
+.c-l-fs label {
+    font-size: 12px;
+}
+
+.img-animated a:before {
+    content: "";
+    position: absolute;
+    background: #0000004d;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.5s;
+    transform: scale(0.5);
+}
+
+.img-animated a {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.img-animated a:hover:before {
+    opacity: 1;
+    transform: scale(1.5);
+}
+
+.proof-remove {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.edit-ledger i {
+    position: static !important;
+}
+
+.edit-ledger {
+    width: 70%;
+    margin: auto;
+    left: 0;
+    right: 0;
+}
+
+.img-animated a i {
+    margin: auto;
+    display: block;
+    height: 32px;
+    opacity: 0;
+    color: #fff;
+    font-size: 20px;
+    transition: all 0.5s;
+    background: #000;
+    width: 32px;
+    text-align: center;
+    padding: 0;
+    line-height: 32px;
+    border-radius: 100%;
+    position: absolute;
+    z-index: 9999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.img-animated a:hover i {
+    opacity: 1;
+}
+
+.proof-media-grid img {
+    height: 98px;
+    object-fit: cover;
+    width: 117px;
+}
+
+@media(max-width:767px) {
+    .broker-add .grid {
+        grid-template-columns: 90px 1fr 86px 1fr;
+    }
+}
+
+@media(max-width:480px) {
+    .broker-add .grid {
+        grid-template-columns: 90px 1fr;
+    }
+}

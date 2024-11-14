@@ -1,0 +1,1810 @@
+<title>Master Config</title>
+<section class="ms-config-wrap">
+  <div class="content_wrap">
+    <div class="breadcrumb">
+      <div class="breadcrumb-left">
+        <ul>
+          <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+          <li class="breadcrumb-item active" aria-current="page">Masterconfig</li>
+        </ul>
+      </div>
+    </div>
+    <div class="content_box ms_config_bg">
+      <div class="ms-config">
+        <kendo-tabstrip [scrollable]="true">
+          <kendo-tabstrip-tab title="Master Config" [selected]="true">
+            <ng-template kendoTabContent>
+              <div>
+                <div class="config_Wrapper masterConfig mt-0">
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Lab</div>
+                      <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                        <button kendoButton (click)="openLabDialog()" title="Add Data">
+                          <i class="icon-add"></i></button>
+                      </kendo-buttongroup>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="labData.length > 0">
+                        <li *ngFor="let item of labData">
+                          <div class="c_label">{{item.name}} : {{item.displayName}}</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormUpdate(item, 'Lab');">
+                              <i class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDelete(item, 'Lab')">
+                              <i class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="labData.length == 0">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Shape</div>
+                      <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                        <button kendoButton (click)="openMasterDNormDialog('Shape')">
+                          <i class="icon-add" title="Add"></i></button>
+                      </kendo-buttongroup>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="shapeData.length > 0">
+                        <li *ngFor="let item of shapeData">
+                          <div class="c_label">{{item.name}} : {{item.displayName}} ({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormUpdate(item, 'Shape')">
+                              <i class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDelete(item, 'Shape')">
+                              <i class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="shapeData.length == 0">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Color</div>
+                      <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                        <button kendoButton (click)="openMasterDNormDialog('Color')">
+                          <i class="icon-add" title="Add"></i>
+                        </button>
+                      </kendo-buttongroup>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="colorsData.length > 0">
+                        <li *ngFor="let item of colorsData">
+                          <div class="c_label">{{item.name}} : {{item.displayName}} ({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormUpdate(item, 'Color')">
+                              <i class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDelete(item, 'Color')">
+                              <i class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="colorsData.length == 0">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Clarities</div>
+                      <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                        <button kendoButton (click)="openMasterDNormDialog('Clarities')">
+                          <i class="icon-add" title="Add"></i></button>
+                      </kendo-buttongroup>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="claritiesData.length > 0">
+                        <li *ngFor="let item of claritiesData">
+                          <div class="c_label">{{item.name}} : {{item.displayName}} ({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormUpdate(item, 'Clarities')">
+                              <i class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDelete(item, 'Clarities')">
+                              <i class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="claritiesData.length == 0">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Fluorescence</div>
+                      <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                        <button kendoButton (click)="openMasterDNormDialog('Fluorescence')">
+                          <i class="icon-add" title="Add"></i>
+                        </button>
+                      </kendo-buttongroup>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="fluorescenceData.length > 0">
+                        <li *ngFor="let item of fluorescenceData">
+                          <div class="c_label">{{item.name}} : {{item.displayName}} ({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormUpdate(item, 'Fluorescence')">
+                              <i class="icon-edit" title="Edit"></i>
+                            </button>
+                            <button class="btn" (click)="onMasterDNormDelete(item, 'Fluorescence')">
+                              <i class="icon-delete" title="Delete"></i>
+                            </button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="fluorescenceData.length == 0">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Cut</div>
+                      <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                        <button kendoButton (click)="openMasterDNormDialog('Cut')">
+                          <i class="icon-add" title="Add"></i>
+                        </button>
+                      </kendo-buttongroup>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="cutData.length > 0">
+                        <li *ngFor="let item of cutData">
+                          <div class="c_label">{{item.name}} : {{item.displayName}} ({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormUpdate(item, 'Cut')">
+                              <i class="icon-edit" title="Edit"></i>
+                            </button>
+                            <button class="btn" (click)="onMasterDNormDelete(item, 'Cut')">
+                              <i class="icon-delete" title="Delete"></i>
+                            </button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="cutData.length == 0">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">CPS</div>
+                      <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                        <button kendoButton (click)="openMasterDNormDialog('CPS')">
+                          <i class="icon-add" title="Add"></i></button>
+                      </kendo-buttongroup>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="cpsData.length > 0">
+                        <li *ngFor="let item of cpsData">
+                          <div class="c_label">{{item.name}} : {{item.displayName}} ({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormUpdate(item, 'CPS')">
+                              <i class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDelete(item, 'CPS')">
+                              <i class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="cpsData.length == 0">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box cutDetails">
+                    <div class="config_head">
+                      <div class="config_title">Cut Details</div>
+                      <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                        <button kendoButton (click)="openCutdetailsDialog()">
+                          <i class="icon-add" title="Add"></i></button>
+                      </kendo-buttongroup>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="cutDetailDNormData.length > 0">
+                        <li *ngFor="let item of cutDetailDNormData">
+                          <div class="c_label">
+                            <b>CPS&nbsp;:&nbsp;</b>{{item.cps}}
+                            <b>Shape&nbsp;:&nbsp;</b>{{item.shape}}
+                            <b>Cut&nbsp;:&nbsp;</b>{{item.cut}}
+                            <b>Polish&nbsp;:&nbsp;</b>{{item.polish}}
+                            <b>Symmetry&nbsp;:&nbsp;</b>{{item.symmetry}}
+                          </div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onCutDetailDNormDelete(item)">
+                              <i class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="cutDetailDNormData.length == 0">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box fanCut_details">
+                    <div class="config_head">
+                      <div class="config_title">Fancy Cut Details</div>
+                      <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                        <button kendoButton *ngIf="isViewButtons" (click)="openFancyCutdetailsDialog()">
+                          <i class="icon-add" title="Add"></i></button>
+                      </kendo-buttongroup>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="fancyCutDetailDNormData.length > 0">
+                        <li *ngFor="let item of fancyCutDetailDNormData">
+                          <div class="c_label">
+                            <b>Shape&nbsp;:&nbsp;</b>{{item.shape}}
+                            <b>Cut&nbsp;:&nbsp;</b>{{item.cut}}
+                            <b>Depth%&nbsp;:&nbsp;</b>{{item.minDepth}} - {{item.maxDepth}}
+                            <b>Table%&nbsp;:&nbsp;</b>{{item.minTable}} - {{item.maxTable}}
+                            <b>Girdle&nbsp;:&nbsp;</b>{{item.minGirdle}} - {{item.maxGirdle}}
+                            <b>Ratio%&nbsp;:&nbsp;</b>{{item.minRatio}} - {{item.maxRatio}}
+                          </div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onFancyCutDetailDNormEdit(item)">
+                              <i class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onFancyCutDetailDNormDelete(item)">
+                              <i class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="fancyCutDetailDNormData.length == 0">No Data Found</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Inclusion">
+            <ng-template kendoTabContent>
+              <div>
+                <div class="config_Wrapper incluConfig mt-0">
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Brown</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="brown"
+                            [(ngModel)]="inclusionConfig.brown" #brown="ngModel" id=""
+                            (click)="isActiveInclusion('Brown',inclusionConfig.brown)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.brown"
+                            (click)="openPlanParamDialog('Brown')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'Brown'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'Brown');">
+                              <i class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'Brown')">
+                              <i class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('Brown')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Green</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="green"
+                            [(ngModel)]="inclusionConfig.green" #green="ngModel" id=""
+                            (click)="isActiveInclusion('Green',inclusionConfig.green)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.green"
+                            (click)="openPlanParamDialog('Green')">
+                            <i class="icon-add"></i>
+                          </button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'Green'">
+                          <div class="c_label"> {{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'Green');">
+                              <i class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'Green')">
+                              <i class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('Green')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Milky</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="milky"
+                            [(ngModel)]="inclusionConfig.milky" #green="ngModel" id=""
+                            (click)="isActiveInclusion('Milky',inclusionConfig.milky)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.milky"
+                            (click)="openPlanParamDialog('Milky')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'Milky'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'Milky');">
+                              <i class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'Milky')">
+                              <i class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('Milky')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Shade</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="shade"
+                            [(ngModel)]="inclusionConfig.shade" #shade="ngModel" id=""
+                            (click)="isActiveInclusion('Shade',inclusionConfig.shade)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.shade"
+                            (click)="openPlanParamDialog('Shade')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'Shade'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'Shade');">
+                              <i class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'Shade')">
+                              <i class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('Shade')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Side Black</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="sideBlack"
+                            [(ngModel)]="inclusionConfig.sideBlack" #sideBlack="ngModel" id=""
+                            (click)="isActiveInclusion('SideBlack',inclusionConfig.sideBlack)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.sideBlack"
+                            (click)="openPlanParamDialog('SideBlack')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'SideBlack'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'SideBlack');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'SideBlack')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('SideBlack')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">CenterSideBlack</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="centerSideBlack"
+                            [(ngModel)]="inclusionConfig.centerSideBlack" #centerSideBlack="ngModel" id=""
+                            (click)="isActiveInclusion('CenterSideBlack',inclusionConfig.centerSideBlack)">
+                          </kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.centerSideBlack"
+                            (click)="openPlanParamDialog('CenterSideBlack')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'CenterSideBlack'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'CenterSideBlack');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'CenterSideBlack')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('CenterSideBlack')">No Data Found</div>
+                    </div>
+                  </div>
+
+                  <!-- Second row -->
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Center Black</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="centerBlack"
+                            [(ngModel)]="inclusionConfig.centerBlack" #centerBlack="ngModel" id=""
+                            (click)="isActiveInclusion('CenterBlack',inclusionConfig.centerBlack)">
+                          </kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.centerBlack"
+                            (click)="openPlanParamDialog('CenterBlack')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'CenterBlack'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'CenterBlack');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'CenterBlack')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('CenterBlack')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Side White</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="sideWhite"
+                            [(ngModel)]="inclusionConfig.sideWhite" #sideWhite="ngModel" id=""
+                            (click)="isActiveInclusion('SideWhite',inclusionConfig.sideWhite)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.sideWhite"
+                            (click)="openPlanParamDialog('SideWhite')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'SideWhite'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'SideWhite');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'SideWhite')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('SideWhite')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">CenterSideWhite</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="centerSideWhite"
+                            [(ngModel)]="inclusionConfig.centerSideWhite" #centerSideWhite="ngModel" id=""
+                            (click)="isActiveInclusion('CenterSideWhite',inclusionConfig.centerSideWhite)">
+                          </kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.centerSideWhite"
+                            (click)="openPlanParamDialog('CenterSideWhite')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'CenterSideWhite'">
+                          <div class="flex">
+                            <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                            <div class="btnGroup ms-auto">
+                              <button class="btn" (click)="onMasterDNormEditInclusion(item, 'CenterSideWhite');"><i
+                                  class="icon-edit" title="Edit"></i></button>
+                              <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'CenterSideWhite')"><i
+                                  class="icon-delete" title="Delete"></i></button>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('CenterSideWhite')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">CenterWhite</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="centerWhite"
+                            [(ngModel)]="inclusionConfig.centerWhite" #centerWhite="ngModel" id=""
+                            (click)="isActiveInclusion('CenterWhite',inclusionConfig.centerWhite)">
+                          </kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.centerWhite"
+                            (click)="openPlanParamDialog('CenterWhite')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'CenterWhite'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'CenterWhite');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'CenterWhite')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('CenterWhite')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Open Crown</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="openCrown"
+                            [(ngModel)]="inclusionConfig.openCrown" #openCrown="ngModel" id=""
+                            (click)="isActiveInclusion('OpenCrown',inclusionConfig.openCrown)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.openCrown"
+                            (click)="openPlanParamDialog('OpenCrown')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'OpenCrown'">
+                          <div class="c_label">
+                            {{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})
+                          </div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'OpenCrown');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'OpenCrown')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('OpenCrown')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Open Table</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="openTable"
+                            [(ngModel)]="inclusionConfig.openTable" #openTable="ngModel" id=""
+                            (click)="isActiveInclusion('OpenTable',inclusionConfig.openTable)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.openTable"
+                            (click)="openPlanParamDialog('OpenTable')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'OpenTable'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'OpenTable');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'OpenTable')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('OpenTable')">No Data Found</div>
+                    </div>
+                  </div>
+
+                  <!-- 3rd row -->
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Open Pavilion </div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="openPavilion"
+                            [(ngModel)]="inclusionConfig.openPavilion" #openPavilion="ngModel" id=""
+                            (click)="isActiveInclusion('OpenPavilion',inclusionConfig.openPavilion)">
+                          </kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.openPavilion"
+                            (click)="openPlanParamDialog('OpenPavilion')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'OpenPavilion'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'OpenPavilion');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'OpenPavilion')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('OpenPavilion')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Open Girdle</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="openGirdle"
+                            [(ngModel)]="inclusionConfig.openGirdle" #openGirdle="ngModel" id=""
+                            (click)="isActiveInclusion('OpenGirdle',inclusionConfig.openGirdle)">
+                          </kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.openGirdle"
+                            (click)="openPlanParamDialog('OpenGirdle')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'OpenGirdle'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'OpenGirdle');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'OpenGirdle')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('OpenGirdle')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Girdle Condition</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="girdleCondition"
+                            [(ngModel)]="inclusionConfig.girdleCondition" #girdleCondition="ngModel" id=""
+                            (click)="isActiveInclusion('GirdleCondition',inclusionConfig.girdleCondition)">
+                          </kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.girdleCondition"
+                            (click)="openPlanParamDialog('GirdleCondition')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'GirdleCondition'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})
+                          </div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'GirdleCondition');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'GirdleCondition')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('GirdleCondition')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">EFOC</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="efoc"
+                            [(ngModel)]="inclusionConfig.efoc" #efoc="ngModel" id=""
+                            (click)="isActiveInclusion('EFOC',inclusionConfig.efoc)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.efoc"
+                            (click)="openPlanParamDialog('EFOC')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'EFOC'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'EFOC');"><i class="icon-edit"
+                                title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'EFOC')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('EFOC')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">EFOP</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="efop"
+                            [(ngModel)]="inclusionConfig.efop" #efop="ngModel" id=""
+                            (click)="isActiveInclusion('EFOP',inclusionConfig.efop)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.efop"
+                            (click)="openPlanParamDialog('EFOP')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'EFOP'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})
+                          </div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'EFOP');"><i class="icon-edit"
+                                title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'EFOP')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('EFOP')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">EFOT</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="efot"
+                            [(ngModel)]="inclusionConfig.efot" #efot="ngModel" id=""
+                            (click)="isActiveInclusion('EFOT',inclusionConfig.efot)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.efot"
+                            (click)="openPlanParamDialog('EFOT')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'EFOT'">
+                          <div class="flex">
+                            <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                            <div class="btnGroup ms-auto">
+                              <button class="btn" (click)="onMasterDNormEditInclusion(item, 'EFOT');"><i
+                                  class="icon-edit" title="Edit"></i></button>
+                              <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'EFOT')"><i
+                                  class="icon-delete" title="Delete"></i></button>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('EFOT')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">EFOG</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="efog"
+                            [(ngModel)]="inclusionConfig.efog" #efog="ngModel" id=""
+                            (click)="isActiveInclusion('EFOG',inclusionConfig.efog)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.efog"
+                            (click)="openPlanParamDialog('EFOG')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'EFOG'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'EFOG');"><i class="icon-edit"
+                                title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'EFOG')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('EFOG')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Culet</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="culet"
+                            [(ngModel)]="inclusionConfig.culet" #culet="ngModel" id=""
+                            (click)="isActiveInclusion('Culet',inclusionConfig.culet)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.culet"
+                            (click)="openPlanParamDialog('Culet')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'Culet'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'Culet');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'Culet')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('Culet')">No Data Found</div>
+                    </div>
+                  </div>
+
+                  <!-- 4th row -->
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">HNA</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="hNA" [(ngModel)]="inclusionConfig.hna"
+                            #hNA="ngModel" id="" (click)="isActiveInclusion('HNA',inclusionConfig.hna)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.hna" (click)="openPlanParamDialog('HNA')"><i
+                              class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'HNA'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'HNA');"><i class="icon-edit"
+                                title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'HNA')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('HNA')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">EyeClean</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="eyeClean"
+                            [(ngModel)]="inclusionConfig.eyeClean" #eyeClean="ngModel" id=""
+                            (click)="isActiveInclusion('EyeClean',inclusionConfig.eyeClean)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.eyeClean"
+                            (click)="openPlanParamDialog('EyeClean')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'EyeClean'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'EyeClean');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'EyeClean')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('EyeClean')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">KtoS</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="ktoS"
+                            [(ngModel)]="inclusionConfig.ktoS" #ktoS="ngModel" id=""
+                            (click)="isActiveInclusion('KtoS',inclusionConfig.ktoS)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.ktoS"
+                            (click)="openPlanParamDialog('KtoS')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'KtoS'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'KtoS');"><i class="icon-edit"
+                                title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'KtoS')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('KtoS')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Natural On Table</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="naturalOnTable"
+                            [(ngModel)]="inclusionConfig.naturalOnTable" #naturalOnTable="ngModel" id=""
+                            (click)="isActiveInclusion('NaturalOnTable',inclusionConfig.naturalOnTable)">
+                          </kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.naturalOnTable"
+                            (click)="openPlanParamDialog('NaturalOnTable')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'NaturalOnTable'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'NaturalOnTable');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'NaturalOnTable')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('NaturalOnTable')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Natural On Girdle</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="naturalOnGirdle"
+                            [(ngModel)]="inclusionConfig.naturalOnGirdle" #naturalOnGirdle="ngModel" id=""
+                            (click)="isActiveInclusion('NaturalOnGirdle',inclusionConfig.naturalOnGirdle)">
+                          </kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.naturalOnGirdle"
+                            (click)="openPlanParamDialog('NaturalOnGirdle')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'NaturalOnGirdle'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'NaturalOnGirdle');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'NaturalOnGirdle')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('NaturalOnGirdle')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Natural On Crown</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="naturalOnCrown"
+                            [(ngModel)]="inclusionConfig.naturalOnCrown" #naturalOnCrown="ngModel" id=""
+                            (click)="isActiveInclusion('NaturalOnCrown',inclusionConfig.naturalOnCrown)">
+                          </kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.naturalOnCrown"
+                            (click)="openPlanParamDialog('NaturalOnCrown')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'NaturalOnCrown'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'NaturalOnCrown');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'NaturalOnCrown')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('NaturalOnCrown')">No Data Found</div>
+                    </div>
+                  </div>
+
+                  <!-- 5th row -->
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Natural On Pavilion</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="naturalOnPavilion"
+                            [(ngModel)]="inclusionConfig.naturalOnPavilion" #naturalOnPavilion="ngModel" id=""
+                            (click)="isActiveInclusion('NaturalOnPavilion',inclusionConfig.naturalOnPavilion)">
+                          </kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.naturalOnPavilion"
+                            (click)="openPlanParamDialog('NaturalOnPavilion')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'NaturalOnPavilion'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'NaturalOnPavilion');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'NaturalOnPavilion')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('NaturalOnPavilion')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">RedSpot</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="redSpot"
+                            [(ngModel)]="inclusionConfig.redSpot" #redSpot="ngModel" id=""
+                            (click)="isActiveInclusion('RedSpot',inclusionConfig.redSpot)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.redSpot"
+                            (click)="openPlanParamDialog('RedSpot')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'RedSpot'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'RedSpot');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'RedSpot')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('RedSpot')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">FLColor</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="fLColor"
+                            [(ngModel)]="inclusionConfig.flColor" #fLColor="ngModel" id=""
+                            (click)="isActiveInclusion('FLColor',inclusionConfig.flColor)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.flColor"
+                            (click)="openPlanParamDialog('FLColor')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'FLColor'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'FLColor');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'FLColor')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('FLColor')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Luster</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="luster"
+                            [(ngModel)]="inclusionConfig.luster" #luster="ngModel" id=""
+                            (click)="isActiveInclusion('Luster',inclusionConfig.luster)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.luster"
+                            (click)="openPlanParamDialog('Luster')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'Luster'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'Luster');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'Luster')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('Luster')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Bowtie</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="bowtie"
+                            [(ngModel)]="inclusionConfig.bowtie" #bowtie="ngModel" id=""
+                            (click)="isActiveInclusion('Bowtie',inclusionConfig.bowtie)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!inclusionConfig.bowtie"
+                            (click)="openPlanParamDialog('Bowtie')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="inclusionData && inclusionData.length > 0">
+                        <li *ngFor="let item of inclusionData  | typefilter:'Bowtie'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})</div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditInclusion(item, 'Bowtie');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteInclusion(item, 'Bowtie')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkInclusionTypeLength('Bowtie')">No Data Found</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Measurement">
+            <ng-template kendoTabContent>
+              <div>
+                <div class="config_Wrapper measurConfig mt-0">
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Depth</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off" name="depth" [(ngModel)]="measurementConfig.depth"
+                            #depth="ngModel" id="" (click)="isActiveMeasurement('Depth',measurementConfig.depth)">
+                          </kendo-switch>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="c_height"></div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Table</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off" name="table" [(ngModel)]="measurementConfig.table"
+                            #table="ngModel" id="" (click)="isActiveMeasurement('Table',measurementConfig.table)">
+                          </kendo-switch>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="c_height"></div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Length</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off" name="length"
+                            [(ngModel)]="measurementConfig.length" #length="ngModel" id=""
+                            (click)="isActiveMeasurement('Length',measurementConfig.length)">
+                          </kendo-switch>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="c_height"></div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Width</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off" name="width" [(ngModel)]="measurementConfig.width"
+                            #width="ngModel" id="" (click)="isActiveMeasurement('Width',measurementConfig.width)">
+                          </kendo-switch>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="c_height"></div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Height</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off" name="height"
+                            [(ngModel)]="measurementConfig.height" #height="ngModel" id=""
+                            (click)="isActiveMeasurement('Height',measurementConfig.height)">
+                          </kendo-switch>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="c_height"></div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">CrownHeight</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off" name="crownHeight"
+                            [(ngModel)]="measurementConfig.crownHeight" #crownHeight="ngModel" id=""
+                            (click)="isActiveMeasurement('CrownHeight',measurementConfig.crownHeight)">
+                          </kendo-switch>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="c_height"></div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">CrownAngle</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off" name="crownAngle"
+                            [(ngModel)]="measurementConfig.crownAngle" #crownAngle="ngModel" id=""
+                            (click)="isActiveMeasurement('CrownAngle',measurementConfig.crownAngle)">
+                          </kendo-switch>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="c_height"></div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">PavillionAngle</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off" name="pavillionAngle"
+                            [(ngModel)]="measurementConfig.pavillionAngle" #pavillionAngle="ngModel" id=""
+                            (click)="isActiveMeasurement('PavillionAngle',measurementConfig.pavillionAngle)">
+                          </kendo-switch>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="c_height"></div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">PavillionDepth</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off" name="pavillionDepth"
+                            [(ngModel)]="measurementConfig.pavillionDepth" #pavillionDepth="ngModel" id=""
+                            (click)="isActiveMeasurement('PavillionDepth',measurementConfig.pavillionDepth)">
+                          </kendo-switch>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="c_height"></div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">GirdlePer</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off" name="girdlePer"
+                            [(ngModel)]="measurementConfig.girdlePer" #girdlePer="ngModel" id=""
+                            (click)="isActiveMeasurement('girdlePer',measurementConfig.girdlePer)">
+                          </kendo-switch>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="c_height"></div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Girdle</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off me-3" name="girdle"
+                            [(ngModel)]="measurementConfig.girdle" #girdle="ngModel" id=""
+                            (click)="isActiveMeasurement('Girdle',measurementConfig.girdle)"></kendo-switch>
+                        </ng-container>
+                        <kendo-buttongroup kendoTooltip position="bottom" class="config_btns">
+                          <button kendoButton [disabled]="!measurementConfig.girdle"
+                            (click)="openPlanParamDialog('Girdle')"><i class="icon-add"></i></button>
+                        </kendo-buttongroup>
+                      </div>
+                    </div>
+                    <div class="c_height">
+                      <ul class="config_ul" *ngIf="measurementData && measurementData.length > 0">
+                        <li *ngFor="let item of measurementData | typefilter:'Girdle'">
+                          <div class="c_label">{{item.displayName}} : {{item.name}}&nbsp;({{item.priority}})
+                          </div>
+                          <div class="btnGroup ms-auto">
+                            <button class="btn" (click)="onMasterDNormEditMeasurement(item, 'Girdle');"><i
+                                class="icon-edit" title="Edit"></i></button>
+                            <button class="btn" (click)="onMasterDNormDeleteMeasurement(item, 'Girdle')"><i
+                                class="icon-delete" title="Delete"></i></button>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="not_found" *ngIf="!checkMeasurementTypeLength('Girdle')">No Data Found</div>
+                    </div>
+                  </div>
+                  <div class="config_box">
+                    <div class="config_head">
+                      <div class="config_title">Ratio</div>
+                      <div>
+                        <ng-container>
+                          <kendo-switch class="k-widget k-switch-off" name="ratio" [(ngModel)]="measurementConfig.ratio"
+                            #ratio="ngModel" id="" (click)="isActiveMeasurement('Ratio',measurementConfig.ratio)">
+                          </kendo-switch>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="c_height"></div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+        </kendo-tabstrip>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add Lab Modal Start -->
+<div class="modal c-modal addemp msconfig rorgan" tabindex="-1" role="dialog" *ngIf="isLabToggle">
+  <form name="form" #labDNormForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Lab Details</h5>
+          <button type="button" class="close" (click)="closeLabDialog()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-shape">
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">Name <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="name" [(ngModel)]="labDNormObj.name" #name="ngModel" id="" required>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Display Name <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="displayName" [(ngModel)]="labDNormObj.displayName" #displayName="ngModel"
+                      id="" required>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class=" modal-footer ">
+          <button (click)="onMasterDNormSubmit(labDNormForm, false)" [disabled]="!labDNormForm.valid"
+            class="btn btn-primary"><i class="icon-add"></i>New</button>
+          <button (click)="onMasterDNormSubmit(labDNormForm, true)" [disabled]="!labDNormForm.valid"
+            class="btn btn-primary"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeLabDialog()"></div>
+  </form>
+</div>
+<!-- Add Lab Modal End -->
+
+<!-- Add Fancy Cut Detials Start -->
+<div class="modal c-modal addemp msconfig cut rorgan" tabindex="-1" role="dialog" *ngIf="isFancyCutToggle">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form name="form" #fancyCutForm="ngForm" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Fancy Cut Details</h5>
+        <button type="button" class="close " (click)="closeFancyCutDialog()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true ">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 ">
+            <div class="i-form ad-shape">
+              <div class="grid">
+
+                <div class="form-data">
+                  <label for="">Shape <span class="require ">*</span></label>
+                </div>
+                <div class="form-data">
+                  <kendo-dropdownlist [data]="listFancyCutShapeItems" [valuePrimitive]="true" name="shape"
+                    [(ngModel)]="fancyCutDetailDNormObj.shape" #shape="ngModel" required>
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data">
+                  <label for="">Cut <span class="require">*</span></label>
+                </div>
+                <div class="form-data" [ngClass]="{ 'error': cut.invalid && (cut.dirty || cut.touched) }">
+                  <kendo-dropdownlist [data]="listCPSData" [valuePrimitive]="true" name="cut"
+                    [(ngModel)]="fancyCutDetailDNormObj.cut" #cut="ngModel" required>
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-data">
+                  <label for="">Depth %<span class="require">*</span></label>
+                </div>
+                <div class="form-data" [ngClass]="{'error': (errDepth.length > 0 || minDepth.invalid || maxDepth.invalid) && 
+                    (minDepth.touched && maxDepth.touched) }">
+                  <div class="d-flex">
+                    <input type="text" class="me-2" name="minDepth" placeholder="Min" #minDepth="ngModel" required
+                      autocomplete="off"
+                      (blur)="errDepth = utilityService.checkMinMaxValidation(fancyCutDetailDNormObj.minDepth, fancyCutDetailDNormObj.maxDepth)"
+                      [(ngModel)]="fancyCutDetailDNormObj.minDepth" (keypress)="utilityService.floatOnly($event);" />
+                    <input type="text" placeholder="Max" name="maxDepth" #maxDepth="ngModel" required autocomplete="off"
+                      [(ngModel)]="fancyCutDetailDNormObj.maxDepth" (keypress)="utilityService.floatOnly($event);"
+                      (blur)="errDepth = utilityService.checkMinMaxValidation(fancyCutDetailDNormObj.minDepth, fancyCutDetailDNormObj.maxDepth)" />
+                  </div>
+                  <span class="font-smaller s-error">{{errDepth.length > 0 ? '(' + errDepth + ')' : ''}}</span>
+                </div>
+                <div class="form-data">
+                  <label for="">Table %<span class="require">*</span></label>
+                </div>
+                <div class="form-data" [ngClass]="{'error': (errTable.length > 0 || minTable.invalid || maxTable.invalid) && 
+                    (minTable.touched && maxTable.touched) }">
+                  <div class="d-flex">
+                    <input type="text" class="me-2" name="minTable" placeholder="Min" #minTable="ngModel" required
+                      autocomplete="off"
+                      (blur)="errTable = utilityService.checkMinMaxValidation(fancyCutDetailDNormObj.minTable, fancyCutDetailDNormObj.maxTable)"
+                      [(ngModel)]="fancyCutDetailDNormObj.minTable" (keypress)="utilityService.floatOnly($event);" />
+                    <input type="text" placeholder="Max" name="maxTable" #maxTable="ngModel" required autocomplete="off"
+                      [(ngModel)]="fancyCutDetailDNormObj.maxTable" (keypress)="utilityService.floatOnly($event);"
+                      (blur)="errTable = utilityService.checkMinMaxValidation(fancyCutDetailDNormObj.minTable, fancyCutDetailDNormObj.maxTable)" />
+                  </div>
+                  <span class="font-smaller s-error">{{errTable.length > 0 ? '(' + errTable + ')' : ''}}</span>
+                </div>
+                <div class="form-data">
+                  <label>Girdle <span class="require">*</span></label>
+                </div>
+                <div class="form-data" [ngClass]="{'error': (mingirdle.invalid || maxgirdle.invalid) && 
+                  (mingirdle.touched && maxgirdle.touched) }">
+                  <div class="d-flex">
+                    <kendo-dropdownlist [data]="gridleData" textField="name" valueField="name" [valuePrimitive]="true"
+                      name="mingirdle" class="me-2" required [(ngModel)]="fancyCutDetailDNormObj.minGirdle"
+                      #mingirdle="ngModel" id="mingirdle">
+                    </kendo-dropdownlist>
+
+                    <kendo-dropdownlist [data]="gridleData" textField="name" valueField="name" [valuePrimitive]="true"
+                      name="maxgirdle" required [(ngModel)]="fancyCutDetailDNormObj.maxGirdle" #maxgirdle="ngModel"
+                      id="maxgirdle">
+                    </kendo-dropdownlist>
+                  </div>
+                  <span class="font-smaller s-error">{{errGirdle.length > 0 ? '(' + errGirdle + ')' : ''}}</span>
+                </div>
+                <div class="form-data">
+                  <label>Ratio %<span class="require">*</span></label>
+                </div>
+                <div class="form-data" [ngClass]="{'error': (errRation.length > 0 || minRation.invalid || maxRation.invalid) && 
+                  (minRation.touched && maxRation.touched) }">
+                  <div class="d-flex">
+                    <input type="text" class="me-2" name="minRation" placeholder="Min" #minRation="ngModel" required
+                      autocomplete="off" [(ngModel)]="fancyCutDetailDNormObj.minRatio"
+                      (keypress)="utilityService.floatOnly($event);"
+                      (blur)="errRation = utilityService.checkMinMaxValidation(fancyCutDetailDNormObj.minRatio, fancyCutDetailDNormObj.maxRatio)" />
+                    <input type="text" placeholder="Max" required #maxRation="ngModel"
+                      (keypress)="utilityService.floatOnly($event);" name="maxRation"
+                      [(ngModel)]="fancyCutDetailDNormObj.maxRatio" autocomplete="off"
+                      (blur)="errRation = utilityService.checkMinMaxValidation(fancyCutDetailDNormObj.minRatio, fancyCutDetailDNormObj.maxRatio)" />
+                  </div>
+                  <span class="font-smaller s-error">{{errRation.length > 0 ? '(' + errRation + ')' : ''}}</span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer ">
+        <button class="btn btn-primary" (click)="onFancyCutDNormSubmit(false)" [disabled]="!fancyCutForm.valid"><i
+            class="icon-add"></i>New</button>
+        <button class="btn btn-primary" (click)="onFancyCutDNormSubmit(true)" [disabled]="!fancyCutForm.valid"><i
+            class="icon-save"></i>Save</button>
+      </div>
+    </form>
+  </div>
+
+  <div (document:keydown.esc)="closeFancyCutDialog()"></div>
+</div>
+<!-- Add Fancy Cut Detials End -->
+
+<!-- Add Master Start -->
+<div class="modal c-modal addemp msconfig rorgan " tabindex="-1 " role="dialog " *ngIf="isMasterToggle">
+  <form name="form" #masterDNormForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered " role="document ">
+      <div class="modal-content ">
+        <div class="modal-header ">
+          <h5 class="modal-title ">{{masterFlag}}</h5>
+          <button type="button " class="close " (click)="closeMasterDNormDialog() " data-dismiss="modal "
+            aria-label="Close ">
+            <span aria-hidden="true ">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body ">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 ">
+              <div class="i-form ad-shape">
+                <div class="grid ">
+                  <div class="form-data">
+                    <label for=" ">Name <span class="require ">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="name" [(ngModel)]="masterDNormObj.name" #name="ngModel" id="" required>
+                  </div>
+                  <div class="form-data">
+                    <label for=" ">Disaplay Name <span class="require ">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="displayName" [(ngModel)]="masterDNormObj.displayName"
+                      #displayName="ngModel" id="" required>
+                  </div>
+                  <div class="form-data">
+                    <label for=" ">Priority <span class="require ">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="priority" [(ngModel)]="masterDNormObj.priority" #priority="ngModel" id=""
+                      (keypress)="utilityService.numberOnly($event)" required>
+                  </div>
+                </div>
+                <div class="wrd grid">
+                  <div class="form-data">
+                    <label for=" ">Optional Words</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="optionalwords" [(ngModel)]="optionalword" #optionalwords="ngModel" id="">
+                  </div>
+                  <div class="form-data">
+                    <button (click)="onAddoptionalWordDNormAdd(optionalword)" [disabled]="optionalword.length == 0"
+                      class="btn btn-primary icon-add"></button>
+                  </div>
+                </div>
+                <div class="data-list">
+                  <ul>
+                    <li *ngFor="let item of masterDNormObj.optionalWords; let i = index">
+                      <span class="font600">Optional Word:</span> {{item}}
+                      <a title="Remove Cut Detail" (click)="removeAddoptionalWordDNorm(i)">
+                        <i class="icon-delete icon-colorstyle"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer ">
+          <button (click)="onMasterDNormSubmit(masterDNormForm, false)" [disabled]="!masterDNormForm.valid"
+            class="btn btn-primary"><i class="icon-add"></i>New</button>
+          <button (click)="onMasterDNormSubmit(masterDNormForm, true)" [disabled]="!masterDNormForm.valid"
+            class="btn btn-primary"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeMasterDNormDialog()"></div>
+  </form>
+</div>
+<!-- Add Master End -->
+
+<!-- Add Cut Detials Start -->
+<div class="modal c-modal addemp msconfig cut rorgan" tabindex="-1" role="dialog" *ngIf="isCutDetailsToggle">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cut Details</h5>
+        <button type="button" class="close " (click)="closeCutdetailsDialog()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true ">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="form" #cutDetailDNormForm="ngForm">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-shape">
+                <div class="cps grid">
+                  <div class="form-data">
+                    <label for=" ">CPS <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': cps.invalid && (cps.dirty || cps.touched) }">
+                    <kendo-dropdownlist [data]="listCutData" [valuePrimitive]="true" name="cps"
+                      [(ngModel)]="cutDetailDNormObj.cps" #cps="ngModel" required>
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="form-data">
+                    <label for=" ">Shape <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': shape.invalid && (shape.dirty || shape.touched) }">
+                    <kendo-dropdownlist [data]="listShapeData" [valuePrimitive]="true" name="shape"
+                      [(ngModel)]="cutDetailDNormObj.shape" #shape="ngModel" required>
+                    </kendo-dropdownlist>
+                  </div>
+                </div>
+                <div class="cut grid">
+                  <div class="form-data">
+                    <label for=" ">Cut <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': cut.invalid && (cut.dirty || cut.touched) }">
+                    <kendo-dropdownlist [data]="listCPSData" [valuePrimitive]="true" name="cut"
+                      [(ngModel)]="cutDetailDNormObj.cut" #cut="ngModel" required>
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="form-data">
+                    <label for=" ">Polish <span class="require ">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': polish.invalid && (polish.dirty || polish.touched) }">
+                    <kendo-dropdownlist [data]="listCPSData" [valuePrimitive]="true" name="polish"
+                      [(ngModel)]="cutDetailDNormObj.polish" #polish="ngModel" required>
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="form-data">
+                    <label for=" ">Symmetry<span class="require ">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': symmetry.invalid && (symmetry.dirty || symmetry.touched) }">
+                    <kendo-dropdownlist [data]="listCPSData" [valuePrimitive]="true" name="symmetry"
+                      [(ngModel)]="cutDetailDNormObj.symmetry" #symmetry="ngModel" required>
+                    </kendo-dropdownlist>
+                  </div>
+                  <div class="form-data">
+                    <button (click)="onCutDetailDNormAdd(cutDetailDNormForm)" [disabled]="!cutDetailDNormForm.valid"
+                      class="btn btn-primary icon-add"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="data-list">
+          <ul>
+            <li *ngFor="let item of newCutDetailDNormData; let i = index">
+              <span class="font600">CPS:</span> {{item.cps}}
+              <span class="font600">Shape:</span> {{item.shape}}
+              <span class="font600">Cut:</span> {{item.cut}}
+              <span class="font600">Polish:</span> {{item.polish}}
+              <span class="font600">Symmetry:</span> {{item.symmetry}}
+              <a title="Remove Cut Detail" (click)="removeCutDetailDNorm(i)">
+                <i class="icon-delete icon-colorstyle"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer ">
+        <button class="btn btn-primary" (click)="onCutDetailDNormSubmit(false)"
+          [disabled]="newCutDetailDNormData.length == 0"><i class="icon-add"></i>New</button>
+        <button class="btn btn-primary" (click)="onCutDetailDNormSubmit(true)"
+          [disabled]="newCutDetailDNormData.length == 0"><i class="icon-save"></i>Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div (document:keydown.esc)="closeCutdetailsDialog()"></div>
+</div>
+<!-- Add Cut Detials End -->
+
+<!-- Add INCLUSION Modal Start -->
+<div class="modal c-modal addemp msconfig rorgan" tabindex="-1" role="dialog" *ngIf="isInclusionToggle">
+  <form name="form" #planParamItemForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{dialogTitle}}</h5>
+          <button type="button" class="close" (click)="closePlanParamDialog('Brown')" data-dismiss="modal"
+            aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ad-shape">
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">Name <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': name.invalid && (name.dirty || name.touched) }">
+                    <input type="text" name="name" [(ngModel)]="masterDNormObj.name" #name="ngModel" id="" required>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Display Name <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': displayName.invalid && (displayName.dirty || displayName.touched) }">
+                    <input type="text" name="paramValue" [(ngModel)]="masterDNormObj.displayName" #displayName="ngModel"
+                      id="" required>
+
+                  </div>
+                  <div class="form-data">
+                    <label for="">Priority <span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': priority.invalid && (priority.dirty || priority.touched) }">
+                    <input type="text" (keypress)="utilityService.numberOnly($event)" name="priority"
+                      [(ngModel)]="masterDNormObj.priority" #priority="ngModel" id="" required>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer ">
+          <button (click)="onInclusionSubmit(planParamItemForm,false)" [disabled]="!planParamItemForm.valid"
+            class="btn btn-primary"><i class="icon-add"></i>New</button>
+          <button (click)="onInclusionSubmit(planParamItemForm,true)" [disabled]="!planParamItemForm.valid"
+            class="btn btn-primary"><i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closePlanParamDialog('Brown')"></div>
+  </form>
+</div>
+<!-- Add INCLUSION Modal End -->
+
+
+<div kendoDialogContainer></div>

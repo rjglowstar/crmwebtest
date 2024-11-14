@@ -1,0 +1,44 @@
+<div class="modal dialog-ui dialog-xs" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog  modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-suggestion"></i>{{'BasicText.Suggestion'| translate}}</h5>
+        <button type="button" class="close" (click)="closeSuggestionDialog()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="suggestionForm1" #suggestionForm="ngForm" novalidate>
+          <div class="i-form">
+            <div class="mail-grid">
+              <div class="form-data">
+                <label>{{'BasicText.Email'| translate}} <span class="require">*</span></label>
+              </div>
+              <div class="form-data">
+                <input type="text" name="email" class="k-input" [(ngModel)]="suggestionObj.email" #email="ngModel"
+                  id="email" required>
+              </div>
+              <div class="form-data">
+                <label>{{'BasicText.Suggestion'| translate}} <span class="require">*</span></label>
+              </div>
+              <div class="form-data">
+                <div class="form-data">
+                  <textarea name="description" class="k-textarea w-100 bg-white" [(ngModel)]="suggestionObj.description"
+                    #description="ngModel" id="description" cols="4" rows="4" resizable="auto"
+                    style="height: 60px;" required></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" (click)="saveSuggestion(suggestionForm)" [disabled]="!suggestionForm.valid"><i
+            class="icon-save"></i>{{'BasicText.Save'| translate}}</button>
+        <button class="btn" (click)="closeSuggestionDialog();"><i class="icon-delete"></i>{{'BasicText.Cancel'| translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div (document:keydown.esc)="closeSuggestionDialog()"></div>

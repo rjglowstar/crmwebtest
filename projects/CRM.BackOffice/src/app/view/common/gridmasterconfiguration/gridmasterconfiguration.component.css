@@ -1,0 +1,61 @@
+.company-list {
+    margin-top: 5px;
+    height: calc(100vh - 150px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.company-list li {
+    padding: 0.5px 0;
+}
+
+.company-list a {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 25px;
+    color: #000;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 5px;
+}
+
+.company-list li:hover a {
+    background-color: rgba(77, 77, 77, 0.7);
+    color: #fff;
+}
+
+.company-list a.active {
+    background-color: #4d4d4d;
+    color: #fff;
+}
+
+.company-list li:hover a:active,
+.company-list li:hover a.active {
+    background-color: #4d4d4d;
+    color: #fff;
+}
+
+.c-modal.grid-info.a-config {
+    border: 1px solid #d3d3d3;
+    height: calc(100% - 0px);
+}
+
+.c-modal.a-config .right {
+    height: calc(100vh - 138px);
+    overflow-y: auto;
+}
+
+.c-modal.a-config .company-list {
+    height: calc(100vh - 168px);
+}
+
+.s-company i {
+    float: right;
+}
+
+.c-modal .company-list{
+    margin-top: inherit;
+}

@@ -1,0 +1,97 @@
+<div class="sideDetails diamCompare" [ngClass]="{'active': diamondCompareFlag }">
+    <div class="sideDet_head">
+        <h6>Stone Compare Detail</h6>
+        <div class="btntop_group">
+            <button kendoButton (click)="removeItems('selected')" [disabled]="!selectedInvItems.length">
+                <i class="icon-delete_new"></i>
+                {{'BasicText.Remove Selected'| translate}}
+            </button>
+            <button kendoButton (click)="removeItems('all')">
+                <i class="icon-delete_new"></i>
+                {{'BasicText.Remove All'| translate}}
+            </button>
+            <button kendoButton class="active" (click)="closeDiamondCompareSidebar()">
+                <i class="icon-menu_close"></i>
+            </button>
+        </div>
+    </div>
+    <div class="sideDet_body">
+        <ul class="side_summary">
+            <li>{{'BasicText.No of Pcs'| translate}}:<span>{{totalCount}}</span></li>
+            <li>{{'BasicText.Weight'| translate}}:<span>{{totalWeight}}</span></li>
+            <li>{{'BasicText.AVG DISC%'| translate}}:<span>{{avgDiscount}}%</span></li>
+            <li>{{'BasicText.AVG$/CARAT'| translate}}:<span>$ {{avgPerCarat}}</span></li>
+            <li>{{'BasicText.TOTAL NETAMT'| translate}}:<span>$ {{totalNetAmount}}</span></li>
+            <li>R NetAmt:<span>$ {{rNetAmount}}</span></li>
+        </ul>
+        <div class="compare_grid">
+            <div class="compare_lft">
+                <ul class="fixedCol">
+                    <li>{{'BasicText.Stone Id'| translate}}</li>
+                    <li class="imgLi">Media</li>
+                    <li>{{'BasicText.Shape'| translate}}</li>
+                    <li>{{'BasicText.Size'| translate}}</li>
+                    <li>{{'BasicText.Color'| translate}}</li>
+                    <li>{{'BasicText.Clarity'| translate}}</li>
+                    <li>{{'BasicText.Cut'| translate}}</li>
+                    <li>{{'BasicText.Polish'| translate}}</li>
+                    <li>{{'BasicText.Symmetry'| translate}}</li>
+                    <li>{{'BasicText.Fluorescence'| translate}}</li>
+                    <li>{{'BasicText.Measurement'| translate}}</li>
+                    <li>{{'BasicText.DEPTH%'| translate}}</li>
+                    <li>{{'BasicText.RATIO'| translate}}</li>
+                    <li>{{'BasicText.Lab'| translate}}</li>
+                    <li>{{"BasicText.Rap" | translate}}</li>
+                    <li>{{"BasicText.Discount" | translate}}%</li>
+                    <li>{{"BasicText.$/Ct($)" | translate}}</li>
+                    <li>{{"BasicText.Amount($)" | translate}}</li>
+                    <li>&nbsp;</li>
+                </ul>
+            </div>
+            <div class="compare_rtl">
+                <div class="compare-diamond" *ngFor="let item of compareInvItemsData;let i = index">
+                    <ul>
+                        <li>
+                            <input type="checkbox" kendoGridSelectAllCheckbox name="chk" class="k-checkbox"
+                                (click)="selectStone(i, $event)" />
+                            {{item.stoneId}}
+                        </li>
+                        <li class="imgLi">
+                            <div class="stone_img">
+                                <img alt="img" [src]="sanitizeURL(item)" />
+                            </div>
+                        </li>
+                        <li>{{item.shape}}</li>
+                        <li>{{item.weight}}</li>
+                        <li>{{item.color}}</li>
+                        <li>{{item.clarity}}</li>
+                        <li>{{item.cut}}</li>
+                        <li>{{item.polish}}</li>
+                        <li>{{item.symmetry}}</li>
+                        <li>{{(item.fluorescence && item.fluorescence.length > 0) ? item.fluorescence : '-'}}</li>
+                        <li>{{item.measurement.length ? item.measurement.length : '0'}} - {{item.measurement.width ?
+                            item.measurement.width : '0'}} x
+                            {{item.measurement.height ? item.measurement.height : '0'}}</li>
+                        <li>{{(item.measurement.depth) ? item.measurement.depth : '-'}}</li>
+                        <li>{{(item.measurement.ratio) ? item.measurement.ratio : '-'}}</li>
+                        <li>{{(item.lab && item.lab.length > 0) ? item.lab : '-'}}</li>
+                        <li>{{item.price.rap}}</li>
+                        <li>{{item.price.discount}}%</li>
+                        <li>$ {{item.price.perCarat}}</li>
+                        <li>$ {{item.price.netAmount}}</li>
+                        <li class="cmp_btn btntop_group">
+                            <button kendoButton class="mx-auto" (click)="addToWatchList(item)">
+                                <i class="icon-wishlist"></i>
+                                {{'BasicText.Add to Watchlist'| translate}}
+                            </button>
+                            <button kendoButton class="mx-auto" (click)="addToCart(item)" [hidden]="item.isHold">
+                                <i class="icon-cart"></i>
+                                {{'BasicText.Add to Cart'| translate}}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

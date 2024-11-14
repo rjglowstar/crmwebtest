@@ -1,0 +1,62 @@
+.table-bg-red {
+    background-color: #ffdddd;
+    display: block;
+    margin: -26px -30px -30px;
+    padding: 20px 30px;
+    width: auto;
+}
+
+.table-bg-green {
+    background-color: #8cd37d;
+    display: block;
+    margin: -26px -30px -30px;
+    padding: 20px 30px;
+    width: auto;
+}
+
+.slot-wrap {
+    background-color: #d3d3d3;
+    padding: 5px;
+    border-bottom: initial;
+}
+
+.slot-wrap h5 {
+    margin-bottom: initial;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.slot-wrap .o-edit i {
+    font-size: 14px;
+    padding-right: initial;
+}
+
+.i-form.slot-list.info-block {
+    position: relative;
+}
+
+.info-block.slot-list {
+    margin: initial;
+}
+
+.kapan-details {
+    position: static;
+    top: 100%;
+    left: 0;
+    background-color: #f4f4f4;
+    padding: 5px;
+    width: 100%;
+    display: block;
+    z-index: 5;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.kapan-details h6.c-name {
+    overflow: hidden;
+    word-break: break-all;
+}
+
+.kapan-details .info-block li {
+    color: #fff;
+}

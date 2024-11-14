@@ -1,0 +1,703 @@
+<title>Weekly Summary</title>
+<section class="stockmain-wrap we_summary">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left w-100">
+        <div class="breadcrumb">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Weekly Summary</li>
+            </ul>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap stocktally">
+            <kendo-grid [data]="weeklySummary.summary" scrollable="scrollable" [resizable]="true" [reorderable]="true"
+              [selectable]="selectableSettings" [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'kapan'">
+              <ng-template kendoGridToolbarTemplate>
+
+                <div class="summarybar mt-0 p-0">
+                  <div class="summary-left title">
+                    <!-- <ul *ngIf="weeklySummary && weeklySummary.summaryNo"> -->
+                    <ul>
+                      <li>
+                        Summary No : <span>{{weeklySummary.summaryNo}}</span>&nbsp;
+                        <span *ngIf="weeklySummary.startDate && weeklySummary.endDate">({{weeklySummary.startDate|
+                          date:
+                          'dd-MM'}} to {{weeklySummary.endDate| date: 'dd-MM'}})</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="summary-right">
+                    <div class="inputWrap">
+                      <kendo-dropdownlist [data]="weeklySummaryDropDownList" [textField]="'summaryNo'"
+                        [valueField]="'id'" [valuePrimitive]="true" [(ngModel)]="selectedWeeklySummary"
+                        [kendoDropDownFilter]="filterSettings" (valueChange)="getPrevWeeklySummary($event)"
+                        name="WeeklySummary">
+                        <ng-template kendoComboBoxItemTemplate let-dataItem>
+                          <span class="k-state-default temp temp-child">
+                            {{dataItem.summaryNo}} ({{dataItem.startDate| date: 'dd-MM'}} to
+                            {{dataItem.endDate| date:
+                            'dd-MM'}})
+                          </span>
+                        </ng-template>
+                      </kendo-dropdownlist>
+                      <kendo-daterange class="date_range d-flex flex-wrap justify-content-end w-auto">
+                        <kendo-floatinglabel class="pt-0">
+                          <kendo-dateinput kendoDateRangeStartInput [(value)]="dateFilter.startDate!"
+                            (valueChange)="dateFilter.startDate = $event"></kendo-dateinput>
+                        </kendo-floatinglabel>
+                        <kendo-floatinglabel class="pt-0 ms-1">
+                          <kendo-dateinput kendoDateRangeEndInput [(value)]="dateFilter.endDate!"
+                            (valueChange)="dateFilter.endDate = $event"></kendo-dateinput>
+                        </kendo-floatinglabel>
+                      </kendo-daterange>
+
+
+                      <kendo-buttongroup kendoTooltip position="bottom">
+                        <button kendoButton kendoTooltip position="bottom" title="Search" class="btn btn-action"
+                          (click)="getSummary()">
+                          <i class="icon-search"></i>
+                        </button>
+                        <button kendoButton class="btn btn-action" title="Save" [disabled]="checkDisableSummary()"
+                          *ngIf="isViewButtons" (click)="saveSummary()">
+                          <i class="icon-save"></i>
+                        </button>
+                        <!-- <button kendoButton class="btn btn-action" title="Download WS"
+                            [disabled]="(weeklySummary && weeklySummary.id == null)" (click)="downloadWS()">
+                            <i class="icon-excelnew"></i>
+                          </button> -->
+                        <button kendoButton class="btn btn-action" title="Confirm Kapan" *ngIf="isViewButtons"
+                          [disabled]="mySelection.length == 0 || (weeklySummary && weeklySummary.id == null)"
+                          (click)="confirmKapan()">
+                          <i class="icon-check"></i>
+                        </button>
+                        <!-- <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration">
+                            <i class="icon-gridconfig pe-0"></i>
+                          </button> -->
+                      </kendo-buttongroup>
+                    </div>
+                  </div>
+                </div>
+
+              </ng-template>
+              <kendo-grid-checkbox-column [width]="30">
+
+                <ng-template kendoGridHeaderTemplate>
+                  <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox" id="headerCheckbox" />
+                  <label class="k-checkbox-label" for="headerCheckbox"></label>
+                </ng-template>
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                  <input type="checkbox" class="k-checkbox" id="checkbox-{{rowIndex}}"
+                    [kendoGridSelectionCheckbox]="rowIndex" />
+                  <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                  </label>
+                </ng-template>
+              </kendo-grid-checkbox-column>
+
+              <kendo-grid-column field="kapan" title="Kapan" [width]="50">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                  <a [ngClass]="{'table-bg-green':dataItem.isConfirm, 'table-bg-red': dataItem.error.pcsCount > 0}"
+                    class="position-relative" (click)="openKapanDetail(dataItem)" href="javascript:void(0)">
+                    {{dataItem.kapan }}</a>
+                </ng-template>
+                <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                  Total
+                </ng-template>
+              </kendo-grid-column>
+
+              <!-- #region Total -->
+              <kendo-grid-column-group title="Total" [width]="200">
+
+                <!-- #region Previous -->
+                <kendo-grid-column-group title="Previous" [width]="100">
+                  <kendo-grid-column field="previousSummary.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumPSPcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="previousSummary.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.previousSummary.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumPSWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+                <!-- #endregion -->
+                <!-- #region New -->
+                <kendo-grid-column-group title="New" [width]="100">
+                  <kendo-grid-column field="arrival.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumArrivalPcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="arrival.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.arrival.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumArrivalWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+                <!-- #endregion -->
+
+                <kendo-grid-column-group title="Inward Memo" [width]="100">
+                  <kendo-grid-column field="inwardMemo.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumInwardPcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="inwardMemo.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.inwardMemo.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumInwardWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+
+                <!-- #region Total -->
+                <kendo-grid-column-group title="Total" [width]="100">
+                  <kendo-grid-column field="total.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumTotalPcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="total.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.total.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumTotalWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+                <!-- #endregion -->
+
+              </kendo-grid-column-group>
+              <!-- #endregion -->
+
+              <!-- #region Lab Diff -->
+              <kendo-grid-column field="labDiff.weight" title="Lab Diff." [width]="50">
+                <ng-template kendoGridHeaderTemplate>
+                  Lab <br /> Diff.
+                </ng-template>
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                  {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.labDiff.weight)}}
+                </ng-template>
+                <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                  {{utilityService.ConvertToFloatWithDecimalTwoDigit(sumLDWt)}}
+                </ng-template>
+              </kendo-grid-column>
+              <!-- #endregion -->
+
+              <!-- #region Calculate -->
+              <kendo-grid-column-group title="Calculate" [width]="200">
+                <!-- #region Lab -->
+                <kendo-grid-column-group title="Lab" [width]="100">
+                  <kendo-grid-column field="lab.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumLabPcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="lab.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.lab.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumLabWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+                <!-- #endregion -->
+
+                <!-- #region Transit -->
+                <kendo-grid-column-group title="Transit" [width]="100">
+                  <kendo-grid-column field="inTransit.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumITPcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="inTransit.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.inTransit.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumITWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+                <!-- #endregion -->
+
+                <!-- #region Memo -->
+                <kendo-grid-column-group title="Memo" [width]="100">
+                  <kendo-grid-column field="memo.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumMemoPcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="memo.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.memo.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumMemoWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+                <!-- #endregion -->
+
+                <!-- #region Stock -->
+                <kendo-grid-column-group title="Stock" [width]="100">
+                  <kendo-grid-column field="stock.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumStockPcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="stock.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.stock.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumStockWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+                <!-- #endregion -->
+
+                <!-- #region Order -->
+                <kendo-grid-column-group title="Order" [width]="100">
+                  <kendo-grid-column field="order.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumOrderPcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="order.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.order.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumOrderWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+                <!-- #endregion -->
+
+              </kendo-grid-column-group>
+              <!-- #endregion -->
+
+              <!-- #region Difference -->
+              <kendo-grid-column-group title="Difference" [width]="200">
+
+                <!-- #region Delivered -->
+                <kendo-grid-column-group title="Delivered" [width]="100">
+                  <kendo-grid-column field="delivered.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumDeliPcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="delivered.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.delivered.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumDeliWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+                <!-- #endregion -->
+
+                <!-- #region InwardReturn -->
+                <kendo-grid-column-group title="InwardReturn" [width]="100">
+                  <kendo-grid-column field="inwardReturn.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumInwRtnPcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="inwardReturn.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.inwardReturn.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumInwRtnWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+                <!-- #endregion -->
+
+                <!-- #region Balance -->
+                <kendo-grid-column-group title="Balance" [width]="100">
+                  <kendo-grid-column field="balance.pcsCount" title="Pcs" [width]="50">
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumBalancePcs}}
+                    </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="balance.weight" title="Weight" [width]="50">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                      {{utilityService.ConvertToFloatWithDecimalTwoDigit(dataItem.balance.weight)}}
+                    </ng-template>
+                    <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                      {{sumBalanceWt.toFixed(2)}}
+                    </ng-template>
+                  </kendo-grid-column>
+                </kendo-grid-column-group>
+                <!-- #endregion -->
+
+              </kendo-grid-column-group>
+              <!-- #endregion -->
+
+              <!-- #region Error -->
+              <kendo-grid-column field="error.pcsCount" title="Err" [width]="30">
+                <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                  {{sumErrorPsc}}
+                </ng-template>
+              </kendo-grid-column>
+              <!-- #endregion -->
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div kendoDialogContainer></div>
+
+<!-- #region Grid Config -->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'WeeklySummary'" [gridName]="'WeeklySummary'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Packing List Dialog -->
+<div class="modal c-modal addemp dialog-sm-l" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+  [hidden]="!showKapandetail">
+  <form name="form">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="icon-packinglist"></i>Kapan: {{kapanDetail.kapan}}
+          </h5>
+          <button type="button" class="close" (click)="closeKapanDetail()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body s-block">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 p-4">
+
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Previous - {{kapanDetail.previousSummary.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.previousSummary.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones"
+                      (click)="copyKapanStones(kapanDetail.previousSummary.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.previousSummary.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.previousSummary.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">New - {{kapanDetail.arrival.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.arrival.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.arrival.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.arrival.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.arrival.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Inward - {{kapanDetail.inwardMemo.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.inwardMemo.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.inwardMemo.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.inwardMemo.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.inwardMemo.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Total - {{kapanDetail.total.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.total.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.total.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.total.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.total.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <hr />
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Lab Difference - {{kapanDetail.labDiff.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.labDiff.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.labDiff.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.labDiff.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.labDiff.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <hr />
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Lab - {{kapanDetail.lab.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.lab.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.lab.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.lab.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.lab.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Transit - {{kapanDetail.inTransit.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.inTransit.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.inTransit.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.inTransit.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.inTransit.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Memo - {{kapanDetail.memo.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.memo.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.memo.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.memo.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.memo.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Stock - {{kapanDetail.stock.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.stock.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.stock.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.stock.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.stock.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Order - {{kapanDetail.order.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.order.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.order.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.order.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.order.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <hr />
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Delivered - {{kapanDetail.delivered.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.delivered.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.delivered.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.delivered.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.delivered.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Inward Return - {{kapanDetail.inwardReturn.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.inwardReturn.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones"
+                      (click)="copyKapanStones(kapanDetail.inwardReturn.stoneId)"><i class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.inwardReturn.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.inwardReturn.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Balance - {{kapanDetail.balance.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.balance.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.balance.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.balance.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.balance.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+              <hr />
+              <div class="i-form slot-list info-block">
+                <div class="slot-wrap flex mb-0">
+                  <div class="slot-info o-title">
+                    <h5 class="title d-inline-block ps-1">Error - {{kapanDetail.error.stoneId.length}}
+                    </h5>
+                  </div>
+                  <div class="" *ngIf="kapanDetail.error.stoneId.length > 0">
+                    <button kendoButton title="Copy Stones" (click)="copyKapanStones(kapanDetail.error.stoneId)"><i
+                        class="icon-copy p-0"></i></button>
+                  </div>
+                </div>
+                <div class="kapan-details li-wrap" *ngIf="kapanDetail.error.stoneId.length > 0">
+                  <li class="w-100 mb-1">
+                    <h6 class="c-name">
+                      <i class="p-0">
+                        {{kapanDetail.error.stoneId.join(', ')}}
+                      </i>
+                    </h6>
+                  </li>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div (document:keydown.esc)="closeKapanDetail()"></div>
+  </form>
+</div>
+<!-- #endregion -->

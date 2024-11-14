@@ -1,0 +1,436 @@
+<title>Register</title>
+<div class="form-wrap authScr_bg register">
+	<div class="authGrid register_wrap">
+
+		<div class="bg_wrap">
+			<div class="img_wrap">
+				<img src="../../../../assets/images/loginbg.png" class="img-fluid" />
+			</div>
+		</div>
+
+		<div class="right_wrap">
+			<div class="log_wrap">
+				<!-- logo -->
+				<div class="logo_wrap">
+					<!-- go back -->
+					<a class="goTohome_btn" title="Go Back" (click)="navigateBackward()"><i
+							class="icon-left-new"></i><span>BACK</span></a>
+
+					<a routerLink="/home">
+						<img [src]="logoPath" class="img-fluid white_logo" alt="brand-logo">
+					</a>
+				</div>
+
+				<h6>{{'BasicText.Registration Form'| translate}}</h6>
+
+				<div class="ri-form-wrap">
+					<form name="registerForm" #registerForm="ngForm">
+						<kendo-tabstrip>
+							<kendo-tabstrip-tab title="Personal Details" [selected]="true">
+								<ng-template kendoTabContent>
+									<div class="input_grid">
+
+										<div class="form-data"
+											[ngClass]="{ 'error': firstName.invalid && (firstName.dirty || firstName.touched)}">
+											<input type="text" placeholder="&nbsp;" name="firstName"
+												#firstName="ngModel" autocomplete="off"
+												[(ngModel)]="registerCustomer.name.firstName" required
+												alphaNumericSpecial>
+											<label for="lname" class="input_lbl">{{'BasicText.First Name'|
+												translate}}<span class="require">*</span></label>
+										</div>
+
+										<div class="form-data">
+											<input type="text" placeholder="&nbsp;" name="middleName"
+												#middleName="ngModel" autocomplete="off"
+												[(ngModel)]="registerCustomer.name.middleName" alphaNumericSpecial>
+											<label for="lname" class="input_lbl">{{'BasicText.Middle Name'|
+												translate}}</label>
+										</div>
+
+										<div class="form-data"
+											[ngClass]="{ 'error': lastName.invalid && (lastName.dirty || lastName.touched)}">
+											<input type="text" placeholder="&nbsp;" name="lastName" #lastName="ngModel"
+												autocomplete="off" [(ngModel)]="registerCustomer.name.lastName" required
+												alphaNumericSpecial>
+											<label for="lname" class="input_lbl">{{'BasicText.Last Name'|
+												translate}}<span class="require">*</span></label>
+										</div>
+
+										<div class="form-data"
+											[ngClass]="{ 'error': birthDate.invalid && (birthDate.dirty || birthDate.touched)}">
+											<kendo-datepicker calendarType="classic" [disabledDates]="disabledDates"
+												format="dd/MM/yyyy" name="birthDate" #birthDate="ngModel"
+												placeholder="Date of birth*" [(ngModel)]="registerCustomer.birthDate"
+												required>
+											</kendo-datepicker>
+										</div>
+
+										<div class="form-data country-code"
+											[ngClass]="{ 'error':primaryMobile.invalid && (primaryMobile.dirty || primaryMobile.touched)}">
+											<ngx-intl-tel-input [preferredCountries]="preferredCountries"
+												[enableAutoCountrySelect]="true" [enablePlaceholder]="false"
+												[searchCountryFlag]="true"
+												[searchCountryField]="[SearchCountryField.All]"
+												[selectFirstCountry]="false" [selectedCountryISO]="CountryISO.India"
+												[phoneValidation]="true" [separateDialCode]="separateDialCode"
+												[numberFormat]="PhoneNumberFormat.National" name="primaryMobile"
+												inputId="primaryMobile" #primaryMobile="ngModel"
+												[(ngModel)]="primaryMobileNo"
+												(ngModelChange)="checkIntPhoneValidation($event, IntlTelType.PrimaryMobile, registerForm)"
+												[enablePlaceholder]="true" customPlaceholder="Mobile Number" required>
+											</ngx-intl-tel-input>
+										</div>
+
+										<div class="form-data country-code">
+											<ngx-intl-tel-input [preferredCountries]="preferredCountries"
+												[enableAutoCountrySelect]="true" [enablePlaceholder]="false"
+												[searchCountryFlag]="true"
+												[searchCountryField]="[SearchCountryField.All]"
+												[selectFirstCountry]="false" [selectedCountryISO]="CountryISO.India"
+												[phoneValidation]="true" [separateDialCode]="separateDialCode"
+												[numberFormat]="PhoneNumberFormat.National" name="secondaryMobile"
+												inputId="secondaryMobile" #secondaryMobile="ngModel"
+												[(ngModel)]="secondaryMobileNo"
+												(ngModelChange)="checkIntPhoneValidation($event, IntlTelType.SecondaryMobile, registerForm)"
+												[enablePlaceholder]="true" customPlaceholder="Alternate Number">
+											</ngx-intl-tel-input>
+										</div>
+
+										<div class="form-data"
+											[ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('email')) || (email.errors?.required && email.touched))}">
+											<input type="text" placeholder="&nbsp;" name="email" #email="ngModel"
+												[(ngModel)]="registerCustomer.email" email alphaNumericSpecial required
+												autocomplete="off">
+											<label class="input_lbl">{{'BasicText.Email Address'| translate}}<span
+													class="require">*</span></label>
+										</div>
+
+										<div class="form-data">
+											<input type="text" placeholder="&nbsp;" name="phoneNo" #phoneNo="ngModel"
+												maxlength="15" autocomplete="off" [(ngModel)]="registerCustomer.phoneNo"
+												(keypress)="utilityService.numberOnly($event)">
+											<label class="input_lbl">{{'BasicText.Telephone No'| translate}}</label>
+										</div>
+
+										<div ngModelGroup="passwords" #passwords="ngModelGroup" appCheckPassword
+											class="column2 flexWrap_box">
+											<div class="form-data"
+												[ngClass]="{ 'error': password.invalid && (registerForm.dirty || password.dirty || password.touched)}">
+												<input type="password" placeholder="&nbsp;" #password="ngModel"
+													name="password" autocomplete="off"
+													[(ngModel)]="registerCustomer.password" required
+													[pattern]="passwordPattern" #PassReg
+													style="padding-right: 22px !important;">
+												<label class="input_lbl">{{'BasicText.Password'| translate}}<span
+														class="require">*</span></label>
+												<span class="pass-view-register"
+													(click)="PassReg.type = PassReg.type == 'password' ? 'text' : 'password'">
+													<i
+														class="{{PassReg.type == 'password' ?'icon-view':'icon-password-disable'}}"></i>
+												</span>
+											</div>
+											<div class="form-data"
+												[ngClass]="{ 'error': confirmPassword.invalid && (registerForm.dirty || confirmPassword.dirty || confirmPassword.touched)}">
+												<input type="password" placeholder="&nbsp;" #confirmPassword="ngModel"
+													name="confirmPassword" [(ngModel)]="confirmPasswordText" required
+													autocomplete="off" #CPassReg
+													style="padding-right: 22px !important;">
+												<label class="input_lbl">{{'BasicText.Confirm Password'|
+													translate}}<span class="require">*</span></label>
+												<span class="pass-view-register"
+													(click)="CPassReg.type = CPassReg.type == 'password' ? 'text' : 'password'">
+													<i
+														class="{{CPassReg.type == 'password' ?'icon-view':'icon-password-disable'}}"></i>
+												</span>
+											</div>
+										</div>
+										<div class="form-data error column2">
+											<span *ngIf="password.errors?.pattern" class="error s-error mt-0">
+												{{'BasicText.Password Pattern'| translate}}
+											</span>
+											<span
+												*ngIf="passwords.errors?.passwordCheck && (confirmPassword.dirty || confirmPassword.touched)"
+												class="s-error">
+												{{'BasicText.Passwords do not match'| translate}}
+											</span>
+										</div>
+									</div>
+								</ng-template>
+							</kendo-tabstrip-tab>
+							<kendo-tabstrip-tab title="Business Details">
+								<ng-template kendoTabContent>
+									<div class="input_grid">
+										<div class="form-data"
+											[ngClass]="{ 'error': companyName.invalid && (companyName.dirty || companyName.touched)}">
+											<input type="text" placeholder="&nbsp;" name="companyName"
+												#companyName="ngModel" [(ngModel)]="registerCustomer.companyName"
+												required alphaNumericSpecial>
+											<label class="input_lbl">{{'BasicText.Company Name'| translate}}<span
+													class="require">*</span></label>
+										</div>
+										<div class="form-data"
+											[ngClass]="{ 'error': designation.invalid && (designation.dirty || designation.touched)}">
+											<kendo-combobox [data]="listDesignationItems" name="designation"
+												#designation="ngModel" [(ngModel)]="registerCustomer.designation"
+												required alphaNumericSpecial placeholder="Designation *"
+												[kendoDropDownFilter]="filterSettings">
+											</kendo-combobox>
+										</div>
+
+										<div class="form-data"
+											[ngClass]="{ 'error': businessType.invalid && (businessType.dirty || businessType.touched)}">
+											<kendo-combobox [data]="listBusinessTypeItems" name="businessType"
+												#businessType="ngModel" [(ngModel)]="registerCustomer.businessType"
+												required [kendoDropDownFilter]="filterSettings"
+												placeholder="Business Type *">
+											</kendo-combobox>
+										</div>
+
+										<div class="form-data country-code">
+											<ngx-intl-tel-input [preferredCountries]="preferredCountries"
+												[enableAutoCountrySelect]="true" [enablePlaceholder]="false"
+												[searchCountryFlag]="true"
+												[searchCountryField]="[SearchCountryField.All]"
+												[selectFirstCountry]="false" [selectedCountryISO]="CountryISO.India"
+												[maxLength]="15" [phoneValidation]="true"
+												[separateDialCode]="separateDialCode"
+												[numberFormat]="PhoneNumberFormat.National" name="businessMobileNo"
+												inputId="businessMobileNo" #businessMobileNo="ngModel"
+												[(ngModel)]="businessMobile"
+												(ngModelChange)="checkIntPhoneValidation($event, IntlTelType.BusinessMobile, registerForm)"
+												[enablePlaceholder]="true"
+												[customPlaceholder]="'BasicText.Business Mobile No'| translate">
+											</ngx-intl-tel-input>
+										</div>
+
+										<div class="form-data">
+											<input type="text" placeholder="&nbsp;" name="businessPhoneNo"
+												#businessPhoneNo="ngModel" maxlength="15"
+												[(ngModel)]="registerCustomer.businessPhoneNo"
+												(keypress)="utilityService.numberOnly($event)" />
+											<label class="input_lbl">{{'BasicText.Business Phone No'|
+												translate}}</label>
+										</div>
+
+										<div class="form-data">
+											<input type="text" placeholder="&nbsp;" name="businessEmail"
+												#businessEmail="ngModel" [(ngModel)]="registerCustomer.businessEmail"
+												email alphaNumericSpecial>
+											<label class="input_lbl" for="bemail">{{'BasicText.Email Address'|
+												translate}}</label>
+										</div>
+
+										<div class="form-data column2"
+											[ngClass]="{ 'error': line1.invalid && (line1.dirty || line1.touched)}">
+											<textarea class="textarea-wrap" placeholder="&nbsp;" cols="4" rows="3"
+												type="text" name="line1" #line1="ngModel"
+												[(ngModel)]="registerCustomer.address.line1" required
+												alphaNumericSpecial></textarea>
+											<label class="input_lbl">{{'BasicText.Address'| translate}}<span
+													class="require">*</span></label>
+										</div>
+
+										<div class="form-data"
+											[ngClass]="{ 'error': country.invalid && (country.dirty || country.touched)}">
+											<kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings"
+												[textField]="'name'" [valueField]="'name'" name="country"
+												#country="ngModel" (valueChange)="onCountryChange($event)"
+												[valuePrimitive]="true" [(ngModel)]="registerCustomer.address.country"
+												required [kendoDropDownFilter]="filterSettings"
+												[placeholder]="'BasicText.Country'| translate">
+											</kendo-combobox>
+										</div>
+
+										<div class="form-data"
+											[ngClass]="{ 'error': state.invalid && (state.dirty || state.touched)}">
+											<input type="text" placeholder="&nbsp;" name="state" #state="ngModel"
+												[(ngModel)]="registerCustomer.address.state" required
+												autocomplete="off" />
+											<label class="input_lbl">{{'BasicText.State'| translate}}<span
+													class="require">*</span></label>
+										</div>
+
+										<div class="form-data"
+											[ngClass]="{ 'error': city.invalid && (city.dirty || city.touched)}">
+											<input type="text" placeholder="&nbsp;" name="city" #city="ngModel"
+												[(ngModel)]="registerCustomer.address.city" required
+												autocomplete="off" />
+											<label class="input_lbl">{{'BasicText.City'| translate}}<span
+													class="require">*</span></label>
+										</div>
+
+										<div class="form-data"
+											[ngClass]="{ 'error': postalCode.invalid && (postalCode.dirty || postalCode.touched)}">
+											<input type="text" placeholder="&nbsp;" name="postalCode"
+												#postalCode="ngModel" [(ngModel)]="registerCustomer.address.zipCode"
+												required [alphaNumericSpecial]="'postal'">
+											<label class="input_lbl">{{'BasicText.Postal Code'| translate}}<span
+													class="require">*</span></label>
+										</div>
+
+										<div class="form-data">
+											<input type="text" placeholder="&nbsp;" name="faxNo" #faxNo="ngModel"
+												maxlength="15" [(ngModel)]="registerCustomer.faxNo"
+												(keypress)="utilityService.numberOnly($event)">
+											<label class="input_lbl">{{'BasicText.Fax'| translate}}</label>
+										</div>
+
+										<div class="form-data"
+											[ngClass]="{ 'error': referenceName.invalid && (referenceName.dirty || referenceName.touched)}">
+											<input type="text" placeholder="&nbsp;" name="referenceName"
+												#referenceName="ngModel" [(ngModel)]="registerCustomer.referenceName"
+												required alphaNumericSpecial>
+											<label class="input_lbl">{{'BasicText.Reference'| translate}}<span
+													class="require">*</span></label>
+										</div>
+									</div>
+								</ng-template>
+							</kendo-tabstrip-tab>
+							<kendo-tabstrip-tab title="KYC Details">
+								<ng-template kendoTabContent>
+									<div class="input_grid">
+
+										<!-- Business Card -->
+										<div class="form-data">
+											<div class="c-upload">
+												<label class="upload_cusInput" for="fileInpBusIdentity">
+													<span>Business Proof<span class="require">*</span></span>
+													<span class="browLbl">
+														<ng-container>Browse</ng-container>
+														<!-- <ng-container *ngIf="businessIdentityModel">File Uploaded</ng-container> -->
+													</span>
+												</label>
+												<input #businessIndentityFileupload type="file" hidden
+													(change)="uploadFiles(registerForm,$event, FileStoreTypes.CustomerBussinessIdent)"
+													accept=".jpg,.png,.pdf" id="fileInpBusIdentity" type="file"
+													name="businessIdentity" />
+												<!-- required -->
+												<input type="hidden" name="fileHidden">
+												<span *ngIf="businessIdentityFlag" class="s-error">
+													{{'BasicText.Business identity is required'|translate}}</span>
+												<div class="msg-box" [ngStyle]="{'border-bottom-color': '#028e02'  }"
+													*ngIf="businessIdentityModel">
+													<div class="success">{{'BasicText.File successfully attached'|
+														translate}}</div>
+													<button type="button" (click)="clearBusinessIdentity(registerForm)"
+														class="btn"><i class="icon-delete"></i></button>
+												</div>
+											</div>
+										</div>
+
+										<!-- Photo identity proof -->
+										<div class="form-data">
+											<div class="c-upload">
+												<label class="upload_cusInput" for="fileInpPhotoIdentity">
+													<span>Photo ID Proof<span class="require">*</span></span>
+													<span class="browLbl">
+														<ng-container>Browse</ng-container>
+														<!-- <ng-container *ngIf="photoIdentityModel">File Uploaded</ng-container> -->
+													</span>
+												</label>
+												<input #photoIdentityFileupload type="file" hidden
+													(change)="uploadFiles(registerForm,$event,FileStoreTypes.CustomerPhotoIdent)"
+													accept=".jpg,.png,.pdf" id="fileInpPhotoIdentity" type="file"
+													name="photoIdentity" />
+												<input type="hidden" name="fileHidden">
+											</div>
+											<span *ngIf="photoIdentityFlag" class="s-error">
+												{{'BasicText.Photo identity is required'| translate}}</span>
+											<div class="msg-box" [ngStyle]="{'border-bottom-color': '#028e02'  }"
+												*ngIf="photoIdentityModel">
+												<div class="success">{{'BasicText.File successfully attached'|
+													translate}}</div>
+												<button type="button" (click)="clearPhotoIdentity(registerForm)"
+													class="btn"><i class="icon-delete"></i></button>
+											</div>
+										</div>
+
+										<div class="form-data column2">
+											<hr class="or_label">
+										</div>
+
+										<!-- Profile Photo -->
+										<!-- <div class="form-data text-center">
+										<label>{{'BasicText.Profile image'| translate}}</label>
+										<div class="c-upload">
+											<label for="file-input">
+												<span><i class="icon-upload"></i></span>
+												<span>{{'BasicText.Select files'| translate}}</span>
+											</label>
+											<input #profileFileupload type="file"
+												(change)="uploadFiles(registerForm,$event,FileStoreTypes.CustomerProfile)"
+												accept="image/png, image/gif, image/jpeg" id="fileInpProImage" type="file"
+												name="profileImage" />
+											<input type="hidden" name="fileHidden">
+										</div>
+										<div class="msg-box" [ngStyle]="{'border-bottom-color': '#028e02'  }" *ngIf="profileImageModel">
+											<div class="success">{{'BasicText.File successfully attached'| translate}}</div>
+											<button type="button" (click)="clearPhotoProfile(registerForm)" class="btn"><i
+													class="icon-delete"></i></button>
+										</div>
+										<span class="im-bottom">{{'BasicText.Personal image'| translate}}</span>										
+									</div> -->
+
+										<div class="form-data social">
+											<div
+												[ngClass]="{ 'error': whatsAppNumberV.invalid && (whatsAppNumberV.dirty || whatsAppNumberV.touched)}">
+												<input type="text" name="whatsAppNumberV" #whatsAppNumberV="ngModel"
+													maxlength="15" (keypress)="utilityService.numberOnly($event)"
+													[(ngModel)]="whatsAppNumber"
+													placeholder="{{'BasicText.WhatsappNumber' | translate}}">
+											</div>
+										</div>
+										<div class="form-data social">
+											<div
+												[ngClass]="{ 'error': messengerLinkV.invalid && ((messengerLinkV.touched && messengerLinkV.hasError('pattern')) || (messengerLinkV.errors?.required && messengerLinkV.touched))}">
+												<input type="text" name="messengerLinkV" #messengerLinkV="ngModel"
+													[(ngModel)]="messengerLink"
+													placeholder="{{'BasicText.WeChatUserName' | translate}}">
+											</div>
+										</div>
+										<div class="form-data social">
+											<input type="text" name="skypeUserNameV" #skypeUserNameV="ngModel"
+												[(ngModel)]="skypeUserName"
+												placeholder="{{'BasicText.SkypeUserName' | translate}}">
+										</div>
+										<div class="form-data social">
+											<input type="text" name="snapChatUserNameV" #snapChatUserNameV="ngModel"
+												[(ngModel)]="snapChatUserName"
+												placeholder="{{'BasicText.SanpChatUserName' | translate}}">
+										</div>
+										<div class="form-data social">
+											<input type="text" name="telegramUserNameV" #telegramUserNameV="ngModel"
+												[(ngModel)]="telegramUserName"
+												placeholder="{{'BasicText.TelegramUserName' | translate}}">
+										</div>
+										<div class="form-data social">
+											<input type="text" name="linkedInUserNameV" #linkedInUserNameV="ngModel"
+												[(ngModel)]="linkedInUserName"
+												placeholder="{{'BasicText.LinkedInUserName' | translate}}">
+										</div>
+									</div>
+								</ng-template>
+							</kendo-tabstrip-tab>
+						</kendo-tabstrip>
+						<div class="i-form">
+							<!-- [disabled]="!registerForm.valid" -->
+							<div class="form-data sub-btn">
+								<div class="btn_wrap">
+									<button type="button" (click)="resetForm(registerForm)"
+										class="c-btn">{{'BasicText.RESET'|
+										translate}}</button>
+									<button type="submit" (click)="onRegisterSubmit(registerForm)"
+										class="c-btn">{{'BasicText.Submit'|
+										translate}}</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div kendoDialogContainer></div>

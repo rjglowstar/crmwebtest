@@ -1,0 +1,135 @@
+<div class="modal c-modal addemp logi-modal l-issue rorgan" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isLabReceive">
+  <form name="form" #LabReceive="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=""><i class="icon-labrecive"></i>Lab Receive</h5>
+          <button type="button" class="close" (click)="closeLabReceiveDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- #region LAB Receive CRUD -->
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="en-form f-12">
+                <div class="e-details-n lb-rcv-top">
+                  <div class="info-block">
+                    <li>
+                      <h6 class="c-name"><span>Organization:</span>{{strOrg}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Department:</span>{{strDept}}</h6>
+                    </li>
+                    <li>
+                      <h6 class="c-name"><span>Employee:</span>{{strEmp}}</h6>
+                    </li>
+                  </div>
+                </div>
+              </div>
+              <div class="lab-receive-grid mb-2">
+                <div class="form-data">
+                  <label>Stone ID:</label>
+                </div>
+                <div class="form-data">
+                  <input type="text" id="barcode" name="barcode" [(ngModel)]="EnteredStoneID" #barcode="ngModel"
+                    #BarcodeInput name="barcode">
+                </div>
+                <div class="form-data">
+                  <label>Box No<span class="require">*</span></label>
+                </div>
+                <div class="form-data">
+                  <input type="text" name="boxSerialNo" [(ngModel)]="boxSerialNo" required />
+                </div>
+              </div>
+
+              <div class="i-form ma-pac-midd mb-0">
+                <div class="grid">
+                  <div class="form-data">
+                    <span class="t-title">Packets:</span>{{cntMnuStones}}
+                  </div>
+                  <div class="form-data">
+                    <span class="t-title">Weight:</span>{{sumMnuStonesWeight}}
+                  </div>
+                  <div class="ci-top-right pe-0">
+                    <kendo-buttongroup kendoTooltip position="bottom">
+                      <button kendoButton class="mb-1"> <i class="icon-gridconfig pe-0"
+                          (click)="openGridConfigDialog()"></i></button>
+                    </kendo-buttongroup>
+                  </div>
+                </div>
+              </div>
+              <!-- #endregion -->
+
+              <!-- #region Grid -->
+              <div class="mod-wrap">
+                <div class="grid-wrap">
+                  <ng-container *ngIf="!gridViewLab">
+                    <div class="k-grouping-header k-grouping-header-flex">
+                      <div class="k-indicator-container">
+                        <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                        </kendo-skeleton>
+                      </div>
+                    </div>
+                    <table *ngIf="fields && fields.length > 0" class="w-100">
+                      <th *ngFor="let field of fields">{{field.propertyName}}</th>
+                      <tr *ngFor="let field of skeletonArray">
+                        <td *ngFor="let field of fields">
+                          <kendo-skeleton shape="text" animation="wave" [width]="75" [height]="40">
+                          </kendo-skeleton>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-container>
+                  <kendo-grid [data]="gridViewLab" class="grid-ui upload-grid" [sortable]="true" [resizable]="true">
+                    <ng-container *ngIf="fields && fields.length > 0">
+                      <ng-container *ngFor="let field of fields">
+                        <ng-container *ngIf="field.isSelected">
+                          <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                            <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'Action'">
+                              <ng-container style="text-align: center">
+                                <i class="icon-delete p-0" (click)="deletePlan(dataItem.stoneId)"></i>
+                              </ng-container>
+                            </ng-template>
+                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                              *ngIf="field.propertyName == 'isLabResultFound'">
+                              <input type="checkbox" class="k-checkbox" id="checkbox-isLabResultFound-{{rowIndex}}"
+                                [checked]="dataItem.isLabResultFound" [disabled]="true" />
+                              <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                              </label>
+                            </ng-template>
+                          </kendo-grid-column>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </kendo-grid>
+                </div>
+              </div>
+              <!-- #endregion -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="onSavePacket(LabReceive,true)"
+            [disabled]="(boxSerialNo == null || boxSerialNo.length == 0)">
+            <i class="icon-add"></i>New</button>
+          <button type="button" class="btn btn-primary" (click)="onSavePacket(LabReceive,true)"
+            [disabled]="(boxSerialNo == null || boxSerialNo.length == 0)">
+            <i class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div (document:keydown.esc)="closeLabReceiveDialog()"></div>
+
+<!-- #region Grid Config-->
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'LabReceive'" [gridName]="'LabReceiveGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->

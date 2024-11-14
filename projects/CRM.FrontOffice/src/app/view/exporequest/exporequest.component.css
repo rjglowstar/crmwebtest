@@ -1,0 +1,53 @@
+.status-btn-offline {
+    border-left: 3px solid #f49898;
+}
+
+.status-btn {
+    font-size: 13px;
+    background: #f5f5f5;
+}
+
+.expo-grid .k-grid {
+    height: calc(100vh - 350px);
+}
+
+.expoday-grid {
+    display: grid;
+    grid-template-columns: 70px 1fr 110px 1fr 76px 70px;
+    grid-column-gap: 10px;
+    align-items: center;
+}
+
+.left-count table:nth-child(1):after {
+    content: "";
+    background: #000;
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    top: 0;
+    right: -14px;
+}
+
+.expo-ordergrid .k-grid {
+    height: calc(100vh - 550px);
+}
+
+.cart-info tr td:first-child {
+    font-size: 11px;
+}
+
+.exportday-grid-2 {
+    display: grid;
+    grid-template-columns: 110px 1fr 80px 1fr 76px 1fr;
+    grid-column-gap: 10px;
+    align-items: center;
+    margin-top: 5px;
+    border-top: 1px solid #d3d3d3;
+    padding-top: 5px;
+}
+
+@media (max-width:767px) {
+    .expo-grid .k-grid {
+        height: 400;
+    }
+}

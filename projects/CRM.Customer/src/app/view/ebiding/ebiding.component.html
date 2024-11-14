@@ -1,0 +1,470 @@
+<section class="secbg_wrap ebid_sec">
+    <div class="wrapper-full">
+        <div class="sec_topbar">
+            <div class="flex_box">
+                <h3 class="page_title">E-Bid</h3>
+                <div class="btntop_group">
+                    <button kendoButton title="Apply Bid from Excel" (click)="fileUpload.click()"
+                        [disabled]="!isActiveBid || isBidEnded">
+                        <i class="icon-apply_bid"></i>
+                        <span class="btn-text">Apply Bids</span>
+                    </button>
+                    <input #fileUpload id="fileUpload" type="file"
+                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                        (click)="fileUpload.value=''" (change)="applyBidingByExcel($event)" hidden />
+                    <button kendoButton (click)="openExcelFile()" title="Excel" [disabled]="!isActiveBid || isBidEnded">
+                        <i class="icon-excel"></i>
+                        <span class="btn-text">Excel</span>
+                    </button>
+                    <button kendoButton (click)="openGridConfigDialog()"
+                        title="{{'BasicText.Grid Configuration'| translate}}">
+                        <i class="icon-setting"></i>
+                        <span class="btn-text">{{'BasicText.Grid Configuration'| translate}}</span>
+                    </button>
+                </div>
+            </div>
+            <div class="grid_box">
+                <ul class="summary_bar">
+                    <li>Total Pcs: {{stoneTotalCount}}</li>
+                    <li>Total Weight: {{stoneTotalWeight}}</li>
+                    <li>Selected Pcs: {{selectedStoneTotalCount}}</li>
+                    <li>Selected Weight: {{selectedStoneTotalWeight}}</li>
+                </ul>
+                <div class="countInfo">
+                    <h4>Closure Date : {{ isActiveBid ? bidEndDate : 'BID CLOSED' }} <br>
+                        GMT +5:30 (Indian Standard Time)</h4>
+                    <div class="count_down">
+                        <div class="count"><span>{{ days }}</span>DAYS</div>
+                        <div class="count"><span>{{ hours }}</span>HOURS</div>
+                        <div class="count"><span>{{ minutes }}</span>MINUTES</div>
+                        <div class="count"><span>{{ seconds }}</span>SECONDS</div>
+                    </div>
+                </div>
+                <kendo-buttongroup class="bidTabBtns">
+                    <button kendoButton [class.active]="bidTab === 1" (click)="bidSelectTab(1)">Bid Stone
+                        ({{stoneTotalCount}})</button>
+                    <button kendoButton [class.active]="bidTab === 2" (click)="bidSelectTab(2)">Active Bid
+                        ({{stoneActiveBidTotalCount}})</button>
+                    <button kendoButton [class.active]="bidTab === 3" (click)="bidSelectTab(3)">Bid History
+                        ({{bidHistoryTotalCount}})</button>
+                </kendo-buttongroup>
+            </div>
+        </div>
+        <div class="gridtbl_wrap grid-setting">
+            <div *ngIf="bidTab === 1">
+                <kendo-grid #invGrid [data]="gridView" [reorderable]="true" [resizable]="true" [sortable]="true"
+                    [sort]="sort" (sortChange)="sortChange($event)" [selectable]="selectableSettings"
+                    (selectionChange)="selectedRowChange($event)" [pageSize]="pageSize" [skip]="skip" [pageable]="false"
+                    (pageChange)="pageChange($event)" [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'stoneId'"
+                    [filter]="filter" filterable="menu" (filterChange)="filterChange($event)"
+                    *ngIf="bidingSummary.invDetailItems.length > 0">
+
+                    <ng-container *ngIf="fields && fields.length > 0">
+                        <ng-container *ngFor="let field of fields">
+                            <ng-container *ngIf="field.isSelected">
+                                <kendo-grid-column [width]="field.width" [field]="field.propertyName"
+                                    [title]="field.title" [filterable]="field.filterable ?? false"
+                                    [headerStyle]="field.propertyName === 'media' ? { 'justify-content': 'center' } : {}">
+
+                                    <ng-template *ngIf="field.title == 'Checkbox'" kendoGridHeaderTemplate>
+                                        <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox"
+                                            id="headerCheckbox" />
+                                        <label class="k-checkbox-label" for="headerCheckbox"></label>
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                        *ngIf="field.title == 'Checkbox'">
+                                        <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                                            id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                        </label>
+                                    </ng-template>
+
+                                    <!-- <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                        *ngIf="field.propertyName == 'location'" [style]="{'text-align': 'center'}">
+                                        <div kendoTooltip position="top" [title]="dataItem.location"
+                                            class="text-center"><img
+                                                src="../../../assets/images/svg/couFlag_{{getcountryFlag(dataItem.location)}}.svg"
+                                                width="20px" [alt]="dataItem.location"></div>
+                                    </ng-template> -->
+
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                        *ngIf="field.propertyName == 'media'" [style]="{'text-align': 'center'}">
+                                        <span class="gr-icon d-inline-block w-100 text-center"
+                                            (click)="openDiamonddetailSidebar(dataItem.stoneId)"><i
+                                                class="icon-mediaImg" style="font-size:20px;"></i></span>
+                                    </ng-template>
+
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                        *ngIf="field.propertyName == 'weight'">
+                                        {{dataItem.weight.toFixed(2)}}
+                                    </ng-template>
+
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                        *ngIf="field.propertyName == 'measurement.depth'">
+                                        {{dataItem.measurement.depth.toFixed(2)}}
+                                    </ng-template>
+
+                                    <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+                                        let-filterService="filterService" *ngIf="field.filterable">
+                                        <kendo-multiselect style="width: 220px" [data]="categories" [checkboxes]="true"
+                                            textField="CategoryName" (click)="getGridCategoriesData(field.propertyName)"
+                                            valueField="CategoryID" [valuePrimitive]="true"
+                                            [value]="filter | filterValues"
+                                            (valueChange)="categoryChange($event, filterService, field.propertyName)">
+                                        </kendo-multiselect>
+                                    </ng-template>
+
+                                    <ng-template kendoGridCellTemplate let-dataItem
+                                        *ngIf="field.propertyName == 'measurement'">
+                                        <span>{{dataItem.measurement?.length}} * {{dataItem.measurement?.width}} *
+                                            {{dataItem.measurement?.height}}</span>
+                                    </ng-template>
+
+                                </kendo-grid-column>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                    <ng-template kendoGridDetailTemplate let-dataItem let-rowIndex="rowIndex">
+                        <div class="ebiding_Grid">
+                            <div class="form_data">
+                                <label>Rapaport </label>
+                                <input type="number" [(ngModel)]="dataItem.price.rap" [disabled]="true" />
+                            </div>
+                            <div class="form_data">
+                                <label>Bid $/Ct </label>
+                                <input type="number" [(ngModel)]="dataItem.bidPerCT" [disabled]="true" />
+                            </div>
+                            <div class="form_data">
+                                <label>Bid Amt$ </label>
+                                <input type="number" [(ngModel)]="dataItem.bidNetAmount" [disabled]="true" />
+                            </div>
+                            <div class="form_data">
+                                <label>Cur. {{isGreater ? 'Max' : 'Min'}} Bid% </label>
+                                <span class="maxBid_sp">{{dataItem.curBidDisc}} %</span>
+                            </div>
+                            <div class="form_data">
+                                <label>Bid Disc% </label>
+                                <span class="flexGroup">
+                                    <button kendoButton class="bidD_btn" (click)="decrementDiscount(dataItem)"
+                                        [disabled]="isBidEnded">-</button>
+                                    <input type="number" [(ngModel)]="dataItem.bidingDisc"
+                                        (input)="calculatePerCtAmount(dataItem)" [disabled]="isBidEnded" />
+                                    <button kendoButton class="bidD_btn inc" (click)="incrementDiscount(dataItem)"
+                                        [disabled]="isBidEnded">+</button>
+                                </span>
+                            </div>
+                            <div class="form_data">
+                                <button kendoButton class="bidSub_btn"
+                                    (click)="placeBid(dataItem.stoneId, dataItem.bidingDisc, dataItem)"
+                                    [disabled]="(isGreater ? dataItem.bidingDisc < dataItem.curBidDisc : false) || isBidEnded || dataItem.bidingDisc < -99 || dataItem.bidingDisc > 99">Add
+                                    Bid</button>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-grid>
+                <div class="bidhis_sec noBid_sec" *ngIf="!bidingSummary.invDetailItems.length">
+                    <img src="../../../assets/images/notBid.png" class="img-fluid" alt="No data available" />
+                    <p>Every month we provide an extra discount on a few <br>
+                        stones which you can bid to buy. Stay tuned.</p>
+                </div>
+            </div>
+            <div *ngIf="bidTab === 2">
+                <kendo-grid #invGrid [data]="gridAcitveBidView" [reorderable]="true" [resizable]="true"
+                    [sortable]="true" [sort]="sort" (sortChange)="sortChange($event)" [selectable]="selectableSettings"
+                    (selectionChange)="selectedRowChange($event)" [(selectedKeys)]="mySelection"
+                    [kendoGridSelectBy]="'stoneId'" [filter]="filter" filterable="menu"
+                    (filterChange)="activeBidFilterChange($event)" *ngIf="activeBidInvDetailItems.length > 0">
+
+                    <ng-container *ngIf="fields && fields.length > 0">
+                        <ng-container *ngFor="let field of fields">
+                            <ng-container *ngIf="field.isSelected">
+                                <kendo-grid-column [width]="field.width" [field]="field.propertyName"
+                                    [title]="field.title" [filterable]="field.filterable ?? false"
+                                    [headerStyle]="field.propertyName === 'media' ? { 'justify-content': 'center' } : {}">
+
+                                    <ng-template *ngIf="field.title == 'Checkbox'" kendoGridHeaderTemplate>
+                                        <input kendoGridSelectAllCheckbox type="checkbox" class="k-checkbox"
+                                            id="headerCheckbox" />
+                                        <label class="k-checkbox-label" for="headerCheckbox"></label>
+                                    </ng-template>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                        *ngIf="field.title == 'Checkbox'">
+                                        <input *ngIf="!dataItem.isDisabled" type="checkbox" class="k-checkbox"
+                                            id="checkbox-{{rowIndex}}" [kendoGridSelectionCheckbox]="rowIndex" />
+                                        <label class="k-checkbox-label" for="checkbox-{{rowIndex}}">
+                                        </label>
+                                    </ng-template>
+
+                                    <!-- <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                        *ngIf="field.propertyName == 'location'" [style]="{'text-align': 'center'}">
+                                        <div kendoTooltip position="top" [title]="dataItem.location"
+                                            class="text-center"><img
+                                                src="../../../assets/images/svg/couFlag_{{getcountryFlag(dataItem.location)}}.svg"
+                                                width="20px" [alt]="dataItem.location"></div>
+                                    </ng-template> -->
+
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                        *ngIf="field.propertyName == 'media'" [style]="{'text-align': 'center'}">
+                                        <span class="gr-icon d-inline-block w-100 text-center"
+                                            (click)="openDiamonddetailSidebar(dataItem.stoneId)"><i
+                                                class="icon-mediaImg" style="font-size:20px;"></i></span>
+                                    </ng-template>
+
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                        *ngIf="field.propertyName == 'weight'">
+                                        {{dataItem.weight.toFixed(2)}}
+                                    </ng-template>
+
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"
+                                        *ngIf="field.propertyName == 'measurement.depth'">
+                                        {{dataItem.measurement.depth.toFixed(2)}}
+                                    </ng-template>
+
+                                    <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+                                        let-filterService="filterService" *ngIf="field.filterable">
+                                        <kendo-multiselect style="width: 220px" [data]="activeBidCategories"
+                                            [checkboxes]="true" textField="CategoryName"
+                                            (click)="getActiveBidGridCategoriesData(field.propertyName)"
+                                            valueField="CategoryID" [valuePrimitive]="true"
+                                            [value]="filter | filterValues"
+                                            (valueChange)="categoryChange($event, filterService, field.propertyName)">
+                                        </kendo-multiselect>
+                                    </ng-template>
+
+                                    <ng-template kendoGridCellTemplate let-dataItem
+                                        *ngIf="field.propertyName == 'measurement'">
+                                        <span>{{dataItem.measurement?.length}} * {{dataItem.measurement?.width}} *
+                                            {{dataItem.measurement?.height}}</span>
+                                    </ng-template>
+
+                                </kendo-grid-column>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                    <ng-template kendoGridDetailTemplate let-dataItem let-rowIndex="rowIndex">
+                        <div class="ebiding_Grid">
+                            <div class="form_data">
+                                <label>Rapaport </label>
+                                <input type="number" [(ngModel)]="dataItem.price.rap" [disabled]="true" />
+                            </div>
+                            <div class="form_data">
+                                <label>Bid $/Ct </label>
+                                <input type="number" [(ngModel)]="dataItem.bidPerCT" [disabled]="true" />
+                            </div>
+                            <div class="form_data">
+                                <label>Bid Amt$ </label>
+                                <input type="number" [(ngModel)]="dataItem.bidNetAmount" [disabled]="true" />
+                            </div>
+                            <div class="form_data">
+                                <label>Cur. {{isGreater ? 'Max' : 'Min'}} Bid% </label>
+                                <span class="maxBid_sp">{{dataItem.curBidDisc}} %</span>
+                            </div>
+                            <div class="form_data">
+                                <label>Bid Disc% </label>
+                                <span class="flexGroup">
+                                    <button kendoButton class="bidD_btn" (click)="decrementDiscount(dataItem)"
+                                        [disabled]="isBidEnded">-</button>
+                                    <input type="number" [(ngModel)]="dataItem.bidingDisc" [max]="dataItem.curBidDisc"
+                                        (input)="calculatePerCtAmount(dataItem)" [disabled]="isBidEnded" />
+                                    <button kendoButton class="bidD_btn inc" (click)="incrementDiscount(dataItem)"
+                                        [disabled]="isBidEnded">+</button>
+                                </span>
+                            </div>
+                            <div class="form_data">
+                                <button kendoButton class="bidSub_btn"
+                                    (click)="placeBid(dataItem.stoneId, dataItem.bidingDisc, dataItem)"
+                                    [disabled]="(isGreater ? dataItem.bidingDisc < dataItem.curBidDisc : false) || isBidEnded || dataItem.bidingDisc < -99 || dataItem.bidingDisc > 99">Add
+                                    Bid</button>
+                                <!-- <span *ngIf="dataItem.bidingDisc > dataItem.curBidDisc" class="text-danger">
+                                <i class="icon-info mx-2"></i>Value must be above {{ dataItem.curBidDisc }}.
+                            </span> -->
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-grid>
+                <div class="bidhis_sec noBid_sec" *ngIf="!activeBidInvDetailItems.length">
+                    <img src="../../../assets/images/notBid.png" class="img-fluid" alt="No data available" />
+                    <p>Every month we provide an extra discount on a few <br>
+                        stones which you can bid to buy. Stay tuned.</p>
+                </div>
+            </div>
+
+            <div class="bidhis_sec" *ngIf="bidTab === 3">
+                <ul class="bidhis_wrap" *ngIf="bidHistoryItems.length > 0">
+                    <li *ngFor="let item of bidHistoryItems">
+                        <kendo-panelbar>
+                            <kendo-panelbar-item [expanded]="false">
+                                <ng-template kendoPanelBarItemTitle>
+                                    <div class="sumflex_wrap">
+                                        <span class="status_icon">
+                                            <i class="icon-bid"></i>
+                                        </span>
+                                        <div class="bidhis_summary">
+                                            <span>BID No: <label>{{item.bidNumber}}</label></span>
+                                            <span>Auction Date: <label>{{item.auctionDate | date:
+                                                    'dd/MM/yyyy'}}</label></span>
+                                            <span>Total Stones: <label>{{item.totalStones}}</label></span>
+                                            <span>Total Weight: <label>{{item.totalWeight.toFixed(2)}}</label></span>
+                                            <span>Total $/Ct: <label>{{item.totalPerCT.toFixed(2)}}</label></span>
+                                            <span>Total Amount.: <label>{{item.totalAmt.toFixed(2)}}</label></span>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <ng-template kendoPanelBarContent>
+                                    <div class="gridtbl_wrap">
+                                        <!-- grid-data -->
+                                        <kendo-grid #invGrid [data]="item.bidInvItems" [groupable]="false"
+                                            [resizable]="true" [sortable]="true" (sortChange)="sortChange($event)"
+                                            [kendoGridSelectBy]="'stoneId'" [scrollable]="'scrollable'"
+                                            class="bidHis_grid">
+                                            <!-- <kendo-grid-column field="location" title="Location" [width]="80">
+                                                <ng-template kendoGridCellTemplate let-dataItem
+                                                    [headerStyle]="{'justify-content': 'center'}"
+                                                    [style]="{'text-align': 'center'}">
+                                                    <div class="text-center" kendoTooltip position="top"
+                                                        [title]="dataItem.location">
+                                                        <img src="../../../assets/images/svg/couFlag_{{getcountryFlag(dataItem.location)}}.svg"
+                                                            width="22px" [alt]="dataItem.location">
+                                                    </div>
+                                                </ng-template>
+                                            </kendo-grid-column> -->
+                                            <kendo-grid-column field="stoneId" title="StoneId"
+                                                [width]="70"></kendo-grid-column>
+                                            <kendo-grid-column field="media" title="Media" [width]="80"
+                                                [headerStyle]="{'justify-content': 'center'}">
+                                                <ng-template kendoGridCellTemplate let-dataItem>
+                                                    <span class="gr-icon d-inline-block w-100 text-center"
+                                                        (click)="openDiamonddetailSidebar(dataItem.stoneId)"><i
+                                                            class="icon-mediaImg" style="font-size:20px;"></i></span>
+                                                </ng-template>
+                                            </kendo-grid-column>
+                                            <kendo-grid-column field="shape" title="Shape"
+                                                [width]="70"></kendo-grid-column>
+                                            <kendo-grid-column field="weight" title="Carat"
+                                                [width]="60"></kendo-grid-column>
+                                            <kendo-grid-column field="color" title="Color"
+                                                [width]="70"></kendo-grid-column>
+                                            <kendo-grid-column field="clarity" title="Clarity"
+                                                [width]="70"></kendo-grid-column>
+                                            <kendo-grid-column field="cut" title="Cut" [width]="60"></kendo-grid-column>
+                                            <kendo-grid-column field="polish" title="Polish"
+                                                [width]="60"></kendo-grid-column>
+                                            <kendo-grid-column field="symmetry" title="Symm"
+                                                [width]="70"></kendo-grid-column>
+                                            <kendo-grid-column field="fluorescence" title="Fluor"
+                                                [width]="70"></kendo-grid-column>
+                                            <kendo-grid-column field="measurement" title="Measurement" [width]="80">
+                                                <ng-template kendoGridCellTemplate let-dataItem>
+                                                    <span>{{dataItem.measurement?.length}} *
+                                                        {{dataItem.measurement?.width}} *
+                                                        {{dataItem.measurement?.height}}</span>
+                                                </ng-template>
+                                            </kendo-grid-column>
+                                            <kendo-grid-column field="measurement.depth" title="Depth %"
+                                                [width]="80"></kendo-grid-column>
+                                            <kendo-grid-column field="measurement.table" title="Table %"
+                                                [width]="80"></kendo-grid-column>
+                                            <kendo-grid-column field="lab" title="Lab" [width]="50"></kendo-grid-column>
+                                            <kendo-grid-column field="certificateNo" title="Report No"
+                                                [width]="80"></kendo-grid-column>
+                                            <kendo-grid-column field="price.rap" title="Rap"
+                                                [width]="60"></kendo-grid-column>
+                                            <kendo-grid-column field="curBidDisc" title="Cur. BidDisc"
+                                                [width]="80"></kendo-grid-column>
+                                            <kendo-grid-column field="bidPerCarat" title="$/Ct"
+                                                [width]="80"></kendo-grid-column>
+                                            <kendo-grid-column field="bidNetAmount" title="Bid Amt"
+                                                [width]="80"></kendo-grid-column>
+                                            <kendo-grid-column field="bidDiscount" title="Bid Disc"
+                                                [width]="70"></kendo-grid-column>
+                                            <kendo-grid-column field="isApproved" title="Action" [width]="100">
+                                                <ng-template kendoGridCellTemplate let-dataItem>
+                                                    <span *ngIf="dataItem.isApproved" class="approve_sp">Approved</span>
+                                                </ng-template>
+                                            </kendo-grid-column>
+                                        </kendo-grid>
+                                    </div>
+                                </ng-template>
+                            </kendo-panelbar-item>
+                        </kendo-panelbar>
+                    </li>
+                </ul>
+                <div class="noBid_sec bidhis" *ngIf="!bidHistoryItems.length">
+                    <img src="../../../assets/images/notBid.png" class="img-fluid" alt="No data available" />
+                    <p>Every month we provide an extra discount on a few <br>
+                        stones which you can bid to buy. Stay tuned.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- <div class="modal c-modal dialog-ui announceModal" tabindex="-1" role="dialog" data-keyboard="false"
+    data-backdrop="static" *ngIf="isBidAnnouncementEnded">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="icon-broadcast"></i>{{"BasicText.Announcement"| translate}}</h5>
+                <button type="button" class="close" (click)="closeImageDialog()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <img [src]="bidingSummary.invDetailItems.length ? '../assets/images/bid_closebanner.jpg' : '../assets/images/coming_soon_glowstar.jpg'"
+                        class="w-100">
+                </div>
+            </div>
+        </div>
+        <div (document:keydown.esc)="closeImageDialog()"></div>
+    </div>
+</div> -->
+
+<!-- #region Export To Excel -->
+<div class="modal c-modal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+    *ngIf="isExcelModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="icon-excelnew"></i>{{"BasicText.Export To Excel"| translate}}</h5>
+                <button type="button" class="close" (click)="closeExcelDialog()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="my-3 ms-2">
+                    <input type="radio" name="export" value="Selected" [(ngModel)]="exportType" #Selected
+                        kendoRadioButton />
+                    <kendo-label class="k-radio-label me-2" [for]="Selected" text="Selected"></kendo-label>
+                    <input type="radio" name="export" value="Search" [(ngModel)]="exportType" #Search
+                        kendoRadioButton />
+                    <kendo-label class="k-radio-label" [for]="Search" text="Search">
+                    </kendo-label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button (click)="exportDataFromExcel()"><i class="icon-excelnew"></i>{{"BasicText.Export To Excel"|
+                    translate}}</button>
+            </div>
+        </div>
+
+        <div (document:keydown.esc)="closeExcelDialog()"></div>
+    </div>
+</div>
+<!-- #endregion -->
+
+<!-- #region Grid Config Modal -->
+<ng-container *ngIf="isGridConfig">
+    <app-gridconfiguration [fields]="fields" [pageName]="'BidingInventory'" [gridName]="'BidingInventoryGrid'"
+        [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+        (ChildEvent)="setNewGridConfig($event)">
+    </app-gridconfiguration>
+</ng-container>
+<!-- #endregion -->
+
+<!-- #region Diamond Deatils Sidebar -->
+<ng-container *ngIf="showDiamonddetailModal">
+    <app-diamonddetail [diamonddetailFlag]="showDiamonddetailModal" [stoneId]="stoneId" [bidingFlag]="true"
+        (closeDialog)="showDiamonddetailModal=$event"></app-diamonddetail>
+</ng-container>
+<!-- #endregion -->

@@ -1,0 +1,620 @@
+@charset "UTF-8";
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+}
+
+.logo {
+    margin-top: 20px;
+}
+
+.chal-head {
+    text-align: center;
+}
+
+.chal-head h5 {
+    font-weight: 600;
+}
+
+.chal-body span.c-st {
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.body-top {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.bo-left h6 {
+    font-weight: 600;
+    margin: initial;
+}
+
+.bo-left span {
+    display: block;
+    font-size: 15px;
+}
+
+.bo-right h6 {
+    font-weight: 600;
+    margin-bottom: initial;
+}
+
+.bo-right h6:last-child {
+    margin-bottom: initial;
+}
+
+span.p-st {
+    display: block;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.body-middle table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #000;
+}
+
+.body-middle table thead {
+    border: 1px solid #000;
+    text-align: center;
+}
+
+.body-middle th {
+    font-weight: 600;
+    border: 1px solid #000;
+}
+
+.body-middle td,
+tr {
+    border: 1px solid #000;
+    text-align: center;
+}
+
+.body-middle td.t-b {
+    font-weight: 600;
+}
+
+.body-middle td.t-bg {
+    background-color: #c0c0c0;
+}
+
+td.t-r {
+    text-align: right;
+}
+
+td.t-l {
+    text-align: left;
+}
+
+.ps-15 {
+    padding-left: 15px;
+}
+
+.w-25 {
+    width: 25% !important;
+}
+
+.w-50 {
+    width: 50% !important;
+}
+
+.border-0 {
+    border: 0 !important;
+}
+
+.border-bottom-0 {
+    border-bottom: 0 !important;
+}
+
+.border-top-0 {
+    border-top: 0 !important;
+}
+
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+.p-2 {
+    padding: 0.5rem !important;
+}
+
+.ps-1,
+.px-1 {
+    padding-left: 0.25rem !important;
+}
+
+.border-left-2 {
+    border-left: 2px solid #000;
+}
+
+.border-right-2 {
+    border-right: 2px solid #000;
+}
+
+.border-top-2 {
+    border-top: 2px solid #000;
+}
+
+.border-bottom-2 {
+    border-bottom: 2px solid #000;
+}
+
+.con-inv.chal-wrap {
+    border: initial;
+    margin: 0 45px;
+}
+
+.con-inv .chal-head {
+    padding: 4px;
+    position: relative;
+}
+
+.con-inv .chal-head .logo img {
+    width: 600px;
+}
+
+.con-inv .body-middle table {
+    border: none;
+}
+
+.bo-right {
+    border-left: 2px solid #000;
+}
+
+.con-inv .body-top {
+    padding: initial;
+}
+
+.con-inv .bo-right table tr,
+.con-inv .bo-right table td {
+    border: 1px solid #000;
+    padding-left: 4px;
+    text-align: left;
+}
+
+.con-inv .bo-right table tr:first-child,
+.con-inv .bo-right table td:first-child,
+.con-inv .bo-right table tr:last-child {
+    border: 0;
+}
+
+.con-inv .bo-right table td:nth-child(2) {
+    border-top: 0;
+    border-right: 0;
+}
+
+.con-inv .body-middle table thead {
+    border: 2px solid #000;
+    text-align: center;
+}
+
+.con-inv .body-middle th:first-child {
+    border-left: 0;
+}
+
+.con-inv .body-middle th:last-child {
+    border-right: 0;
+}
+
+.con-inv .body-middle tr {
+    border-left: 2px solid #000;
+    border-right: 2px solid #000;
+}
+
+.con-inv tfoot tr {
+    border-top: 2px solid #000;
+}
+
+.con-inv tfoot td {
+    border: 2px solid #000;
+}
+
+.bo-right table {
+    width: 100%;
+}
+
+.body-fotter .body-top {
+    align-items: initial;
+}
+
+.body-fotter table tr {
+    border: 0;
+    text-align: left;
+}
+
+img {
+    vertical-align: middle;
+    border-style: none;
+}
+
+th {
+    text-align: inherit;
+}
+
+.text-start {
+    text-align: left !important
+}
+
+.invisible {
+    visibility: hidden !important
+}
+
+.di-info span {
+    display: block;
+    text-align: right;
+}
+
+.di-info.cg-local span {
+    text-align: center !important;
+}
+
+.di-info {
+    margin-top: 20px;
+    margin-bottom: 55px;
+    font-size: 20px;
+}
+
+.di-bor-0 tr,
+.di-bor-0 td {
+    border: 0;
+    text-align: left;
+}
+
+.di-inv .body-top {
+    border-top: initial;
+}
+
+.di-bor-0 tr td:first-child {
+    padding-right: 5px;
+}
+
+.di-inv .body-f-left span.c-st.di {
+    color: #0066d4;
+}
+
+.di-inv span.c-st.di {
+    text-align: center;
+}
+
+.ch-sig span {
+    text-align: center;
+    margin-top: 0px;
+    display: block;
+}
+
+.ch-sig img {
+    margin: auto;
+    display: block;
+}
+
+.ch-sig {
+    width: 100%;
+}
+
+.body-f-mid {
+    border: 2px solid #000;
+    display: flex;
+    justify-content: space-between;
+    border-top: 0;
+}
+
+.body-f-left,
+.body-f-right {
+    width: 25%;
+}
+
+.body-f-footer {
+    padding: 5px;
+    text-align: center;
+    border-top: 0;
+}
+
+.body-f-footer span {
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-block !important;
+    width: 60%;
+}
+
+.co-details {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+.co-details tr,
+.co-details td {
+    border: initial;
+}
+
+.body-f-footer p {
+    margin: initial;
+    font-size: 13px;
+}
+
+@media print {
+    .chal-wrap {
+        page-break-after: always;
+    }
+
+    *,
+    ::after,
+    ::before {
+        text-shadow: none !important;
+        box-shadow: none !important
+    }
+
+    a:not(.btn) {
+        text-decoration: underline
+    }
+
+    abbr[title]::after {
+        content: " (" +attr(title) +")"
+    }
+
+    pre {
+        white-space: pre-wrap !important
+    }
+
+    blockquote,
+    pre {
+        border: 1px solid #999;
+        page-break-inside: avoid
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    img,
+    tr {
+        page-break-inside: avoid
+    }
+
+    h2,
+    h3,
+    p {
+        orphans: 3;
+        widows: 3
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid
+    }
+
+    @page {
+        size: a3
+    }
+
+    body {
+        min-width: 992px !important
+    }
+}
+
+*,
+::after,
+::before {
+    box-sizing: border-box
+}
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 0;
+    margin-bottom: .5rem
+}
+
+table {
+    border-collapse: collapse
+}
+
+th {
+    text-align: inherit
+}
+
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-bottom: .5rem;
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.2;
+    color: inherit
+}
+
+.h5,
+h5 {
+    font-size: 1.25rem
+}
+
+.h6,
+h6 {
+    font-size: 1rem
+}
+
+.bang-wrap .body-middle table thead,
+.tok-wrap .body-middle table thead {
+    border: 2px solid #000;
+    text-align: center;
+}
+
+.bg-yellow {
+    background-color: #ffff99;
+}
+
+.red {
+    color: #ff0000;
+}
+
+.tok-wrap .body-top {
+    display: block;
+    padding: initial;
+    border: 2px solid #000;
+}
+
+
+.w-70 {
+    width: 70% !important;
+}
+
+.w-30 {
+    width: 30% !important;
+}
+
+.body-f-footer ul {
+    padding-left: 16px;
+}
+
+.body-f-footer li {
+    list-style: decimal;
+    text-align: left;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.cd-details {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    padding: 0 5px;
+}
+
+.cd-details p {
+    margin: 0;
+}
+
+.bo-left span b {
+    width: 72px;
+    display: inline-block;
+    position: relative;
+}
+
+.bo-left span b:after {
+    content: ":";
+    position: absolute;
+    right: 0;
+}
+
+.ship-section .c-st b {
+    width: 110px;
+    position: relative;
+    display: inline-block;
+}
+
+.ship-section .c-st b:after,
+.inv-section .c-st b:after {
+    content: ":";
+    position: absolute;
+    right: 0;
+}
+
+.ship-section span,
+.inv-section span {
+    font-weight: 400 !important;
+    font-size: 14px !important;
+}
+
+.inv-section .c-st b {
+    width: 94px;
+    display: inline-block;
+    position: relative;
+}
+
+.chal-body .c-st strong {
+    font-size: 18px;
+}
+
+.inv-section .c-st b:after {
+    content: ":";
+    position: absolute;
+    right: 0;
+}
+
+.ship-section {
+    flex-basis: 30%;
+}
+
+.inv-section {
+    flex-basis: 190px;
+}
+
+.txt-left {
+    overflow: hidden;
+    display: block;
+}
+
+.border-remove,
+.border-remove tr {
+    border: 0;
+}
+
+.dt-last {
+    display: block;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.clr-yellow {
+    background: yellow;
+}
+
+.cif-brd tr,
+.cif-brd td {
+    border: none !important;
+}
+
+.border-left-0 {
+    border-left: 0 !important;
+}
+
+.cg-tbl td:nth-child(odd) {
+    width: 200px;
+}
+
+table.cg-tbl {
+    width: 100%;
+}
+
+.cg-local {
+    width: fit-content;
+    display: block;
+    margin: 20px auto 55px;
+}

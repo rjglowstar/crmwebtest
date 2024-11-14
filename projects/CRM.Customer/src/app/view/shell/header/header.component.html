@@ -1,0 +1,168 @@
+<!-- Header Start -->
+<header>
+	<div (scroll)="onScroll($event)" #nav>
+		<nav class="header_wrap navbar navbar-expand-xl navbar-light">
+
+			<div class="siBar_togmenu d-xl-none" (click)="navpanelSidebar()">
+				<i class="icon-toggleMenu"></i>
+			</div>
+
+			<div class="c_logo">
+				<a class="navbar_brand" href="javascript:void(0);" routerLink="/dashboard">
+					<img [src]="logoPath" class="img-fluid mx-auto ms-xl-0" alt="brand-logo">
+				</a>
+			</div>
+
+			<div class="dash_search navlink_search">
+				<label>All</label>
+				<input placeholder="{{'BasicText.HeadInput'| translate}}" [(ngModel)]="usearSearchString"
+					#usearSearchStr="ngModel" name="usearSearchString" (keyup.enter)="navigateToSearchResult()">
+				<i class="icon-searchNew" (click)="navigateToSearchResult()"></i>
+			</div>
+
+			<div class="navbar_links d-flex align-items-center w-100">
+
+				<div class="collapse navbar-collapse d-none">
+					<div class="navbar-nav align-items-center ms-auto">
+						<a class="lanSelect_box nav-link d-none d-xl-inline-flex"
+							(clickOutside)="onClickedOutside($event)">
+							<span (click)="showLanguageList()" [ngClass]="{'active': showLangList}">
+								<img class="img-fluid" [src]="selectedItem === 'English' ? 
+								'../../../../assets/images/svg/Ic_India_Flag.svg' : 
+								'../../../../assets/images/svg/Ic_China_Flag.svg'" />
+								<span>
+									{{ selectedItem === 'English' ? 'En': 'Ch' }}
+									<i class="icon-dropdown"></i>
+								</span>
+							</span>
+							<ul [ngClass]="{'active': showLangList}">
+								<li *ngFor="let item of languageList" (click)="changeLanguage(item)">
+									<a *ngIf="(selectedItem === 'English' && item.text === 'Chinese') || 
+										  (selectedItem === 'Chinese' && item.text === 'English')">
+										<img class="img-fluid" [src]="item.text === 'Chinese' ? 
+									'../../../../assets/images/svg/Ic_China_Flag.svg' : 
+									'../../../../assets/images/svg/Ic_India_Flag.svg'" />
+										{{ item.text === 'English' ? 'En': 'Ch' }}
+									</a>
+								</li>
+							</ul>
+						</a>
+						<a class="nav-link" routerLinkActive="link-active" href="javascript:void(0);"
+							routerLink="/ebiding">
+							<i class="icon-eBid lg"></i>
+							E-BID
+						</a>
+						<a class="nav-link" routerLinkActive="link-active" routerLink="/mycart">
+							<i class="icon-cart"></i>
+							<span><span class="sm_txt">Your</span>Cart</span>
+						</a>
+						<a class="nav-link" routerLinkActive="link-active" routerLink="/myorder">
+							<i class="icon-orderNew"></i>
+							<span><span class="sm_txt">Your</span>Order</span>
+						</a>
+						<a class="nav-link" routerLinkActive="link-active" routerLink="/watchlist">
+							<i class="icon-watchlist_new"></i>
+							<span><span class="sm_txt">Your</span>Watchlist</span>
+						</a>
+					</div>
+				</div>
+
+				<ng-container>
+					<a class="nav-link Profile_link ms-auto" href="javascript:void(0);" (click)="navpanelSidebar()">
+						<span class="profile_icon">{{profileName}}</span>
+					</a>
+				</ng-container>
+			</div>
+		</nav>
+	</div>
+</header>
+<!-- Header End -->
+
+<!-- Sidebar Navigation Menu start -->
+<div class="nav_sidebar" [ngClass]="{'active': navpanelFlag}">
+	<div class="navSide_head">
+		<div class="nm_group">
+			<div class="profile_nm">{{ fxCredentials?.fullName ? fxCredentials?.fullName?.substring(0, 1)?.toUpperCase()
+				: '' }}</div>
+			<div>
+				<span class="nm_lg">{{fxCredentials?.fullName}}</span>
+				<span class="nm_sm">{{fxCredentials?.origin}}</span>
+			</div>
+		</div>
+		<a class="lanSelect_box nav-link d-inline-flex d-xl-none" (clickOutside)="onClickedOutside2($event)">
+			<span (click)="showLanguageList2()" [ngClass]="{'active': showLangList2}">
+				<img class="img-fluid" [src]="selectedItem === 'English' ? 
+				'../../../../assets/images/svg/Ic_India_Flag.svg' : 
+				'../../../../assets/images/svg/Ic_China_Flag.svg'" />
+				<span>
+					{{ selectedItem === 'English' ? 'En': 'Ch' }}
+					<i class="icon-dropdown"></i>
+				</span>
+			</span>
+			<ul [ngClass]="{'active': showLangList2}">
+				<li *ngFor="let item of languageList" (click)="changeLanguage(item)">
+					<a *ngIf="(selectedItem === 'English' && item.text === 'Chinese') || 
+						  (selectedItem === 'Chinese' && item.text === 'English')">
+						<img class="img-fluid" [src]="item.text === 'Chinese' ? 
+					'../../../../assets/images/svg/Ic_China_Flag.svg' : 
+					'../../../../assets/images/svg/Ic_India_Flag.svg'" />
+						{{ item.text === 'English' ? 'En': 'Ch' }}
+					</a>
+				</li>
+			</ul>
+		</a>
+		<i class="close_btn icon-menu_close ms-3 me-0" (click)="navpanelSidebar()"></i>
+	</div>
+	<div class="navSide_body">
+		<ul>
+			<li>
+				<a (click)="navpanelSidebar()" routerLinkActive="link-active" href="javascript:void(0);">
+					<i class="icon-vow_discount"></i>VOW(Volume of Week)
+				</a>
+			</li>
+			<li>
+				<a (click)="navpanelSidebar()" routerLinkActive="link-active" routerLink="/mycart">
+					<i class="icon-cart"></i>Your Cart
+				</a>
+			</li>
+			<li>
+				<a (click)="navpanelSidebar()" routerLinkActive="link-active" routerLink="/myorder">
+					<i class="icon-orderNew"></i> Your Order
+				</a>
+			</li>
+			<li>
+				<a (click)="navpanelSidebar()" routerLinkActive="link-active" routerLink="/watchlist">
+					<i class="icon-watchlist_new"></i> Your Watchlist
+				</a>
+			</li>
+			<li>
+				<a (click)="navpanelSidebar()" routerLinkActive="link-active" routerLink="/ebiding">
+					<i class="icon-eBid"></i>E BID
+				</a>
+			</li>
+			<li>
+				<a (click)="navpanelSidebar()" (click)="showSuggestionDialog();" href="javascript:void(0);"
+					routerLinkActive="link-active">
+					<i class="icon-feedback"></i>Feedback
+				</a>
+			</li>
+		</ul>
+
+		<div class="btn_group">
+			<a (click)="navpanelSidebar()" routerLink="/customerprofile">
+				Edit Profile
+			</a>
+			<a class="logOut" (click)="navpanelSidebar()" (click)="logoutClick()">
+				{{'BasicText.Logout'|translate}}
+			</a>
+		</div>
+
+		<div class="scanTodown">
+			<picture>
+				<source src="../../../../assets/images/scanToDownApp-mob.png" media="(max-width:991px)">
+				<img src="../../../../assets/images/scanToDownApp.png" alt="App QR Code" class="img-fluid w-100">
+			</picture>
+		</div>
+	</div>
+</div>
+<!-- Sidebar Navigation Menu end -->

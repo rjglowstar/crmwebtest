@@ -1,0 +1,354 @@
+<title>Recommended Diamonds</title>
+<section class="esearch-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item k-cursor-pointer" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Recommended</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom">
+              <button title="Add Recommended Diamond" kendoButton (click)="showGenerateBidPopup()">
+                <i class="icon-add"></i>
+              </button>
+              <button [disabled]="mySelection.length == 0" kendoButton (click)="openDeleteDialog()"
+                title="Delete Items"><i class="icon-trash"></i>
+              </button>
+              <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                  class="icon-gridconfig"></i>
+              </button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <kendo-grid *ngIf="gridView" [data]="gridView" [resizable]="true" [groupable]="true"
+              (sortChange)="sortChange($event)" [sortable]="true" [selectable]="selectableSettings" [group]="groups"
+              (groupChange)="groupChange($event)" [pageSize]="pageSize" [skip]="skip" [pageable]="true"
+              (pageChange)="pageChange($event)" [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+              <kendo-grid-checkbox-column [showSelectAll]="isShowCheckBoxAll" [width]="25">
+              </kendo-grid-checkbox-column>
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'createdDate'">
+                        {{dataItem.createdDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.propertyName == 'endDate'">
+                        {{dataItem.endDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+
+            <div class="i-form">
+              <div class="row">
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">Stock Id</label>
+                  <input type="text" autocomplete="off" [(ngModel)]="stoneId">
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">Certificate No</label>
+                  <input type="text" autocomplete="off" [(ngModel)]="certificateNo">
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label class="lbl">Shape</label>
+                  <kendo-multiselect name="shape" class="customselect" [data]="allTheShapes"
+                    [(ngModel)]="recommendedSearchCriteria.shapes" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" #shape="ngModel" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allTheShapes, recommendedSearchCriteria.shapes)"
+                    (open)="filterShapeChk = utilityService.onOpenDropdown(allTheShapes,filterShapeChk, recommendedSearchCriteria.shapes)"
+                    (filterChange)="filterShape = utilityService.handleFilter($event);allTheShapes = utilityService.filterDropdownSearch(shapesList, $event, recommendedSearchCriteria.shapes)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterShapeChk" id="filterShapeChk"
+                          title="Select all" [(ngModel)]="filterShapeChk"
+                          (change)="recommendedSearchCriteria.shapes = utilityService.checkAllListItems(allTheShapes, filterShapeChk, recommendedSearchCriteria.shapes)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(recommendedSearchCriteria.shapes, true)">
+                        {{utilityService.getCommaSapratedString(recommendedSearchCriteria.shapes)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                  <label class="lbl">Size</label>
+                  <div class="d-flex">
+                    <input type="text" class="me-2" placeholder="Min Size"
+                      [(ngModel)]="recommendedSearchCriteria.minSize">
+                    <input type="text" placeholder="Max Size" [(ngModel)]="recommendedSearchCriteria.maxSize">
+                  </div>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label class="lbl">Color</label>
+                  <kendo-multiselect name="Color" class="customselect" [data]="allColors"
+                    [(ngModel)]="recommendedSearchCriteria.colors" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" #Color="ngModel" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allColors, recommendedSearchCriteria.colors)"
+                    (open)="filterColorChk = utilityService.onOpenDropdown(allColors,filterColorChk, recommendedSearchCriteria.colors)"
+                    (filterChange)="filterColor = utilityService.handleFilter($event);allColors = utilityService.filterDropdownSearch(colorList, $event, recommendedSearchCriteria.colors)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterColorChk" id="filterColorChk"
+                          title="Select all" [(ngModel)]="filterColorChk"
+                          (change)="recommendedSearchCriteria.colors = utilityService.checkAllListItems(allColors, filterColorChk, recommendedSearchCriteria.colors)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(recommendedSearchCriteria.colors, true)">
+                        {{utilityService.getCommaSapratedString(recommendedSearchCriteria.colors)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label class="lbl">Clarity</label>
+                  <kendo-multiselect name="clarity" class="customselect" [data]="allClarities"
+                    [(ngModel)]="recommendedSearchCriteria.clarities" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" #clarity="ngModel" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allClarities, recommendedSearchCriteria.clarities)"
+                    (open)="filterClarityChk = utilityService.onOpenDropdown(allClarities,filterClarityChk, recommendedSearchCriteria.clarities)"
+                    (filterChange)="filterClarity = utilityService.handleFilter($event);allClarities = utilityService.filterDropdownSearch(clarityList, $event, recommendedSearchCriteria.clarities)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterClarityChk" id="filterClarityChk"
+                          title="Select all" [(ngModel)]="filterClarityChk"
+                          (change)="recommendedSearchCriteria.clarities = utilityService.checkAllListItems(allClarities,filterClarityChk, recommendedSearchCriteria.clarities)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(recommendedSearchCriteria.clarities, true)">
+                        {{utilityService.getCommaSapratedString(recommendedSearchCriteria.clarities)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label class="lbl">Cut</label>
+                  <kendo-multiselect name="cut" class="customselect" [data]="allTheCPS" #cut="ngModel"
+                    [(ngModel)]="recommendedSearchCriteria.cuts" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allTheCPS, recommendedSearchCriteria.cuts)"
+                    (open)="filterCutChk = utilityService.onOpenDropdown(allTheCPS,filterCutChk, recommendedSearchCriteria.cuts)"
+                    (filterChange)="filterCut = utilityService.handleFilter($event);allTheCPS = utilityService.filterDropdownSearch(CPSList, $event, recommendedSearchCriteria.cuts)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterCutChk" id="filterCutChk"
+                          title="Select all" [(ngModel)]="filterCutChk"
+                          (change)="recommendedSearchCriteria.cuts = utilityService.checkAllListItems(allTheCPS,filterCutChk, recommendedSearchCriteria.cuts)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(recommendedSearchCriteria.cuts, true)">
+                        {{utilityService.getCommaSapratedString(recommendedSearchCriteria.cuts)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label class="lbl">Polish</label>
+                  <kendo-multiselect name="polish" class="customselect" [data]="allTheCPS"
+                    [(ngModel)]="recommendedSearchCriteria.polishes" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" #polish="ngModel" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allTheCPS, recommendedSearchCriteria.polishes)"
+                    (open)="filterPolishChk = utilityService.onOpenDropdown(allTheCPS,filterPolishChk, recommendedSearchCriteria.polishes)"
+                    (filterChange)="filterPolish = utilityService.handleFilter($event);allTheCPS = utilityService.filterDropdownSearch(CPSList, $event, recommendedSearchCriteria.polishes)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterPolishChk" id="filterPolishChk"
+                          title="Select all" [(ngModel)]="filterPolishChk"
+                          (change)="recommendedSearchCriteria.polishes = utilityService.checkAllListItems(allTheCPS,filterPolishChk, recommendedSearchCriteria.polishes)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(recommendedSearchCriteria.polishes, true)">
+                        {{utilityService.getCommaSapratedString(recommendedSearchCriteria.polishes)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label class="lbl">Symmetry</label>
+                  <kendo-multiselect name="symmetry" class="customselect" [data]="allTheCPS"
+                    [(ngModel)]="recommendedSearchCriteria.symmetries" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" #symmetry="ngModel" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allTheCPS, recommendedSearchCriteria.symmetries)"
+                    (open)="filterSymmChk = utilityService.onOpenDropdown(allTheCPS,filterSymmChk, recommendedSearchCriteria.symmetries)"
+                    (filterChange)="filterSymm = utilityService.handleFilter($event);allTheCPS = utilityService.filterDropdownSearch(CPSList, $event, recommendedSearchCriteria.symmetries)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterSymmChk" id="filterSymmChk"
+                          title="Select all" [(ngModel)]="filterSymmChk"
+                          (change)="recommendedSearchCriteria.symmetries = utilityService.checkAllListItems(allTheCPS,filterSymmChk, recommendedSearchCriteria.symmetries)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(recommendedSearchCriteria.symmetries, true)">
+                        {{utilityService.getCommaSapratedString(recommendedSearchCriteria.symmetries)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label class="lbl">Fluorescence</label>
+                  <kendo-multiselect name="fluorescence" class="customselect" [data]="allTheFluorescences"
+                    [(ngModel)]="recommendedSearchCriteria.fluorescences" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" #fluorescence="ngModel" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allTheFluorescences, recommendedSearchCriteria.fluorescences)"
+                    (open)="filterFlourChk = utilityService.onOpenDropdown(allTheFluorescences,filterFlourChk, recommendedSearchCriteria.fluorescences)"
+                    (filterChange)="filterFlour = utilityService.handleFilter($event);allTheFluorescences = utilityService.filterDropdownSearch(fluorList, $event, recommendedSearchCriteria.fluorescences)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterFlourChk" id="filterFlourChk"
+                          title="Select all" [(ngModel)]="filterFlourChk"
+                          (change)="recommendedSearchCriteria.fluorescences = utilityService.checkAllListItems(allTheFluorescences,filterFlourChk, recommendedSearchCriteria.fluorescences)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(recommendedSearchCriteria.fluorescences, true)">
+                        {{utilityService.getCommaSapratedString(recommendedSearchCriteria.fluorescences)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data mul-select">
+                  <label class="lbl">Lab</label>
+                  <kendo-multiselect name="lab" class="customselect" [data]="allTheLab" #lab="ngModel"
+                    [(ngModel)]="recommendedSearchCriteria.labs" [textField]="'name'" [valueField]="'name'"
+                    [valuePrimitive]="true" [popupSettings]="{width: 'auto'}" [autoClose]="false"
+                    [kendoMultiSelectSummaryTag]="0" [filterable]="true"
+                    (valueChange)="utilityService.onMultiSelectChange(allTheLab, recommendedSearchCriteria.labs)"
+                    (open)="filterLabChk = utilityService.onOpenDropdown(allTheLab,filterLabChk, recommendedSearchCriteria.labs)"
+                    (filterChange)="filterLab = utilityService.handleFilter($event);allTheLab = utilityService.filterDropdownSearch(labList, $event, recommendedSearchCriteria.labs)">
+                    <ng-template kendoComboBoxHeaderTemplate>
+                      <div class="single k-widget k-header ps-2">
+                        <input type="checkbox" class="k-checkbox me-1" name="filterLabChk" id="filterLabChk"
+                          title="Select all" [(ngModel)]="filterLabChk"
+                          (change)="recommendedSearchCriteria.labs = utilityService.checkAllListItems(allTheLab,filterLabChk, recommendedSearchCriteria.labs)">
+                        <label>Select all</label>
+                      </div>
+                    </ng-template>
+                    <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                      <input type="checkbox" class="k-checkbox" [checked]="dataItem.isChecked">
+                      <label class="k-checkbox-label"> {{dataItem.name}} </label>
+                    </ng-template>
+                    <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                      <span kendoTooltip position="bottom"
+                        [title]="utilityService.getCommaSapratedString(recommendedSearchCriteria.labs, true)">
+                        {{utilityService.getCommaSapratedString(recommendedSearchCriteria.labs)}}
+                      </span>
+                    </ng-template>
+                  </kendo-multiselect>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                  <button class="btn btn-action" (click)="getData()"><i class="icon-search"></i>Search</button>
+                  <button (click)="clearSearch()" class="btn btn-action"><i class="icon-clear"></i>Clear</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Search End -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="getData()"><i class="icon-search"></i></button></li>
+        <li><button (click)="clearSearch()"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'Recommended'" [gridName]="'RecommendedGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+
+<ng-container *ngIf="showRecSearchPopup">
+  <app-recsearch (closeDialogPopup)="closeDialogPopupHandler($event)"></app-recsearch>
+</ng-container>
+
+<div kendoDialogContainer></div>

@@ -1,0 +1,51 @@
+
+    <kendo-grid [data]="gridDetailView" [reorderable]="true" [resizable]="true" [sortable]="true" [skip]="detailSkip"
+        [pageSize]="detailPageSize" [pageable]="true" (pageChange)="pageChangeDetail($event)">
+        <kendo-grid-column field="media" title="Media" [width]="80">
+            <ng-template kendoGridCellTemplate let-dt>
+                <span *ngIf="dt.media.isHtmlVideo || dt.media.isPrimaryImage || dt.media.isCertificate">
+                    <span class="gr-icon" *ngIf="dt.media.isHtmlVideo"
+                        (click)="openMediaDialog('360 Vision View', dt.stoneId, 'iframe')">
+                        <i class="icon-diamond" kendoTooltip position="top" title="360 Vision"></i>
+                    </span>
+                    <span class="gr-icon" *ngIf="dt.media.isPrimaryImage"
+                        (click)="openMediaDialog('Image View', dt.stoneId, 'img')">
+                        <i class="icon-camera" kendoTooltip position="top" title="Image"></i>
+                    </span>
+                    <span class="gr-icon" *ngIf="dt.media.isCertificate"
+                        (click)="openMediaDialog('Certificate View', dt.certificateNo, 'cert')">
+                        <i class="icon-cerificate" kendoTooltip position="top" title="Certificate"></i>
+                    </span>
+                    <span class="gr-icon" *ngIf="dt.media.isDownloadableVideo"
+                        (click)="openMediaDialog('Download Video', dt.stoneId, 'download')">
+                        <i class="icon-videodownload" kendoTooltip position="top" title="Download Video"></i>
+                    </span>
+                </span>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="stoneId" title="StoneId"></kendo-grid-column>
+        <kendo-grid-column field="shape" title="Shape"></kendo-grid-column>
+        <kendo-grid-column field="weight" title="Weight"></kendo-grid-column>
+        <kendo-grid-column field="color" title="Color"></kendo-grid-column>
+        <kendo-grid-column field="clarity" title="Clarity"></kendo-grid-column>
+        <kendo-grid-column field="cps" title="CPS"></kendo-grid-column>
+        <kendo-grid-column field="fluorescence" title="Fl"></kendo-grid-column>
+        <kendo-grid-column field="location" title="Location"></kendo-grid-column>
+        <kendo-grid-column field="lab" title="Lab"></kendo-grid-column>
+        <kendo-grid-column field="certificateNo" title="CertiNo"></kendo-grid-column>
+        <kendo-grid-column field="sDiscount" title="S.Disc"></kendo-grid-column>
+        <kendo-grid-column field="aDiscount" title="A.Disc"></kendo-grid-column>
+        <kendo-grid-column field="fDiscount" title="Disc"></kendo-grid-column>
+        <kendo-grid-column field="perCarat" title="$/Ct"></kendo-grid-column>
+        <kendo-grid-column field="netAmount" title="NetAmt"></kendo-grid-column>
+        <kendo-grid-column field="vowDiscount" title="VOW Disc"></kendo-grid-column>
+        <kendo-grid-column field="vowAmount" title="VOW Amt"></kendo-grid-column>
+        <kendo-grid-column field="fAmount" title="Payable Amt"></kendo-grid-column>
+    </kendo-grid>
+
+<!-- #region Media Modal -->
+<ng-container *ngIf="isShowMedia">
+    <app-media [mediaTitle]="mediaTitle" [mediaSrc]="mediaSrc" [mediaType]="mediaType"
+        (closeDialog)="closeMediaDialog($event)"></app-media>
+</ng-container>
+<!-- #endregion-->

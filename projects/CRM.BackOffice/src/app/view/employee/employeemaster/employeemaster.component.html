@@ -1,0 +1,496 @@
+<title>Employee</title>
+<section class="esearch-wrap">
+  <div class="content_wrap">
+    <div class="d-flex">
+      <div class="e-left">
+        <div class="breadcrumb bg">
+          <div class="breadcrumb-left">
+            <ul>
+              <li class="breadcrumb-item" routerLink="/"><i class="icon-home"></i>Home</li>
+              <li class="breadcrumb-item active" aria-current="page">Employee</li>
+            </ul>
+          </div>
+          <div class="breadcrumb-right">
+            <kendo-buttongroup kendoTooltip position="bottom" *ngIf="isViewButtons">
+              <button kendoButton (click)="openAddEmpDialog()" title="Add Employee"><i class="icon-add"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="addUserByEmployee(employeeObj)"><i
+                  class="icon-addemployee" title="Add User"></i></button>
+              <button kendoButton [disabled]="insertFlag" (click)="setPermission(employeeObj)"><i
+                  class="icon-user_permissions" title="Set User Permission"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openUpdateEmpDialog()" title="Edit Employee">
+                <i class="icon-edit"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openEmpDetails()" title="View Details"><i
+                  class="icon-viewdetilas"></i></button>
+              <button [disabled]="insertFlag" kendoButton (click)="openDeleteDialog()" title="Delete Employee Data"
+                *ngIf="isCanDeleteEmployee"><i class="icon-trash"></i></button>
+              <button kendoButton (click)="openGridConfigDialog()" title="Grid Configuration"><i
+                  class="icon-gridconfig"></i></button>
+            </kendo-buttongroup>
+          </div>
+        </div>
+        <div class="content_box">
+          <div class="grid-wrap">
+            <!-- Skeleton start -->
+            <ng-container *ngIf="!gridView">
+              <div class="k-grouping-header k-grouping-header-flex">
+                <div class="k-indicator-container">
+                  <kendo-skeleton shape="text" animation="wave" [width]="400" [height]="40">
+                  </kendo-skeleton>
+                </div>
+              </div>
+              <table *ngIf="fields && fields.length > 0" class="w-100">
+                <ng-container *ngFor="let field of fields">
+                  <th *ngIf="field.isSelected">
+                    {{field.title}}
+                  </th>
+                </ng-container>
+                <tr *ngFor="let field of skeletonArray">
+                  <ng-container *ngFor="let fieldItem of fields">
+                    <td *ngIf="fieldItem.isSelected">
+                      <kendo-skeleton shape="text" animation="wave" [width]="94" [height]="40">
+                      </kendo-skeleton>
+                    </td>
+                  </ng-container>
+                </tr>
+              </table>
+            </ng-container>
+            <!-- Skeleton start -->
+            <kendo-grid #orgGrid *ngIf="gridView" [data]="gridView" [reorderable]="true" [resizable]="true"
+              [groupable]="true" [sortable]="true" [selectable]="selectableSettings"
+              (selectionChange)="selectedRowChange($event)" [group]="groups" (groupChange)="groupChange($event)"
+              [pageSize]="pageSize" [skip]="skip" [pageable]="true" (pageChange)="pageChange($event)"
+              [(selectedKeys)]="mySelection" [kendoGridSelectBy]="'id'">
+              <ng-container *ngIf="fields && fields.length > 0">
+                <ng-container *ngFor="let field of fields">
+                  <ng-container *ngIf="field.isSelected">
+                    <kendo-grid-column [width]="field.width" [field]="field.propertyName" [title]="field.title">
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Join Date'">
+                        {{dataItem.joiningDate | date: 'dd/MM/yyyy'}}
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Is Manager'">
+                        <input type="checkbox" class="k-checkbox" disabled [checked]="dataItem.isManager" />
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Active'">
+                        <input type="checkbox" class="k-checkbox" disabled [checked]="dataItem.isActive" />
+                      </ng-template>
+                      <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Available'">
+                        <input type="checkbox" class="k-checkbox" disabled [checked]="dataItem.isAvailable" />
+                      </ng-template>
+                      <!-- <ng-template kendoGridCellTemplate let-dataItem *ngIf="field.title == 'Mobile No'">
+                          <span>{{dataItem.mobile | numberfilter:'mobile'}}</span>
+                        </ng-template> -->
+                    </kendo-grid-column>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search start -->
+      <div class="e-right">
+        <div class="sr-wrap" [ngClass]="{'active': filterFlag}">
+          <div class="sr">
+            <h6>Search By Filter</h6>
+            <form name="form" #empSearchForm="ngForm" novalidate>
+              <div class="i-form">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label for="">First Name</label>
+                    <input type="text" id="" name="filterFName" [(ngModel)]="employeeCriteria.firstName"
+                      #filterFName="ngModel">
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Last Name</label>
+                    <input type="text" id="" name="filterLName" [(ngModel)]="employeeCriteria.lastName"
+                      #filterLName="ngModel">
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Organization</label>
+                    <kendo-combobox [data]="listOrganizationDNormItems" textField="text" valueField="value"
+                      name="filterOrganization" [valuePrimitive]="true" [kendoDropDownFilter]="filterSettings"
+                      [(ngModel)]="employeeCriteria.organizationId" #filterOrganization="ngModel"
+                      (valueChange)="onOrganizationDNormChange($event,true)">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Branch</label>
+                    <kendo-combobox [valuePrimitive]="true" [data]="listBranchDNormItems" textField="text"
+                      valueField="value" name="filterBranch" [(ngModel)]="employeeCriteria.branch"
+                      [kendoDropDownFilter]="filterSettings" #filterBranch="ngModel"
+                      (valueChange)="onBranchDNormChange($event,true)">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Department</label>
+                    <kendo-combobox [valuePrimitive]="true" [data]="listDepartmentItems" textField="text"
+                      valueField="value" name="dept" [(ngModel)]="employeeCriteria.departmentId"
+                      [kendoDropDownFilter]="filterSettings" #filterDepartment="ngModel"
+                      (valueChange)="onDepartmentChange($event,true)">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data">
+                    <label>Origin</label>
+                    <kendo-combobox [data]="listOriginItems" [valuePrimitive]="true" name="filterOrigin"
+                      [kendoDropDownFilter]="filterSettings" [(ngModel)]="employeeCriteria.origin"
+                      #filterOrigin="ngModel">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data check-box">
+                    <ng2-tri-state-checkbox name="filterIsActive" [(ngModel)]="employeeCriteria.isActive"
+                      #filterIsActive="ngModel">
+                    </ng2-tri-state-checkbox>
+                    <!-- <input type="checkbox" id="a-employee" class="k-checkbox" name="filterIsActive"
+                          [(ngModel)]="employeeCriteria.isActive" #filterIsActive="ngModel"> -->
+                    <label for="a-employee">Show Only active employee</label>
+                  </div>
+                  <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12 form-data social">
+                    <button class="btn btn-action" (click)="empSearchForm.form.valid && onFilterSubmit(empSearchForm)">
+                      <i class="icon-search"></i>Search
+                    </button>
+                    <button (click)="clearFilter(empSearchForm)" class="btn btn-action">
+                      <i class="icon-clear"></i>Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Search End -->
+    </div>
+    <div class="f-btn" [ngClass]="{'active': filterFlag}">
+      <ul>
+        <li><button class="open-filter" (click)="filterPartToggle()"><i class="icon-filter"></i></button></li>
+        <li><button (click)="empSearchForm.form.valid && onFilterSubmit(empSearchForm)"><i
+              class="icon-search"></i></button></li>
+        <li><button (click)="clearFilter(empSearchForm)"><i class="icon-clear"></i></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Register Employee Modal Start -->
+<div class="modal c-modal addemp rorgan employee-modal" tabindex="-1" role="dialog" data-keyboard="false"
+  data-backdrop="static" *ngIf="isRegEmployee">
+  <form name="form" #employeeForm="ngForm">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle"><i class="icon-candidates"></i>Add
+            Employee</h5>
+          <button type="button" class="close" (click)="closeRegEmpDialog(employeeForm)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-sm-12 col-xs-12">
+              <div class="i-form ro-grid">
+                <h6 class="title"><i class="icon-mainuser"></i>Employee Information</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label for="">First Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': fname.invalid && (fname.dirty || fname.touched)}">
+                    <input type="text" name="fname" [(ngModel)]="employeeObj.name.firstName" #fname="ngModel" id=""
+                      required>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Middle Name</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" name="mname" [(ngModel)]="employeeObj.name.middleName" #mname="ngModel" id="">
+                  </div>
+                  <div class="form-data">
+                    <label for="">Last Name<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': lname.invalid && (lname.dirty || lname.touched)}">
+                    <input type="text" name="lname" [(ngModel)]="employeeObj.name.lastName" #lname="ngModel" id=""
+                      required>
+                  </div>
+                  <div class="form-data">
+                    <label>Origin<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': origin.invalid && (origin.dirty || origin.touched) }">
+                    <kendo-combobox [data]="listOriginItems" [valuePrimitive]="true" name="origin"
+                      [kendoDropDownFilter]="filterSettings" [(ngModel)]="employeeObj.origin" #origin="ngModel"
+                      required>
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Email<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data"
+                    [ngClass]="{ 'error': email.invalid && ((email.touched && email.hasError('email')) || (email.errors?.required && email.touched))}">
+                    <input type="email" name="email" [(ngModel)]="employeeObj.email" #email="ngModel" id="" required
+                      email>
+                  </div>
+
+                  <div class="form-data">
+                    <label for="">Mobile No<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data country-code"
+                    [ngClass]="{ 'error':primaryMobile.invalid && (primaryMobile.dirty || primaryMobile.touched)}">
+                    <ngx-intl-tel-input [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                      [enablePlaceholder]="false" [searchCountryFlag]="true"
+                      [searchCountryField]="[SearchCountryField.All]" [selectFirstCountry]="false"
+                      [selectedCountryISO]="CountryISO.India" [maxLength]="15" [phoneValidation]="true"
+                      [separateDialCode]="separateDialCode" [numberFormat]="PhoneNumberFormat.National"
+                      name="primaryMobile" #primaryMobile="ngModel" [(ngModel)]="primaryMobileNo"
+                      (ngModelChange)="checkIntPhoneValidation($event, IntlTelType.PrimaryMobile, employeeForm)"
+                      [enablePlaceholder]="true">
+                    </ngx-intl-tel-input>
+                  </div>
+
+                  <div class="form-data">
+                    <label>Organization<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': org.invalid && (org.dirty || org.touched) }">
+                    <kendo-combobox [data]="listOrganizationDNormItems" textField="text" valueField="value"
+                      (valueChange)="onOrganizationDNormChange($event)" name="org"
+                      [kendoDropDownFilter]="filterSettings" [(ngModel)]="selectedOrganizationDNormItems" #org="ngModel"
+                      required>
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>Branch<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data" [ngClass]="{ 'error': branch.invalid && (branch.dirty || branch.touched) }">
+                    <kendo-combobox [data]="listBranchDNormItems" textField="text" valueField="value" name="branch"
+                      (valueChange)="onBranchDNormChange($event)" [(ngModel)]="selectedBranchDNormItems"
+                      #branch="ngModel" required [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label for="">Department<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listDepartmentItems" textField="text" valueField="value" name="dept"
+                      (valueChange)="onDepartmentChange($event)" [(ngModel)]="selectedDeptItems" #dept="ngModel"
+                      required [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                </div>
+              </div>
+              <div class="i-form om-add">
+                <h6 class="title"><i class="icon-mapmarker"></i>Address</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label>Line1</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line1" #line1="ngModel"
+                      [(ngModel)]="employeeObj.address.line1">
+                    </textarea>
+                  </div>
+                  <div class="form-data">
+                    <label>Line2</label>
+                  </div>
+                  <div class="form-data">
+                    <textarea cols="4" type="text" id="" name="line2" #line2="ngModel"
+                      [(ngModel)]="employeeObj.address.line2">
+                    </textarea>
+                  </div>
+                  <div class="form-data">
+                    <label>Type</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="listAddressTypeItems" [valuePrimitive]="true" name="addressType"
+                      #addressType="ngModel" [(ngModel)]="employeeObj.address.type"
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>Country</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="countryItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" name="country" #country="ngModel" (valueChange)="onCountryChange($event)"
+                      [valuePrimitive]="true" [(ngModel)]="employeeObj.address.country"
+                      [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>State</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="stateItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onStateChange($event)" [valuePrimitive]="true" name="state"
+                      #state="ngModel" [(ngModel)]="employeeObj.address.state" [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>City</label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-combobox [data]="cityItems" [kendoDropDownFilter]="filterSettings" [textField]="'name'"
+                      [valueField]="'name'" (valueChange)="onCityChange($event)" [valuePrimitive]="true" name="city"
+                      #city="ngModel" [(ngModel)]="employeeObj.address.city" [kendoDropDownFilter]="filterSettings">
+                    </kendo-combobox>
+                  </div>
+                  <div class="form-data">
+                    <label>ZipCode</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="zipcode" #zipcode="ngModel"
+                      [(ngModel)]="employeeObj.address.zipCode">
+                  </div>
+                </div>
+              </div>
+              <div class="i-form ot-grid">
+                <h6 class="title"><i class="k-icon k-i-menu"></i>Others</h6>
+                <div class="grid">
+                  <div class="form-data">
+                    <label>Native Address</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="nAddress" #nAddress="ngModel"
+                      [(ngModel)]="employeeObj.nativeAddress">
+                  </div>
+                  <div class="form-data">
+                    <label>Joining Date<span class="require">*</span></label>
+                  </div>
+                  <div class="form-data">
+                    <kendo-datepicker calendarType="classic" name="jDate" #jDate="ngModel" format="dd/MM/yyyy"
+                      [(ngModel)]="employeeObj.joiningDate" required></kendo-datepicker>
+                  </div>
+                  <div class="form-data">
+                    <label>Enroll Number</label>
+                  </div>
+                  <div class="form-data">
+                    <input type="text" id="" name="eNumber" #eNumber="ngModel"
+                      [(ngModel)]="employeeObj.enrollmentNumber">
+                  </div>
+                  <div class=""></div>
+                  <div class="">
+                    <kendo-switch class="k-widget k-switch-off me-1" #isManager="ngModel" name="isManager" id="m-chk"
+                      [(ngModel)]="employeeObj.isManager"></kendo-switch>
+                    <label class="k-checkbox-label" for="m-chk">Manager</label>
+                  </div>
+                  <div class="k-text-end"></div>
+                  <div class="">
+                    <kendo-switch class="k-widget k-switch-off me-1" #isActive="ngModel" name="isActive" id="a-chk"
+                      [(ngModel)]="employeeObj.isActive"></kendo-switch>
+                    <label class="k-checkbox-label" for="a-chk">Active</label>
+                  </div>
+                  <div class="k-text-end"></div>
+                  <div class="">
+                    <kendo-switch class="k-widget k-switch-off me-1" #isAvailable="ngModel" name="isAvailable"
+                      id="av-chk" [(ngModel)]="employeeObj.isAvailable"></kendo-switch>
+                    <label class="k-checkbox-label" for="av-chk">Available</label>
+                  </div>
+                </div>
+              </div>
+              <div class="i-form ro-grid">
+                <h6 class="title mb-2"><i class="icon-share"></i>Social Media</h6>
+                <div class="row no-gutters m-0">
+                  <div class="col-5 col-md-5 form-data p-1">
+                    <label>Social Media</label>
+                    <kendo-combobox [data]="listSocialMediaProviderItems" [valuePrimitive]="true"
+                      name="SocialMediaProvider" [(ngModel)]="selectedSocialMediaProviderItem"
+                      [kendoDropDownFilter]="filterSettings" (valueChange)="onSocialMediaProviderChange($event)"
+                      #SocialMediaProvider="ngModel">
+                    </kendo-combobox>
+                  </div>
+                  <div class="col-5 col-md-5 form-data p-1" [hidden]="isMessagingFlag">
+                    <label>Profile Name</label>
+                    <input type="text" id="" name="smpName" #smpName="ngModel" [(ngModel)]="socialMediaObj.profileName">
+                  </div>
+                  <div class="col-5 col-md-5 form-data p-1" [hidden]="!isMessagingFlag">
+                    <label>Mobile Number</label>
+                    <kendo-maskedtextbox name="smpMobile" [(ngModel)]="socialMediaObj.mobileNumber" #smpMobile="ngModel"
+                      id="">
+                    </kendo-maskedtextbox>
+                  </div>
+                  <div class="col-2 col-md-2 form-data p-1" style="align-self: end;" [hidden]="isSocialMediaUpdateFlag">
+                    <button (click)="onSocialMediaSubmit()" [disabled]="((isMessagingFlag == true ? (socialMediaObj.mobileNumber == undefined || socialMediaObj.mobileNumber == '' || smpMobile.invalid) : false) 
+                      || (isMessagingFlag == false ? (socialMediaObj.profileName == undefined || socialMediaObj.profileName == '') : false) 
+                      || (selectedSocialMediaProviderItem == undefined || selectedSocialMediaProviderItem == ''))"
+                      class="btn btn-primary">
+                      <i class="icon-add"></i>Add</button>
+                  </div>
+                  <div class="col-2 col-md-2 form-data p-1" style="align-self: end;"
+                    [hidden]="!isSocialMediaUpdateFlag">
+                    <button (click)="onSocialMediaUpdate()" [disabled]="((isMessagingFlag == true ? (socialMediaObj.mobileNumber == undefined || socialMediaObj.mobileNumber == '' || smpMobile.invalid) : false) 
+                      || (isMessagingFlag == false ? (socialMediaObj.profileName == undefined || socialMediaObj.profileName == '') : false) 
+                      || (selectedSocialMediaProviderItem == undefined || selectedSocialMediaProviderItem == ''))"
+                      class="btn btn-primary">
+                      <i class="icon-edit"></i>Update</button>
+                  </div>
+
+                </div>
+                <div class="o-border m-1">
+                  <div class="ms-3 me-3 s-media" *ngIf="employeeObj.socialMedias.length > 0">
+                    <div class="row o-scroll">
+                      <div class="col-md-3 p-1" *ngFor="let field of employeeObj.socialMedias">
+                        <kendo-card class="w-100 bg-light">
+                          <kendo-card-body>
+                            <div kendoCardSubtitle>
+                              <span class="k-icon k-i-star"></span>
+                              <span><b>{{field.provider.providerName}}</b></span>
+                              <kendo-buttongroup class="float-end">
+                                <button kendoButton (click)="onSocialMediaEdit(field)"><i
+                                    class="icon-edit"></i></button>
+                                <button kendoButton (click)="onSocialMediaDelete(field)"><i
+                                    class="icon-trash"></i></button>
+                              </kendo-buttongroup>
+                            </div>
+                            <div kendoCardSubtitle>
+                              <span class="k-icon k-i-user"></span>
+                              <span class="s-title">{{(field.provider.mediaType == '3' || field.provider.mediaType ==
+                                'Messaging') ? (field.mobileNumber | numberfilter:'mobile') : field.profileName}}</span>
+                            </div>
+                          </kendo-card-body>
+                        </kendo-card>
+                      </div>
+                      <!-- <table class="table table-bordered">
+                      <th>Social Media</th>
+                      <th>Profile Name</th>
+                      <th>Mobile Number</th>
+                      <tbody>
+                        <tr class="no-gutters" *ngFor="let field of employeeObj.socialMedias">
+                          <td class="p-1">{{field.provider.providerName}}</td>
+                          <td class="p-1">{{field.profileName}}</td>
+                          <td class="p-1">{{field.mobileNumber}}</td>
+                        </tr>
+                      </tbody>
+                    </table> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="onEmpSubmit(employeeForm,false)" [disabled]="!employeeForm.valid" class="btn btn-primary"><i
+              class="icon-add"></i>New</button>
+          <button (click)="onEmpSubmit(employeeForm,true)" [disabled]="!employeeForm.valid" class="btn btn-primary"><i
+              class="icon-save"></i>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div (document:keydown.esc)="closeRegEmpDialog(employeeForm)"></div>
+  </form>
+</div>
+<!-- Register Employee Modal End -->
+
+
+<ng-container *ngIf="isPermission">
+  <app-userpermission [title]="modalTitle" [empPermi]="empPermi" [pageComeFromPermission]="pageComeFromPermission"
+    (toggle)="isPermission=$event"></app-userpermission>
+</ng-container>
+
+<ng-container *ngIf="isGridConfig">
+  <app-gridconfiguration [fields]="fields" [pageName]="'Employee'" [gridName]="'EmployeeGrid'"
+    [gridConfigId]="gridConfig ? gridConfig.id : undefined" (toggle)="isGridConfig=$event"
+    (ChildEvent)="setNewGridConfig($event)">
+  </app-gridconfiguration>
+</ng-container>
+
+<div kendoDialogContainer></div>

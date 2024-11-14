@@ -1,0 +1,238 @@
+<section class="diaDetail_sec">
+  <div class="container">
+    <div class="dd-logo">
+      <img [src]="logoPath" alt="logo" />
+    </div>
+    <div *ngIf="isStoneDetails">
+      <div class="dd-header link-header">
+        <p><i class="icon-diamond"></i> <b> {{"BasicText.Stone Id"| translate}} :</b> {{invItemObj.stoneId}}</p>
+        <p class="mb-0 grid-available" *ngIf="isStoneDetails"><i class="icon-available-status"></i>
+          {{"BasicText.Available" | translate}}
+        </p>
+        <section class="lanSelect_box" (clickOutside)="onClickedOutside($event)">
+
+          <span onkeypress="return false;" (click)="showLanguageList()" [ngClass]="[showLangList ? 'active':'']">{{
+            !selectedItem ? '' : selectedItem }}</span>
+          <ul *ngIf="showLangList">
+            <li class="" *ngFor="let item of languageList" (click)="changeLanguage(item)">
+              <a>
+                {{item.value !== undefined ? item.text : item.value}}
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
+      <div class="dd-grid">
+        <div class="dd-leftsidebar">
+          <iframe *ngIf="showVideo" class="frameStone" [src]="invItemObj.videoURL"
+            style="width: 100%;height: 470px;border:0;"></iframe>
+          <img *ngIf="showImage" class="frameStone mb-3" [src]="invItemObj.imageURL" alt="diamond image"
+            style="width: 100%;height: auto;" />
+          <iframe *ngIf="showCertificate" class="frameStone" [src]="invItemObj.certiURL"
+            style="width: 100%;height: 470px;border:0;" allow='autoplay'></iframe>
+          <div class="dd-icon">
+            <button kendoButton kendoTooltip position="bottom" title="View Image"
+              [disabled]="!invItemObj.media.isPrimaryImage"
+              (click)="viewAction(ViewActionType.Image,ViewActionImageType.Primary)">
+              <i class="icon-camera"></i>
+            </button>
+
+            <button kendoButton kendoTooltip position="bottom" title="View Heart Image"
+              [disabled]="!invItemObj.media.isHeartBlack"
+              (click)="viewAction(ViewActionType.Image,ViewActionImageType.Heart)">
+              <i class="icon-dd-heart"></i>
+            </button>
+
+            <button kendoButton kendoTooltip position="bottom" title="View Arrow Image"
+              [disabled]="!invItemObj.media.isArrowBlack"
+              (click)="viewAction(ViewActionType.Image,ViewActionImageType.Arrow)">
+              <i class="icon-dd-arrow"></i>
+            </button>
+
+            <button kendoButton kendoTooltip position="bottom" title="View Video"
+              [disabled]="!invItemObj.media.isHtmlVideo" (click)="viewAction(ViewActionType.Video,'')">
+              <i class="icon-video-camera"></i>
+            </button>
+
+            <button kendoButton kendoTooltip position="bottom" title="Download Video"
+              [disabled]="!invItemObj.media.isDownloadableVideo" (click)="viewAction(ViewActionType.VideoDownload,'')">
+              <i class="icon-videodownload"></i>
+            </button>
+
+            <button kendoButton kendoTooltip position="bottom" title="View Certificate"
+              [disabled]="!invItemObj.media.isCertificate" (click)="viewAction(ViewActionType.Certificate,'')">
+              <i class="icon-cerificate"></i>
+            </button>
+          </div>
+        </div>
+        <div class="dd-rightsidebar">
+          <div class="dd-basic">
+            <h5>{{"BasicText.Details" | translate}}</h5>
+            <div class="dd-basic-grid">
+              <p>
+                <b>{{"BasicText.LAB" | translate}} :</b> {{invItemObj.lab}}
+              </p>
+              <p>
+                <b>{{"BasicText.SHAPE" | translate}} :</b> {{invItemObj.shape}}
+              </p>
+              <p>
+                <b>{{"BasicText.SIZE" | translate}} :</b> {{invItemObj.weight}}
+              </p>
+              <p>
+                <b>{{"BasicText.COLOR" | translate}} :</b> {{invItemObj.color}}
+              </p>
+              <p>
+                <b>{{"BasicText.CLARITY" | translate}} :</b> {{invItemObj.clarity}}
+              </p>
+              <p>
+                <b>{{"BasicText.CUT" | translate}} :</b> {{invItemObj.cut}}
+              </p>
+              <p>
+                <b>{{"BasicText.POLISH" | translate}} :</b> {{invItemObj.polish}}
+              </p>
+              <p>
+                <b>{{"BasicText.SYMMETRY" | translate}} :</b> {{invItemObj.symmetry}}
+              </p>
+              <p>
+                <b>{{"BasicText.FLUORESCENCE" | translate}} :</b> {{invItemObj.fluorescence}}
+              </p>
+              <p>
+                <b>{{"BasicText.CERTIFICATE NO" | translate}} :</b> {{invItemObj.certificateNo}}
+              </p>
+              <p>
+                <b>{{'BasicText.Location'| translate}} :</b> {{invItemObj.location}}
+              </p>
+            </div>
+          </div>
+
+          <div class="dd-basic">
+            <h5>{{"BasicText.Measurement" | translate}}</h5>
+            <div class="dd-basic-grid">
+              <p>
+                <b>{{"BasicText.LENGTH" | translate}} :</b> {{invItemObj.measurement.length}}
+              </p>
+              <p>
+                <b>{{"BasicText.WIDTH" | translate}} :</b> {{invItemObj.measurement.width}}
+              </p>
+              <p>
+                <b>{{"BasicText.DEPTH" | translate}} :</b> {{invItemObj.measurement.depth}}
+              </p>
+              <p>
+                <b>{{"BasicText.TOTAL DEPTH %" | translate}} :</b> {{invItemObj.measurement.depth}}
+              </p>
+              <p>
+                <b>{{"BasicText.TABLE %" | translate}} :</b> {{invItemObj.measurement.table}}
+              </p>
+              <p>
+                <b>{{"BasicText.CROWN HEIGHT" | translate}} :</b> {{invItemObj.measurement.crownHeight}}
+              </p>
+              <p>
+                <b>{{"BasicText.CROWN ANGLE" | translate}} :</b> {{invItemObj.measurement.crownAngle}}
+              </p>
+              <p>
+                <b>{{"BasicText.PAVILION DEPTH" | translate}} :</b> {{invItemObj.measurement.pavilionDepth}}
+              </p>
+              <p>
+                <b>{{"BasicText.PAVILION ANGLE" | translate}} :</b> {{invItemObj.measurement.pavilionAngle}}
+              </p>
+              <p>
+                <b>{{"BasicText.GIRDLE %" | translate}} :</b> {{invItemObj.measurement.girdlePer}}
+              </p>
+              <p>
+                <b>{{"BasicText.Girdle" | translate}} :</b> {{invItemObj.measurement.minGirdle}} -
+                {{invItemObj.measurement.maxGirdle}}
+              </p>
+              <p>
+                <b>{{"BasicText.EYE CLEAN" | translate}} :</b> {{invItemObj.inclusion.eyeClean}}
+              </p>
+              <p>
+                <b>{{"BasicText.RATIO" | translate}} :</b> {{invItemObj.measurement.ratio}}
+              </p>
+            </div>
+          </div>
+
+          <div class="dd-basic">
+            <h5>{{"BasicText.INCLUSION" | translate}}</h5>
+            <div class="dd-basic-grid pb-0">
+              <p>
+                <b>{{"BasicText.BROWN" | translate}} :</b> {{invItemObj.inclusion.brown}}
+              </p>
+              <p>
+                <b>{{"BasicText.GREEN" | translate}} :</b> {{invItemObj.inclusion.green}}
+              </p>
+              <p>
+                <b>{{"BasicText.MILKY" | translate}} :</b> {{invItemObj.inclusion.milky}}
+              </p>
+              <p>
+                <b>{{"BasicText.SHADE" | translate}} :</b> {{invItemObj.inclusion.shade}}
+              </p>
+              <p>
+                <b>{{"BasicText.BLACK TABLE" | translate}} :</b> {{invItemObj.inclusion.centerBlack}}
+              </p>
+              <p>
+                <b>{{"BasicText.BLACK CROWN" | translate}} :</b> {{invItemObj.inclusion.sideBlack}}
+              </p>
+              <p>
+                <b>{{"BasicText.OPEN CROWN" | translate}} :</b> {{invItemObj.inclusion.openCrown}}
+              </p>
+              <p>
+                <b>{{"BasicText.OPEN GIRDLE" | translate}} :</b> {{invItemObj.inclusion.openGirdle}}
+              </p>
+              <p>
+                <b>{{"BasicText.OPEN PAVILION" | translate}} :</b> {{invItemObj.inclusion.openPavilion}}
+              </p>
+              <p>
+                <b>{{"BasicText.OPEN TABLE" | translate}} :</b> {{invItemObj.inclusion.openTable}}
+              </p>
+              <p>
+                <b>EFOC :</b> {{invItemObj.inclusion.efoc}}
+              </p>
+              <p>
+                <b>EFOP :</b> {{invItemObj.inclusion.efop}}
+              </p>
+              <p>
+                <b>{{"BasicText.GIRDLE CONDITION" | translate}} :</b>
+                {{invItemObj.inclusion.girdleCondition}}
+              </p>
+              <p>
+                <b>{{"BasicText.CULET" | translate}} :</b> {{invItemObj.inclusion.culet}}
+              </p>
+              <p>
+                <b>{{"BasicText.NATURAL ON PAVILION" | translate}} :</b>
+                {{invItemObj.inclusion.naturalOnPavillion}}
+              </p>
+              <p>
+                <b>{{"BasicText.NATURAL ON CROWN" | translate}} :</b> {{invItemObj.inclusion.naturalOnCrown}}
+              </p>
+              <p>
+                <b>{{"BasicText.NATURAL ON GIRDLE" | translate}} :</b>
+                {{invItemObj.inclusion.naturalOnGirdle}}
+              </p>
+            </div>
+            <p class="ps-2 pt-1 mb-0">
+              <b>{{"BasicText.KEY TO SYMBOL" | translate}} :</b> {{invItemObj.inclusion.ktoS}}
+            </p>
+            <p class="ps-2 pt-1">
+              <b>{{"BasicText.COMMENT" | translate}} :</b> {{invItemObj.inclusion.certiComment}}
+            </p>
+          </div>
+
+          <div class="dd-count" *ngIf="!isBiding">
+            <p>
+              <b>Rapaport (US$)</b>{{invItemObj.price.rap}}
+            </p>
+            <p>
+              <b>{{"BasicText.Discount" | translate}}%</b>{{invItemObj.price.discount}}
+            </p>
+            <p>
+              <b>{{"BasicText.$/Ct($)" | translate}}</b>{{invItemObj.price.perCarat}}
+            </p>
+            <p>
+              <b>{{"BasicText.Amount($)" | translate}}</b>{{invItemObj.price.netAmount}}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

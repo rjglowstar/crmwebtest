@@ -1,0 +1,95 @@
+<div class="modal c-modal dialog-lg about-us" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="main-title">
+                <h5 class="modal-title">
+                    <i class="icon-assignment_large"></i>
+                    Release Note
+                </h5>
+                <button type="button" class="close" (click)="closeReleaseNoteDialog()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="panelbar-wrapper note-ui">
+                    <kendo-panelbar>
+                        <kendo-panelbar-item [title]="'Version No : 1.0.0.1 (17-09-2022)'" [expanded]="true">
+                            <ng-template kendoPanelBarContent>
+                                <div class="subtitle">
+                                    <h4>Features</h4>
+                                </div>
+                                <div class="version-content">
+                                    <ul>
+                                        <li>ફ્રન્ટઓફિસ માં ડેશબોર્ડ ડિઝાઇન કરેલું છે </li>
+                                        <li>ઈન્વેન્ટરી પેજ પર સૅર્ચ ફિલ્ટર ડિઝાઇન કરેલ છે </li>
+                                    </ul>
+                                </div>
+                                <div class="subtitle">
+                                    <h4 class="mt-2">Resolved Bugs</h4>
+                                </div>
+                                <div class="version-content">
+                                    <ul>
+                                        <li>Pricing Request માં ડિઝાઇન પ્રોબ્લમ ફિક્સ કરેલ છે</li>
+                                        <li>Stone Media માં ફોટોસ અપડેટ કરેલ છે</li>
+                                        <li>Relase Note માં ડાયલોગ ડિઝાઇન પ્રોબ્લેમ ફિક્સ કરેલ છે </li>
+                                        <li>Pricing Request માં ડિઝાઇન પ્રોબ્લમ ફિક્સ કરેલ છે</li>
+                                        <li>Stone Media માં ફોટોસ અપડેટ કરેલ છે</li>
+                                        <li>Relase Note માં ડાયલોગ ડિઝાઇન પ્રોબ્લેમ ફિક્સ કરેલ છે </li>
+                                    </ul>
+                                </div>
+                            </ng-template>
+                        </kendo-panelbar-item>
+                        <kendo-panelbar-item [title]="'Version No : 1.0.0.2 (11-10-2022)'">
+                            <ng-template kendoPanelBarContent>
+                                <div class="subtitle">
+                                    <h4>Features</h4>
+                                </div>
+                                <div class="version-content">
+                                    <ul>
+                                        <li>ફ્રન્ટઓફિસ માં ડેશબોર્ડ ડિઝાઇન કરેલું છે </li>
+                                        <li>ઈન્વેન્ટરી પેજ પર સૅર્ચ ફિલ્ટર ડિઝાઇન કરેલ છે </li>
+                                    </ul>
+                                </div>
+                                <div class="subtitle">
+                                    <h4 class="mt-2">Resolved Bugs</h4>
+                                </div>
+                                <div class="version-content">
+                                    <ul>
+                                        <li>Pricing Request માં ડિઝાઇન પ્રોબ્લમ ફિક્સ કરેલ છે</li>
+                                        <li>Stone Media માં ફોટોસ ઉપડૅટ કરેલ છે</li>
+                                        <li>Relase Note માં ડાયલોગ ડિઝાઇન પ્રોબ્લેમ ફિક્સ કરેલ છે </li>
+                                    </ul>
+                                </div>
+                            </ng-template>
+                        </kendo-panelbar-item>
+                        <kendo-panelbar-item [title]="'Version No : 1.0.0.3 (12-11-2022)'">
+                            <ng-template kendoPanelBarContent>
+                                <div class="subtitle">
+                                    <h4>Features</h4>
+                                </div>
+                                <div class="version-content">
+                                    <ul>
+                                        <li>ફ્રન્ટઓફિસ માં ડેશબોર્ડ ડિઝાઇન કરેલું છે </li>
+                                        <li>ઈન્વેન્ટરી પેજ પર સૅર્ચ ફિલ્ટર ડિઝાઇન કરેલ છે </li>
+                                    </ul>
+                                </div>
+                                <div class="subtitle">
+                                    <h4 class="mt-2">Resolved Bugs</h4>
+                                </div>
+                                <div class="version-content">
+                                    <ul>
+                                        <li>Pricing Request માં ડિઝાઇન પ્રોબ્લમ ફિક્સ કરેલ છે</li>
+                                        <li>Stone Media માં ફોટોસ ઉપડૅટ કરેલ છે</li>
+                                        <li>Relase Note માં ડાયલોગ ડિઝાઇન પ્રોબ્લેમ ફિક્સ કરેલ છે </li>
+                                    </ul>
+                                </div>
+                            </ng-template>
+                        </kendo-panelbar-item>
+                    </kendo-panelbar>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div (document:keydown.esc)="closeReleaseNoteDialog()"></div>

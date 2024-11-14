@@ -1,0 +1,206 @@
+@font-face {
+     font-family: 'Poppins', sans-serif;
+     font-display: swap;
+     src: url("../font/Poppins-Italic.woff2") format("woff2"),
+          url("../font/Poppins-Italic.woff") format("woff"),
+          url("../font/Poppins-Italic.ttf") format("ttf");
+     font-style: italic;
+}
+
+@font-face {
+     font-family: 'Poppins', sans-serif;
+     font-display: swap;
+     src: url("../font/Poppins-Regular.woff2") format("woff2"),
+          url("../font/Poppins-Regular.woff") format("woff"),
+          url("../font/Poppins-Regular.ttf") format("ttf");
+     font-weight: 400;
+}
+
+@font-face {
+     font-family: 'Poppins', sans-serif;
+     font-display: swap;
+     src: url("../font/Poppins-Medium.woff2") format("woff2"),
+          url("../font/Poppins-Medium.woff") format("woff"),
+          url("../font/Poppins-Medium.ttf") format("ttf");
+     font-weight: 500;
+}
+
+@font-face {
+     font-family: 'Poppins', sans-serif;
+     font-display: swap;
+     src: url("../font/Poppins-SemiBold.woff2") format("woff2"),
+          url("../font/Poppins-SemiBold.woff") format("woff"),
+          url("../font/Poppins-SemiBold.ttf") format("ttf");
+     font-weight: 600;
+}
+
+@font-face {
+     font-family: 'Poppins', sans-serif;
+     font-display: swap;
+     src: url("../font/Poppins-Bold.woff2") format("woff2"),
+          url("../font/Poppins-Bold.woff") format("woff"),
+          url("../font/Poppins-Bold.ttf") format("ttf");
+     font-weight: 700;
+}
+
+
+/* Noto Sans - start */
+@font-face {
+     font-family: "Notosans-Italic";
+     src: url("../font/noto_sans/NotoSans-Italic.woff2") format("woff2"),
+          url("../font/noto_sans/NotoSans-Italic.woff") format("woff"),
+          url("../font/noto_sans/NotoSans-Italic.ttf") format("ttf");
+}
+
+@font-face {
+     font-family: "Notosans-Light";
+     src: url("../font/noto_sans/NotoSans-Light.woff2") format("woff2"),
+          url("../font/noto_sans/NotoSans-Light.woff") format("woff"),
+          url("../font/noto_sans/NotoSans-Light.ttf") format("ttf");
+}
+
+@font-face {
+     font-family: "Notosans-Regular";
+     src: url("../font/noto_sans/NotoSans-Regular.woff2") format("woff2"),
+          url("../font/noto_sans/NotoSans-Regular.woff") format("woff"),
+          url("../font/noto_sans/NotoSans-Regular.ttf") format("ttf");
+}
+
+@font-face {
+     font-family: "Notosans-Medium";
+     src: url("../font/noto_sans/NotoSans-Medium.woff2") format("woff2"),
+          url("../font/noto_sans/NotoSans-Medium.woff") format("woff"),
+          url("../font/noto_sans/NotoSans-Medium.ttf") format("ttf");
+}
+
+@font-face {
+     font-family: "Notosans-SemiBold";
+     src: url("../font/noto_sans/NotoSans-SemiBold.woff2") format("woff2"),
+          url("../font/noto_sans/NotoSans-SemiBold.woff") format("woff"),
+          url("../font/noto_sans/NotoSans-SemiBold.ttf") format("ttf");
+}
+
+@font-face {
+     font-family: "Notosans-Bold";
+     src: url("../font/noto_sans/NotoSans-Bold.woff2") format("woff2"),
+          url("../font/noto_sans/NotoSans-Bold.woff") format("woff"),
+          url("../font/noto_sans/NotoSans-Bold.ttf") format("ttf");
+}
+
+
+/* Inter - start */
+@font-face {
+     font-family: 'Inter', sans-serif;
+     src: url("../font/inter/Inter-Thin.woff2") format("woff2"),
+          url("../font/inter/Inter-Thin.woff") format("woff"),
+          url("../font/inter/Inter-Thin.ttf") format("ttf");
+     font-weight: 100;
+}
+
+@font-face {
+     font-family: 'Inter', sans-serif;
+     src: url("../font/inter/Inter-ExtraLight.woff2") format("woff2"),
+          url("../font/inter/Inter-ExtraLight.woff") format("woff"),
+          url("../font/inter/Inter-ExtraLight.ttf") format("ttf");
+     font-weight: 200;
+}
+
+@font-face {
+     font-family: 'Inter', sans-serif;
+     src: url("../font/inter/Inter-Light.woff2") format("woff2"),
+          url("../font/inter/Inter-Light.woff") format("woff"),
+          url("../font/inter/Inter-Light.ttf") format("ttf");
+     font-weight: 300;
+}
+
+@font-face {
+     font-family: 'Inter', sans-serif;
+     src: url("../font/inter/Inter-Regular.woff2") format("woff2"),
+          url("../font/inter/Inter-Regular.woff") format("woff"),
+          url("../font/inter/Inter-Regular.ttf") format("ttf");
+     font-weight: 400;
+}
+
+@font-face {
+     font-family: 'Inter', sans-serif;
+     src: url("../font/inter/Inter-Medium.woff2") format("woff2"),
+          url("../font/inter/Inter-Medium.woff") format("woff"),
+          url("../font/inter/Inter-Medium.ttf") format("ttf");
+     font-weight: 500;
+}
+
+@font-face {
+     font-family: 'Inter', sans-serif;
+     src: url("../font/inter/Inter-SemiBold.woff2") format("woff2"),
+          url("../font/inter/Inter-SemiBold.woff") format("woff"),
+          url("../font/inter/Inter-SemiBold.ttf") format("ttf");
+     font-weight: 600;
+}
+
+@font-face {
+     font-family: 'Inter', sans-serif;
+     src: url("../font/inter/Inter-Bold.woff2") format("woff2"),
+          url("../font/inter/Inter-Bold.woff") format("woff"),
+          url("../font/inter/Inter-Bold.ttf") format("ttf");
+     font-weight: 700;
+}
+
+@font-face {
+     font-family: 'Inter', sans-serif;
+     src: url("../font/inter/Inter-ExtraBold.woff2") format("woff2"),
+          url("../font/inter/Inter-ExtraBold.woff") format("woff"),
+          url("../font/inter/Inter-ExtraBold.ttf") format("ttf");
+     font-weight: 800;
+}
+
+@font-face {
+     font-family: 'Inter', sans-serif;
+     src: url("../font/inter/Inter-Black.woff2") format("woff2"),
+          url("../font/inter/Inter-Black.woff") format("woff"),
+          url("../font/inter/Inter-Black.ttf") format("ttf");
+     font-weight: 900;
+}
+
+/* Inter - start */
+@font-face {
+     font-family: 'Roboto Mono', monospace;
+     src: url("../font/roboto_mono/RobotoMono-Regular.woff2") format("woff2"),
+          url("../font/roboto_mono/RobotoMono-Regular.woff") format("woff"),
+          url("../font/roboto_mono/RobotoMono-Regular.ttf") format("ttf");
+     font-weight: 400;
+}
+
+@font-face {
+     font-family: 'Roboto Mono', monospace;
+     src: url("../font/roboto_mono/RobotoMono-Medium.woff2") format("woff2"),
+          url("../font/roboto_mono/RobotoMono-Medium.woff") format("woff"),
+          url("../font/roboto_mono/RobotoMono-Medium.ttf") format("ttf");
+     font-weight: 500;
+}
+
+@font-face {
+     font-family: 'Roboto Mono', monospace;
+     src: url("../font/roboto_mono/RobotoMono-SemiBold.woff2") format("woff2"),
+          url("../font/roboto_mono/RobotoMono-SemiBold.woff") format("woff"),
+          url("../font/roboto_mono/RobotoMono-SemiBold.ttf") format("ttf");
+     font-weight: 600;
+}
+
+/* CustNewUI_Font - start */
+@font-face {
+     font-family: "Rollgates Luxury";
+     src: url("../font/rollgates_luxury/Rollgates-Luxury.woff2") format("woff2"),
+          url("../font/rollgates_luxury/Rollgates-Luxury.woff") format("woff"),
+          url("../font/rollgates_luxury/Rollgates-Luxury.ttf") format("ttf");
+     font-weight: 400;
+}
+
+@font-face {
+     font-family: 'Daily Coffee';
+     src: url("../font/daily_coffee/Daily-Coffee.woff2") format("woff2"),
+          url("../font/daily_coffee/Daily-Coffee.woff") format("woff"),
+          url("../font/daily_coffee/Daily-Coffee.ttf") format("truetype");
+     font-weight: 400;
+}
+
+/* CustNewUI_Font - end */
