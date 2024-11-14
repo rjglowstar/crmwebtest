@@ -1,3 +1,6 @@
+[build]
+  publish = "dist/"
+  base = "crmwebtest"  # Add the correct base path for your app's location
 
 [context.production]
   publish = "dist/"
@@ -5,3 +8,4 @@
 
 [context.deploy-preview]
   publish = "dist/"
+  command = "ng build CRM.Customer --configuration preview"  # Optional preview config if needed
